@@ -4,13 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.dromara</groupId>
-    <artifactId>ruoyi-common-alibaba-bom</artifactId>
+    <groupId>com.cdzeroly</groupId>
+    <artifactId>common-alibaba-bom</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
 
     <description>
-        ruoyi-common-alibaba-bom alibaba依赖项
+        common-alibaba-bom alibaba依赖项
     </description>
 
     <properties>

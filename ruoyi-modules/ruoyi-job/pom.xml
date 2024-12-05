@@ -4,75 +4,75 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.dromara</groupId>
-        <artifactId>ruoyi-modules</artifactId>
+        <artifactId>modules</artifactId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ruoyi-job</artifactId>
+    <artifactId>job</artifactId>
 
     <description>
-        ruoyi-job 任务调度模块
+        job 任务调度模块
     </description>
 
     <dependencies>
 
         <dependency>
             <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-nacos</artifactId>
+            <artifactId>common-nacos</artifactId>
         </dependency>
 
         <!-- RuoYi Common Log -->
         <dependency>
             <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-log</artifactId>
+            <artifactId>common-log</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-dict</artifactId>
+            <artifactId>common-dict</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-web</artifactId>
+            <artifactId>common-web</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-dubbo</artifactId>
+            <artifactId>common-dubbo</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-mybatis</artifactId>
+            <artifactId>common-mybatis</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-job</artifactId>
+            <artifactId>common-job</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-tenant</artifactId>
+            <artifactId>common-tenant</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>org.dromara</groupId>
-                    <artifactId>ruoyi-common-mybatis</artifactId>
+                    <artifactId>common-mybatis</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
 
         <dependency>
             <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-security</artifactId>
+            <artifactId>common-security</artifactId>
         </dependency>
 
         <!-- RuoYi Api System -->
         <dependency>
             <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-api-system</artifactId>
+            <artifactId>api-system</artifactId>
         </dependency>
 
     </dependencies>

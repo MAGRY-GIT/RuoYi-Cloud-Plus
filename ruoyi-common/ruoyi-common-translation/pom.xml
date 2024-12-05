@@ -3,38 +3,38 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>org.dromara</groupId>
-        <artifactId>ruoyi-common</artifactId>
+        <groupId>com.cdzeroly</groupId>
+        <artifactId>common</artifactId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ruoyi-common-translation</artifactId>
+    <artifactId>common-translation</artifactId>
 
     <description>
-        ruoyi-common-translation 通用翻译功能
+        common-translation 通用翻译功能
     </description>
 
     <dependencies>
 
         <dependency>
-            <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-json</artifactId>
+            <groupId>com.cdzeroly</groupId>
+            <artifactId>common-json</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-dict</artifactId>
+            <groupId>com.cdzeroly</groupId>
+            <artifactId>common-dict</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-dubbo</artifactId>
+            <groupId>com.cdzeroly</groupId>
+            <artifactId>common-dubbo</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-api-resource</artifactId>
+            <groupId>com.cdzeroly</groupId>
+            <artifactId>api-resource</artifactId>
         </dependency>
 
     </dependencies>

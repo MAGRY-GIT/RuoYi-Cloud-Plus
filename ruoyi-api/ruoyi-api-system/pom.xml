@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.dromara</groupId>
-        <artifactId>ruoyi-api</artifactId>
+        <artifactId>api</artifactId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ruoyi-api-system</artifactId>
+    <artifactId>api-system</artifactId>
 
     <description>
-        ruoyi-api-system系统接口模块
+        api-system系统接口模块
     </description>
 
     <dependencies>
@@ -20,12 +20,12 @@
         <!-- RuoYi Common Core-->
         <dependency>
             <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-core</artifactId>
+            <artifactId>common-core</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-excel</artifactId>
+            <artifactId>common-excel</artifactId>
         </dependency>
 
     </dependencies>

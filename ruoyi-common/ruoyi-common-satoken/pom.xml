@@ -3,16 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>org.dromara</groupId>
-        <artifactId>ruoyi-common</artifactId>
+        <groupId>com.cdzeroly</groupId>
+        <artifactId>common</artifactId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ruoyi-common-satoken</artifactId>
+    <artifactId>common-satoken</artifactId>
 
     <description>
-        ruoyi-common-satoken 权限认证服务
+        common-satoken 权限认证服务
     </description>
 
     <dependencies>
@@ -31,14 +31,14 @@
 
         <!-- RuoYi Api System -->
         <dependency>
-            <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-api-system</artifactId>
+            <groupId>com.cdzeroly</groupId>
+            <artifactId>api-system</artifactId>
         </dependency>
 
         <!-- RuoYi Common Redis-->
         <dependency>
-            <groupId>org.dromara</groupId>
-            <artifactId>ruoyi-common-redis</artifactId>
+            <groupId>com.cdzeroly</groupId>
+            <artifactId>common-redis</artifactId>
         </dependency>
 
         <dependency>

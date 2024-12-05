@@ -1,2 +1,2 @@
-org.dromara.common.encrypt.config.EncryptorAutoConfiguration
-org.dromara.common.encrypt.config.ApiDecryptAutoConfiguration
+com.cdzeroly.common.encrypt.config.EncryptorAutoConfiguration
+com.cdzeroly.common.encrypt.config.ApiDecryptAutoConfiguration
