@@ -45,3 +45,6 @@ nbdist/
 !*/build/*.xml
 
 .flattened-pom.xml
+/docker/mysql/data/
+
+/docker/redis/data/
