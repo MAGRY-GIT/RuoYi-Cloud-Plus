@@ -48,3 +48,4 @@ nbdist/
 /docker/mysql/data/
 
 /docker/redis/data/
+/docker/rabbitmq/data/
