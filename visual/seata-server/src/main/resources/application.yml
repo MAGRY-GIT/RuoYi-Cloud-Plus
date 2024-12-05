@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: ruoyi-seata-server
+    name: seata-server
   profiles:
     # 环境配置
     active: @profiles.active@

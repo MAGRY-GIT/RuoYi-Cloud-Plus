@@ -19,7 +19,7 @@ EXPOSE 8091
 ADD ./target/seata-server.jar ./app.jar
 
 ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom \
-           #-Dskywalking.agent.service_name=ruoyi-seata-server", \
+           #-Dskywalking.agent.service_name=seata-server", \
            #-Dskywalking.plugin.seata.server=true", \
            #-javaagent:/ruoyi/skywalking/agent/skywalking-agent.jar", \
            ${JAVA_OPTS} -jar app.jar

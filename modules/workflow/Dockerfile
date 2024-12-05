@@ -18,7 +18,7 @@ EXPOSE ${SERVER_PORT}
 ADD ./target/workflow.jar ./app.jar
 
 ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom -Dserver.port=${SERVER_PORT} \
-           #-Dskywalking.agent.service_name=ruoyi-system \
+           #-Dskywalking.agent.service_name=system \
            #-javaagent:/cdzeroly/skywalking/agent/skywalking-agent.jar \
            -XX:+HeapDumpOnOutOfMemoryError -XX:+UseZGC ${JAVA_OPTS} \
            -jar app.jar

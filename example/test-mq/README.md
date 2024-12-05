@@ -1,4 +1,4 @@
-# ruoyi-test-mq
+# test-mq
 
 ## 模块说明
 

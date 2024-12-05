@@ -1,24 +1,23 @@
-package com.cdzeroly.job;
+package com.cdzeroly.resource;
 
 import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 
 /**
- * 任务调度模块
+ * 资源服务
  *
  * @author Lion Li
  */
 @EnableDubbo
-@SpringBootApplication
-public class RuoYiJobApplication {
-
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+public class ResourceApplication {
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(RuoYiJobApplication.class);
+        SpringApplication application = new SpringApplication(ResourceApplication.class);
         application.setApplicationStartup(new BufferingApplicationStartup(2048));
         application.run(args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  任务调度模块启动成功   ლ(´ڡ`ლ)ﾞ  ");
+        System.out.println("(♥◠‿◠)ﾉﾞ  资源服务模块启动成功   ლ(´ڡ`ლ)ﾞ  ");
     }
-
 }

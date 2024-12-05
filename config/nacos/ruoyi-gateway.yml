@@ -28,50 +28,50 @@ spring:
           enabled: true
       routes:
         # 认证中心
-        - id: ruoyi-auth
-          uri: lb://ruoyi-auth
+        - id: auth
+          uri: lb://auth
           predicates:
             - Path=/auth/**
           filters:
             - StripPrefix=1
         # 代码生成
-        - id: ruoyi-gen
-          uri: lb://ruoyi-gen
+        - id: gen
+          uri: lb://gen
           predicates:
             - Path=/tool/**
           filters:
             - StripPrefix=1
         # 系统模块
-        - id: ruoyi-system
-          uri: lb://ruoyi-system
+        - id: system
+          uri: lb://system
           predicates:
             - Path=/system/**,/monitor/**
           filters:
             - StripPrefix=1
         # 资源服务
-        - id: ruoyi-resource
-          uri: lb://ruoyi-resource
+        - id: resource
+          uri: lb://resource
           predicates:
             - Path=/resource/**
           filters:
             - StripPrefix=1
         # workflow服务
-        - id: ruoyi-workflow
-          uri: lb://ruoyi-workflow
+        - id: workflow
+          uri: lb://workflow
           predicates:
             - Path=/workflow/**
           filters:
             - StripPrefix=1
         # 演示服务
-        - id: ruoyi-demo
-          uri: lb://ruoyi-demo
+        - id: demo
+          uri: lb://demo
           predicates:
             - Path=/demo/**
           filters:
             - StripPrefix=1
         # MQ演示服务
-        - id: ruoyi-test-mq
-          uri: lb://ruoyi-test-mq
+        - id: test-mq
+          uri: lb://test-mq
           predicates:
             - Path=/test-mq/**
           filters:

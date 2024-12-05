@@ -18,7 +18,7 @@ EXPOSE ${SERVER_PORT}
 ADD ./target/cdzeroly-gateway.jar ./app.jar
 
 ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom -Dserver.port=${SERVER_PORT} \
-           #-Dskywalking.agent.service_name=ruoyi-gateway \
+           #-Dskywalking.agent.service_name=gateway \
            #-javaagent:/cdzeroly/skywalking/agent/skywalking-agent.jar \
            -XX:+HeapDumpOnOutOfMemoryError -XX:+UseZGC ${JAVA_OPTS} \
            -jar app.jar

@@ -1,21 +1,22 @@
-package com.cdzeroly.stream;
+package com.cdzeroly.gen;
 
+import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 
 /**
- * SpringBoot-MQ 案例项目
- * @author Lion Li
+ * 代码生成
+ *
+ * @author ruoyi
  */
+@EnableDubbo
 @SpringBootApplication
-public class RuoYiTestMqApplication {
-
+public class GenApplication {
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(RuoYiTestMqApplication.class);
+        SpringApplication application = new SpringApplication(GenApplication.class);
         application.setApplicationStartup(new BufferingApplicationStartup(2048));
         application.run(args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  MQ案例模块启动成功   ლ(´ڡ`ლ)ﾞ  ");
+        System.out.println("(♥◠‿◠)ﾉﾞ  代码生成模块启动成功   ლ(´ڡ`ლ)ﾞ  ");
     }
-
 }

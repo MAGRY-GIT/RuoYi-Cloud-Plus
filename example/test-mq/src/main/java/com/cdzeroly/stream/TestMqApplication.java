@@ -1,22 +1,21 @@
-package com.cdzeroly.system;
+package com.cdzeroly.stream;
 
-import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 
 /**
- * 系统模块
- *
- * @author ruoyi
+ * SpringBoot-MQ 案例项目
+ * @author Lion Li
  */
-@EnableDubbo
 @SpringBootApplication
-public class RuoYiSystemApplication {
+public class TestMqApplication {
+
     public static void main(String[] args) {
-        SpringApplication application = new SpringApplication(RuoYiSystemApplication.class);
+        SpringApplication application = new SpringApplication(TestMqApplication.class);
         application.setApplicationStartup(new BufferingApplicationStartup(2048));
         application.run(args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  系统模块启动成功   ლ(´ڡ`ლ)ﾞ  ");
+        System.out.println("(♥◠‿◠)ﾉﾞ  MQ案例模块启动成功   ლ(´ڡ`ლ)ﾞ  ");
     }
+
 }

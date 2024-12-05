@@ -5,7 +5,7 @@ server:
 
 spring:
   application:
-    name: ruoyi-snailjob-server
+    name: snailjob-server
   profiles:
     active: @profiles.active@
   web:

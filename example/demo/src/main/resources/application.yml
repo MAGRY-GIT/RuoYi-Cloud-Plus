@@ -6,7 +6,7 @@ server:
 spring:
   application:
     # 应用名称
-    name: ruoyi-demo
+    name: demo
   profiles:
     # 环境配置
     active: @profiles.active@
@@ -30,7 +30,7 @@ spring:
   config:
     import:
       - optional:nacos:application-common.yml
-      - optional:nacos:ruoyi-resource.yml
+      - optional:nacos:resource.yml
       - optional:nacos:datasource.yml
 
 --- # 数据源设置 需在 system 数据源下 执行 test.sql 文件
