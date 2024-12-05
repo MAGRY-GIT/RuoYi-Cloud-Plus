@@ -1,0 +1,1 @@
+dubboDataPermissionFilter=com.cdzeroly.common.mybatis.filter.DubboDataPermissionFilter

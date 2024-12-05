@@ -5,10 +5,10 @@ FROM bellsoft/liberica-openjdk-debian:17.0.11-cds
 
 LABEL maintainer="Lion Li"
 
-RUN mkdir -p /ruoyi/seata-server/logs \
-    /ruoyi/skywalking/agent
+RUN mkdir -p /cdzeroly/seata-server/logs \
+    /cdzeroly/skywalking/agent
 
-WORKDIR /ruoyi/seata-server
+WORKDIR /cdzeroly/seata-server
 
 ENV TZ=PRC LANG=C.UTF-8 LC_ALL=C.UTF-8 JAVA_OPTS="" SEATA_IP="" SEATA_PORT=""
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
@@ -16,7 +16,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 EXPOSE 7091
 EXPOSE 8091
 
-ADD ./target/ruoyi-seata-server.jar ./app.jar
+ADD ./target/seata-server.jar ./app.jar
 
 ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom \
            #-Dskywalking.agent.service_name=ruoyi-seata-server", \

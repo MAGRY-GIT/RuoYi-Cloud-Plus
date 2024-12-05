@@ -50,7 +50,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.dromara</groupId>
+            <groupId>com.cdzeroly</groupId>
             <artifactId>common-nacos</artifactId>
         </dependency>
 

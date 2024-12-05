@@ -5,17 +5,17 @@ FROM bellsoft/liberica-openjdk-debian:17.0.11-cds
 
 LABEL maintainer="Lion Li"
 
-RUN mkdir -p /ruoyi/auth/logs  \
-    /ruoyi/auth/temp  \
-    /ruoyi/skywalking/agent
+RUN mkdir -p /cdzeroly/auth/logs  \
+    /cdzeroly/auth/temp  \
+    /cdzeroly/skywalking/agent
 
-WORKDIR /ruoyi/auth
+WORKDIR /cdzeroly/auth
 
 ENV SERVER_PORT=9210 LANG=C.UTF-8 LC_ALL=C.UTF-8 JAVA_OPTS=""
 
 EXPOSE ${SERVER_PORT}
 
-ADD ./target/ruoyi-auth.jar ./app.jar
+ADD ./target/auth.jar ./app.jar
 
 ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom -Dserver.port=${SERVER_PORT} \
            #-Dskywalking.agent.service_name=ruoyi-auth \

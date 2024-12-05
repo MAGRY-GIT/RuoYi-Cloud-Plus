@@ -2,8 +2,6 @@ package com.cdzeroly.stream.controller;
 
 import com.cdzeroly.stream.producer.*;
 import lombok.extern.slf4j.Slf4j;
-import org.dromara.stream.producer.*;
-import org.ruoyi.stream.producer.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -5,16 +5,16 @@ FROM bellsoft/liberica-openjdk-debian:17.0.11-cds
 
 LABEL maintainer="Lion Li"
 
-RUN mkdir -p /ruoyi/snailjob/logs
+RUN mkdir -p /cdzeroly/snailjob/logs
 
-WORKDIR /ruoyi/snailjob
+WORKDIR /cdzeroly/snailjob
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 JAVA_OPTS="-Xms512m -Xmx1024m"
 
 EXPOSE 8800
 EXPOSE 17888
 
-ADD ./target/ruoyi-snailjob-server.jar ./app.jar
+ADD ./target/snailjob-server.jar ./app.jar
 
 ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom \
            -XX:+HeapDumpOnOutOfMemoryError -XX:+UseZGC ${JAVA_OPTS} \

@@ -91,7 +91,7 @@ spring:
 
     bus:
       id: ${spring.application.name}
-      base-packages: org.dromara.**.event
+      base-packages: com.cdzeroly.**.event
   # 消息总线 也可以使用 kafka 参考 spring-cloud-bus 用法
   rabbitmq:
     host: localhost
@@ -182,12 +182,12 @@ sa-token:
 # MyBatisPlus配置
 # https://baomidou.com/config/
 mybatis-plus:
-  # 多包名使用 例如 org.dromara.**.mapper,org.xxx.**.mapper
-  mapperPackage: org.dromara.**.mapper
+  # 多包名使用 例如 com.cdzeroly.**.mapper,org.xxx.**.mapper
+  mapperPackage: com.cdzeroly.**.mapper
   # 对应的 XML 文件位置
   mapperLocations: classpath*:mapper/**/*Mapper.xml
   # 实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: org.dromara.**.domain
+  typeAliasesPackage: com.cdzeroly.**.domain
   global-config:
     dbConfig:
       # 主键类型

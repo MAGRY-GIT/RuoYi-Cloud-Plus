@@ -5,15 +5,15 @@ FROM bellsoft/liberica-openjdk-debian:17.0.11-cds
 
 LABEL maintainer="Lion Li"
 
-RUN mkdir -p /ruoyi/nacos
+RUN mkdir -p /cdzeroly/nacos
 
-WORKDIR /ruoyi/nacos
+WORKDIR /cdzeroly/nacos
 
 EXPOSE 8848
 
 ENV TZ=Asia/Shanghai LANG=C.UTF-8 LC_ALL=C.UTF-8 JAVA_OPTS="-Xms512m -Xmx1024m"
 
-ADD ./target/ruoyi-nacos.jar ./app.jar
+ADD ./target/nacos.jar ./app.jar
 
 ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom ${JAVA_OPTS} -jar app.jar
 

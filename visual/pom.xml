@@ -38,7 +38,7 @@
 
         <!-- prometheus 监控 -->
 <!--        <dependency>-->
-<!--            <groupId>org.dromara</groupId>-->
+<!--            <groupId>com.cdzeroly</groupId>-->
 <!--            <artifactId>common-prometheus</artifactId>-->
 <!--        </dependency>-->
     </dependencies>

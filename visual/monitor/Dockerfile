@@ -5,15 +5,15 @@ FROM bellsoft/liberica-openjdk-debian:17.0.11-cds
 
 LABEL maintainer="Lion Li"
 
-RUN mkdir -p /ruoyi/monitor/logs
+RUN mkdir -p /cdzeroly/monitor/logs
 
-WORKDIR /ruoyi/monitor
+WORKDIR /cdzeroly/monitor
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 JAVA_OPTS=""
 
 EXPOSE 9100
 
-ADD ./target/ruoyi-monitor.jar ./app.jar
+ADD ./target/monitor.jar ./app.jar
 
 ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom \
            -XX:+HeapDumpOnOutOfMemoryError -XX:+UseZGC ${JAVA_OPTS} \
