@@ -22,10 +22,11 @@ spring:
     gateway:
       # 打印请求日志(自定义)
       requestLog: true
+      # 自动路由配置(开启) || 手动路由配置(不生效)
       discovery:
         locator:
           lowerCaseServiceId: true
-          enabled: true
+          enabled: false
       routes:
         # 认证中心
         - id: auth
