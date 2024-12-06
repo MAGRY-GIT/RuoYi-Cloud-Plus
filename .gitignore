@@ -49,3 +49,4 @@ nbdist/
 
 /docker/redis/data/
 /docker/rabbitmq/data/
+/docker/minio/data/
