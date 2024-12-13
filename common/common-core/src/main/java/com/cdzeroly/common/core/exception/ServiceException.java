@@ -45,6 +45,16 @@ public final class ServiceException extends RuntimeException {
         this.code = code;
     }
 
+    /**
+     * 构建异常
+     *
+     * @param msgKey 国际化信息对应的key
+     * @return ApplicationException对象
+     */
+    public static ServiceException build(String msgKey) {
+        return new ServiceException(msgKey);
+    }
+
     public String getDetailMessage() {
         return detailMessage;
     }

@@ -64,7 +64,7 @@ public class PlusDataPermissionHandler {
     private final ExpressionParser parser = new SpelExpressionParser();
     private final ParserContext parserContext = new TemplateParserContext();
     /**
-     * bean解析器 用于处理 spel 表达式中对 bean 的调用
+     * bean解析器 用于处理 spel 表达式中对 bo 的调用
      */
     private final BeanResolver beanResolver = new BeanFactoryResolver(SpringUtils.getBeanFactory());
 

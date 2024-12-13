@@ -4,10 +4,16 @@ import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.util.Assert;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 表格分页数据对象
@@ -85,5 +91,17 @@ public class TableDataInfo<T> implements Serializable {
         rspData.setMsg("查询成功");
         return rspData;
     }
+
+
+   public  <U> TableDataInfo<U> map(Function<? super T, ? extends U> function) {
+        TableDataInfo<U> uTableDataInfo = new TableDataInfo<>();
+        uTableDataInfo.setTotal( this.total);
+        List<? extends U> list = this.rows.stream().map(function).toList();
+        uTableDataInfo.setRows((List) list);
+        uTableDataInfo.setCode( this.code);
+        uTableDataInfo.setMsg( this.msg);
+        return uTableDataInfo;
+    }
+
 
 }

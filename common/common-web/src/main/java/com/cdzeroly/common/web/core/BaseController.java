@@ -1,6 +1,9 @@
 package com.cdzeroly.common.web.core;
 
 import com.cdzeroly.common.core.domain.R;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * web层通用数据处理
@@ -8,6 +11,11 @@ import com.cdzeroly.common.core.domain.R;
  * @author Lion Li
  */
 public class BaseController {
+    @Autowired
+    protected HttpServletRequest request;
+
+    @Autowired
+    protected HttpServletResponse response;
 
     /**
      * 响应返回结果

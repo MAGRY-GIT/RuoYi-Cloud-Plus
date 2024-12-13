@@ -69,5 +69,9 @@ public class RemoteUserVo implements Serializable {
      * 创建时间
      */
     private Date createTime;
+    /**
+     * 密钥
+     */
+    private String secret;
 
 }
