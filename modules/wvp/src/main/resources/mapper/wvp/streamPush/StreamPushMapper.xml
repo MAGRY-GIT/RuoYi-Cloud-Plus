@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdzeroly.wvp.streamPush.mapper.StreamPushMapper">
+    <update id="updatePushStatus">
+        UPDATE wvp_stream_push
+        SET pushing = #{pushing}
+        WHERE id = #{id}
+
+    </update>
+    <update id="batchUpdate">
+
+        <foreach collection="streamPushItemForUpdate" item="item" separator=";">
+            UPDATE wvp_stream_push
+            SET
+            update_time = #{item.updateTime},
+            app = #{item.app},
+            stream = #{item.stream},
+            media_server_id = #{item.mediaServerId},
+            server_id = #{item.serverId},
+            push_time = #{item.pushTime},
+            pushing = #{item.pushing},
+            start_offline_push = #{item.startOfflinePush}
+            WHERE id = #{item.id}
+        </foreach>
+
+    </update>
+
+    <select id="selectAll" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+
+        SELECT
+        st.*,
+        st.id as stream_push_id,
+        wdc.*,
+        wdc.id as gb_id
+        FROM
+        wvp_stream_push st
+        LEFT JOIN wvp_device_channel wdc ON st.id = wdc.stream_push_id
+        WHERE 1=1
+        <if test="query != null">
+            AND (
+            st.app LIKE CONCAT('%', #{query}, '%') ESCAPE '/'
+            OR st.stream LIKE CONCAT('%', #{query}, '%') ESCAPE '/'
+            OR wdc.gb_device_id LIKE CONCAT('%', #{query}, '%') ESCAPE '/'
+            OR wdc.gb_name LIKE CONCAT('%', #{query}, '%') ESCAPE '/'
+            )
+        </if>
+        <if test="pushing == true">
+            AND st.pushing = 1
+        </if>
+        <if test="pushing == false">
+            AND st.pushing = 0
+        </if>
+        <if test="mediaServerId != null">
+            AND st.media_server_id = #{mediaServerId}
+        </if>
+        ORDER BY st.create_time DESC
+    </select>
+
+    <select id="selectPage" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+
+        SELECT
+        st.*,
+        st.id as stream_push_id,
+        wdc.*,
+        wdc.id as gb_id
+        FROM
+        wvp_stream_push st
+        LEFT JOIN wvp_device_channel wdc ON st.id = wdc.stream_push_id
+        WHERE 1=1
+        <if test="query != null">
+            AND (
+            st.app LIKE CONCAT('%', #{query}, '%') ESCAPE '/'
+            OR st.stream LIKE CONCAT('%', #{query}, '%') ESCAPE '/'
+            OR wdc.gb_device_id LIKE CONCAT('%', #{query}, '%') ESCAPE '/'
+            OR wdc.gb_name LIKE CONCAT('%', #{query}, '%') ESCAPE '/'
+            )
+        </if>
+        <if test="pushing == true">
+            AND st.pushing = 1
+        </if>
+        <if test="pushing == false">
+            AND st.pushing = 0
+        </if>
+        <if test="mediaServerId != null">
+            AND st.media_server_id = #{mediaServerId}
+        </if>
+        ORDER BY st.create_time DESC
+        ${ew.customSqlSegment}
+    </select>
+    <select id="selectByAppAndStream" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+        SELECT
+            st.*,
+            st.id as stream_push_id,
+            wdc.*,
+            wdc.id as gb_id
+        FROM
+            wvp_stream_push st
+                LEFT JOIN
+            wvp_device_channel wdc ON st.id = wdc.stream_push_id
+        WHERE
+            st.app = #{app}
+          AND st.stream = #{stream}
+
+
+    </select>
+    <select id="selectAllByMediaServerId" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+        SELECT
+            st.*,
+            st.id as stream_push_id,
+            wdc.*,
+            wdc.id as gb_id
+        FROM
+            wvp_stream_push st
+                LEFT JOIN
+            wvp_device_channel wdc ON st.id = wdc.stream_push_id
+        WHERE
+            st.media_server_id = #{mediaServerId}
+
+
+    </select>
+    <select id="selectAllByMediaServerIdWithOutGbID"
+            resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+        SELECT
+            st.*,
+            st.id as stream_push_id,
+            wdc.*,
+            wdc.id as gb_id
+        FROM
+            wvp_stream_push st
+                LEFT JOIN
+            wvp_device_channel wdc ON st.id = wdc.stream_push_id
+        WHERE
+            st.media_server_id = #{mediaServerId}
+          AND wdc.gb_device_id IS NULL
+
+
+    </select>
+    <select id="getListFromRedis" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+        SELECT
+        st.*,
+        st.id as stream_push_id,
+        wdc.*,
+        wdc.id as gb_id
+        FROM
+        wvp_stream_push st
+        LEFT JOIN
+        wvp_device_channel wdc ON st.id = wdc.stream_push_id
+        WHERE
+        (st.app, st.stream) IN
+        <foreach collection="offlineStreams" item="item" separator=",">
+            (#{item.app}, #{item.stream})
+        </foreach>
+
+    </select>
+    <select id="getAllAppAndStream" resultType="java.lang.String">
+        SELECT CONCAT(app, stream) FROM wvp_stream_push
+
+    </select>
+    <select id="getAllPushing" resultType="java.lang.Integer">
+        select count(1) from wvp_stream_push where pushing = true
+
+    </select>
+    <select id="queryOne" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+        SELECT
+            st.*,
+            st.id as stream_push_id,
+            wdc.*,
+            wdc.id as gb_id
+        FROM
+            wvp_stream_push st
+                LEFT JOIN
+            wvp_device_channel wdc ON st.id = wdc.stream_push_id
+        WHERE
+            st.id = #{id}
+
+    </select>
+    <select id="selectInSet" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+        SELECT
+        st.*,
+        st.id as stream_push_id,
+        wdc.*,
+        wdc.id as gb_id
+        FROM
+        wvp_stream_push st
+        LEFT JOIN
+        wvp_device_channel wdc ON st.id = wdc.stream_push_id
+        WHERE
+        st.id IN
+        <foreach collection="ids" item="item" separator=",">
+            #{item}
+        </foreach>
+
+    </select>
+    <select id="getAllGBId" resultType="java.util.Map">
+        SELECT
+            wdc.gb_device_id,
+            wsp.id as stream_push_id,
+            wsp.*,
+            wdc.id as gb_id
+        FROM
+            wvp_stream_push wsp
+                LEFT JOIN
+            wvp_device_channel wdc ON wsp.id = wdc.stream_push_id
+
+    </select>
+    <select id="getAllAppAndStreamMap" resultType="java.util.Map">
+        SELECT
+            CONCAT(wsp.app, wsp.stream) as unique_key,
+            wsp.*,
+            wdc.id as gb_id
+        FROM
+            wvp_stream_push wsp
+                LEFT JOIN
+            wvp_device_channel wdc ON wsp.id = wdc.stream_push_id
+
+    </select>
+</mapper>

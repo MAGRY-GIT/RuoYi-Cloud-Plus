@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdzeroly.wvp.gb28181.mapper.DeviceMobilePositionMapper">
+    <delete id="clearMobilePositionsByDeviceId">
+        DELETE FROM wvp_device_mobile_position WHERE device_id = #{deviceId}
+
+    </delete>
+
+    <select id="queryPositionByDeviceIdAndTime"
+            resultType="com.cdzeroly.wvp.gb28181.domian.MobilePosition">
+        SELECT * FROM wvp_device_mobile_position
+        WHERE device_id = #{deviceId}
+        <if test="channelId != null">
+            AND channel_id = #{channelId}
+        </if>
+        <if test="startTime != null">
+            AND time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null">
+            AND time &lt;= #{endTime}
+        </if>
+        ORDER BY time ASC
+
+
+    </select>
+    <select id="queryLatestPositionByDevice" resultType="com.cdzeroly.wvp.gb28181.domian.MobilePosition">
+        SELECT * FROM wvp_device_mobile_position WHERE device_id = #{deviceId} ORDER BY time DESC LIMIT 1
+
+    </select>
+</mapper>

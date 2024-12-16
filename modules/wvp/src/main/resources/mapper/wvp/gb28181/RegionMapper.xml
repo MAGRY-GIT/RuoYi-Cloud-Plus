@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdzeroly.wvp.gb28181.mapper.RegionMapper">
+    <update id="updateChild">
+        update wvp_common_region
+        set parent_device_id = #{parentDeviceId}
+        where parent_id = #{parentId}
+    </update>
+    <update id="updateParentId">
+        update wvp_common_region w1
+        inner join (select * from wvp_common_region) w2 on w1.parent_device_id = w2.device_id
+        set w1.parent_id = w2.id
+        where w1.id in
+        <foreach collection="regionListForAdd" item="item" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+
+    </update>
+
+    <select id="query" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+
+        SELECT * FROM wvp_common_region WHERE 1=1
+        <if test='query != null'>
+            AND (device_id LIKE concat('%', #{query}, '%') ESCAPE '/' OR name LIKE concat('%', #{query}, '%') ESCAPE
+            '/')
+        </if>
+        <if test='parentId != null'>
+            AND parent_device_id = #{parentId}
+        </if>
+        ORDER BY id
+    </select>
+    <select id="getChildren" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+        SELECT *
+        from wvp_common_region
+        WHERE parent_id = #{parentId}
+        ORDER BY id
+    </select>
+    <select id="getUninitializedCivilCode" resultType="java.lang.String">
+
+        select dc.civil_code as civil_code
+        from wvp_device_channel dc
+        where dc.civil_code not in
+              (select device_id from wvp_common_region)
+    </select>
+    <select id="queryInList" resultType="java.lang.String">
+        SELECT device_id FROM wvp_common_region
+        WHERE device_id IN
+        <foreach collection='codes' item='item' open='(' separator=',' close=')'>
+            #{item}
+        </foreach>
+
+    </select>
+    <select id="queryForTree" resultType="com.cdzeroly.wvp.gb28181.domian.bean.RegionTree">
+        SELECT
+        *,
+        concat('region', id) as tree_id,
+        0 as type,
+        'ON' as status,
+        false as is_leaf
+        FROM wvp_common_region
+        WHERE
+        <if test='parentId != null'>
+            parent_id = #{parentId}
+        </if>
+        <if test='parentId == null'>
+            parent_id is null
+        </if>
+        <if test='query != null'>
+            AND (device_id LIKE concat('%', #{query}, '%') ESCAPE '/' OR name LIKE concat('%', #{query}, '%') ESCAPE
+            '/')
+        </if>
+
+    </select>
+    <select id="queryInRegionListByDeviceId" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+        SELECT * FROM wvp_common_region
+        WHERE device_id IN
+        <foreach collection='regionList' item='item' open='(' separator=',' close=')'>
+            #{item.deviceId}
+        </foreach>
+
+    </select>
+    <select id="queryByPlatform" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGBChannel">
+        SELECT wcr.device_id as gb_device_id,
+               wcr.name      as gb_name
+        FROM wvp_common_region wcr
+                 LEFT JOIN wvp_platform_region wpr ON wcr.id = wpr.region_id
+        WHERE wpr.platform_id = #{platformId}
+
+    </select>
+    <select id="queryByDeviceId" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+        SELECT *
+        FROM wvp_common_region
+        WHERE device_id = #{deviceId}
+
+
+    </select>
+    <select id="queryParentInChannelList" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+        SELECT *
+        FROM wvp_common_region
+        WHERE id IN
+        <foreach collection='regionSet' item='item' open='(' separator=',' close=')'>
+            #{item.parentId}
+        </foreach>
+
+    </select>
+    <select id="queryByChannelList" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+        SELECT *
+        FROM wvp_common_region
+        WHERE device_id IN
+        <foreach collection='channelList' item='item' open='(' separator=',' close=')'>
+            #{item.gbCivilCode}
+        </foreach>
+        ORDER BY id
+
+    </select>
+    <select id="queryNotShareRegionForPlatformByChannelList"
+            resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+        SELECT *
+        FROM wvp_common_region wcr
+        LEFT JOIN wvp_platform_region wpr ON wpr.region_id = wcr.id AND wpr.platform_id = #{platformId}
+        WHERE wpr.platform_id IS NULL AND wcr.device_id IN
+        <foreach collection='channelList' item='item' open='(' separator=',' close=')'>
+            #{item.gbCivilCode}
+        </foreach>
+
+
+    </select>
+    <select id="queryNotShareRegionForPlatformByRegionList"
+            resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+        SELECT *
+        FROM wvp_common_region wcr
+        LEFT JOIN wvp_platform_region wpr ON wpr.region_id = wcr.id AND wpr.platform_id = #{platformId}
+        WHERE wpr.platform_id IS NULL AND wcr.id IN
+        <foreach collection='allRegion' item='item' open='(' separator=',' close=')'>
+            #{item.id}
+        </foreach>
+
+    </select>
+</mapper>

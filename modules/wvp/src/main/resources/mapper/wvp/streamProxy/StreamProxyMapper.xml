@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdzeroly.wvp.streamProxy.mapper.StreamProxyMapper">
+
+    <update id="update">
+        UPDATE wvp_stream_proxy
+        SET pulling    = false,
+            stream_key = null
+        WHERE id = #{id}
+    </update>
+    <update id="offline">
+        UPDATE wvp_stream_proxy
+        SET pulling = false
+        WHERE id = #{id}
+    </update>
+    <update id="online">
+        UPDATE wvp_stream_proxy
+        SET pulling = true
+        WHERE id = #{id}
+
+    </update>
+    <delete id="deleteByList">
+        DELETE FROM wvp_stream_proxy WHERE id IN
+        <foreach collection='streamProxiesForRemove' index='index' item='item' separator=',' open='(' close=')'>
+            #{item.id}
+        </foreach>
+
+    </delete>
+    <select id="getOnline" resultType="java.lang.Integer">
+        select count(1) from wvp_stream_proxy where pulling = true
+
+    </select>
+</mapper>

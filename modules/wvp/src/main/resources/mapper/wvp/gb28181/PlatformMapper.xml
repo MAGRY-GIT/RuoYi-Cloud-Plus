@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdzeroly.wvp.gb28181.mapper.PlatformMapper">
+    <update id="updateStatus">
+        UPDATE wvp_platform
+        SET status = #{online}
+        WHERE server_gb_id = #{platformGbId}
+    </update>
+
+    <select id="queryList" resultType="com.cdzeroly.wvp.gb28181.domian.Platform">
+
+
+        SELECT pp.*,
+        (
+        (SELECT count(0) FROM wvp_platform_channel pc WHERE pc.platform_id = pp.id) +
+        (SELECT count(0) FROM wvp_platform_group pg WHERE pg.platform_id = pp.id) * pp.catalog_with_group +
+        (SELECT count(0) FROM wvp_platform_region pr WHERE pr.platform_id = pp.id) * pp.catalog_with_region +
+        pp.catalog_with_platform
+        ) as channel_count
+        FROM wvp_platform pp
+        WHERE 1=1
+        <if test="query != null">
+            AND (pp.name LIKE CONCAT('%', #{query}, '%') ESCAPE '/' OR pp.server_gb_id LIKE CONCAT('%', #{query}, '%') ESCAPE '/')
+        </if>
+        ORDER BY pp.id DESC
+        ${ew.customSqlSegment}
+    </select>
+    <select id="getByEnable" resultType="com.cdzeroly.wvp.gb28181.domian.Platform">
+
+        SELECT * FROM wvp_platform WHERE enable = #{enable}
+    </select>
+    <select id="queryByEnableAndAsMessageChannel" resultType="com.cdzeroly.wvp.gb28181.domian.Platform">
+
+        SELECT * FROM wvp_platform WHERE enable = #{enable} AND  as_message_channel= #{asMessageChannel}
+    </select>
+    <select id="getByServerGBId" resultType="com.cdzeroly.wvp.gb28181.domian.Platform">
+        SELECT * FROM wvp_platform WHERE server_gb_id = #{platformGbId}
+    </select>
+</mapper>
