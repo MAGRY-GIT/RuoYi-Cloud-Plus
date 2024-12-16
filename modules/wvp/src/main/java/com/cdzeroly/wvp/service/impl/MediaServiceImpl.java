@@ -13,7 +13,7 @@ import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.gb28181.service.IInviteStreamService;
 import com.cdzeroly.wvp.gb28181.session.SipInviteSessionManager;
 import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.media.bean.ResultForOnPublish;
+import com.cdzeroly.wvp.media.domian.bean.ResultForOnPublish;
 import com.cdzeroly.wvp.media.zlm.dto.StreamAuthorityInfo;
 import com.cdzeroly.wvp.service.IMediaService;
 import com.cdzeroly.wvp.service.IRecordPlanService;

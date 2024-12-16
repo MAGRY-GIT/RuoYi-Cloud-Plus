@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.media.event.media;
 
-import com.cdzeroly.wvp.media.bean.RecordInfo;
+import com.cdzeroly.wvp.media.domian.bean.RecordInfo;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.zlm.dto.hook.OnRecordMp4HookParam;
 import lombok.Getter;

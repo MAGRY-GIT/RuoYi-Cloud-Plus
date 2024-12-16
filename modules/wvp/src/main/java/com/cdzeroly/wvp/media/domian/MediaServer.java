@@ -24,7 +24,7 @@ public class MediaServer  extends BaseDateEntity {
     @Schema(description = "ID")
     private String id;
 
-    @Schema(description = "名称")
+    @Schema(description = "主键ID")
     @TableId(value = "primary_id")
     private Integer primaryId;
 

@@ -2,8 +2,8 @@ package com.cdzeroly.wvp.storager.mapper;
 
 import com.cdzeroly.common.mybatis.core.mapper.BaseMapperPlus;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
-import com.cdzeroly.wvp.service.bean.RecordPlan;
-import com.cdzeroly.wvp.service.vo.RecordPlanVo;
+import com.cdzeroly.wvp.service.domian.bean.RecordPlan;
+import com.cdzeroly.wvp.service.domian.vo.RecordPlanVo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

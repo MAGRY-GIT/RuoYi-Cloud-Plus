@@ -8,7 +8,7 @@ import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.gb28181.domian.bean.SendRtpInfo;
-import com.cdzeroly.wvp.media.bean.MediaInfo;
+import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.service.IMediaNodeServerService;
 import com.cdzeroly.wvp.media.zlm.dto.ZLMServerConfig;

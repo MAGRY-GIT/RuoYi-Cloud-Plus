@@ -9,7 +9,7 @@ import com.cdzeroly.wvp.gb28181.domian.bean.SipTransactionInfo;
 import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.event.hook.HookSubscribe;
-import com.cdzeroly.wvp.service.bean.InviteTimeOutCallback;
+import com.cdzeroly.wvp.service.domian.bean.InviteTimeOutCallback;
 
 
 import javax.sip.InvalidArgumentException;

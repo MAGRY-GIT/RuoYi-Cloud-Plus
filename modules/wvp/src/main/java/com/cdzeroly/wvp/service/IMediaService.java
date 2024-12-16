@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.service;
 
-import com.cdzeroly.wvp.media.bean.ResultForOnPublish;
+import com.cdzeroly.wvp.media.domian.bean.ResultForOnPublish;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 
 /**

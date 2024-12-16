@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.storager.mapper;
 
 import com.cdzeroly.common.mybatis.core.mapper.BaseMapperPlus;
 import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.media.vo.MediaServerVo;
+import com.cdzeroly.wvp.media.domian.vo.MediaServerVo;
 
 
 /**

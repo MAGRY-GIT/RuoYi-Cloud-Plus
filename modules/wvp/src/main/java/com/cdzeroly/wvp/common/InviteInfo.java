@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.common;
 
-import com.cdzeroly.wvp.service.bean.SSRCInfo;
+import com.cdzeroly.wvp.service.domian.bean.SSRCInfo;
 import lombok.Data;
 
 /**

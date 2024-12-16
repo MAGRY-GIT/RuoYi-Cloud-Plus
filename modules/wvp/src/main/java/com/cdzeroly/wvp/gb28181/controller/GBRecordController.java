@@ -15,7 +15,7 @@ import com.cdzeroly.wvp.gb28181.service.IPlayService;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
-import com.cdzeroly.wvp.service.bean.InviteErrorCode;
+import com.cdzeroly.wvp.service.domian.bean.InviteErrorCode;
 import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import com.cdzeroly.wvp.vmanager.bean.StreamContent;
 import com.cdzeroly.wvp.vmanager.bean.WVPResult;

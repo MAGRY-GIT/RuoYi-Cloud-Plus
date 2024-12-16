@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.media.bean.ResultForOnPublish;
+import com.cdzeroly.wvp.media.domian.bean.ResultForOnPublish;
 import com.cdzeroly.wvp.media.event.media.*;
 import com.cdzeroly.wvp.media.event.mediaServer.MediaSendRtpStoppedEvent;
 import com.cdzeroly.wvp.media.service.IMediaServerService;

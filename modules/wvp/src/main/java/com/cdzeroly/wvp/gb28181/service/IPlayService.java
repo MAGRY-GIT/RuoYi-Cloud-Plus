@@ -10,10 +10,10 @@ import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.domian.bo.AudioBroadcastEvent;
 import com.cdzeroly.wvp.gb28181.domian.bean.*;
-import com.cdzeroly.wvp.media.bean.MediaInfo;
+import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
 import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.service.bean.ErrorCallback;
-import com.cdzeroly.wvp.service.bean.SSRCInfo;
+import com.cdzeroly.wvp.service.domian.bean.ErrorCallback;
+import com.cdzeroly.wvp.service.domian.bean.SSRCInfo;
 import com.cdzeroly.wvp.vmanager.bean.AudioBroadcastResult;
 import gov.nist.javax.sip.message.SIPResponse;
 

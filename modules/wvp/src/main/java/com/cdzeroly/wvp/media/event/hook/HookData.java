@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.media.event.hook;
 
-import com.cdzeroly.wvp.media.bean.MediaInfo;
-import com.cdzeroly.wvp.media.bean.RecordInfo;
+import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
+import com.cdzeroly.wvp.media.domian.bean.RecordInfo;
 import com.cdzeroly.wvp.media.event.media.MediaArrivalEvent;
 import com.cdzeroly.wvp.media.event.media.MediaEvent;
 import com.cdzeroly.wvp.media.event.media.MediaPublishEvent;

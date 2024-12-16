@@ -12,7 +12,7 @@ import com.cdzeroly.wvp.media.event.hook.HookSubscribe;
 import com.cdzeroly.wvp.media.event.hook.HookType;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.service.ISendRtpServerService;
-import com.cdzeroly.wvp.service.bean.SSRCInfo;
+import com.cdzeroly.wvp.service.domian.bean.SSRCInfo;
 import com.cdzeroly.wvp.utils.redis.RedisUtil;
 import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import com.cdzeroly.wvp.vmanager.bean.OtherRtpSendInfo;

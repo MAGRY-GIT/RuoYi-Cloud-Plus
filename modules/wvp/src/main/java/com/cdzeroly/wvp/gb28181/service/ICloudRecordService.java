@@ -4,9 +4,9 @@ import com.alibaba.fastjson2.JSONArray;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.service.bean.CloudRecordItem;
-import com.cdzeroly.wvp.service.bean.DownloadFileInfo;
-import com.cdzeroly.wvp.service.bo.CloudRecordItemBo;
+import com.cdzeroly.wvp.service.domian.bean.CloudRecordItem;
+import com.cdzeroly.wvp.service.domian.bean.DownloadFileInfo;
+import com.cdzeroly.wvp.service.domian.bo.CloudRecordItemBo;
 
 import java.util.List;
 

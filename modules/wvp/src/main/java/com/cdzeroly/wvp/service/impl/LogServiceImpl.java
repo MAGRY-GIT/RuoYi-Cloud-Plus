@@ -4,7 +4,7 @@ import ch.qos.logback.classic.Logger;
 import ch.qos.logback.core.rolling.RollingFileAppender;
 import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.service.ILogService;
-import com.cdzeroly.wvp.service.bean.LogFileInfo;
+import com.cdzeroly.wvp.service.domian.bean.LogFileInfo;
 import com.cdzeroly.wvp.utils.DateUtil;
 import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import lombok.extern.slf4j.Slf4j;

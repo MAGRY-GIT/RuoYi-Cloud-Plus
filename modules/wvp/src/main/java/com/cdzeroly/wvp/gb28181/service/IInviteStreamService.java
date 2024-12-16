@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.gb28181.service;
 import com.cdzeroly.wvp.common.InviteInfo;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.common.StreamInfo;
-import com.cdzeroly.wvp.service.bean.ErrorCallback;
+import com.cdzeroly.wvp.service.domian.bean.ErrorCallback;
 
 import java.util.List;
 

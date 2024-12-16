@@ -3,9 +3,9 @@ package com.cdzeroly.wvp.service;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
-import com.cdzeroly.wvp.service.bean.RecordPlan;
-import com.cdzeroly.wvp.service.bo.RecordPlanBo;
-import com.cdzeroly.wvp.service.vo.RecordPlanVo;
+import com.cdzeroly.wvp.service.domian.bean.RecordPlan;
+import com.cdzeroly.wvp.service.domian.bo.RecordPlanBo;
+import com.cdzeroly.wvp.service.domian.vo.RecordPlanVo;
 
 
 import java.util.List;

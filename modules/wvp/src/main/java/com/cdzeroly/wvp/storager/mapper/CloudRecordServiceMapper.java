@@ -1,8 +1,8 @@
 package com.cdzeroly.wvp.storager.mapper;
 
 import com.cdzeroly.common.mybatis.core.mapper.BaseMapperPlus;
-import com.cdzeroly.wvp.service.bean.CloudRecordItem;
-import com.cdzeroly.wvp.service.vo.CloudRecordItemVo;
+import com.cdzeroly.wvp.service.domian.bean.CloudRecordItem;
+import com.cdzeroly.wvp.service.domian.vo.CloudRecordItemVo;
 import org.apache.ibatis.annotations.*;
 
 /**

@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.service.redisMsg;
 
 import com.alibaba.fastjson2.JSON;
-import com.cdzeroly.wvp.service.bean.GPSMsgInfo;
+import com.cdzeroly.wvp.service.domian.bean.GPSMsgInfo;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.streamPush.service.IStreamPushService;
 import lombok.extern.slf4j.Slf4j;

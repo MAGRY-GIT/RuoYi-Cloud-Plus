@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
-import com.cdzeroly.wvp.service.bean.CloudRecordItem;
+import com.cdzeroly.wvp.service.domian.bean.CloudRecordItem;
 import com.cdzeroly.wvp.storager.mapper.CloudRecordServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

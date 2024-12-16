@@ -6,7 +6,7 @@ import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.bo.ChannelReduce;
 import com.cdzeroly.wvp.gb28181.mapper.provider.DeviceChannelProvider;
-import com.cdzeroly.wvp.service.bean.GPSMsgInfo;
+import com.cdzeroly.wvp.service.domian.bean.GPSMsgInfo;
 import com.cdzeroly.wvp.gb28181.domian.dto.DeviceChannelExtend;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.annotations.Param;

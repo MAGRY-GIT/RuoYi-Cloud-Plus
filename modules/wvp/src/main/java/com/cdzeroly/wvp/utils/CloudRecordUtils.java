@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.utils;
 
 import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.service.bean.DownloadFileInfo;
+import com.cdzeroly.wvp.service.domian.bean.DownloadFileInfo;
 
 public class CloudRecordUtils {
 

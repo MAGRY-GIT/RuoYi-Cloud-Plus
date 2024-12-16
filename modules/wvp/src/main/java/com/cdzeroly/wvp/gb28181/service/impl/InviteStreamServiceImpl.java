@@ -9,7 +9,7 @@ import com.cdzeroly.wvp.gb28181.mapper.DeviceChannelMapper;
 import com.cdzeroly.wvp.gb28181.mapper.DeviceMapper;
 import com.cdzeroly.wvp.gb28181.service.IInviteStreamService;
 import com.cdzeroly.wvp.media.event.media.MediaDepartureEvent;
-import com.cdzeroly.wvp.service.bean.ErrorCallback;
+import com.cdzeroly.wvp.service.domian.bean.ErrorCallback;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;

@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.service.bean.PushStreamStatusChangeFromRedisDto;
+import com.cdzeroly.wvp.service.domian.bean.PushStreamStatusChangeFromRedisDto;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.streamPush.service.IStreamPushService;
 import lombok.extern.slf4j.Slf4j;

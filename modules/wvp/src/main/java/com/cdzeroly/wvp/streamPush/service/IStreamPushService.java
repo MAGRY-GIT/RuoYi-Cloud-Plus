@@ -3,8 +3,8 @@ package com.cdzeroly.wvp.streamPush.service;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.service.bean.GPSMsgInfo;
-import com.cdzeroly.wvp.service.bean.StreamPushItemFromRedis;
+import com.cdzeroly.wvp.service.domian.bean.GPSMsgInfo;
+import com.cdzeroly.wvp.service.domian.bean.StreamPushItemFromRedis;
 import com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo;
 import com.cdzeroly.wvp.vmanager.bean.ResourceBaseInfo;
 

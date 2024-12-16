@@ -8,7 +8,7 @@ import com.cdzeroly.wvp.gb28181.mapper.PlatformMapper;
 import com.cdzeroly.wvp.service.IMobilePositionService;
 import com.cdzeroly.wvp.gb28181.mapper.DeviceChannelMapper;
 import com.cdzeroly.wvp.gb28181.mapper.DeviceMobilePositionMapper;
-import com.cdzeroly.wvp.service.bean.GPSMsgInfo;
+import com.cdzeroly.wvp.service.domian.bean.GPSMsgInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

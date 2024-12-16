@@ -6,7 +6,7 @@ import com.cdzeroly.wvp.gb28181.domian.bean.SubscribeHolder;
 import com.cdzeroly.wvp.gb28181.domian.bean.SubscribeInfo;
 import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommanderForPlatform;
-import com.cdzeroly.wvp.service.bean.GPSMsgInfo;
+import com.cdzeroly.wvp.service.domian.bean.GPSMsgInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;

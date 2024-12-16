@@ -9,7 +9,7 @@ import com.cdzeroly.wvp.gb28181.domian.bean.*;
 import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
 import com.cdzeroly.wvp.media.event.hook.HookSubscribe;
 import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.service.bean.SSRCInfo;
+import com.cdzeroly.wvp.service.domian.bean.SSRCInfo;
 import gov.nist.javax.sip.message.SIPRequest;
 
 import javax.sip.InvalidArgumentException;

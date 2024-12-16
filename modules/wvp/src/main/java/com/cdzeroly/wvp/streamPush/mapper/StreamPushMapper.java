@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdzeroly.common.mybatis.core.mapper.BaseMapperPlus;
 import com.cdzeroly.wvp.streamPush.domian.StreamPush;
 import com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo;
-import com.cdzeroly.wvp.service.bean.StreamPushItemFromRedis;
+import com.cdzeroly.wvp.service.domian.bean.StreamPushItemFromRedis;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

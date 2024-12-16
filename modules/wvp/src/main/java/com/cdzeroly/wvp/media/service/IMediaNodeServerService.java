@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.media.service;
 import com.cdzeroly.wvp.common.CommonCallback;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.gb28181.domian.bean.SendRtpInfo;
-import com.cdzeroly.wvp.media.bean.MediaInfo;
+import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.streamProxy.bean.StreamProxy;
 import com.cdzeroly.wvp.vmanager.bean.WVPResult;

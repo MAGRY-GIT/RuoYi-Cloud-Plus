@@ -1,8 +1,8 @@
 package com.cdzeroly.wvp.vmanager.bean;
 
 import com.cdzeroly.wvp.common.StreamInfo;
-import com.cdzeroly.wvp.media.bean.MediaInfo;
-import com.cdzeroly.wvp.service.bean.DownloadFileInfo;
+import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
+import com.cdzeroly.wvp.service.domian.bean.DownloadFileInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;

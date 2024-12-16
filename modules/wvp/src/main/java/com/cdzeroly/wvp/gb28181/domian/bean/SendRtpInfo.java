@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.gb28181.domian.bean;
 
 import com.cdzeroly.wvp.gb28181.enums.InviteStreamType;
 import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.service.bean.RequestPushStreamMsg;
+import com.cdzeroly.wvp.service.domian.bean.RequestPushStreamMsg;
 import lombok.Data;
 
 /**

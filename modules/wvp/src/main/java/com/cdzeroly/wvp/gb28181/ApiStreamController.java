@@ -14,7 +14,7 @@ import com.cdzeroly.wvp.gb28181.service.IInviteStreamService;
 import com.cdzeroly.wvp.gb28181.service.IPlayService;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
 import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.service.bean.InviteErrorCode;
+import com.cdzeroly.wvp.service.domian.bean.InviteErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

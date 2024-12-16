@@ -20,7 +20,7 @@ import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
-import com.cdzeroly.wvp.service.bean.InviteErrorCode;
+import com.cdzeroly.wvp.service.domian.bean.InviteErrorCode;
 import com.cdzeroly.wvp.utils.DateUtil;
 import com.cdzeroly.wvp.vmanager.bean.AudioBroadcastResult;
 import com.cdzeroly.wvp.vmanager.bean.ErrorCode;

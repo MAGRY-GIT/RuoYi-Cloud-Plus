@@ -17,7 +17,7 @@ import com.cdzeroly.wvp.gb28181.transmit.SIPProcessorObserver;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommander;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.ISIPRequestProcessor;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent;
-import com.cdzeroly.wvp.media.bean.MediaInfo;
+import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.service.ISendRtpServerService;

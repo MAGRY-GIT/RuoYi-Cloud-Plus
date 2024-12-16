@@ -26,7 +26,7 @@ import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.service.ISendRtpServerService;
-import com.cdzeroly.wvp.service.bean.InviteErrorCode;
+import com.cdzeroly.wvp.service.domian.bean.InviteErrorCode;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import gov.nist.javax.sdp.TimeDescriptionImpl;
 import gov.nist.javax.sdp.fields.TimeField;

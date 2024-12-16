@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.media.zlm.dto.hook;
 
-import com.cdzeroly.wvp.media.bean.ResultForOnPublish;
+import com.cdzeroly.wvp.media.domian.bean.ResultForOnPublish;
 import lombok.Getter;
 import lombok.Setter;
 
