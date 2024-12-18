@@ -5,13 +5,28 @@ import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.gb28181.domian.bean.SendRtpInfo;
 import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
 import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.streamProxy.bean.StreamProxy;
+import com.cdzeroly.wvp.streamProxy.domain.StreamProxy;
 import com.cdzeroly.wvp.vmanager.bean.WVPResult;
 
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author MGARY
+ */
 public interface IMediaNodeServerService {
+    /**
+     * 创建RTP服务器
+     * @param mediaServer
+     * @param streamId
+     * @param ssrc
+     * @param port
+     * @param onlyAuto
+     * @param disableAudio
+     * @param reUsePort
+     * @param tcpMode
+     * @return
+     */
     int createRTPServer(MediaServer mediaServer, String streamId, long ssrc, Integer port, Boolean onlyAuto, Boolean disableAudio, Boolean reUsePort, Integer tcpMode);
 
     void closeRtpServer(MediaServer mediaServer, String streamId);

@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.common;
 
 /**
  * @description: 定义常量
- * @author: swwheihei
+ * @author swwheihei
  * @date: 2019年5月30日 下午3:04:04
  */
 public interface VideoManagerConstants {
@@ -37,14 +37,6 @@ public interface VideoManagerConstants {
     String SIP_CSEQ_PREFIX = "VMP_SIP_CSEQ_";
 
     String SIP_SUBSCRIBE_PREFIX = "VMP_SIP_SUBSCRIBE_";
-
-    String SYSTEM_INFO_CPU_PREFIX = "VMP_SYSTEM_INFO_CPU_";
-
-    String SYSTEM_INFO_MEM_PREFIX = "VMP_SYSTEM_INFO_MEM_";
-
-    String SYSTEM_INFO_NET_PREFIX = "VMP_SYSTEM_INFO_NET_";
-
-    String SYSTEM_INFO_DISK_PREFIX = "VMP_SYSTEM_INFO_DISK_";
     String BROADCAST_WAITE_INVITE = "task_broadcast_waite_invite_";
 
     String REGISTER_EXPIRE_TASK_KEY_PREFIX = "VMP_device_register_expire_";

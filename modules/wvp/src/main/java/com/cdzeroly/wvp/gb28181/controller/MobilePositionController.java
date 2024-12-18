@@ -1,8 +1,8 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
 import cn.hutool.core.util.StrUtil;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
@@ -102,7 +102,7 @@ public class MobilePositionController {
             });
         } catch (InvalidArgumentException | SipException | ParseException e) {
             log.error("[命令发送失败] 获取移动位置信息: {}", e.getMessage());
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+            throw new ServiceException( "命令发送失败: " + e.getMessage());
         }
         DeferredResult<MobilePosition> result = new DeferredResult<MobilePosition>(5*1000L);
 		result.onTimeout(()->{

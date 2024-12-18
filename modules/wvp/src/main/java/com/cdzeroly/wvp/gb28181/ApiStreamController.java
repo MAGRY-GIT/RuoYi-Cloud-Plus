@@ -26,62 +26,45 @@ import java.text.ParseException;
 
 /**
  * API兼容：实时直播
+ *
  * @author MGARY
  */
-@SuppressWarnings(value = {"rawtypes", "unchecked"})
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/stream")
 public class ApiStreamController {
 
-    private  final SIPCommander cmder;
+    private final SIPCommander cmder;
 
-    private  final UserSetting userSetting;
+    private final UserSetting userSetting;
 
-    private  final IDeviceService deviceService;
+    private final IDeviceService deviceService;
 
-    private  final IDeviceChannelService deviceChannelService;
+    private final IDeviceChannelService deviceChannelService;
 
-    private  final IPlayService playService;
+    private final IPlayService playService;
 
-    private  final IInviteStreamService inviteStreamService;
+    private final IInviteStreamService inviteStreamService;
 
     /**
      * 实时直播 - 开始直播
+     *
      * @param serial 设备编号
-     * @param channel 通道序号 默认值: 1
-     * @param code 通道编号,通过 /api/v1/device/channellist 获取的 ChannelList.ID, 该参数和 channel 二选一传递即可
-     * @param cdn 转推 CDN 地址, 形如: [rtmp|rtsp]://xxx, encodeURIComponent
-     * @param audio 是否开启音频, 默认 开启
-     * @param transport 流传输模式， 默认 UDP
-     * @param checkchannelstatus 是否检查通道状态, 默认 false, 表示 拉流前不检查通道状态是否在线
-     * @param transportmode 当 transport=TCP 时有效, 指示流传输主被动模式, 默认被动
-     * @param timeout 拉流超时(秒),
-     * @return
+     * @param code   通道编号,通过 /api/v1/device/channellist 获取的 ChannelList.ID, 该参数和 channel 二选一传递即可
      */
     @GetMapping("/start")
-    private DeferredResult<JSONObject> start(String serial ,
-                                             @RequestParam(required = false)Integer channel ,
-                                             @RequestParam(required = false)String code,
-                                             @RequestParam(required = false)String cdn,
-                                             @RequestParam(required = false)String audio,
-                                             @RequestParam(required = false)String transport,
-                                             @RequestParam(required = false)String checkchannelstatus ,
-                                             @RequestParam(required = false)String transportmode,
-                                             @RequestParam(required = false)String timeout
-
-    ){
+    private DeferredResult<JSONObject> start(String serial, @RequestParam(required = false) String code) {
         DeferredResult<JSONObject> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue() + 10);
         Device device = deviceService.getDeviceByDeviceId(serial);
-        if (device == null ) {
+        if (device == null) {
             JSONObject resultJSON = new JSONObject();
-            resultJSON.put("error","device[ " + serial + " ]未找到");
+            resultJSON.put("error", "device[ " + serial + " ]未找到");
             result.setResult(resultJSON);
             return result;
-        }else if (!device.isOnLine()) {
+        } else if (!device.isOnLine()) {
             JSONObject resultJSON = new JSONObject();
-            resultJSON.put("error","device[ " + code + " ]offline");
+            resultJSON.put("error", "device[ " + code + " ]offline");
             result.setResult(resultJSON);
             return result;
         }
@@ -90,20 +73,20 @@ public class ApiStreamController {
         DeviceChannel deviceChannel = deviceChannelService.getOne(serial, code);
         if (deviceChannel == null) {
             JSONObject resultJSON = new JSONObject();
-            resultJSON.put("error","channel[ " + code + " ]未找到");
+            resultJSON.put("error", "channel[ " + code + " ]未找到");
             result.setResult(resultJSON);
             return result;
-        }else if (!"ON".equalsIgnoreCase(deviceChannel.getStatus())) {
+        } else if (!"ON".equalsIgnoreCase(deviceChannel.getStatus())) {
             JSONObject resultJSON = new JSONObject();
-            resultJSON.put("error","channel[ " + code + " ]offline");
+            resultJSON.put("error", "channel[ " + code + " ]offline");
             result.setResult(resultJSON);
             return result;
         }
 
-        result.onTimeout(()->{
+        result.onTimeout(() -> {
             log.info("播放等待超时");
             JSONObject resultJSON = new JSONObject();
-            resultJSON.put("error","timeout");
+            resultJSON.put("error", "timeout");
             result.setResult(resultJSON);
             inviteStreamService.removeInviteInfoByDeviceAndChannel(InviteSessionType.PLAY, deviceChannel.getId());
             deviceChannelService.stopPlay(deviceChannel.getId());
@@ -115,7 +98,7 @@ public class ApiStreamController {
         playService.play(newMediaServerItem, serial, code, null, (errorCode, msg, data) -> {
             if (errorCode == InviteErrorCode.SUCCESS.getCode()) {
                 if (data != null) {
-                    StreamInfo streamInfo = (StreamInfo)data;
+                    StreamInfo streamInfo = (StreamInfo) data;
                     JSONObject resultJjson = new JSONObject();
                     resultJjson.put("StreamID", streamInfo.getStream());
                     resultJjson.put("DeviceID", serial);
@@ -124,28 +107,28 @@ public class ApiStreamController {
                     resultJjson.put("ChannelCustomName", "");
                     if (streamInfo.getTranscodeStream() != null) {
                         resultJjson.put("FLV", streamInfo.getTranscodeStream().getFlv().getUrl());
-                    }else {
+                    } else {
                         resultJjson.put("FLV", streamInfo.getFlv().getUrl());
 
                     }
-                    if(streamInfo.getHttps_flv() != null) {
+                    if (streamInfo.getHttps_flv() != null) {
                         if (streamInfo.getTranscodeStream() != null) {
                             resultJjson.put("HTTPS_FLV", streamInfo.getTranscodeStream().getHttps_flv().getUrl());
-                        }else {
+                        } else {
                             resultJjson.put("HTTPS_FLV", streamInfo.getHttps_flv().getUrl());
                         }
                     }
 
                     if (streamInfo.getTranscodeStream() != null) {
                         resultJjson.put("WS_FLV", streamInfo.getTranscodeStream().getWs_flv().getUrl());
-                    }else {
+                    } else {
                         resultJjson.put("WS_FLV", streamInfo.getWs_flv().getUrl());
                     }
 
-                    if(streamInfo.getWss_flv() != null) {
+                    if (streamInfo.getWss_flv() != null) {
                         if (streamInfo.getTranscodeStream() != null) {
                             resultJjson.put("WSS_FLV", streamInfo.getTranscodeStream().getWss_flv().getUrl());
-                        }else {
+                        } else {
                             resultJjson.put("WSS_FLV", streamInfo.getWss_flv().getUrl());
                         }
                     }
@@ -186,12 +169,12 @@ public class ApiStreamController {
                     resultJjson.put("RelaySize", "");
                     resultJjson.put("ChannelPTZType", "0");
                     result.setResult(resultJjson);
-                }else {
+                } else {
                     JSONObject resultJjson = new JSONObject();
                     resultJjson.put("error", "channel[ " + code + " ] " + msg);
                     result.setResult(resultJjson);
                 }
-            }else {
+            } else {
                 JSONObject resultJjson = new JSONObject();
                 resultJjson.put("error", "channel[ " + code + " ] " + msg);
                 result.setResult(resultJjson);
@@ -203,38 +186,36 @@ public class ApiStreamController {
 
     /**
      * 实时直播 - 直播流停止
-     * @param serial 设备编号
-     * @param channel 通道序号
-     * @param code 通道国标编号
+     *
+     * @param serial        设备编号
+     * @param channel       通道序号
+     * @param code          通道国标编号
      * @param check_outputs
      * @return
      */
     @GetMapping("/stop")
     @ResponseBody
-    private JSONObject stop(String serial ,
-                             @RequestParam(required = false)Integer channel ,
-                             @RequestParam(required = false)String code,
-                             @RequestParam(required = false)String check_outputs
+    private JSONObject stop(String serial, @RequestParam(required = false) Integer channel, @RequestParam(required = false) String code, @RequestParam(required = false) String check_outputs
 
-    ){
+    ) {
 
 
         Device device = deviceService.getDeviceByDeviceId(serial);
         if (device == null) {
             JSONObject result = new JSONObject();
-            result.put("error","未找到设备");
+            result.put("error", "未找到设备");
             return result;
         }
         DeviceChannel deviceChannel = deviceChannelService.getOne(serial, code);
         if (deviceChannel == null) {
             JSONObject result = new JSONObject();
-            result.put("error","未找到通道");
+            result.put("error", "未找到通道");
             return result;
         }
         InviteInfo inviteInfo = inviteStreamService.getInviteInfoByDeviceAndChannel(InviteSessionType.PLAY, deviceChannel.getId());
         if (inviteInfo == null) {
             JSONObject result = new JSONObject();
-            result.put("error","未找到流信息");
+            result.put("error", "未找到流信息");
             return result;
         }
 
@@ -242,7 +223,7 @@ public class ApiStreamController {
             cmder.streamByeCmd(device, code, inviteInfo.getStream(), null);
         } catch (InvalidArgumentException | ParseException | SipException | SsrcTransactionNotFoundException e) {
             JSONObject result = new JSONObject();
-            result.put("error","发送BYE失败：" + e.getMessage());
+            result.put("error", "发送BYE失败：" + e.getMessage());
             return result;
         }
         inviteStreamService.removeInviteInfo(inviteInfo);
@@ -252,20 +233,15 @@ public class ApiStreamController {
 
     /**
      * 实时直播 - 直播流保活
-     * @param serial 设备编号
+     *
+     * @param serial  设备编号
      * @param channel 通道序号
-     * @param code 通道国标编号
+     * @param code    通道国标编号
      * @return
      */
     @GetMapping("/touch")
     @ResponseBody
-    private JSONObject touch(String serial ,String t,
-                            @RequestParam(required = false)Integer channel ,
-                            @RequestParam(required = false)String code,
-                            @RequestParam(required = false)String autorestart,
-                            @RequestParam(required = false)String audio,
-                            @RequestParam(required = false)String cdn
-    ){
+    private JSONObject touch(String serial, String t, @RequestParam(required = false) Integer channel, @RequestParam(required = false) String code, @RequestParam(required = false) String autorestart, @RequestParam(required = false) String audio, @RequestParam(required = false) String cdn) {
         return null;
     }
 }

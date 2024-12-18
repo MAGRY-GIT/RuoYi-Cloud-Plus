@@ -1,14 +1,17 @@
 package com.cdzeroly.wvp.streamPush.domian.vo;
 
 import cn.hutool.core.date.DateUtil;
+import com.cdzeroly.common.core.validate.AddGroup;
+import com.cdzeroly.common.core.validate.EditGroup;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.media.event.media.MediaArrivalEvent;
+import com.cdzeroly.wvp.streamPush.domian.StreamPush;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.util.ObjectUtils;
 
 
@@ -18,13 +21,14 @@ import org.springframework.util.ObjectUtils;
 @Data
 @Schema(description = "推流信息")
 @EqualsAndHashCode(callSuper = true)
-@AutoMapper(target = StreamPushVo.class, reverseConvertGenerate = false)
+@AutoMapper(target = StreamPush.class)
 public class StreamPushVo extends CommonGBChannel implements Comparable<StreamPushVo>{
 
     /**
      * id
      */
     @Schema(description = "id")
+    @NotNull(message = "ID不可为空", groups = {EditGroup.class})
     private Integer id;
 
     /**
@@ -74,7 +78,7 @@ public class StreamPushVo extends CommonGBChannel implements Comparable<StreamPu
     private String uniqueKey;
 
     @Override
-    public int compareTo(@NotNull StreamPushVo streamPushVoItem) {
+    public int compareTo( StreamPushVo streamPushVoItem) {
         return Long.valueOf(DateUtil.betweenMs(super.getCreateTime(), streamPushVoItem.getCreateTime())).intValue();
     }
 

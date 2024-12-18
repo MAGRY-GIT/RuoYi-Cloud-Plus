@@ -1,13 +1,14 @@
 package com.cdzeroly.wvp.gb28181.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cdzeroly.common.mybatis.core.mapper.BaseMapperPlus;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.bo.ChannelReduce;
+import com.cdzeroly.wvp.gb28181.domian.vo.DeviceChannelVo;
 import com.cdzeroly.wvp.gb28181.mapper.provider.DeviceChannelProvider;
 import com.cdzeroly.wvp.service.domian.bean.GPSMsgInfo;
-import com.cdzeroly.wvp.gb28181.domian.dto.DeviceChannelExtend;
+import com.cdzeroly.wvp.gb28181.domian.vo.DeviceChannelExtendVo;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface DeviceChannelMapper extends BaseMapper<DeviceChannel> {
+public interface DeviceChannelMapper extends BaseMapperPlus<DeviceChannel, DeviceChannelVo> {
 
 
 
@@ -43,12 +44,15 @@ public interface DeviceChannelMapper extends BaseMapper<DeviceChannel> {
     int del(@Param("id") int id);
 
 
-    List<DeviceChannelExtend> queryChannelsWithDeviceInfo(@Param("deviceId") String deviceId, @Param("parentChannelId") String parentChannelId, @Param("query") String query, @Param("hasSubChannel") Boolean hasSubChannel, @Param("online") Boolean online, @Param("channelIds") List<String> channelIds);
+    List<DeviceChannelExtendVo> queryChannelsWithDeviceInfo(@Param("deviceId") String deviceId, @Param("parentChannelId") String parentChannelId, @Param("query") String query, @Param("hasSubChannel") Boolean hasSubChannel, @Param("online") Boolean online, @Param("channelIds") List<String> channelIds);
 
 
 
     void startPlay(@Param("channelId") Integer channelId, @Param("streamId") String streamId);
 
+
+
+    void updateAllChannelStreamIdentification(@Param("streamIdentification") String streamIdentification);
 
 
     Page<ChannelReduce> queryChannelListInAll( @Param("page") Page<ChannelReduce> pageQuery , @Param("query") String query, @Param("online") Boolean online, @Param("hasSubChannel") Boolean hasSubChannel, @Param("platformId") String platformId, @Param("catalogId") String catalogId);
@@ -119,11 +123,7 @@ public interface DeviceChannelMapper extends BaseMapper<DeviceChannel> {
      */
     int getOnlineCount();
 
-    /**
-     * 获取所有通道计数
-     * @return
-     */
-    int getAllChannelCount();
+
 
     /**
      * 更新频道流标识

@@ -13,6 +13,7 @@ import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.gb28181.utils.XmlUtil;
 import gov.nist.javax.sip.message.SIPRequest;
 import gov.nist.javax.sip.message.SIPResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -33,27 +34,23 @@ import java.text.ParseException;
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class SubscribeRequestProcessor extends SIPRequestProcessorParent implements InitializingBean, ISIPRequestProcessor {
 
-	private final String method = "SUBSCRIBE";
+	private final SIPProcessorObserver sipProcessorObserver;
 
-	@Autowired
-	private SIPProcessorObserver sipProcessorObserver;
+	private final SubscribeHolder subscribeHolder;
 
-	@Autowired
-	private SubscribeHolder subscribeHolder;
-
-	@Autowired
-	private SIPSender sipSender;
+	private final SIPSender sipSender;
 
 
-	@Autowired
-	private IPlatformService platformService;
+	private final IPlatformService platformService;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// 添加消息处理的订阅
-		sipProcessorObserver.addRequestProcessor(method, this);
+        String method = "SUBSCRIBE";
+        sipProcessorObserver.addRequestProcessor(method, this);
 	}
 
 	/**

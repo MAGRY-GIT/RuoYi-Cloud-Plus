@@ -15,6 +15,7 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent
 import com.cdzeroly.wvp.service.ISendRtpServerService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,49 +31,32 @@ import java.text.ParseException;
 
 /**
  * INFO 一般用于国标级联时的回放控制
+ * @author Administrator
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class InfoRequestProcessor extends SIPRequestProcessorParent implements InitializingBean, ISIPRequestProcessor {
 
-    private final String method = "INFO";
+    private final SIPProcessorObserver sipProcessorObserver;
 
-    @Autowired
-    private SIPProcessorObserver sipProcessorObserver;
+    private final IPlatformService platformService;
 
-    @Autowired
-    private IPlatformService platformService;
+    private final IDeviceService deviceService;
 
-    @Autowired
-    private SipSubscribe sipSubscribe;
+    private final IGbChannelService channelService;
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private IInviteStreamService inviteStreamService;
+    private final SIPCommander cmder;
 
-    @Autowired
-    private IDeviceService deviceService;
 
-    @Autowired
-    private IGbChannelService channelService;
-
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
-
-    @Autowired
-    private SIPCommander cmder;
-
-    @Autowired
-    private SipInviteSessionManager sessionManager;
-
-    @Autowired
-    private ISendRtpServerService sendRtpServerService;
+    private final ISendRtpServerService sendRtpServerService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         // 添加消息处理的订阅
+        String method = "INFO";
         sipProcessorObserver.addRequestProcessor(method, this);
     }
 
@@ -127,7 +111,7 @@ public class InfoRequestProcessor extends SIPRequestProcessorParent implements I
             String contentType = header.getContentType();
             String contentSubType = header.getContentSubType();
             if ("Application".equalsIgnoreCase(contentType) && "MANSRTSP".equalsIgnoreCase(contentSubType)) {
-                log.info("[INFO 消息] 平台： {}->{}({})/{}", platform.getServerGBId(), device.getName(),
+                log.info("[INFO 消息] 平台： {}->{}({})/{}", platform.getServerGbId(), device.getName(),
                         device.getDeviceId(), deviceChannel.getId());
                 // 不解析协议， 直接转发给对应的设备
                 cmder.playbackControlCmd(device, deviceChannel, sendRtpInfo.getStream(), new String(evt.getRequest().getRawContent()), eventResult -> {

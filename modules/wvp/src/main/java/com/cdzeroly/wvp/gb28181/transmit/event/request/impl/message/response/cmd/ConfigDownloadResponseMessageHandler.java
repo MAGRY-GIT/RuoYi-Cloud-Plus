@@ -10,6 +10,7 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHand
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.response.ResponseMessageHandler;
 import com.cdzeroly.wvp.gb28181.utils.XmlUtil;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
@@ -24,20 +25,21 @@ import java.text.ParseException;
 
 import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
 
+/**
+ * @author Administrator
+ */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class ConfigDownloadResponseMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "ConfigDownload";
+    private final ResponseMessageHandler responseMessageHandler;
 
-    @Autowired
-    private ResponseMessageHandler responseMessageHandler;
-
-    @Autowired
-    private DeferredResultHolder deferredResultHolder;
+    private final DeferredResultHolder deferredResultHolder;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "ConfigDownload";
         responseMessageHandler.addHandler(cmdType, this);
     }
 

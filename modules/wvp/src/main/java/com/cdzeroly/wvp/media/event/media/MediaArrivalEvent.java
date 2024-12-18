@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.media.event.media;
 import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.zlm.dto.hook.OnStreamChangedHookParam;
-import com.cdzeroly.wvp.vmanager.bean.StreamContent;
+import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,8 +11,11 @@ import java.util.Map;
 
 /**
  * 流到来事件
+ * @author MGARY
  */
 
+@Setter
+@Getter
 public class MediaArrivalEvent extends MediaEvent {
     public MediaArrivalEvent(Object source) {
         super(source);
@@ -30,24 +33,14 @@ public class MediaArrivalEvent extends MediaEvent {
         return mediaArrivalEvent;
     }
 
-    @Getter
-    @Setter
     private MediaInfo mediaInfo;
 
-    @Getter
-    @Setter
     private String callId;
 
-    @Getter
-    @Setter
-    private StreamContent streamInfo;
+    private StreamContentVo streamInfo;
 
-    @Getter
-    @Setter
     private Map<String, String> paramMap;
 
-    @Getter
-    @Setter
     private String serverId;
 
 

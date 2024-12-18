@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cdzeroly.common.mybatis.core.domain.BaseDateEntity;
-import com.cdzeroly.common.tenant.core.TenantEntity;
 import com.cdzeroly.wvp.media.zlm.dto.ZLMServerConfig;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;

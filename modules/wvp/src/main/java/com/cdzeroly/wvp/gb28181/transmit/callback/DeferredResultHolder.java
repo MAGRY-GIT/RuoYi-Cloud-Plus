@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @description: 异步请求处理
- * @author: swwheihei
+ * @author swwheihei
  * @date:   2020年5月8日 下午7:59:05
  */
 @SuppressWarnings(value = {"rawtypes", "unchecked"})
@@ -59,12 +59,8 @@ public class DeferredResultHolder {
 
 
 	public void put(String key, String id, DeferredResultEx result) {
-		Map<String, DeferredResultEx> deferredResultMap = map.get(key);
-		if (deferredResultMap == null) {
-			deferredResultMap = new ConcurrentHashMap<>();
-			map.put(key, deferredResultMap);
-		}
-		deferredResultMap.put(id, result);
+        Map<String, DeferredResultEx> deferredResultMap = map.computeIfAbsent(key, k -> new ConcurrentHashMap<>());
+        deferredResultMap.put(id, result);
 	}
 
 	public void put(String key, String id, DeferredResult result) {
@@ -115,7 +111,7 @@ public class DeferredResultHolder {
 		}
 		result.getDeferredResult().setResult(msg.getData());
 		deferredResultMap.remove(msg.getId());
-		if (deferredResultMap.size() == 0) {
+		if (deferredResultMap.isEmpty()) {
 			map.remove(msg.getKey());
 		}
 	}

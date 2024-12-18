@@ -17,7 +17,7 @@ public final class JsonUtil {
     }
 
     /**
-     * safe json type conversion
+     * 安全的 JSON 类型转换
      *
      * @param key   redis key
      * @param clazz cast type
@@ -32,6 +32,15 @@ public final class JsonUtil {
         return clazz.cast(jsonObject);
     }
 
+    /**
+     * Redis 将 JSON 哈希到对象
+     * @param redisTemplate
+     * @param key
+     * @param objKey
+     * @param clazz
+     * @return
+     * @param <T>
+     */
     public static <T> T redisHashJsonToObject(RedisTemplate<Object, Object> redisTemplate, String key, String objKey, Class<T> clazz) {
         Object jsonObject = redisTemplate.opsForHash().get(key, objKey);
         if (Objects.isNull(jsonObject)) {

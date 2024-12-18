@@ -54,7 +54,6 @@ public interface DeviceMapper extends BaseMapperPlus<Device, DeviceVo> {
     void updateCustom(Device device);
 
 
-    void addCustomDevice(Device device);
 
 
     Page<Device> getDeviceList(@Param("page")Page<Device> page,@Param("query") String query, @Param("status") Boolean status);

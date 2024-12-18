@@ -3,6 +3,7 @@ package com.cdzeroly.wvp.conf.redis;
 
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.service.redisMsg.*;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,37 +14,30 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 
 
 /**
- * @description:Redis中间件配置类，使用spring-data-redis集成，自动从application.yml中加载redis配置
- * @author: swwheihei
- * @date: 2019年5月30日 上午10:58:25
+ * Redis中间件配置类，使用spring-data-redis集成，自动从application.yml中加载redis配置
+ * @author swwheihei
  *
  */
 @Configuration
 @Order(value=1)
+@AllArgsConstructor
 public class RedisMsgListenConfig {
 
-	@Autowired
-	private RedisGpsMsgListener redisGPSMsgListener;
+	private final RedisGpsMsgListener redisGPSMsgListener;
 
-	@Autowired
-	private RedisAlarmMsgListener redisAlarmMsgListener;
+	private final RedisAlarmMsgListener redisAlarmMsgListener;
 
-	@Autowired
-	private RedisPushStreamStatusMsgListener redisPushStreamStatusMsgListener;
+	private final RedisPushStreamStatusMsgListener redisPushStreamStatusMsgListener;
 
-	@Autowired
-	private RedisPushStreamListMsgListener pushStreamListMsgListener;
+	private final RedisPushStreamListMsgListener pushStreamListMsgListener;
 
 
-	@Autowired
-	private RedisCloseStreamMsgListener redisCloseStreamMsgListener;
+	private final RedisCloseStreamMsgListener redisCloseStreamMsgListener;
 
 
-	@Autowired
-	private RedisRpcConfig redisRpcConfig;
+	private final RedisRpcConfig redisRpcConfig;
 
-	@Autowired
-	private RedisPushStreamResponseListener redisPushStreamCloseResponseListener;
+	private final RedisPushStreamResponseListener redisPushStreamCloseResponseListener;
 
 
 	/**

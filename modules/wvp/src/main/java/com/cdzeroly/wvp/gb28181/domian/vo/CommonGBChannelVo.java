@@ -361,7 +361,7 @@ public class CommonGBChannelVo implements Serializable {
 
     public static CommonGBChannelVo build(Platform platform) {
         CommonGBChannelVo commonGBChannel = new CommonGBChannelVo();
-        commonGBChannel.setGbDeviceId(platform.getDeviceGBId());
+        commonGBChannel.setGbDeviceId(platform.getServerGbId());
         commonGBChannel.setGbName(platform.getName());
         commonGBChannel.setGbManufacturer(platform.getManufacturer());
         commonGBChannel.setGbModel(platform.getModel());

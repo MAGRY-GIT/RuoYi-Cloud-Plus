@@ -2,11 +2,11 @@ package com.cdzeroly.wvp.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.StreamInfo;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.mapper.CommonGBChannelMapper;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelPlayService;
@@ -21,7 +21,6 @@ import com.cdzeroly.wvp.service.domian.bo.RecordPlanBo;
 import com.cdzeroly.wvp.service.domian.vo.RecordPlanVo;
 import com.cdzeroly.wvp.storager.mapper.RecordPlanItemMapper;
 import com.cdzeroly.wvp.storager.mapper.RecordPlanMapper;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import com.google.common.base.Joiner;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,7 +82,7 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
         }));
     }
 
-    Map<Integer, StreamInfo> recordStreamMap;
+    private Map<Integer, StreamInfo> recordStreamMap;
 
 //    @Scheduled(cron = "0 */30 * * * *")
     @Scheduled(fixedRate = 10, timeUnit = TimeUnit.MINUTES)
@@ -239,7 +238,7 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
     public void delete(Integer planId) {
         RecordPlan recordPlan = recordPlanMapper.selectById(planId);
         if (recordPlan == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "录制计划不存在");
+            throw new ServiceException( "录制计划不存在");
         }
         // 清理关联的通道
         channelMapper.removeRecordPlanByPlanId(recordPlan.getId());
@@ -258,7 +257,7 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
                     .replaceAll("%", "/%")
                     .replaceAll("_", "/_");
         }
-        List<RecordPlan> all = recordPlanMapper.query(query,pageQuery);
+        List<RecordPlan> all = recordPlanMapper.query(pageQuery,query);
         return  TableDataInfo.build(all);
     }
 
@@ -266,7 +265,7 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
     public void link(List<Integer> channelIds, Integer planId) {
         if (channelIds == null || channelIds.isEmpty()) {
             log.info("[录制计划] 关联/移除关联时, 通道编号必须存在");
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "通道编号必须存在");
+            throw new ServiceException( "通道编号必须存在");
         }
         if (planId == null) {
             channelMapper.removeRecordPlan(channelIds);
@@ -274,11 +273,8 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
             channelMapper.addRecordPlan(channelIds, planId);
         }
         // 查看当前的待录制列表是否变化,如果变化,则调用录制计划马上开始录制
-        List<Integer> currentChannelRecord = queryCurrentChannelRecord();
-        recordStreamMap.keySet().forEach(currentChannelRecord::remove);
-        if (!currentChannelRecord.isEmpty()) {
-            execution();
-        }
+        execution();
+
     }
 
     @Override

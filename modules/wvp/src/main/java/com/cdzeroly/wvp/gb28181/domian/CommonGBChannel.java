@@ -7,6 +7,7 @@ import com.cdzeroly.wvp.gb28181.domian.bean.GbCode;
 import com.cdzeroly.wvp.gb28181.domian.bean.Group;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -367,7 +368,7 @@ public class CommonGBChannel extends TenantEntity {
 
     public static CommonGBChannel build(Platform platform) {
         CommonGBChannel commonGBChannel = new CommonGBChannel();
-        commonGBChannel.setGbDeviceId(platform.getDeviceGBId());
+        commonGBChannel.setGbDeviceId(platform.getDeviceGbId());
         commonGBChannel.setGbName(platform.getName());
         commonGBChannel.setGbManufacturer(platform.getManufacturer());
         commonGBChannel.setGbModel(platform.getModel());

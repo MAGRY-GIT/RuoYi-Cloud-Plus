@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 
 /**
+ * 代理服务配置 zlm
  * @author lin
  */
 @SuppressWarnings(value = {"rawtypes"})
@@ -48,7 +49,16 @@ public class ProxyServletConfig {
         return servletRegistrationBean;
     }
 
+    /**
+     *  Zlm 代理 servlet
+     */
     class ZlmProxyServlet extends ProxyServlet {
+        /**
+         * 从请求中重写查询字符串
+         * @param servletRequest  请求
+         * @param queryString  请求字符串
+         * @return
+         */
         @Override
         protected String rewriteQueryStringFromRequest(HttpServletRequest servletRequest, String queryString) {
             String queryStr = super.rewriteQueryStringFromRequest(servletRequest, queryString);
@@ -98,10 +108,10 @@ public class ProxyServletConfig {
          */
         @Override
         protected String getTargetUri(HttpServletRequest servletRequest) {
-            String requestURI = servletRequest.getRequestURI();
-            MediaServer mediaInfo = getMediaInfoByUri(requestURI);
+            String requestUrl = servletRequest.getRequestURI();
+            MediaServer mediaInfo = getMediaInfoByUri(requestUrl);
 
-            String uri = null;
+            String uri;
             if (mediaInfo != null) {
                 uri = String.format("http://%s:%s", mediaInfo.getIp(), mediaInfo.getHttpPort());
             }else {
@@ -115,8 +125,8 @@ public class ProxyServletConfig {
          */
         @Override
         protected HttpHost getTargetHost(HttpServletRequest servletRequest) {
-            String requestURI = servletRequest.getRequestURI();
-            MediaServer mediaInfo = getMediaInfoByUri(requestURI);
+            String requestUrl = servletRequest.getRequestURI();
+            MediaServer mediaInfo = getMediaInfoByUri(requestUrl);
             HttpHost host;
             if (mediaInfo != null) {
                 host = new HttpHost(mediaInfo.getIp(), mediaInfo.getHttpPort());
@@ -232,8 +242,8 @@ public class ProxyServletConfig {
          */
         @Override
         protected String getTargetUri(HttpServletRequest servletRequest) {
-            String requestURI = servletRequest.getRequestURI();
-            MediaServer mediaInfo = getMediaInfoByUri(requestURI);
+            String requestUrl = servletRequest.getRequestURI();
+            MediaServer mediaInfo = getMediaInfoByUri(requestUrl);
 
             String uri;
             if (mediaInfo != null) {
@@ -249,8 +259,8 @@ public class ProxyServletConfig {
          */
         @Override
         protected HttpHost getTargetHost(HttpServletRequest servletRequest) {
-            String requestURI = servletRequest.getRequestURI();
-            MediaServer mediaInfo = getMediaInfoByUri(requestURI);
+            String requestUrl = servletRequest.getRequestURI();
+            MediaServer mediaInfo = getMediaInfoByUri(requestUrl);
             HttpHost host;
             if (mediaInfo != null) {
                 host = new HttpHost(mediaInfo.getIp(), mediaInfo.getRecordAssistPort());
@@ -280,11 +290,11 @@ public class ProxyServletConfig {
          */
         @Override
         protected String rewriteUrlFromRequest(HttpServletRequest servletRequest) {
-            String requestURI = servletRequest.getRequestURI();
-            MediaServer mediaInfo = getMediaInfoByUri(requestURI);
+            String requestUrl = servletRequest.getRequestURI();
+            MediaServer mediaInfo = getMediaInfoByUri(requestUrl);
             String url = super.rewriteUrlFromRequest(servletRequest);
             if (mediaInfo == null) {
-                log.error("[录像服务访问代理]，错误：处理url信息时未找到流媒体信息=>{}", requestURI);
+                log.error("[录像服务访问代理]，错误：处理url信息时未找到流媒体信息=>{}", requestUrl);
                 return  url;
             }
             if (!ObjectUtils.isEmpty(mediaInfo.getId())) {

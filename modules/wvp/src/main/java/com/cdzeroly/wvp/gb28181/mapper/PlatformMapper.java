@@ -19,10 +19,6 @@ public interface PlatformMapper  extends BaseMapper<Platform> {
 
     /**
      * 查询列表
-     *
-     * @param page
-     * @param query
-     * @return
      */
     List<Platform> queryList(@Param("page") Page<Platform> page, @Param("query") String query);
 
@@ -32,8 +28,6 @@ public interface PlatformMapper  extends BaseMapper<Platform> {
 
     /**
      * 按服务器 GB ID 获取
-     * @param platformGbId
-     * @return
      */
     Platform getByServerGBId(String platformGbId);
 
@@ -41,8 +35,6 @@ public interface PlatformMapper  extends BaseMapper<Platform> {
 
     /**
      * 更新状态
-     * @param platformGbId
-     * @param online
      * @return
      */
     int updateStatus(@Param("platformGbId") String platformGbId, @Param("online") boolean online);

@@ -12,10 +12,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.core.utils.CollectionUtil;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.gb28181.service.ICloudRecordService;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.event.media.MediaRecordMp4Event;
@@ -27,8 +27,6 @@ import com.cdzeroly.wvp.service.domian.bean.DownloadFileInfo;
 import com.cdzeroly.wvp.service.domian.bo.CloudRecordItemBo;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.storager.mapper.CloudRecordServiceMapper;
-import com.cdzeroly.wvp.utils.CloudRecordUtils;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -114,7 +112,7 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
         Assert.notNull(app, "应用名为NULL");
         Assert.notNull(stream, "流ID为NULL");
         if (mediaServerItem.getRecordAssistPort() == 0) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "为配置Assist服务");
+            throw new ServiceException("为配置Assist服务");
         }
 
 
@@ -134,11 +132,11 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
         // 检索相关的录像文件
         List<String> filePathList = cloudRecordServiceMapper.selectList(wrapper).stream().map(CloudRecordItem::getFilePath).collect(Collectors.toList());
         if (CollUtil.isEmpty(mediaServerIds)) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "未检索到视频文件");
+            throw new ServiceException("未检索到视频文件");
         }
         JSONObject result = assistRESTfulUtils.addTask(mediaServerItem, app, stream, startTime, endTime, callId, filePathList, remoteHost);
         if (result.getInteger("code") != 0) {
-            throw new ControllerException(result.getInteger("code"), result.getString("msg"));
+            throw new ServiceException(result.getString("message"),result.getInteger("code"));
         }
         return result.getString("data");
     }
@@ -152,12 +150,12 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
             mediaServerItem = mediaServerService.getOne(mediaServerId);
         }
         if (mediaServerItem == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到可用的流媒体");
+            throw new ServiceException("未找到可用的流媒体");
         }
 
         JSONObject result = assistRESTfulUtils.queryTaskList(mediaServerItem, app, stream, callId, taskId, isEnd, scheme);
         if (result == null || result.getInteger("code") != 0) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), result == null ? "查询任务列表失败" : result.getString("msg"));
+            throw new ServiceException(result == null ? "查询任务列表失败" : result.getString("msg"));
         }
         return result.getJSONArray("data");
     }
@@ -171,7 +169,7 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
             mediaServerItems = new ArrayList<>();
             MediaServer mediaServerItem = mediaServerService.getOne(mediaServerId);
             if (mediaServerItem == null) {
-                throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到流媒体: " + mediaServerId);
+                throw new ServiceException("未找到流媒体: " + mediaServerId);
             }
             mediaServerItems.add(mediaServerItem);
         } else {
@@ -187,7 +185,7 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
 
         List<CloudRecordItem> all = this.getAllList(cloudRecordItemBo);
         if (all.isEmpty()) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到待收藏的视频");
+            throw new ServiceException("未找到待收藏的视频");
         }
         int limitCount = 50;
         int resultCount = 0;
@@ -232,11 +230,11 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
     public DownloadFileInfo getPlayUrlPath(Integer recordId) {
         CloudRecordItem recordItem = cloudRecordServiceMapper.selectById(recordId);
         if (recordItem == null) {
-            throw new ControllerException(ErrorCode.ERROR400.getCode(), "资源不存在");
+            throw new ServiceException( "资源不存在");
         }
         String filePath = recordItem.getFilePath();
         MediaServer mediaServerItem = mediaServerService.getOne(recordItem.getMediaServerId());
-        return CloudRecordUtils.getDownloadFilePath(mediaServerItem, filePath);
+        return DownloadFileInfo.convert(mediaServerItem, filePath);
     }
 
     @Override

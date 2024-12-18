@@ -9,6 +9,7 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHandler;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.response.ResponseMessageHandler;
 import com.cdzeroly.wvp.gb28181.utils.XmlUtil;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
@@ -17,20 +18,21 @@ import org.springframework.stereotype.Component;
 
 import javax.sip.RequestEvent;
 
+/**
+ * @author MGARY
+ */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class AlarmResponseMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "Alarm";
+    private final ResponseMessageHandler responseMessageHandler;
 
-    @Autowired
-    private ResponseMessageHandler responseMessageHandler;
-
-    @Autowired
-    private DeferredResultHolder deferredResultHolder;
+    private final DeferredResultHolder deferredResultHolder;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "Alarm";
         responseMessageHandler.addHandler(cmdType, this);
     }
 

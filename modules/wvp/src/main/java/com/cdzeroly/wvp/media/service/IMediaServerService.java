@@ -5,9 +5,9 @@ import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.gb28181.domian.bean.SendRtpInfo;
 import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
 import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.service.domian.bean.MediaServerLoad;
+import com.cdzeroly.wvp.service.domian.vo.MediaServerLoadVo;
 import com.cdzeroly.wvp.service.domian.bean.SSRCInfo;
-import com.cdzeroly.wvp.streamProxy.bean.StreamProxy;
+import com.cdzeroly.wvp.streamProxy.domain.StreamProxy;
 import com.cdzeroly.wvp.vmanager.bean.WVPResult;
 
 import java.util.List;
@@ -221,7 +221,7 @@ public interface IMediaServerService {
      * @param mediaServer 媒体服务器
      * @return
      */
-    MediaServerLoad getLoad(MediaServer mediaServer);
+    MediaServerLoadVo getLoad(MediaServer mediaServer);
 
     /**
      * 使用辅助端口获取所有
@@ -236,7 +236,7 @@ public interface IMediaServerService {
      * @param id id
      * @return MediaServer
      */
-    MediaServer getOneFromDatabase(String id);
+    MediaServer getMediaServer(String id);
 
     boolean stopSendRtp(MediaServer mediaInfo, String app, String stream, String ssrc);
 

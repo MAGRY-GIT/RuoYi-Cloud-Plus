@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * @description:针对 ZLMediaServer的hook事件监听
- * @author: swwheihei
+ * @author swwheihei
  * @date: 2020年5月8日 上午10:46:48
  */
 @Slf4j
@@ -56,13 +56,13 @@ public class ZLMHttpHookListener {
             HookZlmServerKeepaliveEvent event = new HookZlmServerKeepaliveEvent(this);
             MediaServer mediaServerItem = mediaServerService.getOne(param.getMediaServerId());
             if (mediaServerItem != null) {
-                event.setMediaServerItem(mediaServerItem);
+                event.setMediaServer(mediaServerItem);
                 applicationEventPublisher.publishEvent(event);
             }
         }catch (Exception e) {
             log.info("[ZLM-HOOK-心跳] 发送通知失败 ", e);
         }
-        return HookResult.SUCCESS();
+        return HookResult.success();
     }
 
     /**
@@ -82,7 +82,7 @@ public class ZLMHttpHookListener {
         if (log.isDebugEnabled()){
             log.debug("[ZLM HOOK] 播放鉴权成功：{}->{}", param.getMediaServerId(), param);
         }
-        return HookResult.SUCCESS();
+        return HookResult.success();
     }
 
     /**
@@ -109,7 +109,7 @@ public class ZLMHttpHookListener {
             log.info("[ZLM HOOK]推流鉴权 响应：{}->{}->>>>{}", param.getMediaServerId(), param, successResult);
             return successResult;
         }else {
-            HookResultForOnPublish fail = HookResultForOnPublish.Fail();
+            HookResultForOnPublish fail = HookResultForOnPublish.fail();
             log.info("[ZLM HOOK]推流鉴权 响应：{}->{}->>>>{}", param.getMediaServerId(), param, fail);
             return fail;
         }
@@ -124,12 +124,12 @@ public class ZLMHttpHookListener {
 
         MediaServer mediaServer = mediaServerService.getOne(param.getMediaServerId());
         if (mediaServer == null) {
-            return HookResult.SUCCESS();
+            return HookResult.success();
         }
         if (!ObjectUtils.isEmpty(mediaServer.getTranscodeSuffix())
                 && !"null".equalsIgnoreCase(mediaServer.getTranscodeSuffix())
                 && param.getStream().endsWith(mediaServer.getTranscodeSuffix())  ) {
-            return HookResult.SUCCESS();
+            return HookResult.success();
         }
         if ("rtsp".equalsIgnoreCase(param.getSchema())) {
             if (param.isRegist()) {
@@ -155,7 +155,7 @@ public class ZLMHttpHookListener {
             }
         }
 
-        return HookResult.SUCCESS();
+        return HookResult.success();
     }
 
     /**
@@ -198,11 +198,11 @@ public class ZLMHttpHookListener {
 
         MediaServer mediaServer = mediaServerService.getOne(param.getMediaServerId());
         if (!userSetting.getAutoApplyPlay() || mediaServer == null) {
-            return HookResult.SUCCESS();
+            return HookResult.success();
         }
         MediaNotFoundEvent mediaNotFoundEvent = MediaNotFoundEvent.getInstance(this, param, mediaServer);
         applicationEventPublisher.publishEvent(mediaNotFoundEvent);
-        return HookResult.SUCCESS();
+        return HookResult.success();
     }
 
     /**
@@ -227,7 +227,7 @@ public class ZLMHttpHookListener {
             log.info("[ZLM-HOOK-ZLM启动] 发送通知失败 ", e);
         }
 
-        return HookResult.SUCCESS();
+        return HookResult.success();
     }
 
     /**
@@ -241,7 +241,7 @@ public class ZLMHttpHookListener {
 
         // 查找对应的上级推流，发送停止
         if (!"rtp".equals(param.getApp())) {
-            return HookResult.SUCCESS();
+            return HookResult.success();
         }
         try {
             MediaSendRtpStoppedEvent event = new MediaSendRtpStoppedEvent(this);
@@ -254,7 +254,7 @@ public class ZLMHttpHookListener {
             log.info("[ZLM-HOOK-rtp发送关闭] 发送通知失败 ", e);
         }
 
-        return HookResult.SUCCESS();
+        return HookResult.success();
     }
 
     /**
@@ -278,7 +278,7 @@ public class ZLMHttpHookListener {
             log.info("[ZLM-HOOK-rtpServer收流超时] 发送通知失败 ", e);
         }
 
-        return HookResult.SUCCESS();
+        return HookResult.success();
     }
 
     /**
@@ -300,6 +300,6 @@ public class ZLMHttpHookListener {
             log.info("[ZLM-HOOK-rtpServer收流超时] 发送通知失败 ", e);
         }
 
-        return HookResult.SUCCESS();
+        return HookResult.success();
     }
 }

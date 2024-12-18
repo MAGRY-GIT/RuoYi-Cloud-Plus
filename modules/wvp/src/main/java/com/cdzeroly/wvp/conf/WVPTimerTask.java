@@ -14,17 +14,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class WVPTimerTask {
 
-    private final IRedisCatchStorage redisCatchStorage;
+    @Autowired
+    private  IRedisCatchStorage redisCatchStorage;
 
     @Value("${server.port}")
     private Integer serverPort;
 
-    private final SipConfig sipConfig;
+    @Autowired
+    private  SipConfig sipConfig;
 
-    public WVPTimerTask(IRedisCatchStorage redisCatchStorage, SipConfig sipConfig) {
-        this.redisCatchStorage = redisCatchStorage;
-        this.sipConfig = sipConfig;
-    }
+
 
     @Scheduled(fixedDelay = 2 * 1000)   //每3秒执行一次
     public void execute(){

@@ -42,11 +42,6 @@ public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
             return body;
         }
 
-        if (body instanceof ErrorCode) {
-            ErrorCode errorCode = (ErrorCode) body;
-            return new WVPResult<>(errorCode.getCode(), errorCode.getMsg(), null);
-        }
-
         if (body instanceof String) {
             return JSON.toJSONString(WVPResult.success(body));
         }

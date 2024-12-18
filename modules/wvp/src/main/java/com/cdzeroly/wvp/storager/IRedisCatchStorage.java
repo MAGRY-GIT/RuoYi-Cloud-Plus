@@ -1,7 +1,6 @@
 package com.cdzeroly.wvp.storager;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.cdzeroly.wvp.common.SystemAllInfo;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
@@ -15,7 +14,6 @@ import com.cdzeroly.wvp.service.domian.bean.MessageForPushChannel;
 import com.cdzeroly.wvp.storager.dto.PlatformRegisterInfo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Redis Catch 存储
@@ -109,11 +107,8 @@ public interface IRedisCatchStorage {
 
     MediaInfo getProxyStream(String app, String streamId);
 
-    void addCpuInfo(double cpuInfo);
 
-    void addMemInfo(double memInfo);
 
-    void addNetInfo(Map<String, Double> networkInterfaces);
 
     void sendMobilePositionMsg(JSONObject jsonObject);
 
@@ -156,15 +151,23 @@ public interface IRedisCatchStorage {
      */
     void sendStreamPushRequestedMsgForStatus();
 
-    SystemAllInfo getSystemInfo();
 
+    /**
+     * 获取推流计数
+     * @param id ID
+     * @return 数量
+     */
     int getPushStreamCount(String id);
 
+    /**
+     * 获取代理流计数
+     * @param id  ID
+     * @return 数量
+     */
     int getProxyStreamCount(String id);
 
     int getGbSendCount(String id);
 
-    void addDiskInfo(List<Map<String, Object>> diskInfo);
 
     List<SendRtpInfo> queryAllSendRTPServer();
 

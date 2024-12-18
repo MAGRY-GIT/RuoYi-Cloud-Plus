@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.event;
 
+import com.cdzeroly.common.core.utils.CollectionUtil;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
 import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
@@ -12,26 +13,25 @@ import com.cdzeroly.wvp.gb28181.event.subscribe.mobilePosition.MobilePositionEve
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.event.mediaServer.MediaServerOfflineEvent;
 import com.cdzeroly.wvp.media.event.mediaServer.MediaServerOnlineEvent;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javax.sip.TimeoutEvent;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
- * @description:Event事件通知推送器，支持推送在线事件、离线事件
- * @author: swwheihei
+ *  Event事件通知推送器，支持推送在线事件、离线事件
+ * @author swwheihei
  * @date:   2020年5月6日 上午11:30:50
  */
 @Component
+@AllArgsConstructor
 public class EventPublisher {
 
-	@Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
 	/**
 	 * 设备报警事件
@@ -43,26 +43,42 @@ public class EventPublisher {
 		applicationEventPublisher.publishEvent(alarmEvent);
 	}
 
+    /**
+     * Media Server 脱机事件发布
+     * @param mediaServer mediaServer
+     */
 	public void mediaServerOfflineEventPublish(MediaServer mediaServer){
 		MediaServerOfflineEvent outEvent = new MediaServerOfflineEvent(this);
 		outEvent.setMediaServer(mediaServer);
 		applicationEventPublisher.publishEvent(outEvent);
 	}
 
+    /**
+     * Media Server 在线事件发布
+     * @param mediaServer mediaServer
+     */
 	public void mediaServerOnlineEventPublish(MediaServer mediaServer) {
 		MediaServerOnlineEvent outEvent = new MediaServerOnlineEvent(this);
 		outEvent.setMediaServer(mediaServer);
 		applicationEventPublisher.publishEvent(outEvent);
 	}
 
-
+    /**
+     * 目录事件发布
+     * @param platformId  平台ID
+     * @param deviceChannel  设备通道
+     * @param type  类型
+     */
 	public void catalogEventPublish(Integer platformId, CommonGBChannel deviceChannel, String type) {
 		List<CommonGBChannel> deviceChannelList = new ArrayList<>();
 		deviceChannelList.add(deviceChannel);
 		catalogEventPublish(platformId, deviceChannelList, type);
 	}
 
-
+    /**
+     * 请求超时
+     * @param timeoutEvent  超时事件
+     */
 	public void requestTimeOut(TimeoutEvent timeoutEvent) {
 		RequestTimeoutEvent requestTimeoutEvent = new RequestTimeoutEvent(this);
 		requestTimeoutEvent.setTimeoutEvent(timeoutEvent);
@@ -70,40 +86,36 @@ public class EventPublisher {
 	}
 
 
-	/**
-	 *
-	 * @param platformId
-	 * @param deviceChannels
-	 * @param type
-	 */
+    /**
+     * 目录事件发布
+     * @param platformId  平台ID
+     * @param deviceChannels  设备通道集合
+     * @param type  类型
+     */
 	public void catalogEventPublish(Integer platformId, List<CommonGBChannel> deviceChannels, String type) {
 		CatalogEvent outEvent = new CatalogEvent(this);
-		List<CommonGBChannel> channels = new ArrayList<>();
-		if (deviceChannels.size() > 1) {
-			// 数据去重
-			Set<String> gbIdSet = new HashSet<>();
-			for (CommonGBChannel deviceChannel : deviceChannels) {
-				if (deviceChannel != null && deviceChannel.getGbDeviceId() != null && !gbIdSet.contains(deviceChannel.getGbDeviceId())) {
-					gbIdSet.add(deviceChannel.getGbDeviceId());
-					channels.add(deviceChannel);
-				}
-			}
-		}else {
-			channels = deviceChannels;
-		}
-		outEvent.setChannels(channels);
+        ArrayList<CommonGBChannel> channels = CollectionUtil.safeStream(deviceChannels).collect(Collectors.collectingAndThen(
+            Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(CommonGBChannel::getGbDeviceId))), ArrayList::new));
+        outEvent.setChannels(channels);
 		outEvent.setType(type);
 		outEvent.setPlatformId(platformId);
 		applicationEventPublisher.publishEvent(outEvent);
 	}
 
-
+    /**
+     * Mobile Position 事件发布
+     * @param mobilePosition 手机位置
+     */
 	public void mobilePositionEventPublish(MobilePosition mobilePosition) {
 		MobilePositionEvent event = new MobilePositionEvent(this);
 		event.setMobilePosition(mobilePosition);
 		applicationEventPublisher.publishEvent(event);
 	}
 
+    /**
+     * 记录结束事件推送
+     * @param recordInfo 记录信息
+     */
 	public void recordEndEventPush(RecordInfo recordInfo) {
 		RecordEndEvent outEvent = new RecordEndEvent(this);
 		outEvent.setRecordInfo(recordInfo);

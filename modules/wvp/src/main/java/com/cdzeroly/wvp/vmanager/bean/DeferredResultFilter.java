@@ -6,5 +6,10 @@ package com.cdzeroly.wvp.vmanager.bean;
  */
 public interface DeferredResultFilter {
 
+    /**
+     *  处理程序
+     * @param o  待处理对象和
+     * @return  Object
+     */
     Object handler(Object o);
 }

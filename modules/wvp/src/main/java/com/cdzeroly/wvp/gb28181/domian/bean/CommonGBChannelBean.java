@@ -188,8 +188,8 @@ public class CommonGBChannelBean extends TenantEntity {
         StringBuilder content = new StringBuilder();
         // 行政区划目录项
         content.append("<Item>\n")
-                .append("<DeviceID>" + this.getGbDeviceId() + "</DeviceID>\n")
-                .append("<Name>" + this.getGbName() + "</Name>\n");
+            .append("<DeviceID>").append(this.getGbDeviceId()).append("</DeviceID>\n")
+            .append("<Name>").append(this.getGbName()).append("</Name>\n");
 
 
         if (this.getGbDeviceId().length() > 8) {
@@ -366,7 +366,7 @@ public class CommonGBChannelBean extends TenantEntity {
 
     public static CommonGBChannelBean build(Platform platform) {
         CommonGBChannelBean commonGBChannelBean = new CommonGBChannelBean();
-        commonGBChannelBean.setGbDeviceId(platform.getDeviceGBId());
+        commonGBChannelBean.setGbDeviceId(platform.getServerGbId());
         commonGBChannelBean.setGbName(platform.getName());
         commonGBChannelBean.setGbManufacturer(platform.getManufacturer());
         commonGBChannelBean.setGbModel(platform.getModel());

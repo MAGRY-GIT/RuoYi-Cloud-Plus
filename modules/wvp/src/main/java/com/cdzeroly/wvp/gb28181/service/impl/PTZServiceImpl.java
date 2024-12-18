@@ -1,11 +1,10 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
-import com.cdzeroly.wvp.conf.exception.ControllerException;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.bean.Preset;
 import com.cdzeroly.wvp.gb28181.service.IPTZService;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,7 @@ public class PTZServiceImpl implements IPTZService {
             cmder.frontEndCmd(device, channelId, cmdCode, horizonSpeed, verticalSpeed, zoomSpeed);
         } catch (SipException | InvalidArgumentException | ParseException e) {
             log.error("[命令发送失败] 云台控制: {}", e.getMessage());
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+            throw new ServiceException("命令发送失败: " + e.getMessage());
         }
     }
 
@@ -41,7 +40,7 @@ public class PTZServiceImpl implements IPTZService {
             cmder.frontEndCmd(device, channelId, cmdCode, parameter1, parameter2, combindCode2);
         } catch (SipException | InvalidArgumentException | ParseException e) {
             log.error("[命令发送失败] 前端控制: {}", e.getMessage());
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+            throw new ServiceException("命令发送失败: " + e.getMessage());
         }
     }
 

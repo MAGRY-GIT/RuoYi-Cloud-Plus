@@ -13,6 +13,9 @@ import org.springframework.util.ObjectUtils;
 
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * @author MGARY
+ */
 @Data
 @Slf4j
 @Schema(description = "通道信息")

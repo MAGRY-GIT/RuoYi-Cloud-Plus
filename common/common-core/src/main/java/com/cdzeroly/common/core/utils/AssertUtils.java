@@ -207,6 +207,27 @@ public class AssertUtils {
      * null 断言
      *
      * @param object 对象
+     * @param e  异常
+     */
+    public static void isNotNull(Object object, RuntimeException e) {
+        isFalse(object == null, e);
+    }
+
+
+    /**
+     * null 断言
+     *
+     * @param object 对象
+     * @param message  异常
+     */
+    public static void isNotNull(Object object, String message) {
+        isFalse(object == null, message);
+    }
+
+    /**
+     * null 断言
+     *
+     * @param object 对象
      * @param message    返回提示
      */
     public static void isNull(Object object, String message) {

@@ -1,12 +1,12 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
-import com.cdzeroly.wvp.conf.DynamicTask;
+import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.SipConfig;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
@@ -14,11 +14,14 @@ import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.domian.bean.*;
 import com.cdzeroly.wvp.gb28181.enums.AudioBroadcastCatchStatus;
 import com.cdzeroly.wvp.gb28181.enums.InviteStreamType;
+import com.cdzeroly.wvp.gb28181.exception.InviteDecodeException;
+import com.cdzeroly.wvp.gb28181.exception.PlayException;
 import com.cdzeroly.wvp.gb28181.service.*;
 import com.cdzeroly.wvp.gb28181.session.AudioBroadcastManager;
 import com.cdzeroly.wvp.gb28181.session.SSRCFactory;
 import com.cdzeroly.wvp.gb28181.session.SipInviteSessionManager;
 import com.cdzeroly.wvp.gb28181.transmit.SIPProcessorObserver;
+import com.cdzeroly.wvp.gb28181.transmit.bean.InviteInfo;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommanderForPlatform;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.ISIPRequestProcessor;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent;
@@ -33,11 +36,11 @@ import gov.nist.javax.sdp.fields.TimeField;
 import gov.nist.javax.sdp.fields.URIField;
 import gov.nist.javax.sip.message.SIPRequest;
 import gov.nist.javax.sip.message.SIPResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sdp.*;
@@ -52,69 +55,52 @@ import java.util.Vector;
 
 /**
  * SIP命令类型： INVITE请求
+ * @author MGARY
  */
 @Slf4j
-@SuppressWarnings("rawtypes")
 @Component
+@AllArgsConstructor
 public class InviteRequestProcessor extends SIPRequestProcessorParent implements InitializingBean, ISIPRequestProcessor {
 
-    private final String method = "INVITE";
+    private final ISIPCommanderForPlatform cmderFroPlatform;
 
-    @Autowired
-    private ISIPCommanderForPlatform cmderFroPlatform;
+    private final IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
+    private final IDeviceService deviceService;
 
-    @Autowired
-    private IDeviceService deviceService;
+    private final IGbChannelService channelService;
 
-    @Autowired
-    private IGbChannelService channelService;
+    private final IGbChannelPlayService channelPlayService;
 
-    @Autowired
-    private IGbChannelPlayService channelPlayService;
+    private final ISendRtpServerService sendRtpServerService;
 
-    @Autowired
-    private ISendRtpServerService sendRtpServerService;
+    private final IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final DynamicTask dynamicTask;
 
-    @Autowired
-    private DynamicTask dynamicTask;
+    private final IPlayService playService;
 
-    @Autowired
-    private IPlayService playService;
+    private final IPlatformService platformService;
 
-    @Autowired
-    private IPlatformService platformService;
+    private final AudioBroadcastManager audioBroadcastManager;
 
-    @Autowired
-    private AudioBroadcastManager audioBroadcastManager;
+    private final SIPProcessorObserver sipProcessorObserver;
 
-    @Autowired
-    private SIPProcessorObserver sipProcessorObserver;
+    private final SipConfig config;
 
-    @Autowired
-    private SipConfig config;
+    private final SipInviteSessionManager sessionManager;
 
-    @Autowired
-    private SipInviteSessionManager sessionManager;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private UserSetting userSetting;
-
-    @Autowired
-    private SSRCFactory ssrcFactory;
+    private final SSRCFactory ssrcFactory;
 
 
     @Override
     public void afterPropertiesSet() throws Exception {
         // 添加消息处理的订阅
+        String method = "INVITE";
         sipProcessorObserver.addRequestProcessor(method, this);
     }
 
@@ -171,7 +157,7 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
                 channelPlayService.start(channel, inviteInfo, platform, ((code, msg, streamInfo) -> {
                     if (code != InviteErrorCode.SUCCESS.getCode()) {
                         try {
-                            responseAck(request, code, msg);
+                            responseAck(request, Response.BUSY_HERE , msg);
                         } catch (SipException | InvalidArgumentException | ParseException e) {
                             log.error("[命令发送失败] 上级Invite 点播失败: {}", e.getMessage());
                         }
@@ -186,7 +172,7 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
                         }
                         // 构建sendRTP内容
                         SendRtpInfo sendRtpItem = sendRtpServerService.createSendRtpInfo(streamInfo.getMediaServer(),
-                                inviteInfo.getIp(), inviteInfo.getPort(), inviteInfo.getSsrc(), platform.getServerGBId(),
+                                inviteInfo.getIp(), inviteInfo.getPort(), inviteInfo.getSsrc(), platform.getServerGbId(),
                                 streamInfo.getApp(), streamInfo.getStream(),
                                 channel.getGbId(), inviteInfo.isTcp(), platform.isRtcp());
                         if (inviteInfo.isTcp() && inviteInfo.isTcpActive()) {
@@ -224,7 +210,7 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
                                 if (deviceChannel != null) {
                                     redisCatchStorage.sendPlatformStartPlayMsg(sendRtpItem, deviceChannel, platform);
                                 }
-                            }catch (ControllerException e) {
+                            }catch (ServiceException e) {
                                 log.warn("[上级Invite] tcp主动模式 发流失败", e);
                                 sendBye(platform, inviteInfo.getCallId());
                             }
@@ -303,7 +289,7 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
         // 查看是否支持PS 负载96
         //String ip = null;
         int port = -1;
-        boolean mediaTransmissionTCP = false;
+        boolean mediaTransmissionTcp = false;
         Boolean tcpActive = null;
         for (Object description : mediaDescriptions) {
             MediaDescription mediaDescription = (MediaDescription) description;
@@ -319,7 +305,7 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
                 if ("TCP/RTP/AVP".equalsIgnoreCase(protocol)) {
                     String setup = mediaDescription.getAttribute("setup");
                     if (setup != null) {
-                        mediaTransmissionTCP = true;
+                        mediaTransmissionTcp = true;
                         if ("active".equalsIgnoreCase(setup)) {
                             tcpActive = true;
                         } else if ("passive".equalsIgnoreCase(setup)) {
@@ -334,7 +320,7 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
             log.info("[解析INVITE消息]  不支持的媒体格式，返回415");
             throw new InviteDecodeException(Response.UNSUPPORTED_MEDIA_TYPE, "unsupported media type");
         }
-        inviteInfo.setTcp(mediaTransmissionTCP);
+        inviteInfo.setTcp(mediaTransmissionTcp);
         inviteInfo.setTcpActive(tcpActive != null? tcpActive: false);
         inviteInfo.setStartTime(startTime);
         inviteInfo.setStopTime(stopTime);
@@ -359,27 +345,27 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
     private String createSendSdp(SendRtpInfo sendRtpItem, InviteInfo inviteInfo, String sdpIp) {
         StringBuilder content = new StringBuilder(200);
         content.append("v=0\r\n");
-        content.append("o=" + inviteInfo.getTargetChannelId() + " 0 0 IN IP4 " + sdpIp + "\r\n");
-        content.append("s=" + inviteInfo.getSessionName() + "\r\n");
-        content.append("c=IN IP4 " + sdpIp + "\r\n");
+        content.append("o=").append(inviteInfo.getTargetChannelId()).append(" 0 0 IN IP4 ").append(sdpIp).append("\r\n");
+        content.append("s=").append(inviteInfo.getSessionName()).append("\r\n");
+        content.append("c=IN IP4 ").append(sdpIp).append("\r\n");
         if ("Playback".equalsIgnoreCase(inviteInfo.getSessionName())) {
-            content.append("t=" + inviteInfo.getStartTime() + " " + inviteInfo.getStopTime() + "\r\n");
+            content.append("t=").append(inviteInfo.getStartTime()).append(" ").append(inviteInfo.getStopTime()).append("\r\n");
         } else {
             content.append("t=0 0\r\n");
         }
         if (sendRtpItem.isTcp()) {
-            content.append("m=video " + sendRtpItem.getLocalPort() + " TCP/RTP/AVP 96\r\n");
+            content.append("m=video ").append(sendRtpItem.getLocalPort()).append(" TCP/RTP/AVP 96\r\n");
             if (!sendRtpItem.isTcpActive()) {
                 content.append("a=setup:active\r\n");
             } else {
                 content.append("a=setup:passive\r\n");
             }
         }else {
-            content.append("m=video " + sendRtpItem.getLocalPort() + " RTP/AVP 96\r\n");
+            content.append("m=video ").append(sendRtpItem.getLocalPort()).append(" RTP/AVP 96\r\n");
         }
         content.append("a=sendonly\r\n");
         content.append("a=rtpmap:96 PS/90000\r\n");
-        content.append("y=" + sendRtpItem.getSsrc() + "\r\n");
+        content.append("y=").append(sendRtpItem.getSsrc()).append("\r\n");
         content.append("f=\r\n");
         return content.toString();
     }
@@ -623,7 +609,7 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
             Platform parentPlatform = new Platform();
             parentPlatform.setServerIp(device.getIp());
             parentPlatform.setServerPort(device.getPort());
-            parentPlatform.setServerGBId(device.getDeviceId());
+            parentPlatform.setServerGbId(device.getDeviceId());
 
             sipResponse = responseSdpAck(request, content.toString(), parentPlatform);
 

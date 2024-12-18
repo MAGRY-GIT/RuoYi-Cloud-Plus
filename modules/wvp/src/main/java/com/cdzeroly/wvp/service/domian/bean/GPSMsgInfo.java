@@ -4,6 +4,9 @@ import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
 import com.cdzeroly.wvp.utils.DateUtil;
 import lombok.Data;
 
+/**
+ * @author MGARY
+ */
 @Data
 public class GPSMsgInfo {
 
@@ -57,7 +60,7 @@ public class GPSMsgInfo {
         gpsMsgInfo.setLat(mobilePosition.getLatitude());
         gpsMsgInfo.setSpeed(mobilePosition.getSpeed());
         gpsMsgInfo.setDirection(mobilePosition.getDirection() + "");
-        gpsMsgInfo.setTime(DateUtil.yyyy_MM_dd_HH_mm_ssToISO8601(mobilePosition.getTime()));
+        gpsMsgInfo.setTime(DateUtil.yyyyMmDdHhMmSsToIso8601(mobilePosition.getTime()));
         return gpsMsgInfo;
     }
 }

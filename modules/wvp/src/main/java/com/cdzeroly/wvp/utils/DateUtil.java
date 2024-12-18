@@ -66,12 +66,12 @@ public class DateUtil {
     public static final DateTimeFormatter DateFormatter = DateTimeFormatter.ofPattern(date_PATTERN, Locale.getDefault()).withZone(ZoneId.of(zoneStr));
     public static final DateTimeFormatter urlFormatter = DateTimeFormatter.ofPattern(URL_PATTERN, Locale.getDefault()).withZone(ZoneId.of(zoneStr));
 
-	public static String yyyy_MM_dd_HH_mm_ssToISO8601(String formatTime) {
+	public static String yyyyMmDdHhMmSsToIso8601(String formatTime) {
 
         return formatterISO8601.format(formatter.parse(formatTime));
     }
 
-	public static String ISO8601Toyyyy_MM_dd_HH_mm_ss(String formatTime) {
+	public static String iso8601ToYyyyMmDdHhMmSs(String formatTime) {
         // 三种日期格式都尝试，为了兼容不同厂家的日期格式
         if (verification(formatTime, formatterCompatibleISO8601)) {
             return formatter.format(formatterCompatibleISO8601.parse(formatTime));
@@ -83,7 +83,7 @@ public class DateUtil {
         return formatter.format(formatterISO8601.parse(formatTime));
     }
 
-	public static String urlToyyyy_MM_dd_HH_mm_ss(String formatTime) {
+	public static String urlToYyyyMmDdHhMmSs(String formatTime) {
         return formatter.format(urlFormatter.parse(formatTime));
     }
 
@@ -92,7 +92,7 @@ public class DateUtil {
      * @param formatTime
      * @return
      */
-	public static long yyyy_MM_dd_HH_mm_ssToTimestamp(String formatTime) {
+	public static long yyyyMmDdHhMmSsToTimestamp(String formatTime) {
         TemporalAccessor temporalAccessor = formatter.parse(formatTime);
         Instant instant = Instant.from(temporalAccessor);
         return instant.getEpochSecond();
@@ -101,7 +101,7 @@ public class DateUtil {
     /**
      * 时间戳 转 yyyy_MM_dd_HH_mm_ss
      */
-	public static String timestampTo_yyyy_MM_dd_HH_mm_ss(long timestamp) {
+	public static String timestampToYyyyMmDdHhMmSs(long timestamp) {
         Instant instant = Instant.ofEpochSecond(timestamp);
         return formatter.format(LocalDateTime.ofInstant(instant, ZoneId.of(zoneStr)));
 	}

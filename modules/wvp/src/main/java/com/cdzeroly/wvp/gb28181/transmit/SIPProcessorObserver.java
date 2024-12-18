@@ -7,8 +7,8 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.ISIPRequestProcessor;
 import com.cdzeroly.wvp.gb28181.transmit.event.response.ISIPResponseProcessor;
 import com.cdzeroly.wvp.gb28181.transmit.event.timeout.ITimeoutProcessor;
 import gov.nist.javax.sip.message.SIPResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -19,23 +19,24 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @description: SIP信令处理类观察者
- * @author: panlinlin
- * @date:   2021年11月5日 下午15：32
+ * SIP信令处理类观察者
+ * @author panlinlin
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class SIPProcessorObserver implements ISIPProcessorObserver {
 
-    private static Map<String,  ISIPRequestProcessor> requestProcessorMap = new ConcurrentHashMap<>();
-    private static Map<String, ISIPResponseProcessor> responseProcessorMap = new ConcurrentHashMap<>();
+    private static final Map<String,  ISIPRequestProcessor> REQUEST_PROCESSOR_MAP = new ConcurrentHashMap<>();
+
+    private static final Map<String, ISIPResponseProcessor> RESPONSE_PROCESSOR_MAP = new ConcurrentHashMap<>();
+
+
     private static ITimeoutProcessor timeoutProcessor;
 
-    @Autowired
-    private SipSubscribe sipSubscribe;
+    private final SipSubscribe sipSubscribe;
 
-    @Autowired
-    private EventPublisher eventPublisher;
+    private final EventPublisher eventPublisher;
 
     /**
      * 添加 request订阅
@@ -43,7 +44,7 @@ public class SIPProcessorObserver implements ISIPProcessorObserver {
      * @param processor 处理程序
      */
     public void addRequestProcessor(String method, ISIPRequestProcessor processor) {
-        requestProcessorMap.put(method, processor);
+        REQUEST_PROCESSOR_MAP.put(method, processor);
     }
 
     /**
@@ -52,7 +53,7 @@ public class SIPProcessorObserver implements ISIPProcessorObserver {
      * @param processor 处理程序
      */
     public void addResponseProcessor(String method, ISIPResponseProcessor processor) {
-        responseProcessorMap.put(method, processor);
+        RESPONSE_PROCESSOR_MAP.put(method, processor);
     }
 
     /**
@@ -71,13 +72,13 @@ public class SIPProcessorObserver implements ISIPProcessorObserver {
     @Async("taskExecutor")
     public void processRequest(RequestEvent requestEvent) {
         String method = requestEvent.getRequest().getMethod();
-        ISIPRequestProcessor sipRequestProcessor = requestProcessorMap.get(method);
+        ISIPRequestProcessor sipRequestProcessor = REQUEST_PROCESSOR_MAP.get(method);
         if (sipRequestProcessor == null) {
             log.warn("不支持方法{}的request", method);
             // TODO 回复错误玛
             return;
         }
-        requestProcessorMap.get(method).process(requestEvent);
+        REQUEST_PROCESSOR_MAP.get(method).process(requestEvent);
 
     }
 
@@ -106,7 +107,7 @@ public class SIPProcessorObserver implements ISIPProcessorObserver {
                     }
                 }
             }
-            ISIPResponseProcessor sipRequestProcessor = responseProcessorMap.get(response.getCSeqHeader().getMethod());
+            ISIPResponseProcessor sipRequestProcessor = RESPONSE_PROCESSOR_MAP.get(response.getCSeqHeader().getMethod());
             if (sipRequestProcessor != null) {
                 sipRequestProcessor.process(responseEvent);
             }

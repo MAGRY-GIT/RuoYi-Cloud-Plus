@@ -9,6 +9,10 @@ import gov.nist.javax.sip.stack.SIPTransactionStack;
 import javax.sip.SipStack;
 import java.util.Properties;
 
+/**
+ * 日志记录
+ * @author MGARY
+ */
 public class ServerLoggerImpl implements ServerLogger {
 
     private boolean showLog = true;
@@ -27,11 +31,8 @@ public class ServerLoggerImpl implements ServerLogger {
         if (!showLog) {
             return;
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(sender? "发送：目标--->" + from:"接收：来自--->" + to)
-                .append("\r\n")
-                        .append(message);
-        this.stackLogger.logInfo(stringBuilder.toString());
+        String stringBuilder = (sender ? "发送：目标--->" + from : "接收：来自--->" + to) + "\r\n" + message;
+        this.stackLogger.logInfo(stringBuilder);
 
     }
 
@@ -40,11 +41,7 @@ public class ServerLoggerImpl implements ServerLogger {
         if (!showLog) {
             return;
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(sender? "发送： 目标->" + from :"接收：来自->" + to)
-                .append("\r\n")
-                .append(message);
-        this.stackLogger.logInfo(stringBuilder.toString());
+        this.stackLogger.logInfo((sender ? "发送： 目标->" + from : "接收：来自->" + to) + "\r\n" + message);
     }
 
     @Override
@@ -52,11 +49,8 @@ public class ServerLoggerImpl implements ServerLogger {
         if (!showLog) {
             return;
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(sender? "发送： 目标->" + from :"接收：来自->" + to)
-                .append("\r\n")
-                .append(message);
-        this.stackLogger.logInfo(stringBuilder.toString());
+        String stringBuilder = (sender ? "发送： 目标->" + from : "接收：来自->" + to) + "\r\n" + message;
+        this.stackLogger.logInfo(stringBuilder);
     }
 
     @Override
@@ -72,8 +66,8 @@ public class ServerLoggerImpl implements ServerLogger {
         if (!showLog) {
             return;
         }
-        String TRACE_LEVEL = stackProperties.getProperty("gov.nist.javax.sip.TRACE_LEVEL");
-        if (TRACE_LEVEL != null) {
+        String traceLevel = stackProperties.getProperty("gov.nist.javax.sip.TRACE_LEVEL");
+        if (traceLevel != null) {
             showLog = true;
         }
     }

@@ -22,6 +22,7 @@ import com.cdzeroly.wvp.media.event.hook.HookType;
 import com.cdzeroly.wvp.service.ISendRtpServerService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
@@ -42,42 +43,29 @@ import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class MediaStatusNotifyMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
     private final String cmdType = "MediaStatus";
 
-    @Autowired
-    private NotifyMessageHandler notifyMessageHandler;
+    private final NotifyMessageHandler notifyMessageHandler;
 
-    @Autowired
-    private SIPCommander cmder;
 
-    @Autowired
-    private SIPCommanderForPlatform sipCommanderFroPlatform;
+    private final SIPCommanderForPlatform sipCommanderFroPlatform;
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private IPlatformService platformService;
+    private final IPlatformService platformService;
 
-    @Autowired
-    private HookSubscribe subscribe;
+    private final HookSubscribe subscribe;
 
-    @Autowired
-    private IInviteStreamService inviteStreamService;
+    private final IInviteStreamService inviteStreamService;
 
-    @Autowired
-    private SipInviteSessionManager sessionManager;
+    private final SipInviteSessionManager sessionManager;
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private IPlayService playService;
+    private final IPlayService playService;
 
-    @Autowired
-    private ISendRtpServerService sendRtpServerService;
+    private final ISendRtpServerService sendRtpServerService;
 
     @Override
     public void afterPropertiesSet() throws Exception {

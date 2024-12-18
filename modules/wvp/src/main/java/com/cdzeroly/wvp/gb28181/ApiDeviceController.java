@@ -2,9 +2,9 @@ package com.cdzeroly.wvp.gb28181;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.bean.Preset;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
@@ -13,8 +13,7 @@ import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
 import com.cdzeroly.wvp.vmanager.bean.DeferredResultEx;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
-import com.cdzeroly.wvp.gb28181.domian.dto.DeviceChannelExtend;
+import com.cdzeroly.wvp.gb28181.domian.vo.DeviceChannelExtendVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
@@ -31,6 +30,7 @@ import java.util.*;
 
 /**
  * API兼容：设备信息
+ * @author MAGRY
  */
 @SuppressWarnings("unchecked")
 @Slf4j
@@ -120,13 +120,13 @@ public class ApiDeviceController {
                                    @RequestParam(required = false)Boolean online ){
 
         JSONObject result = new JSONObject();
-        List<DeviceChannelExtend> deviceChannels;
+        List<DeviceChannelExtendVo> deviceChannels;
         List<String> channelIds = null;
         if (!ObjectUtils.isEmpty(code)) {
             String[] split = code.trim().split(",");
             channelIds = Arrays.asList(split);
         }
-        List<DeviceChannelExtend> allDeviceChannelList = channelService.queryChannelExtendsByDeviceId(serial,channelIds,online);
+        List<DeviceChannelExtendVo> allDeviceChannelList = channelService.queryChannelExtendsByDeviceId(serial,channelIds,online);
         if (start == null || limit ==null) {
             deviceChannels = allDeviceChannelList;
             result.put("ChannelCount", deviceChannels.size());
@@ -143,37 +143,37 @@ public class ApiDeviceController {
             result.put("ChannelCount", allDeviceChannelList.size());
         }
         JSONArray channleJSONList = new JSONArray();
-        deviceChannels.stream().forEach(deviceChannelExtend -> {
+        deviceChannels.stream().forEach(deviceChannelExtendVo -> {
             JSONObject deviceJOSNChannel = new JSONObject();
-            deviceJOSNChannel.put("ID", deviceChannelExtend.getChannelId());
-            deviceJOSNChannel.put("DeviceID", deviceChannelExtend.getDeviceId());
-            deviceJOSNChannel.put("DeviceName", deviceChannelExtend.getDeviceName());
-            deviceJOSNChannel.put("DeviceOnline", deviceChannelExtend.isDeviceOnline());
+            deviceJOSNChannel.put("ID", deviceChannelExtendVo.getChannelId());
+            deviceJOSNChannel.put("DeviceID", deviceChannelExtendVo.getDeviceId());
+            deviceJOSNChannel.put("DeviceName", deviceChannelExtendVo.getDeviceName());
+            deviceJOSNChannel.put("DeviceOnline", deviceChannelExtendVo.isDeviceOnline());
             deviceJOSNChannel.put("Channel", 0); // TODO 自定义序号
-            deviceJOSNChannel.put("Name", deviceChannelExtend.getName());
+            deviceJOSNChannel.put("Name", deviceChannelExtendVo.getName());
             deviceJOSNChannel.put("Custom", false);
             deviceJOSNChannel.put("CustomName", "");
-            deviceJOSNChannel.put("SubCount", deviceChannelExtend.getSubCount()); // TODO ? 子节点数, SubCount > 0 表示该通道为子目录
+            deviceJOSNChannel.put("SubCount", deviceChannelExtendVo.getSubCount()); // TODO ? 子节点数, SubCount > 0 表示该通道为子目录
             deviceJOSNChannel.put("SnapURL", "");
-            deviceJOSNChannel.put("Manufacturer ", deviceChannelExtend.getManufacture());
-            deviceJOSNChannel.put("Model", deviceChannelExtend.getModel());
-            deviceJOSNChannel.put("Owner", deviceChannelExtend.getOwner());
-            deviceJOSNChannel.put("CivilCode", deviceChannelExtend.getCivilCode());
-            deviceJOSNChannel.put("Address", deviceChannelExtend.getAddress());
-            deviceJOSNChannel.put("Parental", deviceChannelExtend.getParental()); // 当为通道设备时, 是否有通道子设备, 1-有,0-没有
-            deviceJOSNChannel.put("ParentID", deviceChannelExtend.getParentId()); // 直接上级编号
-            deviceJOSNChannel.put("Secrecy", deviceChannelExtend.getSecrecy());
+            deviceJOSNChannel.put("Manufacturer ", deviceChannelExtendVo.getManufacture());
+            deviceJOSNChannel.put("Model", deviceChannelExtendVo.getModel());
+            deviceJOSNChannel.put("Owner", deviceChannelExtendVo.getOwner());
+            deviceJOSNChannel.put("CivilCode", deviceChannelExtendVo.getCivilCode());
+            deviceJOSNChannel.put("Address", deviceChannelExtendVo.getAddress());
+            deviceJOSNChannel.put("Parental", deviceChannelExtendVo.getParental()); // 当为通道设备时, 是否有通道子设备, 1-有,0-没有
+            deviceJOSNChannel.put("ParentID", deviceChannelExtendVo.getParentId()); // 直接上级编号
+            deviceJOSNChannel.put("Secrecy", deviceChannelExtendVo.getSecrecy());
             deviceJOSNChannel.put("RegisterWay", 1); // 注册方式, 缺省为1, 允许值: 1, 2, 3
             // 1-IETF RFC3261,
             // 2-基于口令的双向认证,
             // 3-基于数字证书的双向认证
-            deviceJOSNChannel.put("Status", deviceChannelExtend.getStatus());
-            deviceJOSNChannel.put("Longitude", deviceChannelExtend.getLongitude());
-            deviceJOSNChannel.put("Latitude", deviceChannelExtend.getLatitude());
-            deviceJOSNChannel.put("PTZType ", deviceChannelExtend.getPTZType()); // 云台类型, 0 - 未知, 1 - 球机, 2 - 半球,
+            deviceJOSNChannel.put("Status", deviceChannelExtendVo.getStatus());
+            deviceJOSNChannel.put("Longitude", deviceChannelExtendVo.getLongitude());
+            deviceJOSNChannel.put("Latitude", deviceChannelExtendVo.getLatitude());
+            deviceJOSNChannel.put("PTZType ", deviceChannelExtendVo.getPTZType()); // 云台类型, 0 - 未知, 1 - 球机, 2 - 半球,
             //   3 - 固定枪机, 4 - 遥控枪机
             deviceJOSNChannel.put("CustomPTZType", "");
-            deviceJOSNChannel.put("StreamID", deviceChannelExtend.getStreamId()); // StreamID 直播流ID, 有值表示正在直播
+            deviceJOSNChannel.put("StreamID", deviceChannelExtendVo.getStreamId()); // StreamID 直播流ID, 有值表示正在直播
             deviceJOSNChannel.put("NumOutputs ", -1); // 直播在线人数
             channleJSONList.add(deviceJOSNChannel);
         });
@@ -226,7 +226,7 @@ public class ApiDeviceController {
             resultMap.put("DeviceID", code);
             resultMap.put("Result", "OK");
             resultMap.put("SumNum", presetQuerySipReqList.size());
-            ArrayList<Map<String, Object>> presetItemList = new ArrayList<>(presetQuerySipReqList.size());
+            List<Map<String, Object>> presetItemList = new ArrayList<>(presetQuerySipReqList.size());
             for (Preset presetQuerySipReq : presetQuerySipReqList) {
                 Map<String, Object> item = new HashMap<>();
                 item.put("PresetID", presetQuerySipReq.getPresetId());
@@ -250,7 +250,7 @@ public class ApiDeviceController {
             });
         } catch (InvalidArgumentException | SipException | ParseException e) {
             log.error("[命令发送失败] 获取设备预置位: {}", e.getMessage());
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+            throw new ServiceException("命令发送失败: " + e.getMessage());
         }
         return result;
     }

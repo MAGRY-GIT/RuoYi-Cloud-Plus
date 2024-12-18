@@ -18,10 +18,11 @@ import com.cdzeroly.wvp.gb28181.utils.XmlUtil;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.utils.DateUtil;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -39,39 +40,31 @@ import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
 
 /**
  * 报警事件的处理，参考：9.4
+ * @author Administrator
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class AlarmNotifyMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
+    private final NotifyMessageHandler notifyMessageHandler;
 
-    private final String cmdType = "Alarm";
+    private final EventPublisher publisher;
 
-    @Autowired
-    private NotifyMessageHandler notifyMessageHandler;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private EventPublisher publisher;
+    private final SipConfig sipConfig;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private SipConfig sipConfig;
+    private final IDeviceAlarmService deviceAlarmService;
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
-
-    @Autowired
-    private IDeviceAlarmService deviceAlarmService;
-
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
+    private final IDeviceChannelService deviceChannelService;
 
     private final ConcurrentLinkedQueue<SipMsgInfo> taskQueue = new ConcurrentLinkedQueue<>();
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        notifyMessageHandler.addHandler(cmdType, this);
+        notifyMessageHandler.addHandler("Alarm", this);
     }
 
     @Override
@@ -125,7 +118,7 @@ public class AlarmNotifyMessageHandler extends SIPRequestProcessorParent impleme
                 if (alarmTime == null) {
                     continue;
                 }
-                deviceAlarm.setAlarmTime(DateUtil.ISO8601Toyyyy_MM_dd_HH_mm_ss(alarmTime));
+                deviceAlarm.setAlarmTime(DateUtil.iso8601ToYyyyMmDdHhMmSs(alarmTime));
                 String alarmDescription = getText(sipMsgInfo.getRootElement(), "AlarmDescription");
                 if (alarmDescription == null) {
                     deviceAlarm.setAlarmDescription("");
@@ -178,15 +171,7 @@ public class AlarmNotifyMessageHandler extends SIPRequestProcessorParent impleme
                 if (DeviceAlarmMethod.Other.getVal() == Integer.parseInt(deviceAlarm.getAlarmMethod())) {
                     // 发送给平台的报警信息。 发送redis通知
                     log.info("[发送给平台的报警信息]内容：{}", JSONObject.toJSONString(deviceAlarm));
-                    AlarmChannelMessage alarmChannelMessage = new AlarmChannelMessage();
-                    if (deviceAlarm.getAlarmMethod() != null) {
-                        alarmChannelMessage.setAlarmSn(Integer.parseInt(deviceAlarm.getAlarmMethod()));
-                    }
-                    alarmChannelMessage.setAlarmDescription(deviceAlarm.getAlarmDescription());
-                    if (deviceAlarm.getAlarmType() != null) {
-                        alarmChannelMessage.setAlarmType(Integer.parseInt(deviceAlarm.getAlarmType()));
-                    }
-                    alarmChannelMessage.setGbId(channelId);
+                    AlarmChannelMessage alarmChannelMessage = getAlarmChannelMessage(deviceAlarm, channelId);
                     redisCatchStorage.sendAlarmMsg(alarmChannelMessage);
                     continue;
                 }
@@ -207,9 +192,23 @@ public class AlarmNotifyMessageHandler extends SIPRequestProcessorParent impleme
         }
     }
 
+    @NotNull
+    private AlarmChannelMessage getAlarmChannelMessage(DeviceAlarm deviceAlarm, String channelId) {
+        AlarmChannelMessage alarmChannelMessage = new AlarmChannelMessage();
+        if (deviceAlarm.getAlarmMethod() != null) {
+            alarmChannelMessage.setAlarmSn(Integer.parseInt(deviceAlarm.getAlarmMethod()));
+        }
+        alarmChannelMessage.setAlarmDescription(deviceAlarm.getAlarmDescription());
+        if (deviceAlarm.getAlarmType() != null) {
+            alarmChannelMessage.setAlarmType(Integer.parseInt(deviceAlarm.getAlarmType()));
+        }
+        alarmChannelMessage.setGbId(channelId);
+        return alarmChannelMessage;
+    }
+
     @Override
     public void handForPlatform(RequestEvent evt, Platform parentPlatform, Element rootElement) {
-        log.info("收到来自平台[{}]的报警通知", parentPlatform.getServerGBId());
+        log.info("收到来自平台[{}]的报警通知", parentPlatform.getServerGbId());
         // 回复200 OK
         try {
             responseAck((SIPRequest) evt.getRequest(), Response.OK);
@@ -221,7 +220,7 @@ public class AlarmNotifyMessageHandler extends SIPRequestProcessorParent impleme
 
 
         DeviceAlarm deviceAlarm = new DeviceAlarm();
-        deviceAlarm.setDeviceId(parentPlatform.getServerGBId());
+        deviceAlarm.setDeviceId(parentPlatform.getServerGbId());
         deviceAlarm.setDeviceName(parentPlatform.getName());
         deviceAlarm.setChannelId(channelId);
         deviceAlarm.setAlarmPriority(getText(rootElement, "AlarmPriority"));
@@ -230,7 +229,7 @@ public class AlarmNotifyMessageHandler extends SIPRequestProcessorParent impleme
         if (alarmTime == null) {
             return;
         }
-        deviceAlarm.setAlarmTime(DateUtil.ISO8601Toyyyy_MM_dd_HH_mm_ss(alarmTime));
+        deviceAlarm.setAlarmTime(DateUtil.iso8601ToYyyyMmDdHhMmSs(alarmTime));
         String alarmDescription = getText(rootElement, "AlarmDescription");
         if (alarmDescription == null) {
             deviceAlarm.setAlarmDescription("");
@@ -257,7 +256,7 @@ public class AlarmNotifyMessageHandler extends SIPRequestProcessorParent impleme
             }
         }
 
-        if (channelId.equals(parentPlatform.getDeviceGBId())) {
+        if (channelId.equals(parentPlatform.getServerGbId())) {
             // 发送给平台的报警信息。 发送redis通知
             AlarmChannelMessage alarmChannelMessage = new AlarmChannelMessage();
             if (deviceAlarm.getAlarmMethod() != null) {

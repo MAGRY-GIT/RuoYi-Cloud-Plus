@@ -136,8 +136,8 @@ public class RecordInfoQueryMessageHandler extends SIPRequestProcessorParent imp
             }
         });
         try {
-            commander.recordInfoQuery(device, deviceChannel.getDeviceId(), DateUtil.ISO8601Toyyyy_MM_dd_HH_mm_ss(startTime),
-                    DateUtil.ISO8601Toyyyy_MM_dd_HH_mm_ss(endTime), sn, secrecy, type, (eventResult -> {
+            commander.recordInfoQuery(device, deviceChannel.getDeviceId(), DateUtil.iso8601ToYyyyMmDdHhMmSs(startTime),
+                    DateUtil.iso8601ToYyyyMmDdHhMmSs(endTime), sn, secrecy, type, (eventResult -> {
                         // 回复200 OK
                         try {
                             responseAck(request, Response.OK);

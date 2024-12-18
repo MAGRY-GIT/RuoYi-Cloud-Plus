@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.notify.cmd;
 
-import com.cdzeroly.wvp.conf.exception.ControllerException;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
@@ -95,12 +95,19 @@ public class BroadcastNotifyMessageHandler extends SIPRequestProcessorParent imp
             }
             String targetId = targetIDElement.getText();
 
+            Element sourceIdElement = rootElement.element("SourceID");
+            String sourceId;
+            if (sourceIdElement != null) {
+                sourceId = sourceIdElement.getText();
+            }else {
+                sourceId = targetId;
+            }
 
-            log.info("[国标级联 语音喊话] platform: {}, channel: {}", platform.getServerGBId(), targetId);
+            log.info("[国标级联 语音喊话] platform: {}, channel: {}", platform.getServerGbId(), targetId);
 
             CommonGBChannel channel = channelService.queryOneWithPlatform(platform.getId(), targetId);
             if (channel == null) {
-                log.warn("[国标级联 语音喊话] 未找到通道 platform: {}, channel: {}", platform.getServerGBId(), targetId);
+                log.warn("[国标级联 语音喊话] 未找到通道 platform: {}, channel: {}", platform.getServerGbId(), targetId);
                 responseAck(request, Response.NOT_FOUND, "TargetID not found");
                 return;
             }
@@ -125,18 +132,18 @@ public class BroadcastNotifyMessageHandler extends SIPRequestProcessorParent imp
 
             MediaServer mediaServerForMinimumLoad = mediaServerService.getMediaServerForMinimumLoad(null);
             commanderForPlatform.broadcastResultCmd(platform, channel, sn, true,  eventResult->{
-                log.info("[国标级联] 语音喊话 回复失败 platform： {}， 错误：{}/{}", platform.getServerGBId(), eventResult.statusCode, eventResult.msg);
+                log.info("[国标级联] 语音喊话 回复失败 platform： {}， 错误：{}/{}", platform.getServerGbId(), eventResult.statusCode, eventResult.msg);
             }, eventResult->{
                 // 消息发送成功， 向上级发送invite，获取推流
                 try {
-                    platformService.broadcastInvite(platform, channel, mediaServerForMinimumLoad,  (hookData)->{
+                    platformService.broadcastInvite(platform, channel, sourceId, mediaServerForMinimumLoad,  (hookData)->{
                         // 上级平台推流成功
                         AudioBroadcastCatch broadcastCatch = audioBroadcastManager.get(channel.getGbId());
                         if (broadcastCatch != null ) {
 
                             if (playService.audioBroadcastInUse(device, deviceChannel)) {
                                 log.info("[国标级联] 语音喊话 设备正在使用中 platform： {}， channel: {}",
-                                        platform.getServerGBId(), channel.getGbDeviceId());
+                                        platform.getServerGbId(), channel.getGbDeviceId());
                                 //  查看语音通道已经建立且已经占用 回复BYE
                                 platformService.stopBroadcast(platform, channel, hookData.getStream(),  true, hookData.getMediaServer());
                             }else {
@@ -155,13 +162,13 @@ public class BroadcastNotifyMessageHandler extends SIPRequestProcessorParent imp
                                             log.info("[语音喊话] 通道建立成功, device: {}, channel: {}", device.getDeviceId(), targetId);
                                         });
                                     } catch (SipException | InvalidArgumentException | ParseException e) {
-                                        log.info("[消息发送失败] 国标级联 语音喊话 platform： {}", platform.getServerGBId());
+                                        log.info("[消息发送失败] 国标级联 语音喊话 platform： {}", platform.getServerGbId());
                                     }
                                 }else {
                                     // 发流
                                     try {
                                         mediaServerService.startSendRtp(hookData.getMediaServer(), sendRtpItem);
-                                    }catch (ControllerException e) {
+                                    }catch (ServiceException e) {
                                         log.info("[语音喊话] 推流失败, 结果： {}", e.getMessage());
                                         return;
                                     }
@@ -174,7 +181,7 @@ public class BroadcastNotifyMessageHandler extends SIPRequestProcessorParent imp
                                     log.info("[语音喊话] 通道建立成功, device: {}, channel: {}", device.getDeviceId(), targetId);
                                 });
                             } catch (SipException | InvalidArgumentException | ParseException e) {
-                                log.info("[消息发送失败] 国标级联 语音喊话 platform： {}", platform.getServerGBId());
+                                log.info("[消息发送失败] 国标级联 语音喊话 platform： {}", platform.getServerGbId());
                             }
                         }
 
@@ -188,11 +195,11 @@ public class BroadcastNotifyMessageHandler extends SIPRequestProcessorParent imp
                                 targetId, code, msg);
                     });
                 } catch (SipException | InvalidArgumentException | ParseException e) {
-                    log.info("[消息发送失败] 国标级联 语音喊话 invite消息 platform： {}", platform.getServerGBId());
+                    log.info("[消息发送失败] 国标级联 语音喊话 invite消息 platform： {}", platform.getServerGbId());
                 }
             });
         } catch (SipException | InvalidArgumentException | ParseException e) {
-            log.info("[消息发送失败] 国标级联 语音喊话 platform： {}", platform.getServerGBId());
+            log.info("[消息发送失败] 国标级联 语音喊话 platform： {}", platform.getServerGbId());
         }
 
     }

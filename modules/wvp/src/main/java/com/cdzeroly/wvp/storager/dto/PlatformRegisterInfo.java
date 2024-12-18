@@ -1,9 +1,14 @@
 package com.cdzeroly.wvp.storager.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 平台发送注册/注销消息时缓存此消息
  * @author lin
  */
+@Setter
+@Getter
 public class PlatformRegisterInfo {
 
     /**
@@ -23,19 +28,4 @@ public class PlatformRegisterInfo {
         return platformRegisterInfo;
     }
 
-    public String getPlatformId() {
-        return platformId;
-    }
-
-    public void setPlatformId(String platformId) {
-        this.platformId = platformId;
-    }
-
-    public boolean isRegister() {
-        return register;
-    }
-
-    public void setRegister(boolean register) {
-        this.register = register;
-    }
 }

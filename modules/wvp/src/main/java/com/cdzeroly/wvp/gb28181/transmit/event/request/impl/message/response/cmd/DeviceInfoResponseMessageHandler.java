@@ -10,6 +10,7 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHand
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.response.ResponseMessageHandler;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -31,22 +32,19 @@ import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class DeviceInfoResponseMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "DeviceInfo";
+    private final ResponseMessageHandler responseMessageHandler;
 
-    @Autowired
-    private ResponseMessageHandler responseMessageHandler;
-
-    @Autowired
-    private DeferredResultHolder deferredResultHolder;
+    private final DeferredResultHolder deferredResultHolder;
 
 
-    @Autowired
-    private IDeviceService deviceService;
+    private final IDeviceService deviceService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "DeviceInfo";
         responseMessageHandler.addHandler(cmdType, this);
     }
 

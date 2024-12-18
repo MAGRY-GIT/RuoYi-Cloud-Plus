@@ -1,9 +1,9 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.common.NetProtocol;
-import com.cdzeroly.wvp.conf.DynamicTask;
+import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -134,7 +134,7 @@ public class AckRequestProcessor extends SIPRequestProcessorParent implements In
 					}
 
 					redisCatchStorage.sendPlatformStartPlayMsg(sendRtpItem, deviceChannel, parentPlatform);
-				}catch (ControllerException e) {
+				}catch (ServiceException e) {
 					log.error("RTP推流失败: {}", e.getMessage());
 					playService.startSendRtpStreamFailHand(sendRtpItem, parentPlatform, callIdHeader);
 				}
@@ -159,7 +159,7 @@ public class AckRequestProcessor extends SIPRequestProcessorParent implements In
 				} else {
 					mediaServerService.startSendRtp(mediaServer, sendRtpItem);
 				}
-			}catch (ControllerException e) {
+			}catch (ServiceException e) {
 				log.error("RTP推流失败: {}", e.getMessage());
 				playService.startSendRtpStreamFailHand(sendRtpItem, null, callIdHeader);
 			}

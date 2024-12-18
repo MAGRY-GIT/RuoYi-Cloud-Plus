@@ -14,11 +14,12 @@ import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHandler;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.control.ControlMessageHandler;
+import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.control.bean.HomePositionRequest;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
@@ -33,29 +34,27 @@ import java.util.List;
 import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
 import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.loadElement;
 
+/**
+ * @author MGARY
+ */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class DeviceControlQueryMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "DeviceControl";
+    private final ControlMessageHandler controlMessageHandler;
 
-    @Autowired
-    private ControlMessageHandler controlMessageHandler;
+    private final IGbChannelService channelService;
 
-    @Autowired
-    private IGbChannelService channelService;
+    private final IDeviceService deviceService;
 
-    @Autowired
-    private IDeviceService deviceService;
+    private final IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
-
-    @Autowired
-    private SIPCommander cmder;
+    private final SIPCommander cmder;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "DeviceControl";
         controlMessageHandler.addHandler(cmdType, this);
     }
 
@@ -88,7 +87,7 @@ public class DeviceControlQueryMessageHandler extends SIPRequestProcessorParent 
         CommonGBChannel channel = channelService.queryOneWithPlatform(platform.getId(), channelId);
         if (channel == null) {
             log.warn("[deviceControl] 未找到通道， 平台： {}（{}），通道编号：{}", platform.getName(),
-                    platform.getServerGBId(), channelId);
+                    platform.getServerGbId(), channelId);
             try {
                 responseAck(request, Response.NOT_FOUND, "channel not found");
             } catch (SipException | InvalidArgumentException | ParseException e) {
@@ -97,7 +96,7 @@ public class DeviceControlQueryMessageHandler extends SIPRequestProcessorParent 
             return;
         }
         log.info("[deviceControl] 命令: {}, 平台： {}（{}）->{}", deviceControlType, platform.getName(),
-                platform.getServerGBId(), channel.getGbId());
+                platform.getServerGbId(), channel.getGbId());
 
         if (!ObjectUtils.isEmpty(deviceControlType)) {
             switch (deviceControlType) {

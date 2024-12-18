@@ -32,6 +32,8 @@ public class DragZoomRequest {
     /**
      * 基本参数
      */
+    @Setter
+    @Getter
     public static class DragZoom {
         /**
          * 播放窗口长度像素值
@@ -64,53 +66,6 @@ public class DragZoomRequest {
         @MessageElement("LengthY")
         protected Integer lengthY;
 
-        public Integer getLength() {
-            return length;
-        }
-
-        public void setLength(Integer length) {
-            this.length = length;
-        }
-
-        public Integer getWidth() {
-            return width;
-        }
-
-        public void setWidth(Integer width) {
-            this.width = width;
-        }
-
-        public Integer getMidPointX() {
-            return midPointX;
-        }
-
-        public void setMidPointX(Integer midPointX) {
-            this.midPointX = midPointX;
-        }
-
-        public Integer getMidPointY() {
-            return midPointY;
-        }
-
-        public void setMidPointY(Integer midPointY) {
-            this.midPointY = midPointY;
-        }
-
-        public Integer getLengthX() {
-            return lengthX;
-        }
-
-        public void setLengthX(Integer lengthX) {
-            this.lengthX = lengthX;
-        }
-
-        public Integer getLengthY() {
-            return lengthY;
-        }
-
-        public void setLengthY(Integer lengthY) {
-            this.lengthY = lengthY;
-        }
     }
 
 }

@@ -9,6 +9,7 @@ import com.cdzeroly.wvp.conf.redis.bean.RedisRpcResponse;
 import com.cdzeroly.wvp.service.redisMsg.control.RedisRpcController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.connection.Message;
@@ -27,7 +28,7 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author Administrator
+ * @author MGARY
  */
 @Slf4j
 @Component
@@ -44,18 +45,22 @@ public class RedisRpcConfig implements MessageListener {
 
     private final RedisTemplate<Object, Object> redisTemplate;
 
-    private ConcurrentLinkedQueue<Message> taskQueue = new ConcurrentLinkedQueue<>();
+    /**
+     * 任务队列
+     */
+    private final ConcurrentLinkedQueue<Message> taskQueue = new ConcurrentLinkedQueue<>();
 
     @Qualifier("taskExecutor")
     @Autowired
     private ThreadPoolTaskExecutor taskExecutor;
 
     @Override
-    public void onMessage(Message message, byte[] pattern) {
+    public void onMessage(@NotNull Message message, byte[] pattern) {
         boolean isEmpty = taskQueue.isEmpty();
         taskQueue.offer(message);
         if (isEmpty) {
             taskExecutor.execute(() -> {
+                //沦陷不是空则执行
                 while (!taskQueue.isEmpty()) {
                     Message msg = taskQueue.poll();
                     try {
@@ -75,6 +80,10 @@ public class RedisRpcConfig implements MessageListener {
         }
     }
 
+    /**
+     * 处理程序响应
+     * @param response 响应
+     */
     private void handlerResponse(RedisRpcResponse response) {
         if (userSetting.getServerId().equals(response.getToId())) {
             return;
@@ -83,12 +92,17 @@ public class RedisRpcConfig implements MessageListener {
         response(response);
     }
 
+    /**
+     * handler 请求
+     * @param request
+     */
     private void handlerRequest(RedisRpcRequest request) {
         try {
             if (userSetting.getServerId().equals(request.getFromId())) {
                 return;
             }
             log.info("[redis-rpc] << {}", request);
+
             Method method = getMethod(request.getUri());
             // 没有携带目标ID的可以理解为哪个wvp有结果就哪个回复，携带目标ID，但是如果是不存在的uri则直接回复404
             if (userSetting.getServerId().equals(request.getToId())) {
@@ -145,9 +159,22 @@ public class RedisRpcConfig implements MessageListener {
     }
 
 
+    /**
+     * 主题订阅者
+     */
     private final Map<Long, SynchronousQueue<RedisRpcResponse>> topicSubscribers = new ConcurrentHashMap<>();
+    /**
+     * 回调
+     */
     private final Map<Long, CommonCallback<RedisRpcResponse>> callbacks = new ConcurrentHashMap<>();
 
+
+    /**
+     *
+     * @param request
+     * @param timeOut
+     * @return
+     */
     public RedisRpcResponse request(RedisRpcRequest request, int timeOut) {
         request.setSn((long) random.nextInt(1000) + 1);
         SynchronousQueue<RedisRpcResponse> subscribe = subscribe(request.getSn());
@@ -169,6 +196,11 @@ public class RedisRpcConfig implements MessageListener {
         sendRequest(request);
     }
 
+    /**
+     * 收到消息解析
+     * @param response 消息
+     * @return Boolean
+     */
     public Boolean response(RedisRpcResponse response) {
         SynchronousQueue<RedisRpcResponse> queue = topicSubscribers.get(response.getSn());
         CommonCallback<RedisRpcResponse> callback = callbacks.get(response.getSn());

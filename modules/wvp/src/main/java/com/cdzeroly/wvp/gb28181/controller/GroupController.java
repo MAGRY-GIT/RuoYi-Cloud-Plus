@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
-import com.cdzeroly.wvp.conf.exception.ControllerException;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.gb28181.domian.bean.Group;
 import com.cdzeroly.wvp.gb28181.domian.bean.GroupTree;
 import com.cdzeroly.wvp.gb28181.service.IGroupService;
@@ -65,7 +65,7 @@ public class GroupController {
         Assert.notNull(id, "分组id（deviceId）不需要存在");
         boolean result = groupService.delete(id);
         if (!result) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "移除失败");
+            throw new ServiceException( "移除失败");
         }
     }
 

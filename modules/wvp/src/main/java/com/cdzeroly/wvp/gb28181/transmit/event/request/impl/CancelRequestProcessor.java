@@ -3,6 +3,7 @@ package com.cdzeroly.wvp.gb28181.transmit.event.request.impl;
 import com.cdzeroly.wvp.gb28181.transmit.SIPProcessorObserver;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.ISIPRequestProcessor;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,19 +12,19 @@ import javax.sip.RequestEvent;
 
 /**
  * SIP命令类型： CANCEL请求
+ * @author MGARY
  */
 @Component
+@AllArgsConstructor
 public class CancelRequestProcessor extends SIPRequestProcessorParent implements InitializingBean, ISIPRequestProcessor {
 
-	private final String method = "CANCEL";
-
-	@Autowired
-	private SIPProcessorObserver sipProcessorObserver;
+	private final SIPProcessorObserver sipProcessorObserver;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// 添加消息处理的订阅
-		sipProcessorObserver.addRequestProcessor(method, this);
+        String method = "CANCEL";
+        sipProcessorObserver.addRequestProcessor(method, this);
 	}
 
 	/**

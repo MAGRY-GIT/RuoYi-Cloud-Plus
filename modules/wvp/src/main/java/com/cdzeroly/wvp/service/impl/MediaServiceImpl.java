@@ -1,12 +1,12 @@
 package com.cdzeroly.wvp.service.impl;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.system.api.RemoteUserService;
 import com.cdzeroly.wvp.common.InviteInfo;
 import com.cdzeroly.wvp.common.InviteSessionStatus;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.bean.SsrcTransaction;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
@@ -18,11 +18,11 @@ import com.cdzeroly.wvp.media.zlm.dto.StreamAuthorityInfo;
 import com.cdzeroly.wvp.service.IMediaService;
 import com.cdzeroly.wvp.service.IRecordPlanService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
-import com.cdzeroly.wvp.streamProxy.bean.StreamProxy;
+import com.cdzeroly.wvp.streamProxy.domain.StreamProxy;
+import com.cdzeroly.wvp.streamProxy.domain.vo.StreamProxyVo;
 import com.cdzeroly.wvp.streamProxy.service.IStreamProxyService;
 import com.cdzeroly.wvp.utils.DateUtil;
 import com.cdzeroly.wvp.utils.MediaServerUtils;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import com.cdzeroly.wvp.vmanager.bean.OtherPsSendInfo;
 import com.cdzeroly.wvp.vmanager.bean.OtherRtpSendInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -88,11 +88,11 @@ public class MediaServiceImpl implements IMediaService {
                 result.setEnable_audio(true);
                 return result;
             }
-            StreamProxy streamProxyItem = streamProxyService.getStreamProxyByAppAndStream(app, stream);
-            if (streamProxyItem != null) {
+            StreamProxyVo streamProxyVo = streamProxyService.getStreamProxyByAppAndStream(app, stream);
+            if (streamProxyVo != null) {
                 ResultForOnPublish result = new ResultForOnPublish();
-                result.setEnable_audio(streamProxyItem.isEnableAudio());
-                result.setEnable_mp4(streamProxyItem.isEnableMp4());
+                result.setEnable_audio(streamProxyVo.isEnableAudio());
+                result.setEnable_mp4(streamProxyVo.isEnableMp4());
                 return result;
             }
             if (userSetting.getPushAuthority()) {
@@ -101,13 +101,13 @@ public class MediaServiceImpl implements IMediaService {
                 // 推流鉴权
                 if (params == null) {
                     log.info("推流鉴权失败： 缺少必要参数：sign=md5(user表的pushKey)");
-                    throw new ControllerException(ErrorCode.ERROR401.getCode(), "Unauthorized");
+                    throw new ServiceException( "Unauthorized");
                 }
 
                 String sign = paramMap.get("sign");
                 if (sign == null) {
                     log.info("推流鉴权失败： 缺少必要参数：sign=md5(user表的pushKey)");
-                    throw new ControllerException(ErrorCode.ERROR401.getCode(), "Unauthorized");
+                    throw new ServiceException( "Unauthorized");
                 }
                 // 推流自定义播放鉴权码
                 String callId = paramMap.get("callId");
@@ -115,7 +115,7 @@ public class MediaServiceImpl implements IMediaService {
                 boolean hasAuthority = this.checkPushAuthority(callId, sign);
                 if (!hasAuthority) {
                     log.info("推流鉴权失败： sign 无权限: callId={}. sign={}", callId, sign);
-                    throw new ControllerException(ErrorCode.ERROR401.getCode(), "Unauthorized");
+                    throw new ServiceException( "Unauthorized");
                 }
                 StreamAuthorityInfo streamAuthorityInfo = StreamAuthorityInfo.getInstanceByHook(app, stream, mediaServer.getId());
                 streamAuthorityInfo.setCallId(callId);
@@ -143,7 +143,7 @@ public class MediaServiceImpl implements IMediaService {
             // 单端口模式下修改流 ID
             if (!mediaServer.isRtpEnable() && inviteInfo == null) {
                 String ssrc = String.format("%010d", Long.parseLong(stream, 16));
-                inviteInfo = inviteStreamService.getInviteInfoBySSRC(ssrc);
+                inviteInfo = inviteStreamService.getInviteInfoBySsrc(ssrc);
                 if (inviteInfo != null) {
                     result.setStream_replace(inviteInfo.getStream());
                     log.info("[ZLM HOOK]推流鉴权 stream: {} 替换为 {}", stream, inviteInfo.getStream());
@@ -236,14 +236,14 @@ public class MediaServiceImpl implements IMediaService {
         } else {
             // 非国标流 推流/拉流代理
             // 拉流代理
-            StreamProxy streamProxy = streamProxyService.getStreamProxyByAppAndStream(app, stream);
-            if (streamProxy != null) {
-                if (streamProxy.isEnableRemoveNoneReader()) {
+            StreamProxyVo streamProxyVo = streamProxyService.getStreamProxyByAppAndStream(app, stream);
+            if (streamProxyVo != null) {
+                if (streamProxyVo.isEnableRemoveNoneReader()) {
                     // 无人观看自动移除
                     streamProxyService.delteByAppAndStream(app, stream);
-                    log.info("[{}/{}]<-[{}] 拉流代理无人观看已经移除", app, stream, streamProxy.getSrcUrl());
+                    log.info("[{}/{}]<-[{}] 拉流代理无人观看已经移除", app, stream, streamProxyVo.getSrcUrl());
                     return true;
-                } else if (streamProxy.isEnableDisableNoneReader()) {
+                } else if (streamProxyVo.isEnableDisableNoneReader()) {
                     // 无人观看停用
                     // 修改数据
                     streamProxyService.stopByAppAndStream(app, stream);

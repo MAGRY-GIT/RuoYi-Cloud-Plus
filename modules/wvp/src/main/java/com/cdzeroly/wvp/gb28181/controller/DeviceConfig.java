@@ -8,14 +8,13 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -85,7 +84,7 @@ public class DeviceConfig {
 			});
 		} catch (InvalidArgumentException | SipException | ParseException e) {
 			log.error("[命令发送失败] 设备配置: {}", e.getMessage());
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+			throw new ServiceException("命令发送失败: " + e.getMessage());
 		}
 		DeferredResult<String> result = new DeferredResult<String>(3 * 1000L);
 		result.onTimeout(() -> {
@@ -136,7 +135,7 @@ public class DeviceConfig {
 			});
 		} catch (InvalidArgumentException | SipException | ParseException e) {
 			log.error("[命令发送失败] 获取设备配置: {}", e.getMessage());
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+			throw new ServiceException("命令发送失败: " + e.getMessage());
 		}
 		DeferredResult<String> result = new DeferredResult<String > (3 * 1000L);
 		result.onTimeout(()->{

@@ -10,6 +10,7 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHandler;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.query.QueryMessageHandler;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
@@ -24,27 +25,26 @@ import javax.sip.message.Response;
 import java.text.ParseException;
 import java.util.List;
 
+/**
+ * @author MGARY
+ */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class CatalogQueryMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "Catalog";
+    private final QueryMessageHandler queryMessageHandler;
 
-    @Autowired
-    private QueryMessageHandler queryMessageHandler;
+    private final IGbChannelService channelService;
 
-    @Autowired
-    private IGbChannelService channelService;
+    private final IPlatformChannelService platformChannelService;
 
-    @Autowired
-    private IPlatformChannelService platformChannelService;
-
-    @Autowired
-    private SIPCommanderForPlatform cmderFroPlatform;
+    private final SIPCommanderForPlatform cmderFroPlatform;
 
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "Catalog";
         queryMessageHandler.addHandler(cmdType, this);
     }
 

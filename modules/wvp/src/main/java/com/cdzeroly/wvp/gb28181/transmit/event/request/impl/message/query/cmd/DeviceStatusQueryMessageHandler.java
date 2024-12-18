@@ -64,7 +64,7 @@ public class DeviceStatusQueryMessageHandler extends SIPRequestProcessorParent i
         String channelId = getText(rootElement, "DeviceID");
         CommonGBChannel channel= channelService.queryOneWithPlatform(parentPlatform.getId(), channelId);
         if (channel ==null){
-            log.error("[平台没有该通道的使用权限]:platformId"+parentPlatform.getServerGBId()+"  deviceID:"+channelId);
+            log.error("[平台没有该通道的使用权限]:platformId"+parentPlatform.getServerGbId()+"  deviceID:"+channelId);
             return;
         }
         try {

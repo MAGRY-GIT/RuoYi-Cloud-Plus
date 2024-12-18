@@ -8,6 +8,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 通道提供商
+ * @author MAGRY
+ */
 public class ChannelProvider {
 
     public final static String BASE_SQL = "select\n" +

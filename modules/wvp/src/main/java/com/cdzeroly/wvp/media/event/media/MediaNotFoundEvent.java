@@ -5,6 +5,7 @@ import com.cdzeroly.wvp.media.zlm.dto.hook.OnStreamNotFoundHookParam;
 
 /**
  * 流未找到
+ * @author MGARY
  */
 public class MediaNotFoundEvent extends MediaEvent {
     public MediaNotFoundEvent(Object source) {

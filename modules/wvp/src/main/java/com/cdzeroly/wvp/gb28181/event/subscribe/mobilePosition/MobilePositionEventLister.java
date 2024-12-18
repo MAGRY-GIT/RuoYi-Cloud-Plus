@@ -7,6 +7,7 @@ import com.cdzeroly.wvp.gb28181.domian.bean.SubscribeInfo;
 import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommanderForPlatform;
 import com.cdzeroly.wvp.service.domian.bean.GPSMsgInfo;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -19,19 +20,18 @@ import java.util.List;
 
 /**
  * 移动位置通知消息转发
+ * @author MAGRY
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class MobilePositionEventLister implements ApplicationListener<MobilePositionEvent> {
 
-    @Autowired
-    private IPlatformChannelService platformChannelService;
+    private final IPlatformChannelService platformChannelService;
 
-    @Autowired
-    private SIPCommanderForPlatform sipCommanderForPlatform;
+    private final SIPCommanderForPlatform sipCommanderForPlatform;
 
-    @Autowired
-    private SubscribeHolder subscribeHolder;
+    private final SubscribeHolder subscribeHolder;
 
     @Override
     public void onApplicationEvent(MobilePositionEvent event) {
@@ -49,9 +49,9 @@ public class MobilePositionEventLister implements ApplicationListener<MobilePosi
         for (Platform platform : platformsForGB) {
             if (log.isDebugEnabled()){
                 log.debug("[向上级发送MobilePosition] 通道：{}，平台：{}， 位置： {}:{}", event.getMobilePosition().getChannelId(),
-                        platform.getServerGBId(), event.getMobilePosition().getLongitude(), event.getMobilePosition().getLatitude());
+                        platform.getServerGbId(), event.getMobilePosition().getLongitude(), event.getMobilePosition().getLatitude());
             }
-            SubscribeInfo subscribe = subscribeHolder.getMobilePositionSubscribe(platform.getServerGBId());
+            SubscribeInfo subscribe = subscribeHolder.getMobilePositionSubscribe(platform.getServerGbId());
             try {
                 GPSMsgInfo gpsMsgInfo = GPSMsgInfo.getInstance(event.getMobilePosition());
                 // 获取通道编号

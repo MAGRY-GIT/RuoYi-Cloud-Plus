@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 
 /**
  * @description: 移动位置bean
- * @author: lawrencehj
+ * @author lawrencehj
  * @date: 2021年1月23日
  */
 

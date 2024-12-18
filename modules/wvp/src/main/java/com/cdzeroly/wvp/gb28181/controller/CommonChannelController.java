@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
+import com.cdzeroly.common.core.domain.R;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.web.core.BaseController;
@@ -15,17 +16,14 @@ import com.cdzeroly.wvp.gb28181.domian.bean.IndustryCodeType;
 import com.cdzeroly.wvp.gb28181.domian.bean.NetworkIdentificationType;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelPlayService;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
-import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.service.domian.bean.ErrorCallback;
 import com.cdzeroly.wvp.service.domian.bean.InviteErrorCode;
-import com.cdzeroly.wvp.storager.IRedisCatchStorage;
-import com.cdzeroly.wvp.vmanager.bean.StreamContent;
+import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
 import com.cdzeroly.wvp.vmanager.bean.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -41,64 +39,59 @@ import java.util.List;
  */
 @Tag(name  = "全局通道管理")
 @RestController
-@Slf4j
+@AllArgsConstructor
 @RequestMapping(value = "/api/common/channel")
 public class CommonChannelController extends BaseController {
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private IGbChannelService channelService;
+    private final IGbChannelService channelService;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
 
-    @Autowired
-    private IGbChannelPlayService channelPlayService;
+    private final IGbChannelPlayService channelPlayService;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
 
     @Operation(summary = "查询通道信息")
     @Parameter(name = "id", description = "通道的数据库自增Id", required = true)
     @GetMapping(value = "/one")
-    public CommonGBChannel getOne(int id){
-        return channelService.getOne(id);
+    public R<CommonGBChannel> getOne(int id){
+        return R.ok(channelService.getOne(id));
     }
 
     @Operation(summary = "获取行业编码列表")
     @GetMapping("/industry/list")
-    public List<IndustryCodeType> getIndustryCodeList(){
-        return channelService.getIndustryCodeList();
+    public R<List<IndustryCodeType>> getIndustryCodeList(){
+        return R.ok(channelService.getIndustryCodeList());
     }
 
     @Operation(summary = "获取编码列表")
     @GetMapping("/type/list")
-    public List<DeviceType> getDeviceTypeList(){
-        return channelService.getDeviceTypeList();
+    public R<List<DeviceType>> getDeviceTypeList(){
+        return R.ok(channelService.getDeviceTypeList());
     }
 
     @Operation(summary = "获取编码列表")
     @GetMapping("/network/identification/list")
-    public List<NetworkIdentificationType> getNetworkIdentificationTypeList(){
-        return channelService.getNetworkIdentificationTypeList();
+    public R<List<NetworkIdentificationType>> getNetworkIdentificationTypeList(){
+        return R.ok(channelService.getNetworkIdentificationTypeList());
     }
 
     @Operation(summary = "更新通道")
     @PostMapping("/update")
-    public void update(@RequestBody CommonGBChannel channel){
+    public R<Void> update(@RequestBody CommonGBChannel channel){
         channelService.update(channel);
+        return R.ok();
     }
 
     @Operation(summary = "重置国标通道")
     @PostMapping("/reset")
-    public void reset(Integer id){
+    public  R<Void> reset(Integer id){
         channelService.reset(id);
+        return R.ok();
     }
 
-    @Operation(summary = "增加通道")
+    @Operation(summary = "增加国标通道")
     @PostMapping("/add")
     public CommonGBChannel add(@RequestBody CommonGBChannel channel){
         channelService.add(channel);
@@ -159,80 +152,88 @@ public class CommonChannelController extends BaseController {
 
     @Operation(summary = "通道设置行政区划")
     @PostMapping("/region/add")
-    public void addChannelToRegion(@RequestBody ChannelToRegionParam param){
+    public  R<Void> addChannelToRegion(@RequestBody ChannelToRegionParam param){
         Assert.notEmpty(param.getChannelIds(),"通道ID不可为空");
         Assert.hasLength(param.getCivilCode(),"未添加行政区划");
         channelService.addChannelToRegion(param.getCivilCode(), param.getChannelIds());
+        return R.ok();
     }
 
     @Operation(summary = "通道删除行政区划")
     @PostMapping("/region/delete")
-    public void deleteChannelToRegion(@RequestBody ChannelToRegionParam param){
+    public  R<Void> deleteChannelToRegion(@RequestBody ChannelToRegionParam param){
         Assert.isTrue(!param.getChannelIds().isEmpty() || !ObjectUtils.isEmpty(param.getCivilCode()),"参数异常");
         channelService.deleteChannelToRegion(param.getCivilCode(), param.getChannelIds());
+        return R.ok();
     }
 
     @Operation(summary = "通道设置行政区划-根据国标设备")
     @PostMapping("/region/device/add")
-    public void addChannelToRegionByGbDevice(@RequestBody ChannelToRegionByGbDeviceParam param){
+    public  R<Void> addChannelToRegionByGbDevice(@RequestBody ChannelToRegionByGbDeviceParam param){
         Assert.notEmpty(param.getDeviceIds(),"参数异常");
         Assert.hasLength(param.getCivilCode(),"未添加行政区划");
         channelService.addChannelToRegionByGbDevice(param.getCivilCode(), param.getDeviceIds());
+        return R.ok();
     }
 
     @Operation(summary = "通道删除行政区划-根据国标设备")
     @PostMapping("/region/device/delete")
-    public void deleteChannelToRegionByGbDevice(@RequestBody ChannelToRegionByGbDeviceParam param){
+    public  R<Void> deleteChannelToRegionByGbDevice(@RequestBody ChannelToRegionByGbDeviceParam param){
         Assert.notEmpty(param.getDeviceIds(),"参数异常");
         channelService.deleteChannelToRegionByGbDevice(param.getDeviceIds());
+        return R.ok();
     }
 
     @Operation(summary = "通道设置业务分组")
     @PostMapping("/group/add")
-    public void addChannelToGroup(@RequestBody ChannelToGroupParam param){
+    public  R<Void> addChannelToGroup(@RequestBody ChannelToGroupParam param){
         Assert.notEmpty(param.getChannelIds(),"通道ID不可为空");
         Assert.hasLength(param.getParentId(),"未添加上级分组编号");
         Assert.hasLength(param.getBusinessGroup(),"未添加业务分组");
         channelService.addChannelToGroup(param.getParentId(), param.getBusinessGroup(), param.getChannelIds());
+        return R.ok();
     }
 
     @Operation(summary = "通道删除业务分组")
     @PostMapping("/group/delete")
-    public void deleteChannelToGroup(@RequestBody ChannelToGroupParam param){
+    public  R<Void> deleteChannelToGroup(@RequestBody ChannelToGroupParam param){
         Assert.isTrue(!param.getChannelIds().isEmpty()
                 || (!ObjectUtils.isEmpty(param.getParentId()) && !ObjectUtils.isEmpty(param.getBusinessGroup())),
                 "参数异常");
         channelService.deleteChannelToGroup(param.getParentId(), param.getBusinessGroup(), param.getChannelIds());
+        return R.ok();
     }
 
     @Operation(summary = "通道设置业务分组-根据国标设备")
     @PostMapping("/group/device/add")
-    public void addChannelToGroupByGbDevice(@RequestBody ChannelToGroupByGbDeviceParam param){
+    public  R<Void> addChannelToGroupByGbDevice(@RequestBody ChannelToGroupByGbDeviceParam param){
         Assert.notEmpty(param.getDeviceIds(),"参数异常");
         Assert.hasLength(param.getParentId(),"未添加上级分组编号");
         Assert.hasLength(param.getBusinessGroup(),"未添加业务分组");
         channelService.addChannelToGroupByGbDevice(param.getParentId(), param.getBusinessGroup(), param.getDeviceIds());
+        return R.ok();
     }
 
     @Operation(summary = "通道删除业务分组-根据国标设备")
     @PostMapping("/group/device/delete")
-    public void deleteChannelToGroupByGbDevice(@RequestBody ChannelToGroupByGbDeviceParam param){
+    public  R<Void> deleteChannelToGroupByGbDevice(@RequestBody ChannelToGroupByGbDeviceParam param){
         Assert.notEmpty(param.getDeviceIds(),"参数异常");
         channelService.deleteChannelToGroupByGbDevice(param.getDeviceIds());
+        return R.ok();
     }
 
     @Operation(summary = "播放通道")
     @GetMapping("/play")
-    public DeferredResult<WVPResult<StreamContent>> deleteChannelToGroupByGbDevice(  Integer channelId){
+    public DeferredResult<WVPResult<StreamContentVo>> deleteChannelToGroupByGbDevice(Integer channelId){
         Assert.notNull(channelId,"参数异常");
         CommonGBChannel channel = channelService.getOne(channelId);
         Assert.notNull(channel, "通道不存在");
 
-        DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
+        DeferredResult<WVPResult<StreamContentVo>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
 
         ErrorCallback<StreamInfo> callback = (code, msg, streamInfo) -> {
             if (code == InviteErrorCode.SUCCESS.getCode()) {
-                WVPResult<StreamContent> wvpResult = WVPResult.success();
+                WVPResult<StreamContentVo> wvpResult = WVPResult.success();
                 if (streamInfo != null) {
                     if (userSetting.getUseSourceIpAsStreamIp()) {
                         streamInfo=streamInfo.clone();//深拷贝
@@ -249,7 +250,7 @@ public class CommonChannelController extends BaseController {
                             && !"null".equalsIgnoreCase(streamInfo.getMediaServer().getTranscodeSuffix())) {
                         streamInfo.setStream(streamInfo.getStream() + "_" + streamInfo.getMediaServer().getTranscodeSuffix());
                     }
-                    wvpResult.setData(new StreamContent(streamInfo));
+                    wvpResult.setData(new StreamContentVo(streamInfo));
                 }else {
                     wvpResult.setCode(code);
                     wvpResult.setMsg(msg);

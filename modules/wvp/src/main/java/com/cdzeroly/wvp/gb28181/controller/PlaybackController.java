@@ -1,12 +1,11 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.web.core.BaseController;
 import com.cdzeroly.wvp.common.InviteInfo;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
-import com.cdzeroly.wvp.conf.exception.ServiceException;
 
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
@@ -19,7 +18,7 @@ import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
 import com.cdzeroly.wvp.service.domian.bean.InviteErrorCode;
 import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
-import com.cdzeroly.wvp.vmanager.bean.StreamContent;
+import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
 import com.cdzeroly.wvp.vmanager.bean.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -76,8 +75,8 @@ public class PlaybackController extends BaseController {
 	@Parameter(name = "startTime", description = "开始时间", required = true)
 	@Parameter(name = "endTime", description = "结束时间", required = true)
 	@GetMapping("/start/{deviceId}/{channelId}")
-	public DeferredResult<WVPResult<StreamContent>> start( @PathVariable String deviceId, @PathVariable String channelId,
-														  String startTime, String endTime) {
+	public DeferredResult<WVPResult<StreamContentVo>> start(@PathVariable String deviceId, @PathVariable String channelId,
+                                                            String startTime, String endTime) {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("设备回放 API调用，deviceId：%s ，channelId：%s", deviceId, channelId));
@@ -85,7 +84,7 @@ public class PlaybackController extends BaseController {
 
 		String uuid = UUID.randomUUID().toString();
 		String key = DeferredResultHolder.CALLBACK_CMD_PLAYBACK + deviceId + channelId;
-		DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
+		DeferredResult<WVPResult<StreamContentVo>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
 		resultHolder.put(key, uuid, result);
 
 		RequestMessage requestMessage = new RequestMessage();
@@ -94,18 +93,18 @@ public class PlaybackController extends BaseController {
 		Device device = deviceService.getDeviceByDeviceId(deviceId);
 		if (device == null) {
 			log.warn("[录像回放] 未找到设备 deviceId: {},channelId:{}", deviceId, channelId);
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到设备：" + deviceId);
+			throw new ServiceException( "未找到设备：" + deviceId);
 		}
 
 		DeviceChannel channel = channelService.getOne(deviceId, channelId);
 		if (channel == null) {
 			log.warn("[录像回放] 未找到通道 deviceId: {},channelId:{}", deviceId, channelId);
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到通道：" + channelId);
+			throw new ServiceException( "未找到通道：" + channelId);
 		}
 		playService.playBack(device, channel, startTime, endTime,
 				(code, msg, data)->{
 
-					WVPResult<StreamContent> wvpResult = new WVPResult<>();
+					WVPResult<StreamContentVo> wvpResult = new WVPResult<>();
 					if (code == InviteErrorCode.SUCCESS.getCode()) {
 						wvpResult.setCode(ErrorCode.SUCCESS.getCode());
 						wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
@@ -123,7 +122,7 @@ public class PlaybackController extends BaseController {
 								}
 								streamInfo.channgeStreamIp(host);
 							}
-							wvpResult.setData(new StreamContent(streamInfo));
+							wvpResult.setData(new StreamContentVo(streamInfo));
 						}
 					}else {
 						wvpResult.setCode(code);
@@ -147,15 +146,15 @@ public class PlaybackController extends BaseController {
 			@PathVariable String channelId,
 			@PathVariable String stream) {
 		if (ObjectUtils.isEmpty(deviceId) || ObjectUtils.isEmpty(channelId) || ObjectUtils.isEmpty(stream)) {
-			throw new ControllerException(ErrorCode.ERROR400);
+			// throw new ServiceException(ErrorCode.ERROR400); TODO
 		}
 		Device device = deviceService.getDeviceByDeviceId(deviceId);
 		if (device == null) {
-			throw new ControllerException(ErrorCode.ERROR400.getCode(), "设备：" + deviceId + " 未找到");
+			throw new ServiceException( "设备：" + deviceId + " 未找到");
 		}
 		DeviceChannel deviceChannel = channelService.getOneForSource(deviceId, channelId);
 		if (deviceChannel == null) {
-			throw new ControllerException(ErrorCode.ERROR400.getCode(), "通道：" + deviceChannel + " 未找到");
+			throw new ServiceException( "通道：" + deviceChannel + " 未找到");
 		}
 		playService.stop(InviteSessionType.PLAYBACK, device, deviceChannel, stream);
 	}
@@ -170,9 +169,9 @@ public class PlaybackController extends BaseController {
 		try {
 			playService.pauseRtp(streamId);
 		} catch (ServiceException e) {
-			throw new ControllerException(ErrorCode.ERROR400.getCode(), e.getMessage());
+			throw new ServiceException( e.getMessage());
 		} catch (InvalidArgumentException | ParseException | SipException e) {
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), e.getMessage());
+			throw new ServiceException( e.getMessage());
 		}
 	}
 
@@ -185,9 +184,9 @@ public class PlaybackController extends BaseController {
 		try {
 			playService.resumeRtp(streamId);
 		} catch (ServiceException e) {
-			throw new ControllerException(ErrorCode.ERROR400.getCode(), e.getMessage());
+			throw new ServiceException( e.getMessage());
 		} catch (InvalidArgumentException | ParseException | SipException e) {
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), e.getMessage());
+			throw new ServiceException( e.getMessage());
 		}
 	}
 
@@ -202,14 +201,14 @@ public class PlaybackController extends BaseController {
 
 		if (null == inviteInfo || inviteInfo.getStreamInfo() == null) {
 			log.warn("streamId不存在!");
-			throw new ControllerException(ErrorCode.ERROR400.getCode(), "streamId不存在");
+			throw new ServiceException( "streamId不存在");
 		}
 		Device device = deviceService.getDeviceByDeviceId(inviteInfo.getDeviceId());
 		DeviceChannel channel = channelService.getOneById(inviteInfo.getChannelId());
 		try {
 			cmder.playSeekCmd(device, channel, inviteInfo.getStreamInfo(), seekTime);
 		} catch (InvalidArgumentException | ParseException | SipException e) {
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), e.getMessage());
+			throw new ServiceException( e.getMessage());
 		}
 	}
 
@@ -223,18 +222,18 @@ public class PlaybackController extends BaseController {
 
 		if (null == inviteInfo || inviteInfo.getStreamInfo() == null) {
 			log.warn("streamId不存在!");
-			throw new ControllerException(ErrorCode.ERROR400.getCode(), "streamId不存在");
+			throw new ServiceException( "streamId不存在");
 		}
 		if(speed != 0.25 && speed != 0.5 && speed != 1 && speed != 2.0 && speed != 4.0) {
 			log.warn("不支持的speed： " + speed);
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "不支持的speed（0.25 0.5 1、2、4）");
+			throw new ServiceException( "不支持的speed（0.25 0.5 1、2、4）");
 		}
 		Device device = deviceService.getDeviceByDeviceId(inviteInfo.getDeviceId());
 		DeviceChannel channel = channelService.getOneById(inviteInfo.getChannelId());
 		try {
 			cmder.playSpeedCmd(device, channel, inviteInfo.getStreamInfo(), speed);
 		} catch (InvalidArgumentException | ParseException | SipException e) {
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), e.getMessage());
+			throw new ServiceException( e.getMessage());
 		}
 	}
 }

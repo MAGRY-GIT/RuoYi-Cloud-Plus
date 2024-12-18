@@ -1,5 +1,13 @@
 package com.cdzeroly.wvp.media.zlm.dto.hook;
 
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * @author MGARY
+ */
+@Setter
+@Getter
 public class HookResult {
 
     private int code;
@@ -14,27 +22,12 @@ public class HookResult {
         this.msg = msg;
     }
 
-    public static HookResult SUCCESS(){
+    public static HookResult success(){
         return new HookResult(0, "success");
     }
 
-    public static HookResultForOnPublish Fail(){
+    public static HookResultForOnPublish fail(){
         return new HookResultForOnPublish(-1, "fail");
     }
 
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 }

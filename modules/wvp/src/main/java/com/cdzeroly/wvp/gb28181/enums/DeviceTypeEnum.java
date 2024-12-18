@@ -1,8 +1,12 @@
 package com.cdzeroly.wvp.gb28181.enums;
 
+import lombok.Getter;
+
 /**
  * 收录行业编码
+ * @author MAGRY
  */
+@Getter
 public enum DeviceTypeEnum {
     DVR("111", "DVR编码", "前端主设备"),
     VIDEO_SERVER("112", "视频服务器编码", "前端主设备"),
@@ -63,12 +67,12 @@ public enum DeviceTypeEnum {
     /**
      * 名称
      */
-    private String code;
+    private final String code;
 
     /**
      * 归属名称
      */
-    private String ownerName;
+    private final String ownerName;
 
     DeviceTypeEnum(String code, String name, String ownerName) {
         this.name = name;
@@ -76,23 +80,5 @@ public enum DeviceTypeEnum {
         this.ownerName = ownerName;
     }
 
-    public String getName() {
-        return name;
-    }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public void setOwnerName(String ownerName) {
-        this.ownerName = ownerName;
-    }
 }

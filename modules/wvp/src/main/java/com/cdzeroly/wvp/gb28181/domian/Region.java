@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.gb28181.domian;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
 import com.cdzeroly.common.tenant.core.TenantEntity;
 import com.cdzeroly.wvp.common.CivilCodePo;
 import com.cdzeroly.wvp.utils.CivilCodeUtil;
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 @Data
 @Schema(description = "区域")
 @TableName("wvp_common_region")
-public class Region  extends TenantEntity implements Comparable<Region>{
+public class Region  extends BaseEntity implements Comparable<Region>{
     /**
      * 数据库自增ID
      */

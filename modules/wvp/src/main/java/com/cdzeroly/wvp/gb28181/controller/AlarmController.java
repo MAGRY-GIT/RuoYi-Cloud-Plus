@@ -1,8 +1,9 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
+import com.cdzeroly.common.core.domain.R;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
@@ -51,15 +52,15 @@ public class AlarmController {
 
     @DeleteMapping("/delete")
     @Operation(summary = "删除报警")
-    public Integer delete(AlarmBo bo) {
-        return deviceAlarmService.clearAlarmBeforeTime(bo);
+    public R<Integer> delete(AlarmBo bo) {
+        return R.ok(deviceAlarmService.clearAlarmBeforeTime(bo));
     }
 
 
     @GetMapping("/test/notify/alarm")
     @Operation(summary = "测试向上级/设备发送模拟报警通知")
     @Parameter(name = "deviceId", description = "设备国标编号")
-    public void delete(@RequestParam String deviceId) {
+    public R<Void> delete(@RequestParam String deviceId) {
         Device device = deviceService.getDeviceByDeviceId(deviceId);
         Platform platform = platformService.queryPlatformByServerGBId(deviceId);
         DeviceAlarm deviceAlarm = new DeviceAlarm();
@@ -76,7 +77,7 @@ public class AlarmController {
 
             try {
                 commander.sendAlarmMessage(device, deviceAlarm);
-            } catch (InvalidArgumentException | SipException | ParseException e) {
+            } catch (InvalidArgumentException | SipException | ParseException ignored) {
 
             }
         } else if (device == null && platform != null) {
@@ -84,12 +85,13 @@ public class AlarmController {
                 commanderForPlatform.sendAlarmMessage(platform, deviceAlarm);
             } catch (SipException | InvalidArgumentException | ParseException e) {
                 log.error("[命令发送失败] 国标级联 发送BYE: {}", e.getMessage());
-                throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+                return  R.fail("命令发送失败: " + e.getMessage());
             }
         } else {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "无法确定" + deviceId + "是平台还是设备");
-        }
+           return R.fail( "无法确定" + deviceId + "是平台还是设备");
 
+        }
+        return R.ok();
     }
 
 

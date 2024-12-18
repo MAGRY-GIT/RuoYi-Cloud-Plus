@@ -24,6 +24,7 @@ import com.cdzeroly.wvp.service.ISendRtpServerService;
 import com.cdzeroly.wvp.service.redisMsg.IRedisRpcService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,63 +39,49 @@ import java.text.ParseException;
 
 /**
  * SIP命令类型： BYE请求
+ * @author MAGRY
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class ByeRequestProcessor extends SIPRequestProcessorParent implements InitializingBean, ISIPRequestProcessor {
 
-	private final String method = "BYE";
+    private final ISIPCommander cmder;
 
-	@Autowired
-	private ISIPCommander cmder;
+	private final ISendRtpServerService sendRtpServerService;
 
-	@Autowired
-	private ISendRtpServerService sendRtpServerService;
+	private final IRedisCatchStorage redisCatchStorage;
 
-	@Autowired
-	private IRedisCatchStorage redisCatchStorage;
+	private final IInviteStreamService inviteStreamService;
 
-	@Autowired
-	private IInviteStreamService inviteStreamService;
+	private final IPlatformService platformService;
 
-	@Autowired
-	private IPlatformService platformService;
+	private final IDeviceService deviceService;
 
-	@Autowired
-	private IDeviceService deviceService;
+	private final IDeviceChannelService deviceChannelService;
 
-	@Autowired
-	private IDeviceChannelService deviceChannelService;
+	private final AudioBroadcastManager audioBroadcastManager;
 
-	@Autowired
-	private AudioBroadcastManager audioBroadcastManager;
+	private final IGbChannelService channelService;
 
-	@Autowired
-	private IGbChannelService channelService;
+	private final IMediaServerService mediaServerService;
 
-	@Autowired
-	private IMediaServerService mediaServerService;
+	private final SIPProcessorObserver sipProcessorObserver;
 
-	@Autowired
-	private SIPProcessorObserver sipProcessorObserver;
+	private final SipInviteSessionManager sessionManager;
 
-	@Autowired
-	private SipInviteSessionManager sessionManager;
+	private final IPlayService playService;
 
-	@Autowired
-	private IPlayService playService;
+	private final UserSetting userSetting;
 
-	@Autowired
-	private UserSetting userSetting;
-
-	@Autowired
-	private IRedisRpcService redisRpcService;
+	private final IRedisRpcService redisRpcService;
 
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// 添加消息处理的订阅
-		sipProcessorObserver.addRequestProcessor(method, this);
+        String method = "BYE";
+        sipProcessorObserver.addRequestProcessor(method, this);
 	}
 
 	/**

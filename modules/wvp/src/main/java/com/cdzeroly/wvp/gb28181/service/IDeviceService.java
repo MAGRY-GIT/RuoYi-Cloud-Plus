@@ -146,7 +146,7 @@ public interface IDeviceService {
 
     /**
      * 获取统计信息
-     * @return
+     * @return  设备统计
      */
     ResourceBaseInfo getOverview();
 

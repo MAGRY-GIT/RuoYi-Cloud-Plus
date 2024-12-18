@@ -87,7 +87,7 @@
             AND st.media_server_id = #{mediaServerId}
         </if>
         ORDER BY st.create_time DESC
-        ${ew.customSqlSegment}
+
     </select>
     <select id="selectByAppAndStream" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
         SELECT

@@ -1,14 +1,16 @@
 package com.cdzeroly.wvp.streamProxy.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.cdzeroly.common.core.exception.ServiceException;
+import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.wvp.common.StreamInfo;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
-import com.cdzeroly.wvp.streamProxy.bean.StreamProxy;
+import com.cdzeroly.wvp.streamProxy.domain.StreamProxy;
+import com.cdzeroly.wvp.streamProxy.domain.vo.StreamProxyVo;
 import com.cdzeroly.wvp.streamProxy.mapper.StreamProxyMapper;
 import com.cdzeroly.wvp.streamProxy.service.IStreamProxyPlayService;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,23 +19,23 @@ import org.springframework.util.ObjectUtils;
 
 /**
  * 视频代理业务
+ * @author MGARY
  */
 @Slf4j
 @Service
-@DS("master")
+@AllArgsConstructor
 public class StreamProxyPlayServiceImpl implements IStreamProxyPlayService {
 
-    @Autowired
-    private StreamProxyMapper streamProxyMapper;
+    private final StreamProxyMapper streamProxyMapper;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
     @Override
     public StreamInfo start(int id) {
-        StreamProxy streamProxy = streamProxyMapper.select(id);
+        StreamProxyVo streamProxyVo = streamProxyMapper.select(id);
+        StreamProxy streamProxy = MapstructUtils.convert(streamProxyVo, StreamProxy.class);
         if (streamProxy == null) {
-            throw new ControllerException(ErrorCode.ERROR404.getCode(), "代理信息未找到");
+            throw new ServiceException("代理信息未找到");
         }
         return startProxy(streamProxy);
     }
@@ -54,7 +56,7 @@ public class StreamProxyPlayServiceImpl implements IStreamProxyPlayService {
             }
         }
         if (mediaServer == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到可用的媒体节点");
+            throw new ServiceException("未找到可用的媒体节点");
         }
         StreamInfo streamInfo = mediaServerService.startProxy(mediaServer, streamProxy);
         if (mediaServerId == null || !mediaServerId.equals(mediaServer.getId())) {
@@ -66,9 +68,10 @@ public class StreamProxyPlayServiceImpl implements IStreamProxyPlayService {
 
     @Override
     public void stop(int id) {
-        StreamProxy streamProxy = streamProxyMapper.select(id);
+        StreamProxyVo streamProxyVo = streamProxyMapper.select(id);
+        StreamProxy streamProxy = MapstructUtils.convert(streamProxyVo, StreamProxy.class);
         if (streamProxy == null) {
-            throw new ControllerException(ErrorCode.ERROR404.getCode(), "代理信息未找到");
+            throw new ServiceException("代理信息未找到");
         }
         stopProxy(streamProxy);
     }
@@ -81,7 +84,7 @@ public class StreamProxyPlayServiceImpl implements IStreamProxyPlayService {
 
         MediaServer mediaServer = mediaServerService.getOne(mediaServerId);
         if (mediaServer == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "媒体节点不存在");
+            throw new ServiceException("媒体节点不存在");
         }
         if (ObjectUtils.isEmpty(streamProxy.getStreamKey())) {
             mediaServerService.closeStreams(mediaServer, streamProxy.getApp(), streamProxy.getStream());

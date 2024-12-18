@@ -2,14 +2,14 @@ package com.cdzeroly.wvp.service.impl;
 
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.gb28181.domian.bean.PlayException;
+import com.cdzeroly.wvp.gb28181.exception.PlayException;
 import com.cdzeroly.wvp.gb28181.domian.bean.SendRtpInfo;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.service.ISendRtpServerService;
 import com.cdzeroly.wvp.utils.JsonUtil;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.support.atomic.RedisAtomicInteger;
 import org.springframework.stereotype.Service;
@@ -19,22 +19,24 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * @author Administrator
+ */
 @Service
+@AllArgsConstructor
 @Slf4j
 public class SendRtpServerServiceImpl implements ISendRtpServerService {
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private RedisTemplate<Object, Object> redisTemplate;
+    private final RedisTemplate<Object, Object> redisTemplate;
 
 
     @Override
     public SendRtpInfo createSendRtpInfo(MediaServer mediaServer, String ip, Integer port, String ssrc, String requesterId,
                                          String deviceId, Integer channelId, Boolean isTcp, Boolean rtcp) {
         int localPort = getNextPort(mediaServer);
-        if (localPort == 0) {
+        if (localPort <= 0) {
             return null;
         }
         return SendRtpInfo.getInstance(localPort, mediaServer, ip, port, ssrc, deviceId, null, channelId,

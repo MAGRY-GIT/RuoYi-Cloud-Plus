@@ -7,6 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author MGARY
+ */
 @Data
 public class SipEvent implements Delayed {
 

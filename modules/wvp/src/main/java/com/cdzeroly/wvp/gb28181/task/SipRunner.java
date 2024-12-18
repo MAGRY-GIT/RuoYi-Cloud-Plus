@@ -13,6 +13,7 @@ import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.service.ISendRtpServerService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -34,31 +35,24 @@ import java.util.Map;
 @Slf4j
 @Component
 @Order(value=14)
+@AllArgsConstructor
 public class SipRunner implements CommandLineRunner {
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private SSRCFactory ssrcFactory;
+    private final SSRCFactory ssrcFactory;
 
-    @Autowired
-    private IDeviceService deviceService;
+    private final IDeviceService deviceService;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private IPlatformService platformService;
+    private final IPlatformService platformService;
 
-    @Autowired
-    private IGbChannelService channelService;
+    private final IGbChannelService channelService;
 
-    @Autowired
-    private ISIPCommanderForPlatform commanderForPlatform;
+    private final ISIPCommanderForPlatform commanderForPlatform;
 
-    @Autowired
-    private ISendRtpServerService sendRtpServerService;
+    private final ISendRtpServerService sendRtpServerService;
 
     @Override
     public void run(String... args) throws Exception {

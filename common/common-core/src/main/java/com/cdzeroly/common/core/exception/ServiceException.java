@@ -40,6 +40,7 @@ public final class ServiceException extends RuntimeException {
         this.message = message;
     }
 
+
     public ServiceException(String message, Integer code) {
         this.message = message;
         this.code = code;
@@ -55,18 +56,12 @@ public final class ServiceException extends RuntimeException {
         return new ServiceException(msgKey);
     }
 
-    public String getDetailMessage() {
-        return detailMessage;
-    }
 
     @Override
     public String getMessage() {
         return message;
     }
 
-    public Integer getCode() {
-        return code;
-    }
 
     public ServiceException setMessage(String message) {
         this.message = message;

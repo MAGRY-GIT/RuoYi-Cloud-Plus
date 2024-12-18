@@ -7,6 +7,9 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
+/**
+ * @author MGARY
+ */
 public class SSLSocketClientUtil {
     public static SSLSocketFactory getSocketFactory(TrustManager manager) {
         SSLSocketFactory socketFactory = null;
@@ -42,12 +45,11 @@ public class SSLSocketClientUtil {
     }
 
     public static HostnameVerifier getHostnameVerifier() {
-        HostnameVerifier hostnameVerifier = new HostnameVerifier() {
+        return new HostnameVerifier() {
             @Override
             public boolean verify(String s, SSLSession sslSession) {
                 return true;
             }
         };
-        return hostnameVerifier;
     }
 }

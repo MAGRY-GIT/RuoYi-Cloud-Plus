@@ -1,9 +1,9 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.web.core.BaseController;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.conf.exception.SsrcTransactionNotFoundException;
 
 import com.cdzeroly.wvp.gb28181.domian.Device;
@@ -17,7 +17,7 @@ import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
 import com.cdzeroly.wvp.service.domian.bean.InviteErrorCode;
 import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
-import com.cdzeroly.wvp.vmanager.bean.StreamContent;
+import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
 import com.cdzeroly.wvp.vmanager.bean.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -94,7 +94,7 @@ public class GBRecordController extends BaseController {
 			}));
 		} catch (InvalidArgumentException | SipException | ParseException e) {
 			log.error("[命令发送失败] 查询录像: {}", e.getMessage());
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " +  e.getMessage());
+			throw new ServiceException( "命令发送失败: " +  e.getMessage());
 		}
 
 		// 录像查询以channelId作为deviceId查询
@@ -118,8 +118,8 @@ public class GBRecordController extends BaseController {
 	@Parameter(name = "endTime", description = "结束时间", required = true)
 	@Parameter(name = "downloadSpeed", description = "下载倍速", required = true)
 	@GetMapping("/download/start/{deviceId}/{channelId}")
-	public DeferredResult<WVPResult<StreamContent>> download( @PathVariable String deviceId, @PathVariable String channelId,
-															 String startTime, String endTime, String downloadSpeed) {
+	public DeferredResult<WVPResult<StreamContentVo>> download(@PathVariable String deviceId, @PathVariable String channelId,
+                                                               String startTime, String endTime, String downloadSpeed) {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("历史媒体下载 API调用，deviceId：%s，channelId：%s，downloadSpeed：%s", deviceId, channelId, downloadSpeed));
@@ -127,7 +127,7 @@ public class GBRecordController extends BaseController {
 
 		String uuid = UUID.randomUUID().toString();
 		String key = DeferredResultHolder.CALLBACK_CMD_DOWNLOAD + deviceId + channelId;
-		DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>(30000L);
+		DeferredResult<WVPResult<StreamContentVo>> result = new DeferredResult<>(30000L);
 		resultHolder.put(key, uuid, result);
 		RequestMessage requestMessage = new RequestMessage();
 		requestMessage.setId(uuid);
@@ -136,18 +136,18 @@ public class GBRecordController extends BaseController {
 		Device device = deviceService.getDeviceByDeviceId(deviceId);
 		if (device == null) {
 			log.warn("[开始历史媒体下载] 未找到设备 deviceId: {},channelId:{}", deviceId, channelId);
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到设备：" + deviceId);
+			throw new ServiceException( "未找到设备：" + deviceId);
 		}
 
 		DeviceChannel channel = channelService.getOne(deviceId, channelId);
 		if (channel == null) {
 			log.warn("[开始历史媒体下载] 未找到通道 deviceId: {},channelId:{}", deviceId, channelId);
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到通道：" + channelId);
+			throw new ServiceException( "未找到通道：" + channelId);
 		}
 		playService.download(device, channel, startTime, endTime, Integer.parseInt(downloadSpeed),
 		(code, msg, data)->{
 
-			WVPResult<StreamContent> wvpResult = new WVPResult<>();
+			WVPResult<StreamContentVo> wvpResult = new WVPResult<>();
 			if (code == InviteErrorCode.SUCCESS.getCode()) {
 				wvpResult.setCode(ErrorCode.SUCCESS.getCode());
 				wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
@@ -157,7 +157,7 @@ public class GBRecordController extends BaseController {
 					if (userSetting.getUseSourceIpAsStreamIp()) {
 						streamInfo.channgeStreamIp(request.getLocalAddr());
 					}
-					wvpResult.setData(new StreamContent(streamInfo));
+					wvpResult.setData(new StreamContentVo(streamInfo));
 				}
 			}else {
 				wvpResult.setCode(code);
@@ -182,12 +182,12 @@ public class GBRecordController extends BaseController {
 		}
 
 		if (deviceId == null || channelId == null) {
-			throw new ControllerException(ErrorCode.ERROR400);
+			throw new ServiceException("参数或方法错误");
 		}
 
 		Device device = deviceService.getDeviceByDeviceId(deviceId);
 		if (device == null) {
-			throw new ControllerException(ErrorCode.ERROR400.getCode(), "设备：" + deviceId + "未找到");
+			throw new ServiceException( "设备：" + deviceId + "未找到");
 		}
 
 		try {
@@ -202,22 +202,22 @@ public class GBRecordController extends BaseController {
 	@Parameter(name = "channelId", description = "通道国标编号", required = true)
 	@Parameter(name = "stream", description = "流ID", required = true)
 	@GetMapping("/download/progress/{deviceId}/{channelId}/{stream}")
-	public StreamContent getProgress(@PathVariable String deviceId, @PathVariable String channelId, @PathVariable String stream) {
+	public StreamContentVo getProgress(@PathVariable String deviceId, @PathVariable String channelId, @PathVariable String stream) {
 		Device device = deviceService.getDeviceByDeviceId(deviceId);
 		if (device == null) {
 			log.warn("[获取历史媒体下载进度] 未找到设备 deviceId: {},channelId:{}", deviceId, channelId);
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到设备：" + deviceId);
+			throw new ServiceException( "未找到设备：" + deviceId);
 		}
 
 		DeviceChannel channel = channelService.getOne(deviceId, channelId);
 		if (channel == null) {
 			log.warn("[获取历史媒体下载进度] 未找到通道 deviceId: {},channelId:{}", deviceId, channelId);
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到通道：" + channelId);
+			throw new ServiceException( "未找到通道：" + channelId);
 		}
 		StreamInfo downLoadInfo = playService.getDownLoadInfo(device, channel, stream);
 		if (downLoadInfo == null) {
-			throw new ControllerException(ErrorCode.ERROR404);
+			// throw new ServiceException(ErrorCode.ERROR404); TODO
 		}
-		return new StreamContent(downLoadInfo);
+		return new StreamContentVo(downLoadInfo);
 	}
 }

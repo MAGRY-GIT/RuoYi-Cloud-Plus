@@ -13,6 +13,7 @@ import com.cdzeroly.wvp.gb28181.utils.NumericUtil;
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.utils.DateUtil;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -34,27 +35,25 @@ import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
 
 /**
  * 移动设备位置数据通知，设备主动发起，不需要上级订阅
- */
+ * @author MGARY
+ * */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class MobilePositionNotifyMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "MobilePosition";
+    private final NotifyMessageHandler notifyMessageHandler;
 
-    @Autowired
-    private NotifyMessageHandler notifyMessageHandler;
+    private final IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
-
-    private ConcurrentLinkedQueue<SipMsgInfo> taskQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<SipMsgInfo> taskQueue = new ConcurrentLinkedQueue<>();
 
     @Qualifier("taskExecutor")
-    @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
+    private final ThreadPoolTaskExecutor taskExecutor;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "MobilePosition";
         notifyMessageHandler.addHandler(cmdType, this);
     }
 

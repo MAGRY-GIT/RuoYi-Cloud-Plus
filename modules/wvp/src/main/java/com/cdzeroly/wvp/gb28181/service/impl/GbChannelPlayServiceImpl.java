@@ -2,33 +2,34 @@ package com.cdzeroly.wvp.gb28181.service.impl;
 
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
-import com.cdzeroly.wvp.gb28181.domian.bean.InviteInfo;
+import com.cdzeroly.wvp.gb28181.transmit.bean.InviteInfo;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.bean.PlayException;
+import com.cdzeroly.wvp.gb28181.exception.PlayException;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelPlayService;
 import com.cdzeroly.wvp.gb28181.service.IPlayService;
 import com.cdzeroly.wvp.service.domian.bean.ErrorCallback;
 import com.cdzeroly.wvp.service.domian.bean.InviteErrorCode;
 import com.cdzeroly.wvp.streamProxy.service.IStreamProxyPlayService;
 import com.cdzeroly.wvp.streamPush.service.IStreamPushPlayService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.sip.message.Response;
 
+/**
+ * @author MAGRY
+ */
 @Slf4j
 @Service
+@AllArgsConstructor
 public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
 
-    @Autowired
-    private IPlayService deviceChannelPlayService;
+    private final IPlayService deviceChannelPlayService;
 
-    @Autowired
-    private IStreamProxyPlayService streamProxyPlayService;
+    private final IStreamProxyPlayService streamProxyPlayService;
 
-    @Autowired
-    private IStreamPushPlayService streamPushPlayService;
+    private final IStreamPushPlayService streamPushPlayService;
 
 
     @Override
@@ -99,7 +100,7 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
         } else if (channel.getStreamPushId() != null) {
             if (platform != null) {
                 // 推流
-                playPush(channel, platform.getServerGBId(), platform.getName(), callback);
+                playPush(channel, platform.getServerGbId(), platform.getName(), callback);
             }else {
                 // 推流
                 playPush(channel, null, null, callback);

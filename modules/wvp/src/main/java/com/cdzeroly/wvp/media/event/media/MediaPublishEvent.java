@@ -2,10 +2,15 @@ package com.cdzeroly.wvp.media.event.media;
 
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.zlm.dto.hook.OnPublishHookParam;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 推流鉴权事件
+ * @author MGARY
  */
+@Setter
+@Getter
 public class MediaPublishEvent extends MediaEvent {
     public MediaPublishEvent(Object source) {
         super(source);
@@ -23,11 +28,4 @@ public class MediaPublishEvent extends MediaEvent {
 
     private String params;
 
-    public String getParams() {
-        return params;
-    }
-
-    public void setParams(String params) {
-        this.params = params;
-    }
 }

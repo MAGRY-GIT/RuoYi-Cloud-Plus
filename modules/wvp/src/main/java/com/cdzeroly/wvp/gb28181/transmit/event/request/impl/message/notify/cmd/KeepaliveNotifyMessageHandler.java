@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.notify.cmd;
 
 import com.cdzeroly.wvp.common.VideoManagerConstants;
-import com.cdzeroly.wvp.conf.DynamicTask;
+import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -120,7 +120,7 @@ public class KeepaliveNotifyMessageHandler extends SIPRequestProcessorParent imp
             if (device.getKeepaliveTime() == null) {
                 device.setKeepaliveIntervalTime(60);
             } else {
-                long lastTime = DateUtil.yyyy_MM_dd_HH_mm_ssToTimestamp(device.getKeepaliveTime());
+                long lastTime = DateUtil.yyyyMmDdHhMmSsToTimestamp(device.getKeepaliveTime());
                 if (System.currentTimeMillis() / 1000 - lastTime > 10) {
                     device.setKeepaliveIntervalTime(Long.valueOf(System.currentTimeMillis() / 1000 - lastTime).intValue());
                 }

@@ -25,7 +25,11 @@ public interface IDeviceAlarmService {
      */
     void add(DeviceAlarm deviceAlarm);
 
-
+    /**
+     * 删除报警
+     * @param bo
+     * @return
+     */
     int clearAlarmBeforeTime(AlarmBo bo);
 
 

@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.gb28181.service;
 
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
-import com.cdzeroly.wvp.gb28181.domian.bean.InviteInfo;
+import com.cdzeroly.wvp.gb28181.transmit.bean.InviteInfo;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.service.domian.bean.ErrorCallback;
 

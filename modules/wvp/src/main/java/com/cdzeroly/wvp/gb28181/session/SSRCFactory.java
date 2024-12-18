@@ -3,7 +3,6 @@ package com.cdzeroly.wvp.gb28181.session;
 import com.cdzeroly.wvp.conf.SipConfig;
 import com.cdzeroly.wvp.conf.UserSetting;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
@@ -35,8 +34,12 @@ public class SSRCFactory {
 
     private final UserSetting userSetting;
 
-
-    public void initMediaServerSSRC(String mediaServerId, Set<String> usedSet) {
+    /**
+     * 初始化 媒体服务器 SSRC
+     * @param mediaServerId  媒体服务器ID
+     * @param usedSet 使用
+     */
+    public void initMediaServerSsrc(String mediaServerId, Set<String> usedSet) {
         String sipDomain = sipConfig.getDomain();
         String ssrcPrefix = sipDomain.length() >= 8 ? sipDomain.substring(3, 8) : sipDomain;
         String redisKey = SSRC_INFO_KEY + userSetting.getServerId() + "_" + mediaServerId;
@@ -62,14 +65,14 @@ public class SSRCFactory {
      * @return ssrc
      */
     public String getPlaySsrc(String mediaServerId) {
-        return "0" + getSN(mediaServerId);
+        return "0" + getSn(mediaServerId);
     }
 
     /**
      * 获取录像回放的SSRC值,第一位固定为1
      */
     public String getPlayBackSsrc(String mediaServerId) {
-        return "1" + getSN(mediaServerId);
+        return "1" + getSn(mediaServerId);
     }
 
     /**
@@ -89,7 +92,7 @@ public class SSRCFactory {
     /**
      * 获取后四位数SN,随机数
      */
-    private String getSN(String mediaServerId) {
+    private String getSn(String mediaServerId) {
         String redisKey = SSRC_INFO_KEY + userSetting.getServerId() + "_" + mediaServerId;
         Long size = redisTemplate.opsForSet().size(redisKey);
         if (size == null || size == 0) {
@@ -106,7 +109,7 @@ public class SSRCFactory {
      * @param mediaServerId 流媒体服务ID
      */
     public void reset(String mediaServerId) {
-        this.initMediaServerSSRC(mediaServerId, null);
+        this.initMediaServerSsrc(mediaServerId, null);
     }
 
     /**
@@ -114,7 +117,7 @@ public class SSRCFactory {
      *
      * @param mediaServerId 流媒体服务ID
      */
-    public boolean hasMediaServerSSRC(String mediaServerId) {
+    public boolean hasMediaServerSsrc(String mediaServerId) {
         String redisKey = SSRC_INFO_KEY + userSetting.getServerId() + "_" + mediaServerId;
         return Boolean.TRUE.equals(redisTemplate.hasKey(redisKey));
     }

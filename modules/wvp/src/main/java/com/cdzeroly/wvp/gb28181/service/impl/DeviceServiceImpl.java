@@ -3,14 +3,14 @@ package com.cdzeroly.wvp.gb28181.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.CommonCallback;
 import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
-import com.cdzeroly.wvp.conf.DynamicTask;
+import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.mapper.DeviceChannelMapper;
 import com.cdzeroly.wvp.gb28181.mapper.DeviceMapper;
@@ -31,7 +31,6 @@ import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.service.ISendRtpServerService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.utils.DateUtil;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import com.cdzeroly.wvp.vmanager.bean.ResourceBaseInfo;
 
 import lombok.extern.slf4j.Slf4j;
@@ -348,14 +347,7 @@ public class DeviceServiceImpl implements IDeviceService {
 
     @Override
     public Device getDeviceByDeviceId(String deviceId) {
-        Device device = redisCatchStorage.getDevice(deviceId);
-        if (device == null) {
-            device = deviceMapper.getDeviceByDeviceId(deviceId);
-            if (device != null) {
-                redisCatchStorage.updateDevice(device);
-            }
-        }
-        return device;
+        return redisCatchStorage.getDevice(deviceId);
     }
 
     @Override
@@ -418,7 +410,7 @@ public class DeviceServiceImpl implements IDeviceService {
         if(device.getStreamMode() == null) {
             device.setStreamMode(NetProtocol.UDP.name());
         }
-        deviceMapper.addCustomDevice(device);
+        deviceMapper.insert(device);
     }
 
     @Override
@@ -502,7 +494,7 @@ public class DeviceServiceImpl implements IDeviceService {
     public boolean delete(String deviceId) {
         Device device = deviceMapper.getDeviceByDeviceId(deviceId);
         if (device == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到设备:" + deviceId);
+            throw new ServiceException("未找到设备:" + deviceId);
         }
         platformChannelMapper.delChannelForDeviceId(deviceId);
         deviceChannelMapper.cleanChannelsByDeviceId(device.getId());

@@ -11,6 +11,7 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.response.Res
 import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import com.cdzeroly.wvp.vmanager.bean.WVPResult;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
@@ -25,20 +26,21 @@ import java.text.ParseException;
 
 import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
 
+/**
+ * @author MGARY
+ */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class DeviceControlResponseMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "DeviceControl";
+    private final ResponseMessageHandler responseMessageHandler;
 
-    @Autowired
-    private ResponseMessageHandler responseMessageHandler;
-
-    @Autowired
-    private DeferredResultHolder deferredResultHolder;
+    private final DeferredResultHolder deferredResultHolder;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "DeviceControl";
         responseMessageHandler.addHandler(cmdType, this);
     }
 

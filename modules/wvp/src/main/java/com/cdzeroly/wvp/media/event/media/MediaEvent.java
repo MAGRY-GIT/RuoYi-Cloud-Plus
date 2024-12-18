@@ -1,11 +1,16 @@
 package com.cdzeroly.wvp.media.event.media;
 
 import com.cdzeroly.wvp.media.domian.MediaServer;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
 
 /**
  * 流到来事件
+ * @author MGARY
  */
+@Setter
+@Getter
 public class MediaEvent extends ApplicationEvent {
 
     public MediaEvent(Object source) {
@@ -20,37 +25,5 @@ public class MediaEvent extends ApplicationEvent {
 
     private String schema;
 
-
-    public String getApp() {
-        return app;
-    }
-
-    public void setApp(String app) {
-        this.app = app;
-    }
-
-    public String getStream() {
-        return stream;
-    }
-
-    public void setStream(String stream) {
-        this.stream = stream;
-    }
-
-    public MediaServer getMediaServer() {
-        return mediaServer;
-    }
-
-    public void setMediaServer(MediaServer mediaServer) {
-        this.mediaServer = mediaServer;
-    }
-
-    public String getSchema() {
-        return schema;
-    }
-
-    public void setSchema(String schema) {
-        this.schema = schema;
-    }
 
 }

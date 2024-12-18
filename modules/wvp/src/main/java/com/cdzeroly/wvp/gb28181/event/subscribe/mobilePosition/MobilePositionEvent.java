@@ -6,12 +6,15 @@ import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
 
 
+/**
+ * @author MGARY
+ */
+@Setter
+@Getter
 public class MobilePositionEvent extends ApplicationEvent {
     public MobilePositionEvent(Object source) {
         super(source);
     }
 
-    @Getter
-    @Setter
     private MobilePosition mobilePosition;
 }

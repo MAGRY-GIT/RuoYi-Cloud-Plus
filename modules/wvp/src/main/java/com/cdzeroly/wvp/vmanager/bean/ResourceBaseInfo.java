@@ -9,7 +9,13 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ResourceBaseInfo {
+    /**
+     * 全部设备
+     */
     private int total;
+    /**
+     * 在线的设备
+     */
     private int online;
 
     public ResourceBaseInfo() {

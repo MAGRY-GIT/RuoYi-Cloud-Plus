@@ -69,9 +69,20 @@ public class HookSubscribe {
         sendNotify(HookType.on_record_mp4, event);
     }
 
+    /**
+     * 所有订阅
+     */
     private final Map<String, Event> allSubscribes = new ConcurrentHashMap<>();
+    /**
+     * 全部钩子
+     */
     private final Map<String, Hook> allHook = new ConcurrentHashMap<>();
 
+    /**
+     * 发送通知
+     * @param hookType  事件类型
+     * @param event    媒体事件
+     */
     private void sendNotify(HookType hookType, MediaEvent event) {
         Hook paramHook = Hook.getInstance(hookType, event.getApp(), event.getStream());
         Event hookSubscribeEvent = allSubscribes.get(paramHook.toString());

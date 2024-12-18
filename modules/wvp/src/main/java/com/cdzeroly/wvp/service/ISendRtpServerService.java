@@ -5,16 +5,57 @@ import com.cdzeroly.wvp.media.domian.MediaServer;
 
 import java.util.List;
 
+/**
+ * 发送 rtp 服务器服务
+ * @author MGARY
+ */
 public interface ISendRtpServerService {
 
+    /**
+     *  创建发送rtp信息
+     * @param mediaServer
+     * @param ip
+     * @param port
+     * @param ssrc
+     * @param requesterId
+     * @param deviceId
+     * @param channelId
+     * @param isTcp
+     * @param rtcp
+     * @return
+     */
     SendRtpInfo createSendRtpInfo(MediaServer mediaServer, String ip, Integer port, String ssrc, String requesterId,
                                   String deviceId, Integer channelId, Boolean isTcp, Boolean rtcp);
 
+    /**
+     *  创建发送rtp信息
+     * @param mediaServer
+     * @param ip
+     * @param port
+     * @param ssrc
+     * @param platformId
+     * @param app
+     * @param stream
+     * @param channelId
+     * @param tcp
+     * @param rtcp
+     * @return
+     */
     SendRtpInfo createSendRtpInfo(MediaServer mediaServer, String ip, Integer port, String ssrc, String platformId,
                                   String app, String stream, Integer channelId, Boolean tcp, Boolean rtcp);
 
+    /**
+     * 更新
+     * @param sendRtpItem
+     */
     void update(SendRtpInfo sendRtpItem);
 
+    /**
+     *
+     * @param channelId
+     * @param targetId
+     * @return
+     */
     SendRtpInfo queryByChannelId(Integer channelId, String targetId);
 
     SendRtpInfo queryByCallId(String callId);

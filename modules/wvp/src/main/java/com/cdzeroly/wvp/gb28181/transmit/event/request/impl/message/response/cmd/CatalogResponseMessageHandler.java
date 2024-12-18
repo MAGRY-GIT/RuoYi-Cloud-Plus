@@ -10,15 +10,16 @@ import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.gb28181.service.IGroupService;
 import com.cdzeroly.wvp.gb28181.service.IRegionService;
 import com.cdzeroly.wvp.gb28181.session.CatalogDataManager;
+import com.cdzeroly.wvp.gb28181.transmit.bean.HandlerCatchData;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHandler;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.response.ResponseMessageHandler;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,32 +39,26 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class CatalogResponseMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "Catalog";
-
-    @Autowired
-    private ResponseMessageHandler responseMessageHandler;
+    private final ResponseMessageHandler responseMessageHandler;
 
     private final ConcurrentLinkedQueue<HandlerCatchData> taskQueue = new ConcurrentLinkedQueue<>();
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
+    private final IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private IRegionService regionService;
+    private final IRegionService regionService;
 
-    @Autowired
-    private IGroupService groupService;
+    private final IGroupService groupService;
 
-    @Autowired
-    private CatalogDataManager catalogDataCatch;
+    private final CatalogDataManager catalogDataCatch;
 
-    @Autowired
-    private SipConfig sipConfig;
+    private final SipConfig sipConfig;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "Catalog";
         responseMessageHandler.addHandler(cmdType, this);
     }
 

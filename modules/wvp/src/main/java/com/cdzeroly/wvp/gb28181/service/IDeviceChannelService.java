@@ -7,7 +7,7 @@ import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
 import com.cdzeroly.wvp.gb28181.domian.bo.ChannelReduce;
 import com.cdzeroly.wvp.vmanager.bean.ResourceBaseInfo;
-import com.cdzeroly.wvp.gb28181.domian.dto.DeviceChannelExtend;
+import com.cdzeroly.wvp.gb28181.domian.vo.DeviceChannelExtendVo;
 
 
 import java.util.List;
@@ -25,7 +25,7 @@ public interface IDeviceChannelService {
 
     /**
      * 获取统计信息
-     * @return
+     * @return  ResourceBaseInfo
      */
     ResourceBaseInfo getOverview();
 
@@ -97,7 +97,7 @@ public interface IDeviceChannelService {
 
     TableDataInfo<DeviceChannel> getSubChannels(int deviceDbId, String channelId, String query, Boolean channelType, Boolean online, PageQuery pageQuery);
 
-    List<DeviceChannelExtend> queryChannelExtendsByDeviceId(String deviceId, List<String> channelIds, Boolean online);
+    List<DeviceChannelExtendVo> queryChannelExtendsByDeviceId(String deviceId, List<String> channelIds, Boolean online);
 
     TableDataInfo<DeviceChannel> queryChannelsByDeviceId(String deviceId, String query, Boolean channelType, Boolean online, PageQuery pageQuery);
 

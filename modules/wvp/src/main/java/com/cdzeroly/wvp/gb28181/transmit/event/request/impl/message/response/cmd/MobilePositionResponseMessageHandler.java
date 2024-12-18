@@ -14,6 +14,7 @@ import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.utils.DateUtil;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -36,21 +37,18 @@ import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class MobilePositionResponseMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "MobilePosition";
+    private final ResponseMessageHandler responseMessageHandler;
 
-    @Autowired
-    private ResponseMessageHandler responseMessageHandler;
+    private final IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
-
-    @Autowired
-    private DeferredResultHolder resultHolder;
+    private final DeferredResultHolder resultHolder;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "MobilePosition";
         responseMessageHandler.addHandler(cmdType, this);
     }
 

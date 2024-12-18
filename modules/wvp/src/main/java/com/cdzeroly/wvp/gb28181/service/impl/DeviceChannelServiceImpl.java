@@ -4,12 +4,12 @@ import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.InviteInfo;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.bean.GbCode;
@@ -27,9 +27,8 @@ import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.utils.DateUtil;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import com.cdzeroly.wvp.vmanager.bean.ResourceBaseInfo;
-import com.cdzeroly.wvp.gb28181.domian.dto.DeviceChannelExtend;
+import com.cdzeroly.wvp.gb28181.domian.vo.DeviceChannelExtendVo;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -155,7 +154,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
     public ResourceBaseInfo getOverview() {
 
         int online = channelMapper.getOnlineCount();
-        int total = channelMapper.getAllChannelCount();
+        int total = channelMapper.count().intValue();
 
         return new ResourceBaseInfo(total, online);
     }
@@ -239,7 +238,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
     public DeviceChannel getOne(String deviceId, String channelId){
         Device device = deviceMapper.getDeviceByDeviceId(deviceId);
         if (device == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到设备：" + deviceId);
+            throw new ServiceException("未找到设备：" + deviceId);
         }
         return channelMapper.getOneByDeviceId(device.getId(), channelId);
     }
@@ -248,7 +247,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
     public DeviceChannel getOneForSource(String deviceId, String channelId){
         Device device = deviceMapper.getDeviceByDeviceId(deviceId);
         if (device == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到设备：" + deviceId);
+            throw new ServiceException("未找到设备：" + deviceId);
         }
         return channelMapper.getOneByDeviceIdForSource(device.getId(), channelId);
     }
@@ -316,14 +315,19 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
             log.info("[更新通道码流类型] 设备: {}, 通道：{}， 码流： {}", channel.getDeviceId(), channel.getDeviceId(),
                     channel.getStreamIdentification());
         }
-        channelMapper.updateChannelStreamIdentification(channel);
+        if (channel.getId() > 0) {
+            channelMapper.updateChannelStreamIdentification(channel);
+        }else {
+            channelMapper.updateAllChannelStreamIdentification(channel.getStreamIdentification());
+        }
+
     }
 
     @Override
     public List<DeviceChannel> queryChaneListByDeviceId(String deviceId) {
         Device device = deviceMapper.getDeviceByDeviceId(deviceId);
         if (device == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到通道：" + deviceId);
+            throw new ServiceException("未找到通道：" + deviceId);
         }
         return channelMapper.queryChannelsByDeviceDbId(device.getId());
     }
@@ -381,7 +385,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
             }
             // 发送redis消息。 通知位置信息的变化
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("time", DateUtil.yyyy_MM_dd_HH_mm_ssToISO8601(mobilePosition.getTime()));
+            jsonObject.put("time", DateUtil.yyyyMmDdHhMmSsToIso8601(mobilePosition.getTime()));
             jsonObject.put("serial", mobilePosition.getDeviceId());
             jsonObject.put("code", channel.getDeviceId());
             jsonObject.put("longitude", mobilePosition.getLongitude());
@@ -590,7 +594,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
     }
 
     @Override
-    public List<DeviceChannelExtend> queryChannelExtendsByDeviceId(String deviceId, List<String> channelIds, Boolean online) {
+    public List<DeviceChannelExtendVo> queryChannelExtendsByDeviceId(String deviceId, List<String> channelIds, Boolean online) {
         return channelMapper.queryChannelsWithDeviceInfo(deviceId, null,null, null, online,channelIds);
     }
 
@@ -598,7 +602,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
     public TableDataInfo<DeviceChannel> queryChannelsByDeviceId(String deviceId, String query, Boolean hasSubChannel, Boolean online, PageQuery pageQuery) {
         Device device = deviceMapper.getDeviceByDeviceId(deviceId);
         if (device == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "未找到设备：" + deviceId);
+            throw new ServiceException("未找到设备：" + deviceId);
         }
         if (query != null) {
             query = query.replaceAll("/", "//")

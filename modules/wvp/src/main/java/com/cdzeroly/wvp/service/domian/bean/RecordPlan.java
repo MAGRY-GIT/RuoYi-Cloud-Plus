@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.service.domian.bean;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cdzeroly.common.tenant.core.TenantEntity;
@@ -27,6 +28,7 @@ public class RecordPlan  extends TenantEntity {
     private String name;
 
     @Schema(description = "计划关联通道数量")
+    @TableField(exist = false)
     private int channelCount;
 
     @Schema(description = "是否开启定时截图")

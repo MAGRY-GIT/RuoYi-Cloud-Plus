@@ -9,9 +9,9 @@ import java.time.Instant;
 import java.util.List;
 
 /**
- * @description:设备录像信息bean
- * @author: swwheihei
- * @date:   2020年5月8日 下午2:05:56
+ * 设备录像信息bean
+ * @author swwheihei
+ *  2020年5月8日 下午2:05:56
  */
 @Setter
 @Getter

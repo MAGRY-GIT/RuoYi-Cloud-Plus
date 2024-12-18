@@ -14,11 +14,11 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sip.InvalidArgumentException;
@@ -30,37 +30,36 @@ import java.text.ParseException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * 消息请求处理器
+ * @author MGARY
+ */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class MessageRequestProcessor extends SIPRequestProcessorParent implements InitializingBean, ISIPRequestProcessor {
 
-    private final String method = "MESSAGE";
+    private static final Map<String, IMessageHandler> MESSAGE_HANDLER_MAP = new ConcurrentHashMap<>();
 
-    private static final Map<String, IMessageHandler> messageHandlerMap = new ConcurrentHashMap<>();
+    private final SIPProcessorObserver sipProcessorObserver;
 
-    @Autowired
-    private SIPProcessorObserver sipProcessorObserver;
+    private final IPlatformService platformService;
 
-    @Autowired
-    private IPlatformService platformService;
+    private final SipSubscribe sipSubscribe;
 
-    @Autowired
-    private SipSubscribe sipSubscribe;
+    private final IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
-
-    @Autowired
-    private SipInviteSessionManager sessionManager;
+    private final SipInviteSessionManager sessionManager;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         // 添加消息处理的订阅
+        String method = "MESSAGE";
         sipProcessorObserver.addRequestProcessor(method, this);
     }
 
     public void addHandler(String name, IMessageHandler handler) {
-        messageHandlerMap.put(name, handler);
+        MESSAGE_HANDLER_MAP.put(name, handler);
     }
 
     @Override
@@ -111,7 +110,7 @@ public class MessageRequestProcessor extends SIPRequestProcessorParent implement
                         return;
                     }
                     String name = rootElement.getName();
-                    IMessageHandler messageHandler = messageHandlerMap.get(name);
+                    IMessageHandler messageHandler = MESSAGE_HANDLER_MAP.get(name);
                     if (messageHandler != null) {
                         if (device != null) {
                             messageHandler.handForDevice(evt, device, rootElement);

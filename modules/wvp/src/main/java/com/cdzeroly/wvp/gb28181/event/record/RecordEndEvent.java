@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationEvent;
 
 /**
  * @description: 录像查询结束时间
- * @author: pan
+ * @author pan
  * @data: 2022-02-23
  */
 

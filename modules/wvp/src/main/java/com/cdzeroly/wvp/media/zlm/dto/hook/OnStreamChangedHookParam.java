@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.media.zlm.dto.hook;
 
-import com.cdzeroly.wvp.vmanager.bean.StreamContent;
+import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
 
 import java.util.List;
 import java.util.Map;
@@ -367,7 +367,7 @@ public class OnStreamChangedHookParam extends HookParam{
         }
     }
 
-    private StreamContent streamInfo;
+    private StreamContentVo streamInfo;
 
     public String getApp() {
         return app;
@@ -483,11 +483,11 @@ public class OnStreamChangedHookParam extends HookParam{
         this.docker = docker;
     }
 
-    public StreamContent getStreamInfo() {
+    public StreamContentVo getStreamInfo() {
         return streamInfo;
     }
 
-    public void setStreamInfo(StreamContent streamInfo) {
+    public void setStreamInfo(StreamContentVo streamInfo) {
         this.streamInfo = streamInfo;
     }
 

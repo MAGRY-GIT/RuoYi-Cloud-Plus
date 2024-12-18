@@ -17,7 +17,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableAsync(proxyTargetClass = true)
 public class ThreadPoolTaskConfig {
 
-    public static final int cpuNum = Runtime.getRuntime().availableProcessors();
+    public static final int CPU_NUM = Runtime.getRuntime().availableProcessors();
 
     /**
      *   默认情况下，在创建了线程池后，线程池中的线程数为0，当有任务来之后，就会创建一个线程去执行任务，
@@ -28,24 +28,24 @@ public class ThreadPoolTaskConfig {
     /**
      * 核心线程数（默认线程数）
      */
-    private static final int corePoolSize = cpuNum;
+    private static final int CORE_POOL_SIZE = CPU_NUM;
     /**
      * 最大线程数
      */
-    private static final int maxPoolSize = cpuNum*2;
+    private static final int MAX_POOL_SIZE = CPU_NUM *2;
     /**
      * 允许线程空闲时间（单位：默认为秒）
      */
-    private static final int keepAliveTime = 30;
+    private static final int KEEP_ALIVE_TIME = 30;
 
     /**
      * 缓冲队列大小
      */
-    private static final int queueCapacity = 10000;
+    private static final int QUEUE_CAPACITY = 10000;
     /**
      * 线程池名前缀
      */
-    private static final String threadNamePrefix = "wvp-";
+    private static final String THREAD_NAME_PREFIX = "wvp-";
 
     /**
      *
@@ -54,11 +54,11 @@ public class ThreadPoolTaskConfig {
     @Bean("taskExecutor") // bean的名称，默认为首字母小写的方法名
     public ThreadPoolTaskExecutor taskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(corePoolSize);
-        executor.setMaxPoolSize(maxPoolSize);
-        executor.setQueueCapacity(queueCapacity);
-        executor.setKeepAliveSeconds(keepAliveTime);
-        executor.setThreadNamePrefix(threadNamePrefix);
+        executor.setCorePoolSize(CORE_POOL_SIZE);
+        executor.setMaxPoolSize(MAX_POOL_SIZE);
+        executor.setQueueCapacity(QUEUE_CAPACITY);
+        executor.setKeepAliveSeconds(KEEP_ALIVE_TIME);
+        executor.setThreadNamePrefix(THREAD_NAME_PREFIX);
 
         // 线程池对拒绝任务的处理策略
         // CallerRunsPolicy：由调用线程（提交任务的线程）处理该任务

@@ -12,6 +12,7 @@ import com.cdzeroly.wvp.gb28181.utils.XmlUtil;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
@@ -24,26 +25,25 @@ import javax.sip.SipException;
 import javax.sip.message.Response;
 import java.text.ParseException;
 
+/**
+ * @author MGARY
+ */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class DeviceStatusResponseMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "DeviceStatus";
+    private final ResponseMessageHandler responseMessageHandler;
 
-    @Autowired
-    private ResponseMessageHandler responseMessageHandler;
+    private final DeferredResultHolder deferredResultHolder;
 
-    @Autowired
-    private DeferredResultHolder deferredResultHolder;
+    private final IDeviceService deviceService;
 
-    @Autowired
-    private IDeviceService deviceService;
-
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final IRedisCatchStorage redisCatchStorage;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "DeviceStatus";
         responseMessageHandler.addHandler(cmdType, this);
     }
 

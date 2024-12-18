@@ -4,7 +4,9 @@ import lombok.Getter;
 
 /**
  * 收录行业编码
+ * @author MGARY
  */
+@Getter
 public enum IndustryCodeTypeEnum {
     SOCIAL_SECURITY_ROAD("00", "社会治安路面接入", "包括城市路面、商业街、公共区域、重点区域"),
     SOCIAL_SECURITY_COMMUNITY("01", "社会治安社区接入", "包括社区、楼宇、网吧等"),
@@ -32,19 +34,16 @@ public enum IndustryCodeTypeEnum {
     /**
      * 接入类型码
      */
-    @Getter
     private String name;
 
     /**
      * 名称
      */
-    @Getter
     private String code;
 
     /**
      * 备注
      */
-    @Getter
     private String notes;
 
     IndustryCodeTypeEnum(String code, String name, String notes) {

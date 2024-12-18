@@ -7,6 +7,7 @@ import com.cdzeroly.wvp.gb28181.domian.bean.*;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.gb28181.service.IGroupService;
 import com.cdzeroly.wvp.gb28181.service.IRegionService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -22,21 +23,21 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author MAGRY
+ */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class CatalogDataManager implements CommandLineRunner {
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
+    private final IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private IRegionService regionService;
+    private final IRegionService regionService;
 
-    @Autowired
-    private IGroupService groupService;
+    private final IGroupService groupService;
 
-    @Autowired
-    private RedisTemplate<Object, Object> redisTemplate;
+    private final RedisTemplate<Object, Object> redisTemplate;
 
     private final Map<String, CatalogData> dataMap = new ConcurrentHashMap<>();
 

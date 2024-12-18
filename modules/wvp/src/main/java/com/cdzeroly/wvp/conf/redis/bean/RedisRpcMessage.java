@@ -10,8 +10,15 @@ import lombok.Setter;
 @Getter
 public class RedisRpcMessage {
 
+    /**
+     * 请求参数
+     */
     private RedisRpcRequest request;
 
+
+    /**
+     * 返回参数
+     */
     private RedisRpcResponse response;
 
 }

@@ -295,7 +295,7 @@
 
     </select>
     <select id="queryChannelsWithDeviceInfo"
-            resultType="com.cdzeroly.wvp.gb28181.domian.dto.DeviceChannelExtend">
+            resultType="com.cdzeroly.wvp.gb28181.domian.vo.DeviceChannelExtendVo">
         SELECT
         dc.id,
         dc.create_time,
@@ -409,7 +409,7 @@
             AND pgc.catalog_id = #{catalogId}
         </if>
         ORDER BY COALESCE(dc.gb_device_id, dc.device_id) ASC
-        ${ew.customSqlSegment}
+
     </select>
     <select id="queryAllChannelsForRefresh" resultType="com.cdzeroly.wvp.gb28181.domian.DeviceChannel">
         select
@@ -471,9 +471,7 @@
         select count(1) from wvp_device_channel where status = 'ON'
 
     </select>
-    <select id="getAllChannelCount" resultType="java.lang.Integer">
-        select count(1) from wvp_device_channel
-    </select>
+
     <select id="getOneForSource" resultType="com.cdzeroly.wvp.gb28181.domian.DeviceChannel">
         SELECT
             id,
@@ -702,5 +700,9 @@
             channel_type = #{channelType}
         WHERE id = #{id}
 
+    </update>
+    <update id="updateAllChannelStreamIdentification">
+
+        UPDATE wvp_device_channel SET stream_identification=#{streamIdentification}
     </update>
 </mapper>

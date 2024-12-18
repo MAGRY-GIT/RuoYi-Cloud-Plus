@@ -3,20 +3,20 @@ package com.cdzeroly.wvp.media.zlm;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.common.CommonCallback;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.gb28181.domian.bean.SendRtpInfo;
 import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.service.IMediaNodeServerService;
 import com.cdzeroly.wvp.media.zlm.dto.ZLMServerConfig;
-import com.cdzeroly.wvp.streamProxy.bean.StreamProxy;
+import com.cdzeroly.wvp.streamProxy.domain.StreamProxy;
 import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import com.cdzeroly.wvp.vmanager.bean.WVPResult;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -24,17 +24,15 @@ import java.util.*;
 
 @Slf4j
 @Service("zlm")
+@AllArgsConstructor
 public class ZLMMediaNodeServerService implements IMediaNodeServerService {
 
 
-    @Autowired
-    private ZLMRESTfulUtils zlmresTfulUtils;
+    private final ZLMRESTFullUtils zlmresTfulUtils;
 
-    @Autowired
-    private ZLMServerFactory zlmServerFactory;
+    private final ZLMServerFactory zlmServerFactory;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
     @Override
     public int createRTPServer(MediaServer mediaServer, String streamId, long ssrc, Integer port, Boolean onlyAuto, Boolean disableAudio, Boolean reUsePort, Integer tcpMode) {
@@ -96,20 +94,20 @@ public class ZLMMediaNodeServerService implements IMediaNodeServerService {
         mediaServer.setSecret(secret);
         JSONObject responseJSON = zlmresTfulUtils.getMediaServerConfig(mediaServer);
         if (responseJSON == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "连接失败");
+            throw new ServiceException("连接失败");
         }
         JSONArray data = responseJSON.getJSONArray("data");
         if (data == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "读取配置失败");
+            throw new ServiceException("读取配置失败");
         }
         ZLMServerConfig zlmServerConfig = JSON.parseObject(JSON.toJSONString(data.get(0)), ZLMServerConfig.class);
         if (zlmServerConfig == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "读取配置失败");
+            throw new ServiceException("读取配置失败");
         }
         mediaServer.setId(zlmServerConfig.getGeneralMediaServerId());
-        mediaServer.setHttpSslPort(zlmServerConfig.getHttpPort());
-        mediaServer.setFlvSslPort(zlmServerConfig.getHttpPort());
-        mediaServer.setWsFlvSslPort(zlmServerConfig.getHttpPort());
+        mediaServer.setHttpSslPort(zlmServerConfig.getHttpSSLport());
+        mediaServer.setFlvSslPort(zlmServerConfig.getHttpSSLport());
+        mediaServer.setWsFlvSslPort(zlmServerConfig.getHttpSSLport());
         mediaServer.setRtmpPort(zlmServerConfig.getRtmpPort());
         mediaServer.setRtmpSslPort(zlmServerConfig.getRtmpSslPort());
         mediaServer.setRtspPort(zlmServerConfig.getRtspPort());
@@ -257,7 +255,7 @@ public class ZLMMediaNodeServerService implements IMediaNodeServerService {
         JSONObject jsonObject = zlmresTfulUtils.getMediaServerConfig(mediaServer);
         if (jsonObject.getInteger("code") != 0) {
             log.warn("[getFfmpegCmd] 获取流媒体配置失败");
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "获取流媒体配置失败");
+            throw new ServiceException("获取流媒体配置失败");
         }
         JSONArray dataArray = jsonObject.getJSONArray("data");
         JSONObject mediaServerConfig = dataArray.getJSONObject(0);
@@ -356,7 +354,7 @@ public class ZLMMediaNodeServerService implements IMediaNodeServerService {
         JSONObject jsonObject = zlmServerFactory.startSendRtpPassive(mediaServer, param, null);
         if (jsonObject == null || jsonObject.getInteger("code") != 0 ) {
             log.error("启动监听TCP被动推流失败: {}, 参数：{}", jsonObject.getString("msg"), JSON.toJSONString(param));
-            throw new ControllerException(jsonObject.getInteger("code"), jsonObject.getString("msg"));
+            throw new ServiceException( jsonObject.getString("message"),jsonObject.getInteger("code"));
         }
         log.info("调用ZLM-TCP被动推流接口, 结果： {}",  jsonObject);
         log.info("启动监听TCP被动推流成功[ {}/{} ]，{}->{}:{}, " , sendRtpItem.getApp(), sendRtpItem.getStream(),
@@ -384,9 +382,9 @@ public class ZLMMediaNodeServerService implements IMediaNodeServerService {
         param.put("dst_port", sendRtpItem.getPort());
         JSONObject jsonObject = zlmresTfulUtils.startSendRtp(mediaServer, param);
         if (jsonObject == null ) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "连接zlm失败");
+            throw new ServiceException("连接zlm失败");
         }else if (jsonObject.getInteger("code") != 0) {
-            throw new ControllerException(jsonObject.getInteger("code"), jsonObject.getString("msg"));
+            throw new ServiceException(jsonObject.getString("message"),jsonObject.getInteger("code") );
         }
         log.info("[推流结果]：{} ，参数： {}",jsonObject, JSONObject.toJSONString(param));
     }
@@ -409,11 +407,11 @@ public class ZLMMediaNodeServerService implements IMediaNodeServerService {
             String ffmpegCmd = getFfmpegCmd(mediaServer, streamProxy.getFfmpegCmdKey());
 
             if (ffmpegCmd == null) {
-                throw new ControllerException(ErrorCode.ERROR100.getCode(), "ffmpeg拉流代理无法获取ffmpeg cmd");
+                throw new ServiceException( "ffmpeg拉流代理无法获取ffmpeg cmd");
             }
             String schema = getSchemaFromFFmpegCmd(ffmpegCmd);
             if (schema == null) {
-                throw new ControllerException(ErrorCode.ERROR100.getCode(), "ffmpeg拉流代理无法从ffmpeg cmd中获取到输出格式");
+                throw new ServiceException( "ffmpeg拉流代理无法从ffmpeg cmd中获取到输出格式");
             }
             int port;
             String schemaForUri;
@@ -456,13 +454,13 @@ public class ZLMMediaNodeServerService implements IMediaNodeServerService {
                     streamProxy.isEnableAudio(), streamProxy.isEnableMp4(), streamProxy.getRtspType(), streamProxy.getTimeout());
         }
         if (jsonObject == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "请求失败");
+            throw new ServiceException( "请求失败");
         }else if (jsonObject.getInteger("code") != 0) {
-            throw new ControllerException(jsonObject.getInteger("code"), jsonObject.getString("msg"));
+            throw new ServiceException( jsonObject.getString("message"),jsonObject.getInteger("code"));
         }else {
             JSONObject data = jsonObject.getJSONObject("data");
             if (data == null) {
-                throw new ControllerException(jsonObject.getInteger("code"), "代理结果异常： " + jsonObject);
+                throw new ServiceException( "代理结果异常： " + jsonObject,jsonObject.getInteger("code"));
             }else {
                 streamProxy.setStreamKey(jsonObject.getString("key"));
                 return getStreamInfoByAppAndStream(mediaServer, streamProxy.getApp(), streamProxy.getStream(), null, null, true);
@@ -493,9 +491,9 @@ public class ZLMMediaNodeServerService implements IMediaNodeServerService {
     public void stopProxy(MediaServer mediaServer, String streamKey) {
         JSONObject jsonObject = zlmresTfulUtils.delStreamProxy(mediaServer, streamKey);
         if (jsonObject == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "请求失败");
+            throw new ServiceException( "请求失败");
         }else if (jsonObject.getInteger("code") != 0) {
-            throw new ControllerException(jsonObject.getInteger("code"), jsonObject.getString("msg"));
+            throw new ServiceException( jsonObject.getString("message"),jsonObject.getInteger("code"));
         }
     }
 

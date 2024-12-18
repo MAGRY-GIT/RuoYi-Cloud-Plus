@@ -1,10 +1,9 @@
 package com.cdzeroly.wvp.gb28181;
 
-import com.cdzeroly.wvp.conf.exception.ControllerException;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,7 +52,7 @@ public class ApiControlController {
         if (speed == null) {speed = 0;}
         Device device = deviceService.getDeviceByDeviceId(serial);
         if (device == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "device[ " + serial + " ]未找到");
+            throw new ServiceException("device[ " + serial + " ]未找到");
         }
         int cmdCode = 0;
         switch (command){
@@ -98,7 +97,7 @@ public class ApiControlController {
             cmder.frontEndCmd(device, code, cmdCode, speed, speed, speed);
         } catch (SipException | InvalidArgumentException | ParseException e) {
             log.error("[命令发送失败] 云台控制: {}", e.getMessage());
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+            throw new ServiceException("命令发送失败: " + e.getMessage());
         }
     }
 
@@ -127,7 +126,7 @@ public class ApiControlController {
         if (channel == null) {channel = 0;}
         Device device = deviceService.getDeviceByDeviceId(serial);
         if (device == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "device[ " + serial + " ]未找到");
+            throw new ServiceException("device[ " + serial + " ]未找到");
         }
         int cmdCode = 0;
         switch (command){
@@ -147,7 +146,7 @@ public class ApiControlController {
             cmder.frontEndCmd(device, code, cmdCode, 0, preset, 0);
         } catch (SipException | InvalidArgumentException | ParseException e) {
             log.error("[命令发送失败] 预置位控制: {}", e.getMessage());
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+            throw new ServiceException("命令发送失败: " + e.getMessage());
         }
     }
 }

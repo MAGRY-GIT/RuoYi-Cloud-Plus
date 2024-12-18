@@ -3,12 +3,12 @@ package com.cdzeroly.wvp.streamPush.service.impl;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
 import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
@@ -29,7 +29,6 @@ import com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo;
 import com.cdzeroly.wvp.streamPush.mapper.StreamPushMapper;
 import com.cdzeroly.wvp.streamPush.service.IStreamPushService;
 import com.cdzeroly.wvp.utils.DateUtil;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import com.cdzeroly.wvp.vmanager.bean.ResourceBaseInfo;
 
 import lombok.extern.slf4j.Slf4j;
@@ -204,7 +203,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
         log.info("[添加推流] app: {}, stream: {}, 国标编号: {}", stream.getApp(), stream.getStream(), stream.getGbDeviceId());
         StreamPushVo streamPushVoInDb = streamPushMapper.selectByAppAndStream(stream.getApp(), stream.getStream());
         if (streamPushVoInDb != null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "应用名+流ID已存在");
+            throw new ServiceException("应用名+流ID已存在");
         }
         StreamPush streamPush = MapstructUtils.convert(stream, StreamPush.class);
         int addResult = streamPushMapper.insert(streamPush);
@@ -250,7 +249,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
             // app或者stream变化
             StreamPushVo streamPushInDbForAppAndStreamBoVo = streamPushMapper.selectByAppAndStream(streamPushVo.getApp(), streamPushVo.getStream());
             if (streamPushInDbForAppAndStreamBoVo != null && !streamPushInDbForAppAndStreamBoVo.getId().equals(streamPushVo.getId())) {
-                throw new ControllerException(ErrorCode.ERROR100.getCode(), "应用名+流ID已存在");
+                throw new ServiceException("应用名+流ID已存在");
             }
         }
         StreamPush streamPush = MapstructUtils.convert(streamPushVo, StreamPush.class);

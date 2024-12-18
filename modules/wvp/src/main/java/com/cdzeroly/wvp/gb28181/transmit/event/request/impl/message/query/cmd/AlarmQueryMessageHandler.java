@@ -6,6 +6,7 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHandler;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.query.QueryMessageHandler;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
@@ -18,17 +19,19 @@ import javax.sip.SipException;
 import javax.sip.message.Response;
 import java.text.ParseException;
 
+/**
+ * @author MGARY
+ */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class AlarmQueryMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "Alarm";
-
-    @Autowired
-    private QueryMessageHandler queryMessageHandler;
+    private final QueryMessageHandler queryMessageHandler;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "Alarm";
         queryMessageHandler.addHandler(cmdType, this);
     }
 

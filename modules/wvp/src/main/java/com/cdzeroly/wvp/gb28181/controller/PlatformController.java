@@ -1,11 +1,11 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.conf.SipConfig;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.domian.bean.PlatformChannel;
@@ -66,7 +66,7 @@ public class PlatformController {
         if (parentPlatform != null) {
             return  parentPlatform;
         } else {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "未查询到此平台");
+            throw new ServiceException("未查询到此平台") ;
         }
     }
 
@@ -80,8 +80,8 @@ public class PlatformController {
 
         TableDataInfo<Platform> parentPlatformPageInfo = platformService.queryPlatformList( pageQuery, query);
         return   parentPlatformPageInfo.map(platform -> {
-            platform.setMobilePositionSubscribe(subscribeHolder.getMobilePositionSubscribe(platform.getServerGBId()) != null);
-            platform.setCatalogSubscribe(subscribeHolder.getCatalogSubscribe(platform.getServerGBId()) != null);
+            platform.setMobilePositionSubscribe(subscribeHolder.getMobilePositionSubscribe(platform.getServerGbId()) != null);
+            platform.setCatalogSubscribe(subscribeHolder.getCatalogSubscribe(platform.getServerGbId()) != null);
             return platform;
         });
 
@@ -96,13 +96,13 @@ public class PlatformController {
             log.debug("保存上级平台信息API调用");
         }
         Assert.notNull(platform.getName(), "平台名称不可为空");
-        Assert.notNull(platform.getServerGBId(), "上级平台国标编号不可为空");
+        Assert.notNull(platform.getServerGbId(), "上级平台国标编号不可为空");
         Assert.notNull(platform.getServerIp(), "上级平台IP不可为空");
         Assert.isTrue(platform.getServerPort() > 0 && platform.getServerPort() < 65535, "上级平台端口异常");
-        Assert.notNull(platform.getDeviceGBId(), "本平台国标编号不可为空");
+        Assert.notNull(platform.getServerGbId(), "本平台国标编号不可为空");
 
-        if (ObjectUtils.isEmpty(platform.getServerGBDomain())) {
-            platform.setServerGBDomain(platform.getServerGBId().substring(0, 6));
+        if (ObjectUtils.isEmpty(platform.getServerGbDomain())) {
+            platform.setServerGbDomain(platform.getServerGbId().substring(0, 6));
         }
 
         if (platform.getExpires() <= 0) {
@@ -121,14 +121,14 @@ public class PlatformController {
             platform.setCharacterSet("GB2312");
         }
 
-        Platform parentPlatformOld = platformService.queryPlatformByServerGBId(platform.getServerGBId());
+        Platform parentPlatformOld = platformService.queryPlatformByServerGBId(platform.getServerGbId());
         if (parentPlatformOld != null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "平台 " + platform.getServerGBId() + " 已存在");
+            throw new ServiceException( "平台 " + platform.getServerGbId() + " 已存在");
         }
         boolean updateResult = platformService.add(platform);
 
         if (!updateResult) {
-            throw new ControllerException(ErrorCode.ERROR100);
+            throw new ServiceException("失败");
         }
     }
 
@@ -141,17 +141,17 @@ public class PlatformController {
             log.debug("保存上级平台信息API调用");
         }
         if (ObjectUtils.isEmpty(parentPlatform.getName())
-                || ObjectUtils.isEmpty(parentPlatform.getServerGBId())
-                || ObjectUtils.isEmpty(parentPlatform.getServerGBDomain())
+                || ObjectUtils.isEmpty(parentPlatform.getServerGbId())
+                || ObjectUtils.isEmpty(parentPlatform.getServerGbDomain())
                 || ObjectUtils.isEmpty(parentPlatform.getServerIp())
                 || ObjectUtils.isEmpty(parentPlatform.getServerPort())
-                || ObjectUtils.isEmpty(parentPlatform.getDeviceGBId())
+                || ObjectUtils.isEmpty(parentPlatform.getServerGbId())
                 || ObjectUtils.isEmpty(parentPlatform.getExpires())
                 || ObjectUtils.isEmpty(parentPlatform.getKeepTimeout())
                 || ObjectUtils.isEmpty(parentPlatform.getTransport())
                 || ObjectUtils.isEmpty(parentPlatform.getCharacterSet())
         ) {
-            throw new ControllerException(ErrorCode.ERROR400);
+            // throw new ServiceException(ErrorCode.ERROR400);TODO
         }
         platformService.update(parentPlatform);
     }
@@ -225,7 +225,7 @@ public class PlatformController {
             result = platformChannelService.addChannels(param.getPlatformId(), param.getChannelIds());
         }
         if (result <= 0) {
-            throw new ControllerException(ErrorCode.ERROR100);
+            throw new ServiceException("失败");
         }
     }
 
@@ -247,7 +247,7 @@ public class PlatformController {
             result = platformChannelService.removeChannels(param.getPlatformId(), param.getChannelIds());
         }
         if (result <= 0) {
-            throw new ControllerException(ErrorCode.ERROR100);
+            throw new ServiceException("失败");
         }
     }
 

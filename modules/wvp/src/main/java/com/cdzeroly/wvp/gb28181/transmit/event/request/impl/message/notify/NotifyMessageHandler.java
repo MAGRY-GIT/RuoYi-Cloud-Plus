@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.notify;
 
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.MessageHandlerAbstract;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.MessageRequestProcessor;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,15 +13,14 @@ import org.springframework.stereotype.Component;
  * @author lin
  */
 @Component
+@AllArgsConstructor
 public class NotifyMessageHandler extends MessageHandlerAbstract implements InitializingBean  {
 
-    private final String messageType = "Notify";
-
-    @Autowired
-    private MessageRequestProcessor messageRequestProcessor;
+    private final MessageRequestProcessor messageRequestProcessor;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String messageType = "Notify";
         messageRequestProcessor.addHandler(messageType, this);
     }
 }

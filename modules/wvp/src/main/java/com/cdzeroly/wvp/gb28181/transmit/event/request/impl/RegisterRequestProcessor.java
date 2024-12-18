@@ -20,6 +20,7 @@ import gov.nist.javax.sip.address.SipUri;
 import gov.nist.javax.sip.header.SIPDateHeader;
 import gov.nist.javax.sip.message.SIPRequest;
 import gov.nist.javax.sip.message.SIPResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,30 +42,25 @@ import java.util.Locale;
 
 /**
  * SIP命令类型： REGISTER请求
+ * @author MGARY
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class RegisterRequestProcessor extends SIPRequestProcessorParent implements InitializingBean, ISIPRequestProcessor {
+    private final SipConfig sipConfig;
 
-    public final String method = "REGISTER";
+    private final SIPProcessorObserver sipProcessorObserver;
 
-    @Autowired
-    private SipConfig sipConfig;
+    private final IDeviceService deviceService;
 
-    @Autowired
-    private SIPProcessorObserver sipProcessorObserver;
+    private final SIPSender sipSender;
 
-    @Autowired
-    private IDeviceService deviceService;
-
-    @Autowired
-    private SIPSender sipSender;
-
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String method = "REGISTER";
         // 添加消息处理的订阅
         sipProcessorObserver.addRequestProcessor(method, this);
     }

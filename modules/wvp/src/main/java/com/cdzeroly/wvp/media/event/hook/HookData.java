@@ -12,6 +12,7 @@ import lombok.Data;
 
 /**
  * Hook返回的内容
+ * @author MGARY
  */
 @Data
 public class HookData {
@@ -46,32 +47,17 @@ public class HookData {
     private String params;
     public static HookData getInstance(MediaEvent mediaEvent) {
         HookData hookData = new HookData();
-        if (mediaEvent instanceof MediaPublishEvent) {
-            MediaPublishEvent event = (MediaPublishEvent) mediaEvent;
-            hookData.setApp(event.getApp());
-            hookData.setStream(event.getStream());
-            hookData.setSchema(event.getSchema());
-            hookData.setMediaServer(event.getMediaServer());
+        hookData.setApp(mediaEvent.getApp());
+        hookData.setStream(mediaEvent.getStream());
+        hookData.setSchema(mediaEvent.getSchema());
+        hookData.setMediaServer(mediaEvent.getMediaServer());
+
+        if (mediaEvent instanceof MediaPublishEvent event) {
             hookData.setParams(event.getParams());
-        }else if (mediaEvent instanceof MediaArrivalEvent) {
-            MediaArrivalEvent event = (MediaArrivalEvent) mediaEvent;
-            hookData.setApp(event.getApp());
-            hookData.setStream(event.getStream());
-            hookData.setSchema(event.getSchema());
-            hookData.setMediaServer(event.getMediaServer());
+        }else if (mediaEvent instanceof MediaArrivalEvent event) {
             hookData.setMediaInfo(event.getMediaInfo());
-        }else if (mediaEvent instanceof MediaRecordMp4Event) {
-            MediaRecordMp4Event event = (MediaRecordMp4Event) mediaEvent;
-            hookData.setApp(event.getApp());
-            hookData.setStream(event.getStream());
-            hookData.setSchema(event.getSchema());
-            hookData.setMediaServer(event.getMediaServer());
+        }else if (mediaEvent instanceof MediaRecordMp4Event event) {
             hookData.setRecordInfo(event.getRecordInfo());
-        }else {
-            hookData.setApp(mediaEvent.getApp());
-            hookData.setStream(mediaEvent.getStream());
-            hookData.setSchema(mediaEvent.getSchema());
-            hookData.setMediaServer(mediaEvent.getMediaServer());
         }
         return hookData;
     }

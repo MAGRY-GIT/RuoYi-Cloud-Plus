@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.service.impl;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.core.rolling.RollingFileAppender;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.service.ILogService;
 import com.cdzeroly.wvp.service.domian.bean.LogFileInfo;
 import com.cdzeroly.wvp.utils.DateUtil;
@@ -23,7 +23,7 @@ public class LogServiceImpl implements ILogService {
     public List<LogFileInfo> queryList(String query, String startTime, String endTime) {
         File logFile = getLogDir();
         if (logFile == null && !logFile.exists()) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "获取日志文件目录失败");
+            throw new ServiceException( "获取日志文件目录失败");
         }
         File[] files = logFile.listFiles();
         List<LogFileInfo> result = new ArrayList<>();

@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.vmanager.bean;
 
+import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +13,7 @@ public class AudioBroadcastResult {
     /**
      * 推流的各个方式流地址
      */
-    private StreamContent streamInfo;
+    private StreamContentVo streamInfo;
 
     /**
      * 编码格式

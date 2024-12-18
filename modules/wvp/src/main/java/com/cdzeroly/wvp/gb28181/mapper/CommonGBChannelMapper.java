@@ -16,6 +16,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * @author MAGRY
+ */
 @Mapper
 @Repository
 public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGBChannel, CommonGBChannelVo> {
@@ -28,11 +31,6 @@ public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGBChannel, C
 
     @SelectProvider(type = ChannelProvider.class, method = "queryById")
     CommonGBChannel queryById(@Param("gbId") int gbId);
-
-    @Delete(value = {"delete from wvp_device_channel where id = #{gbId} "})
-    void delete(int gbId);
-
-
 
 
     int updateStatusById(@Param("gbId") int gbId, @Param("status") int status);
@@ -55,12 +53,6 @@ public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGBChannel, C
     @SelectProvider(type = ChannelProvider.class, method = "queryByIds")
     List<CommonGBChannel> queryByIds(Collection<Integer> ids);
 
-    @Delete(value = {" <script>" +
-            " delete from wvp_device_channel" +
-            " where 1 = 1 and id in " +
-            " <foreach collection='channelListInDb'  item='item'  open='(' separator=',' close=')' > #{item.gbId}</foreach>" +
-            "</script>"})
-    void batchDelete(List<CommonGBChannel> channelListInDb);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByStreamPushId")
     CommonGBChannel queryByStreamPushId(@Param("streamPushId") Integer streamPushId);
@@ -90,8 +82,6 @@ public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGBChannel, C
 
     int updateRegion(@Param("civilCode") String civilCode, @Param("channelList") List<CommonGBChannel> channelList);
 
-    @SelectProvider(type = ChannelProvider.class, method = "queryByIdsOrCivilCode")
-    List<CommonGBChannel> queryByIdsOrCivilCode(@Param("civilCode") String civilCode, @Param("ids") List<Integer> ids);
 
 
     int removeCivilCodeByChannels(List<CommonGBChannel> channelList);

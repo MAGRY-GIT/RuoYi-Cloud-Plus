@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.gb28181.transmit.cmd.impl;
 import com.alibaba.fastjson2.JSON;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.common.NetProtocol;
-import com.cdzeroly.wvp.conf.DynamicTask;
+import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.conf.exception.SsrcTransactionNotFoundException;
 import com.cdzeroly.wvp.gb28181.SipLayer;
@@ -131,14 +131,14 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
                         toTag, callIdHeader, isRegister? parentPlatform.getExpires() : 0);
                 // 将 callid 写入缓存， 等注册成功可以更新状态
                 String callIdFromHeader = callIdHeader.getCallId();
-                redisCatchStorage.updatePlatformRegisterInfo(callIdFromHeader, PlatformRegisterInfo.getInstance(parentPlatform.getServerGBId(), isRegister));
+                redisCatchStorage.updatePlatformRegisterInfo(callIdFromHeader, PlatformRegisterInfo.getInstance(parentPlatform.getServerGbId(), isRegister));
             }else {
                 request = headerProviderPlatformProvider.createRegisterRequest(parentPlatform, fromTag, toTag, www, callIdHeader, isRegister? parentPlatform.getExpires() : 0);
             }
 
             sipSender.transmitRequest(parentPlatform.getDeviceIp(), request, (event)->{
                 if (event != null) {
-                    log.info("[国标级联]：{},  注册失败: {} ", parentPlatform.getServerGBId(), event.msg);
+                    log.info("[国标级联]：{},  注册失败: {} ", parentPlatform.getServerGbId(), event.msg);
                 }
                 redisCatchStorage.delPlatformRegisterInfo(callIdHeader.getCallId());
                 if (errorEvent != null ) {
@@ -156,7 +156,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
                     .append("<Notify>\r\n")
                     .append("<CmdType>Keepalive</CmdType>\r\n")
                     .append("<SN>" + (int)((Math.random()*9+1)*100000) + "</SN>\r\n")
-                    .append("<DeviceID>" + parentPlatform.getDeviceGBId() + "</DeviceID>\r\n")
+                    .append("<DeviceID>" + parentPlatform.getServerGbId() + "</DeviceID>\r\n")
                     .append("<Status>OK</Status>\r\n")
                     .append("</Notify>\r\n");
 
@@ -212,12 +212,12 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
                 .append("<Response>\r\n")
                 .append("<CmdType>Catalog</CmdType>\r\n")
                 .append("<SN>" +sn + "</SN>\r\n")
-                .append("<DeviceID>" + platform.getDeviceGBId() + "</DeviceID>\r\n")
+                .append("<DeviceID>" + platform.getServerGbId() + "</DeviceID>\r\n")
                 .append("<SumNum>" + size + "</SumNum>\r\n")
                 .append("<DeviceList Num=\"" + channels.size() +"\">\r\n");
         if (!channels.isEmpty()) {
             for (CommonGBChannel channel : channels) {
-                catalogXml.append(channel.encode(platform.getDeviceGBId()));
+                catalogXml.append(channel.encode(platform.getServerGbId()));
             }
         }
 
@@ -245,11 +245,11 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
 
         SIPRequest request = (SIPRequest)headerProviderPlatformProvider.createMessageRequest(parentPlatform, catalogXml, fromTag, SipUtils.getNewViaTag(), callIdHeader);
 
-        String timeoutTaskKey = "catalog_task_" + parentPlatform.getServerGBId() + sn;
+        String timeoutTaskKey = "catalog_task_" + parentPlatform.getServerGbId() + sn;
 
         String callId = request.getCallIdHeader().getCallId();
 
-        log.info("[命令发送] 国标级联{} 目录查询回复: 共{}条，已发送{}条", parentPlatform.getServerGBId(),
+        log.info("[命令发送] 国标级联{} 目录查询回复: 共{}条，已发送{}条", parentPlatform.getServerGbId(),
                 channels.size(), Math.min(index + parentPlatform.getCatalogGroup(), channels.size()));
         log.debug(catalogXml);
         if (sendAfterResponse) {
@@ -265,7 +265,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
                     }
                     return;
                 }
-                log.error("[目录推送失败] 国标级联 platform : {}, code: {}, msg: {}, 停止发送", parentPlatform.getServerGBId(), eventResult.statusCode, eventResult.msg);
+                log.error("[目录推送失败] 国标级联 platform : {}, code: {}, msg: {}, 停止发送", parentPlatform.getServerGbId(), eventResult.statusCode, eventResult.msg);
                 dynamicTask.stop(timeoutTaskKey);
             }, eventResult -> {
                 dynamicTask.stop(timeoutTaskKey);
@@ -278,7 +278,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
             });
         }else {
             sipSender.transmitRequest(parentPlatform.getDeviceIp(), request, eventResult -> {
-                log.error("[目录推送失败] 国标级联 platform : {}, code: {}, msg: {}, 停止发送", parentPlatform.getServerGBId(), eventResult.statusCode, eventResult.msg);
+                log.error("[目录推送失败] 国标级联 platform : {}, code: {}, msg: {}, 停止发送", parentPlatform.getServerGbId(), eventResult.statusCode, eventResult.msg);
                 dynamicTask.stop(timeoutTaskKey);
             }, null);
             dynamicTask.startDelay(timeoutTaskKey, ()->{
@@ -304,7 +304,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
         if (parentPlatform == null) {
             return;
         }
-        String deviceId = device == null ? parentPlatform.getDeviceGBId() : device.getDeviceId();
+        String deviceId = device == null ? parentPlatform.getServerGbId() : device.getDeviceId();
         String deviceName = device == null ? parentPlatform.getName() : device.getName();
         String manufacturer = device == null ? "WVP-28181-PRO" : device.getManufacturer();
         String model = device == null ? "platform" : device.getModel();
@@ -367,7 +367,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
             return;
         }
         if (log.isDebugEnabled()) {
-            log.debug("[发送 移动位置订阅] {}/{}->{},{}", parentPlatform.getServerGBId(), gpsMsgInfo.getId(), gpsMsgInfo.getLng(), gpsMsgInfo.getLat());
+            log.debug("[发送 移动位置订阅] {}/{}->{},{}", parentPlatform.getServerGbId(), gpsMsgInfo.getId(), gpsMsgInfo.getLng(), gpsMsgInfo.getLat());
         }
 
         String characterSet = parentPlatform.getCharacterSet();
@@ -396,7 +396,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
         if (parentPlatform == null) {
             return;
         }
-        log.info("[发送报警通知]平台： {}/{}->{},{}: {}", parentPlatform.getServerGBId(), deviceAlarm.getChannelId(),
+        log.info("[发送报警通知]平台： {}/{}->{},{}: {}", parentPlatform.getServerGbId(), deviceAlarm.getChannelId(),
                 deviceAlarm.getLongitude(), deviceAlarm.getLatitude(), JSON.toJSONString(deviceAlarm));
         String characterSet = parentPlatform.getCharacterSet();
         StringBuffer deviceStatusXml = new StringBuffer(600);
@@ -407,7 +407,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
                 .append("<DeviceID>" + deviceAlarm.getChannelId() + "</DeviceID>\r\n")
                 .append("<AlarmPriority>" + deviceAlarm.getAlarmPriority() + "</AlarmPriority>\r\n")
                 .append("<AlarmMethod>" + deviceAlarm.getAlarmMethod() + "</AlarmMethod>\r\n")
-                .append("<AlarmTime>" + DateUtil.yyyy_MM_dd_HH_mm_ssToISO8601(deviceAlarm.getAlarmTime()) + "</AlarmTime>\r\n")
+                .append("<AlarmTime>" + DateUtil.yyyyMmDdHhMmSsToIso8601(deviceAlarm.getAlarmTime()) + "</AlarmTime>\r\n")
                 .append("<AlarmDescription>" + deviceAlarm.getAlarmDescription() + "</AlarmDescription>\r\n")
                 .append("<Longitude>" + deviceAlarm.getLongitude() + "</Longitude>\r\n")
                 .append("<Latitude>" + deviceAlarm.getLatitude() + "</Latitude>\r\n")
@@ -478,12 +478,12 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
                 .append("<Notify>\r\n")
                 .append("<CmdType>Catalog</CmdType>\r\n")
                 .append("<SN>" + (int) ((Math.random() * 9 + 1) * 100000) + "</SN>\r\n")
-                .append("<DeviceID>" + platform.getDeviceGBId() + "</DeviceID>\r\n")
+                .append("<DeviceID>" + platform.getServerGbId() + "</DeviceID>\r\n")
                 .append("<SumNum>"+ sumNum +"</SumNum>\r\n")
                 .append("<DeviceList Num=\"" + channels.size() + "\">\r\n");
         if (!channels.isEmpty()) {
             for (CommonGBChannel channel : channels) {
-                catalogXml.append(channel.encode(type, platform.getDeviceGBId()));
+                catalogXml.append(channel.encode(type, platform.getServerGbId()));
             }
         }
         catalogXml.append("</DeviceList>\r\n")
@@ -538,12 +538,12 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
                 .append("<Notify>\r\n")
                 .append("<CmdType>Catalog</CmdType>\r\n")
                 .append("<SN>" + (int) ((Math.random() * 9 + 1) * 100000) + "</SN>\r\n")
-                .append("<DeviceID>" + platform.getDeviceGBId() + "</DeviceID>\r\n")
+                .append("<DeviceID>" + platform.getServerGbId() + "</DeviceID>\r\n")
                 .append("<SumNum>1</SumNum>\r\n")
                 .append("<DeviceList Num=\" " + channels.size() + " \">\r\n");
         if (!channels.isEmpty()) {
             for (CommonGBChannel channel : channels) {
-               catalogXml.append(channel.encode(type, platform.getDeviceGBId()));
+               catalogXml.append(channel.encode(type, platform.getServerGbId()));
             }
         }
         catalogXml.append("</DeviceList>\r\n")
@@ -574,8 +574,8 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
                     if (deviceChannel != null) {
                         recordXml.append("<DeviceID>" + deviceChannel.getGbDeviceId() + "</DeviceID>\r\n")
                                 .append("<Name>" + recordItem.getName() + "</Name>\r\n")
-                                .append("<StartTime>" + DateUtil.yyyy_MM_dd_HH_mm_ssToISO8601(recordItem.getStartTime()) + "</StartTime>\r\n")
-                                .append("<EndTime>" + DateUtil.yyyy_MM_dd_HH_mm_ssToISO8601(recordItem.getEndTime()) + "</EndTime>\r\n")
+                                .append("<StartTime>" + DateUtil.yyyyMmDdHhMmSsToIso8601(recordItem.getStartTime()) + "</StartTime>\r\n")
+                                .append("<EndTime>" + DateUtil.yyyyMmDdHhMmSsToIso8601(recordItem.getEndTime()) + "</EndTime>\r\n")
                                 .append("<Secrecy>" + recordItem.getSecrecy() + "</Secrecy>\r\n")
                                 .append("<Type>" + recordItem.getType() + "</Type>\r\n");
                         if (!ObjectUtils.isEmpty(recordItem.getFileSize())) {
@@ -637,7 +637,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
             log.info("[向上级发送BYE]， platform 为NULL");
             return;
         }
-        log.info("[向上级发送BYE]， {}/{}", platform.getServerGBId(), sendRtpItem.getChannelId());
+        log.info("[向上级发送BYE]， {}/{}", platform.getServerGbId(), sendRtpItem.getChannelId());
         String mediaServerId = sendRtpItem.getMediaServerId();
         MediaServer mediaServerItem = mediaServerService.getOne(mediaServerId);
         if (mediaServerItem != null) {
@@ -661,7 +661,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
             ssrcTransaction = sessionManager.getSsrcTransactionByStream(stream);
         }
         if (ssrcTransaction == null) {
-            throw new SsrcTransactionNotFoundException(platform.getServerGBId(), channel.getGbDeviceId(), callId, stream);
+            throw new SsrcTransactionNotFoundException(platform.getServerGbId(), channel.getGbDeviceId(), callId, stream);
         }
 
         mediaServerService.releaseSsrc(ssrcTransaction.getMediaServerId(), ssrcTransaction.getSsrc());
@@ -696,7 +696,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
     }
 
     @Override
-    public void broadcastInviteCmd(Platform platform, CommonGBChannel channel, MediaServer mediaServerItem,
+    public void broadcastInviteCmd(Platform platform, CommonGBChannel channel,String sourceId, MediaServer mediaServerItem,
                                    SSRCInfo ssrcInfo, HookSubscribe.Event event, SipSubscribe.Event okEvent,
                                    SipSubscribe.Event errorEvent) throws ParseException, SipException, InvalidArgumentException {
         String stream = ssrcInfo.getStream();
@@ -717,11 +717,11 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
 
         StringBuffer content = new StringBuffer(200);
         content.append("v=0\r\n");
-        content.append("o=" + channel.getGbDeviceId() + " 0 0 IN IP4 " + sdpIp + "\r\n");
+        content.append("o=" + platform.getDeviceGbId() + " 0 0 IN IP4 " + sdpIp + "\r\n");
         content.append("s=Play\r\n");
+        content.append("u=" + channel.getGbDeviceId() + ":0\r\n");
         content.append("c=IN IP4 " + sdpIp + "\r\n");
         content.append("t=0 0\r\n");
-
         if ("TCP-PASSIVE".equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
             content.append("m=audio " + ssrcInfo.getPort() + " TCP/RTP/AVP 8 96\r\n");
         } else if ("TCP-ACTIVE".equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
@@ -743,12 +743,12 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
         //ssrc
         content.append("y=" + ssrcInfo.getSsrc() + "\r\n");
         // f字段:f= v/编码格式/分辨率/帧率/码率类型/码率大小a/编码格式/码率大小/采样率
-        content.append("f=v/////a/1/8/1\r\n");
+        content.append("f=v/2/5/25/1/4096a/1/8/1\r\n");
         CallIdHeader callIdHeader = sipSender.getNewCallIdHeader(sipLayer.getLocalIp(platform.getDeviceIp()), platform.getTransport());
 
-        Request request = headerProviderPlatformProvider.createInviteRequest(platform, channel.getGbDeviceId(),
-                content.toString(), SipUtils.getNewViaTag(), SipUtils.getNewFromTag(),  ssrcInfo.getSsrc(),
-                callIdHeader);
+        Request request = headerProviderPlatformProvider.createInviteRequest(platform, sourceId, channel.getGbDeviceId(),
+            content.toString(), SipUtils.getNewViaTag(), SipUtils.getNewFromTag(),  ssrcInfo.getSsrc(),
+            callIdHeader);
         sipSender.transmitRequest(sipLayer.getLocalIp(platform.getDeviceIp()), request, (e -> {
             sessionManager.removeByStream(ssrcInfo.getStream());
             mediaServerService.releaseSsrc(mediaServerItem.getId(), ssrcInfo.getSsrc());
@@ -757,7 +757,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
         }), e -> {
             ResponseEvent responseEvent = (ResponseEvent) e.event;
             SIPResponse response = (SIPResponse) responseEvent.getResponse();
-            SsrcTransaction ssrcTransaction = SsrcTransaction.buildForPlatform(platform.getServerGBId(), channel.getGbId(), callIdHeader.getCallId(),  stream, ssrcInfo.getSsrc(), mediaServerItem.getId(), response, InviteSessionType.BROADCAST);
+            SsrcTransaction ssrcTransaction = SsrcTransaction.buildForPlatform(platform.getServerGbId(), channel.getGbId(), callIdHeader.getCallId(),  stream, ssrcInfo.getSsrc(), mediaServerItem.getId(), response, InviteSessionType.BROADCAST);
             sessionManager.put(ssrcTransaction);
             okEvent.response(e);
         });

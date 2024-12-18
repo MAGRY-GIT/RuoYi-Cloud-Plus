@@ -1,6 +1,8 @@
 package com.cdzeroly.wvp.service.domian.bean;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.cdzeroly.common.tenant.core.TenantEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -9,6 +11,7 @@ import lombok.Data;
  */
 @Data
 @Schema(description = "录制计划项")
+@TableName("wvp_record_plan_item")
 public class RecordPlanItem {
 
     @Schema(description = "计划项数据库ID")

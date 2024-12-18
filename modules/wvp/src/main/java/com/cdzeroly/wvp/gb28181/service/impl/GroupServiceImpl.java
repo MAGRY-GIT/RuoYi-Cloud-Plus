@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
-import com.cdzeroly.wvp.conf.exception.ControllerException;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.mapper.CommonGBChannelMapper;
@@ -11,7 +11,6 @@ import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
 import com.cdzeroly.wvp.gb28181.service.IGroupService;
 import com.cdzeroly.wvp.utils.DateUtil;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -253,13 +252,13 @@ public class GroupServiceImpl implements IGroupService {
     public List<Group> getPath(String deviceId, String businessGroup) {
         Group businessGroupInDb = groupManager.queryBusinessGroup(businessGroup);
         if (businessGroupInDb == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "业务分组不存在");
+            throw new ServiceException("业务分组不存在");
         }
         List<Group> groupList = new LinkedList<>();
         groupList.add(businessGroupInDb);
         Group group = groupManager.queryOneByDeviceId(deviceId, businessGroup);
         if (group == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "虚拟组织不存在");
+            throw new ServiceException("虚拟组织不存在");
         }
         groupList.add(group);
         List<Group> allParent = getAllParent(group);

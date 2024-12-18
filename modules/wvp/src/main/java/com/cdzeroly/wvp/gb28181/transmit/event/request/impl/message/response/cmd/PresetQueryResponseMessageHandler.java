@@ -9,6 +9,7 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHandler;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.response.ResponseMessageHandler;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -29,22 +30,21 @@ import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
 
 /**
  * 设备预置位查询应答
+ * @author MGARY
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class PresetQueryResponseMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "PresetQuery";
+    private final ResponseMessageHandler responseMessageHandler;
 
-    @Autowired
-    private ResponseMessageHandler responseMessageHandler;
-
-    @Autowired
-    private DeferredResultHolder deferredResultHolder;
+    private final DeferredResultHolder deferredResultHolder;
 
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "PresetQuery";
         responseMessageHandler.addHandler(cmdType, this);
     }
 

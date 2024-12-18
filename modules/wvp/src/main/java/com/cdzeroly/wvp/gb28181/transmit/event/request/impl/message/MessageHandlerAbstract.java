@@ -20,6 +20,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
 
+/**
+ * @author MGARY
+ */
 @Slf4j
 public abstract class MessageHandlerAbstract extends SIPRequestProcessorParent implements IMessageHandler{
 

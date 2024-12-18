@@ -5,7 +5,7 @@ import com.cdzeroly.wvp.gb28181.domian.bean.RecordItem;
 import com.cdzeroly.wvp.gb28181.event.record.RecordEndEventListener;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -18,19 +18,18 @@ import java.util.concurrent.TimeUnit;
  * @author lin
  */
 @Component
+@AllArgsConstructor
 public class RecordDataCatch {
 
-    public static Map<String, RecordInfo> data = new ConcurrentHashMap<>();
+    private static final Map<String, RecordInfo> DATA = new ConcurrentHashMap<>();
 
-    @Autowired
-    private DeferredResultHolder deferredResultHolder;
-    @Autowired
-    private RecordEndEventListener recordEndEventListener;
+    private final DeferredResultHolder deferredResultHolder;
 
+    private final RecordEndEventListener recordEndEventListener;
 
     public int put(String deviceId,String channelId, String sn, int sumNum, List<RecordItem> recordItems) {
         String key = deviceId + sn;
-        RecordInfo recordInfo = data.get(key);
+        RecordInfo recordInfo = DATA.get(key);
         if (recordInfo == null) {
             recordInfo = new RecordInfo();
             recordInfo.setDeviceId(deviceId);
@@ -40,7 +39,7 @@ public class RecordDataCatch {
             recordInfo.setRecordList(Collections.synchronizedList(new ArrayList<>()));
             recordInfo.setLastTime(Instant.now());
             recordInfo.getRecordList().addAll(recordItems);
-            data.put(key, recordInfo);
+            DATA.put(key, recordInfo);
         }else {
             // 同一个设备的通道同步请求只考虑一个，其他的直接忽略
             if (!Objects.equals(sn.trim(), recordInfo.getSn())) {
@@ -54,11 +53,11 @@ public class RecordDataCatch {
 
     @Scheduled(fixedRate = 5 * 1000)   //每5秒执行一次, 发现数据5秒未更新则移除数据并认为数据接收超时
     private void timerTask(){
-        Set<String> keys = data.keySet();
+        Set<String> keys = DATA.keySet();
         // 获取五秒前的时刻
         Instant instantBefore5S = Instant.now().minusMillis(TimeUnit.SECONDS.toMillis(5));
         for (String key : keys) {
-            RecordInfo recordInfo = data.get(key);
+            RecordInfo recordInfo = DATA.get(key);
             // 超过五秒收不到消息任务超时， 只更新这一部分数据
             if ( recordInfo.getLastTime().isBefore(instantBefore5S)) {
                 // 处理录像数据， 返回给前端
@@ -72,21 +71,21 @@ public class RecordDataCatch {
                 msg.setData(recordInfo);
                 deferredResultHolder.invokeAllResult(msg);
                 recordEndEventListener.delEndEventHandler(recordInfo.getDeviceId(),recordInfo.getChannelId());
-                data.remove(key);
+                DATA.remove(key);
             }
         }
     }
 
     public boolean isComplete(String deviceId, String sn) {
-        RecordInfo recordInfo = data.get(deviceId + sn);
+        RecordInfo recordInfo = DATA.get(deviceId + sn);
         return recordInfo != null && recordInfo.getRecordList().size() == recordInfo.getSumNum();
     }
 
     public RecordInfo getRecordInfo(String deviceId, String sn) {
-        return data.get(deviceId + sn);
+        return DATA.get(deviceId + sn);
     }
 
     public void remove(String deviceId, String sn) {
-        data.remove(deviceId + sn);
+        DATA.remove(deviceId + sn);
     }
 }

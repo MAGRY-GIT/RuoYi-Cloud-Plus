@@ -4,7 +4,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
-import com.cdzeroly.wvp.gb28181.domian.bean.HandlerCatchData;
+import com.cdzeroly.wvp.gb28181.transmit.bean.HandlerCatchData;
 import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
 import com.cdzeroly.wvp.gb28181.event.EventPublisher;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent;
@@ -14,10 +14,10 @@ import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.service.IMobilePositionService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.utils.DateUtil;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -30,27 +30,24 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * SIP命令类型： NOTIFY请求中的移动位置请求处理
+ * @author MAGRY
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class NotifyRequestForMobilePositionProcessor extends SIPRequestProcessorParent {
 
 	private final ConcurrentLinkedQueue<HandlerCatchData> taskQueue = new ConcurrentLinkedQueue<>();
 
-	@Autowired
-	private UserSetting userSetting;
+	private final UserSetting userSetting;
 
-	@Autowired
-	private EventPublisher eventPublisher;
+	private final EventPublisher eventPublisher;
 
-	@Autowired
-	private IRedisCatchStorage redisCatchStorage;
+	private final IRedisCatchStorage redisCatchStorage;
 
-	@Autowired
-	private IDeviceChannelService deviceChannelService;
+	private final IDeviceChannelService deviceChannelService;
 
-	@Autowired
-	private IMobilePositionService mobilePositionService;
+	private final IMobilePositionService mobilePositionService;
 
 	public void process(RequestEvent evt) {
 
@@ -172,7 +169,7 @@ public class NotifyRequestForMobilePositionProcessor extends SIPRequestProcessor
 					channels.forEach(channel -> {
 						// 发送redis消息。 通知位置信息的变化
 						JSONObject jsonObject = new JSONObject();
-						jsonObject.put("time", DateUtil.yyyy_MM_dd_HH_mm_ssToISO8601(mobilePosition.getTime()));
+						jsonObject.put("time", DateUtil.yyyyMmDdHhMmSsToIso8601(mobilePosition.getTime()));
 						jsonObject.put("serial", device.getDeviceId());
 						jsonObject.put("code", channel.getDeviceId());
 						jsonObject.put("longitude", mobilePosition.getLongitude());
@@ -186,7 +183,7 @@ public class NotifyRequestForMobilePositionProcessor extends SIPRequestProcessor
 					// 发送redis消息。 通知位置信息的变化
 					if (deviceChannel != null) {
 						JSONObject jsonObject = new JSONObject();
-						jsonObject.put("time", DateUtil.yyyy_MM_dd_HH_mm_ssToISO8601(mobilePosition.getTime()));
+						jsonObject.put("time", DateUtil.yyyyMmDdHhMmSsToIso8601(mobilePosition.getTime()));
 						jsonObject.put("serial", mobilePosition.getDeviceId());
 						jsonObject.put("code", deviceChannel.getDeviceId());
 						jsonObject.put("longitude", mobilePosition.getLongitude());

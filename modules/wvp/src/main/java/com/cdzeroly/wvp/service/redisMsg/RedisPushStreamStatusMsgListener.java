@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.service.redisMsg;
 
 import com.alibaba.fastjson2.JSON;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
-import com.cdzeroly.wvp.conf.DynamicTask;
+import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.service.domian.bean.PushStreamStatusChangeFromRedisDto;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;

@@ -116,30 +116,4 @@ public class SystemInfoUtils {
         return processCount;
     }
 
-    public static List<Map<String, Object>> getDiskInfo() {
-        List<Map<String, Object>> result = new ArrayList<>();
-
-        String osName = System.getProperty("os.name");
-        List<String> pathArray = new ArrayList<>();
-        if (osName.startsWith("Mac OS")) {
-            // 苹果
-            pathArray.add("/");
-        } else if (osName.startsWith("Windows")) {
-            // windows
-            pathArray.add("C:");
-        } else {
-            pathArray.add("/");
-            pathArray.add("/home");
-        }
-        for (String path : pathArray) {
-            Map<String, Object> infoMap = new HashMap<>();
-            infoMap.put("path", path);
-            File partitionFile = new File(path);
-            // 单位： GB
-            infoMap.put("use", (partitionFile.getTotalSpace() - partitionFile.getFreeSpace())/1024/1024/1024D);
-            infoMap.put("free", partitionFile.getFreeSpace()/1024/1024/1024D);
-            result.add(infoMap);
-        }
-        return result;
-    }
 }

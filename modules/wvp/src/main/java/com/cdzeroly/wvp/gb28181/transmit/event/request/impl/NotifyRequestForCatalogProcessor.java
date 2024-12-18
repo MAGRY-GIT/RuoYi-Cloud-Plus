@@ -3,18 +3,19 @@ package com.cdzeroly.wvp.gb28181.transmit.event.request.impl;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
-import com.cdzeroly.wvp.gb28181.domian.bean.*;
 import com.cdzeroly.wvp.gb28181.event.EventPublisher;
 import com.cdzeroly.wvp.gb28181.event.catalog.CatalogChannelEvent;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
+import com.cdzeroly.wvp.gb28181.transmit.bean.HandlerCatchData;
+import com.cdzeroly.wvp.gb28181.transmit.bean.NotifyCatalogChannel;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent;
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,26 +31,24 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * SIP命令类型： NOTIFY请求中的目录请求处理
+ * @author MAGRY
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class NotifyRequestForCatalogProcessor extends SIPRequestProcessorParent {
 
     private final ConcurrentLinkedQueue<NotifyCatalogChannel> channelList = new ConcurrentLinkedQueue<>();
 
 	private final ConcurrentLinkedQueue<HandlerCatchData> taskQueue = new ConcurrentLinkedQueue<>();
 
-	@Autowired
-	private UserSetting userSetting;
+	private final UserSetting userSetting;
 
-	@Autowired
-	private EventPublisher eventPublisher;
+	private final EventPublisher eventPublisher;
 
-	@Autowired
-	private IRedisCatchStorage redisCatchStorage;
+	private final IRedisCatchStorage redisCatchStorage;
 
-	@Autowired
-	private IDeviceChannelService deviceChannelService;
+	private final IDeviceChannelService deviceChannelService;
 
 //	@Scheduled(fixedRate = 2000)   //每400毫秒执行一次
 //	public void showSize(){

@@ -19,17 +19,9 @@
         UPDATE wvp_stream_proxy
         SET pulling = true
         WHERE id = #{id}
-
     </update>
-    <delete id="deleteByList">
-        DELETE FROM wvp_stream_proxy WHERE id IN
-        <foreach collection='streamProxiesForRemove' index='index' item='item' separator=',' open='(' close=')'>
-            #{item.id}
-        </foreach>
 
-    </delete>
     <select id="getOnline" resultType="java.lang.Integer">
         select count(1) from wvp_stream_proxy where pulling = true
-
     </select>
 </mapper>

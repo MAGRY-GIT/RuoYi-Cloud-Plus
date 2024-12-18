@@ -1,11 +1,11 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.web.core.BaseController;
-import com.cdzeroly.wvp.conf.DynamicTask;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
+import com.cdzeroly.wvp.conf.task.DynamicTask;
 
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
@@ -196,7 +196,7 @@ public class DeviceQueryController extends BaseController {
             return json.toString();
         } else {
             log.warn("设备信息删除API调用失败！");
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "设备信息删除API调用失败！");
+            throw new ServiceException( "设备信息删除API调用失败！");
         }
     }
 
@@ -274,13 +274,13 @@ public class DeviceQueryController extends BaseController {
     public void addDevice(Device device) {
 
         if (device == null || device.getDeviceId() == null) {
-            throw new ControllerException(ErrorCode.ERROR400);
+            // throw new ServiceException(ErrorCode.ERROR400); TODO
         }
 
         // 查看deviceId是否存在
         boolean exist = deviceService.isExist(device.getDeviceId());
         if (exist) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "设备编号已存在");
+            throw new ServiceException( "设备编号已存在");
         }
         deviceService.addDevice(device);
     }
@@ -296,7 +296,7 @@ public class DeviceQueryController extends BaseController {
     @PostMapping("/device/update/")
     public void updateDevice(Device device) {
         if (device == null || device.getDeviceId() == null || device.getId() <= 0) {
-            throw new ControllerException(ErrorCode.ERROR400);
+            // throw new ServiceException(ErrorCode.ERROR400);TODO
         }
         deviceService.updateCustomDevice(device);
     }
@@ -331,7 +331,7 @@ public class DeviceQueryController extends BaseController {
             });
         } catch (InvalidArgumentException | SipException | ParseException e) {
             log.error("[命令发送失败] 获取设备状态: {}", e.getMessage());
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+            throw new ServiceException( "命令发送失败: " + e.getMessage());
         }
         result.onTimeout(() -> {
             log.warn(String.format("获取设备状态超时"));
@@ -384,7 +384,7 @@ public class DeviceQueryController extends BaseController {
             });
         } catch (InvalidArgumentException | SipException | ParseException e) {
             log.error("[命令发送失败] 设备报警查询: {}", e.getMessage());
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+            throw new ServiceException( "命令发送失败: " + e.getMessage());
         }
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<ResponseEntity<String>>(3 * 1000L);
         result.onTimeout(() -> {

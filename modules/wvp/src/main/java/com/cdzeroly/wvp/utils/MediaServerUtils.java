@@ -5,16 +5,17 @@ import org.springframework.util.ObjectUtils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author MGARY
+ */
 public class MediaServerUtils {
+
     public static Map<String, String> urlParamToMap(String params) {
         HashMap<String, String> map = new HashMap<>();
         if (ObjectUtils.isEmpty(params)) {
             return map;
         }
         String[] paramsArray = params.split("&");
-        if (paramsArray.length == 0) {
-            return map;
-        }
         for (String param : paramsArray) {
             String[] paramArray = param.split("=");
             if (paramArray.length == 2) {

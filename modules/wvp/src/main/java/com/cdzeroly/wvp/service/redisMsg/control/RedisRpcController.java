@@ -1,9 +1,9 @@
 package com.cdzeroly.wvp.service.redisMsg.control;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.conf.redis.RedisRpcConfig;
 import com.cdzeroly.wvp.conf.redis.bean.RedisRpcMessage;
 import com.cdzeroly.wvp.conf.redis.bean.RedisRpcRequest;
@@ -19,35 +19,31 @@ import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.service.ISendRtpServerService;
 import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import com.cdzeroly.wvp.vmanager.bean.WVPResult;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 /**
  * 其他wvp发起的rpc调用，这里的方法被 RedisRpcConfig 通过反射寻找对应的方法名称调用
+ * @author MGARY
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class RedisRpcController {
 
-    @Autowired
-    private SSRCFactory ssrcFactory;
+    private final SSRCFactory ssrcFactory;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private ISendRtpServerService sendRtpServerService;
+    private final ISendRtpServerService sendRtpServerService;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private HookSubscribe hookSubscribe;
+    private final HookSubscribe hookSubscribe;
 
-    @Autowired
-    private RedisTemplate<Object, Object> redisTemplate;
+    private final RedisTemplate<Object, Object> redisTemplate;
 
 
     /**
@@ -236,9 +232,9 @@ public class RedisRpcController {
         }
         try {
             mediaServerService.startSendRtp(mediaServer, sendRtpItem);
-        }catch (ControllerException exception) {
-            log.info("[redis-rpc] 发流失败： {}/{}, 目标地址： {}：{}， {}", sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getIp(), sendRtpItem.getPort(), exception.getMsg());
-            WVPResult wvpResult = WVPResult.fail(exception.getCode(), exception.getMsg());
+        }catch (ServiceException exception) {
+            log.info("[redis-rpc] 发流失败： {}/{}, 目标地址： {}：{}， {}", sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getIp(), sendRtpItem.getPort(), exception.getMessage());
+            WVPResult wvpResult = WVPResult.fail(exception.getCode(), exception.getMessage());
             response.setBody(wvpResult);
             return response;
         }
@@ -272,10 +268,10 @@ public class RedisRpcController {
         }
         try {
             mediaServerService.stopSendRtp(mediaServer, sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getSsrc());
-        }catch (ControllerException exception) {
+        }catch (ServiceException exception) {
             log.info("[redis-rpc] 停止推流失败： {}/{}, 目标地址： {}：{}， code： {}, msg: {}", sendRtpItem.getApp(),
-                    sendRtpItem.getStream(), sendRtpItem.getIp(), sendRtpItem.getPort(), exception.getCode(), exception.getMsg() );
-            response.setBody(WVPResult.fail(exception.getCode(), exception.getMsg()));
+                    sendRtpItem.getStream(), sendRtpItem.getIp(), sendRtpItem.getPort(), exception.getCode(), exception.getMessage() );
+            response.setBody(WVPResult.fail(exception.getCode(), exception.getMessage()));
             return response;
         }
         log.info("[redis-rpc] 停止推流成功： {}/{}, 目标地址： {}：{}", sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getIp(), sendRtpItem.getPort() );

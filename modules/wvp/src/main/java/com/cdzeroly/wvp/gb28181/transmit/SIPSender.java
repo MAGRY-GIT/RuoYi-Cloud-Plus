@@ -8,6 +8,7 @@ import com.cdzeroly.wvp.gb28181.event.sip.SipEvent;
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.utils.GitUtil;
 import gov.nist.javax.sip.SipProviderImpl;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -29,18 +30,16 @@ import java.text.ParseException;
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class SIPSender {
 
-    @Autowired
-    private SipLayer sipLayer;
+    private final SipLayer sipLayer;
 
-    @Autowired
-    private GitUtil gitUtil;
+    private final GitUtil gitUtil;
 
-    @Autowired
-    private SipSubscribe sipSubscribe;
-    @Autowired
-    private SipConfig sipConfig;
+    private final SipSubscribe sipSubscribe;
+
+    private final SipConfig sipConfig;
 
     public void transmitRequest(String ip, Message message) throws SipException, ParseException {
         transmitRequest(ip, message, null, null, null);

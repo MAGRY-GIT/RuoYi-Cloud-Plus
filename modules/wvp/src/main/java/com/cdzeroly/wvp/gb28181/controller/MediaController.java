@@ -1,17 +1,16 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.satoken.utils.LoginHelper;
 import com.cdzeroly.common.web.core.BaseController;
 import com.cdzeroly.system.api.model.LoginUser;
 import com.cdzeroly.wvp.common.StreamInfo;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.media.zlm.dto.StreamAuthorityInfo;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.streamProxy.service.IStreamProxyService;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
-import com.cdzeroly.wvp.vmanager.bean.StreamContent;
+import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -54,11 +53,11 @@ public class MediaController extends BaseController {
     @Parameter(name = "useSourceIpAsStreamIp", description = "是否使用请求IP作为返回的地址IP")
     @GetMapping(value = "/stream_info_by_app_and_stream")
     @ResponseBody
-    public StreamContent getStreamInfoByAppAndStream( @RequestParam String app,
-                                                     @RequestParam String stream,
-                                                     @RequestParam(required = false) String mediaServerId,
-                                                     @RequestParam(required = false) String callId,
-                                                     @RequestParam(required = false) Boolean useSourceIpAsStreamIp){
+    public StreamContentVo getStreamInfoByAppAndStream(@RequestParam String app,
+                                                       @RequestParam String stream,
+                                                       @RequestParam(required = false) String mediaServerId,
+                                                       @RequestParam(required = false) String callId,
+                                                       @RequestParam(required = false) Boolean useSourceIpAsStreamIp){
         boolean authority = false;
         if (callId != null) {
             // 权限校验
@@ -68,7 +67,7 @@ public class MediaController extends BaseController {
                     && streamAuthorityInfo.getCallId().equals(callId)) {
                 authority = true;
             }else {
-                throw new ControllerException(ErrorCode.ERROR400.getCode(), "获取播放地址鉴权失败");
+                throw new ServiceException( "获取播放地址鉴权失败");
             }
         }else {
             // 是否登陆用户, 登陆用户返回完整信息
@@ -90,7 +89,7 @@ public class MediaController extends BaseController {
         }
 
         if (streamInfo != null){
-            return  new StreamContent(streamInfo);
+            return  new StreamContentVo(streamInfo);
         }else {
             //获取流失败，重启拉流后重试一次
             streamProxyService.stopByAppAndStream(app,stream);
@@ -109,9 +108,9 @@ public class MediaController extends BaseController {
                 streamInfo = mediaServerService.getStreamInfoByAppAndStreamWithCheck(app, stream, mediaServerId, authority);
             }
             if (streamInfo != null){
-                return new StreamContent(streamInfo);
+                return new StreamContentVo(streamInfo);
             }else {
-                throw new ControllerException(ErrorCode.ERROR100);
+                throw new ServiceException("失败");
             }
         }
     }
@@ -127,8 +126,8 @@ public class MediaController extends BaseController {
     @Parameter(name = "app", description = "应用名", required = true)
     @Parameter(name = "stream", description = "流id", required = true)
     @Parameter(name = "mediaServerId", description = "媒体服务器id")
-    public StreamContent getPlayUrl(@RequestParam String app, @RequestParam String stream,
-                                    @RequestParam(required = false) String mediaServerId){
+    public StreamContentVo getPlayUrl(@RequestParam String app, @RequestParam String stream,
+                                      @RequestParam(required = false) String mediaServerId){
         boolean authority = false;
         // 是否登陆用户, 登陆用户返回完整信息
         LoginUser userInfo = LoginHelper.getLoginUser();
@@ -137,8 +136,8 @@ public class MediaController extends BaseController {
         }
         StreamInfo streamInfo = mediaServerService.getStreamInfoByAppAndStreamWithCheck(app, stream, mediaServerId, authority);
         if (streamInfo == null){
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "获取播放地址失败");
+            throw new ServiceException("获取播放地址失败");
         }
-        return new StreamContent(streamInfo);
+        return new StreamContentVo(streamInfo);
     }
 }

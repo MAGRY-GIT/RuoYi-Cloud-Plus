@@ -10,10 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author MGARY
+ */
+
 @Slf4j
 public enum CivilCodeUtil {
 
     INSTANCE;
+
     // 用与消息的缓存
     private final Map<String, CivilCodePo> civilCodeMap = new ConcurrentHashMap<>();
 

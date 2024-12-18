@@ -10,16 +10,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 通用回调管理
+ * @author Administrator
  */
 @Component
 public class CommonSessionManager {
 
-    public static Map<String, CommonSession> callbackMap = new ConcurrentHashMap<>();
+    public static final Map<String, CommonSession> CALLBACK_MAP = new ConcurrentHashMap<>();
 
     /**
      * 存储回调相关的信息
      */
-    class CommonSession{
+    static class CommonSession{
         public String session;
         public long createTime;
         public int timeout;
@@ -46,7 +47,7 @@ public class CommonSessionManager {
         if (timeout != null) {
             commonSession.timeout = timeout;
         }
-        callbackMap.put(sessionId, commonSession);
+        CALLBACK_MAP.put(sessionId, commonSession);
     }
 
     public void add(String sessionId, CommonCallback<Object> callback) {
@@ -54,9 +55,9 @@ public class CommonSessionManager {
     }
 
     public CommonCallback<Object> get(String sessionId, boolean destroy) {
-        CommonSession commonSession = callbackMap.get(sessionId);
+        CommonSession commonSession = CALLBACK_MAP.get(sessionId);
         if (destroy) {
-            callbackMap.remove(sessionId);
+            CALLBACK_MAP.remove(sessionId);
         }
         return commonSession.callback;
     }
@@ -66,20 +67,20 @@ public class CommonSessionManager {
     }
 
     public void delete(String sessionID) {
-        callbackMap.remove(sessionID);
+        CALLBACK_MAP.remove(sessionID);
     }
 
     @Scheduled(fixedRate= 60)   //每分钟执行一次
     public void execute(){
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MINUTE, -1);
-        for (String session : callbackMap.keySet()) {
-            if (callbackMap.get(session).createTime < cal.getTimeInMillis()) {
+        for (String session : CALLBACK_MAP.keySet()) {
+            if (CALLBACK_MAP.get(session).createTime < cal.getTimeInMillis()) {
                 // 超时
-                if (callbackMap.get(session).timeoutCallback != null) {
-                    callbackMap.get(session).timeoutCallback.run("timeout");
+                if (CALLBACK_MAP.get(session).timeoutCallback != null) {
+                    CALLBACK_MAP.get(session).timeoutCallback.run("timeout");
                 }
-                callbackMap.remove(session);
+                CALLBACK_MAP.remove(session);
             }
         }
     }

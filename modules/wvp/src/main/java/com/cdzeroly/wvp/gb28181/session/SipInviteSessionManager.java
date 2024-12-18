@@ -3,6 +3,7 @@ package com.cdzeroly.wvp.gb28181.session;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.domian.bean.SsrcTransaction;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -12,15 +13,15 @@ import java.util.List;
 
 /**
  * 视频流session管理器，管理视频预览、预览回放的通信句柄
+ * @author Administrator
  */
 @Component
+@AllArgsConstructor
 public class SipInviteSessionManager {
 
-	@Autowired
-	private UserSetting userSetting;
+	private final UserSetting userSetting;
 
-	@Autowired
-	private RedisTemplate<Object, Object> redisTemplate;
+	private final RedisTemplate<Object, Object> redisTemplate;
 
 	/**
 	 * 添加一个点播/回放的事务信息

@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @description: 录像查询结束事件
- * @author: pan
- * @data: 2022-02-23
+ *  录像查询结束事件
+ * @author pan
+ * 2022-02-23
  */
 @Slf4j
 @Component

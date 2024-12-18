@@ -4,8 +4,9 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.streamProxy.bean.StreamProxy;
-import com.cdzeroly.wvp.streamProxy.bean.StreamProxyParam;
+import com.cdzeroly.wvp.streamProxy.domain.bean.StreamProxyParam;
+import com.cdzeroly.wvp.streamProxy.domain.bo.StreamProxyBo;
+import com.cdzeroly.wvp.streamProxy.domain.vo.StreamProxyVo;
 import com.cdzeroly.wvp.vmanager.bean.ResourceBaseInfo;
 
 
@@ -21,9 +22,10 @@ public interface IStreamProxyService {
 
     /**
      * 分页查询
+     *
      * @return
      */
-    TableDataInfo<StreamProxy> getAll(PageQuery pageQuery, String query, Boolean pulling, String mediaServerId);
+    TableDataInfo<StreamProxyVo> getAll(PageQuery pageQuery, String query, Boolean pulling, String mediaServerId);
 
     /**
      * 删除视频代理
@@ -57,9 +59,10 @@ public interface IStreamProxyService {
 
     /**
      * 根据app与stream获取streamProxy
+     *
      * @return
      */
-    StreamProxy getStreamProxyByAppAndStream(String app, String streamId);
+    StreamProxyVo getStreamProxyByAppAndStream(String app, String streamId);
 
 
     /**
@@ -79,7 +82,7 @@ public interface IStreamProxyService {
     /**
      * 更新代理流
      */
-    boolean update(StreamProxy streamProxyItem);
+    boolean update(StreamProxyBo streamProxyItem);
 
     /**
      * 获取统计信息
@@ -87,9 +90,9 @@ public interface IStreamProxyService {
      */
     ResourceBaseInfo getOverview();
 
-    void add(StreamProxy streamProxy);
+    void add(StreamProxyBo streamProxy);
 
-    StreamProxy getStreamProxy(int id);
+    StreamProxyVo getStreamProxy(int id);
 
     void delete(int id);
 }

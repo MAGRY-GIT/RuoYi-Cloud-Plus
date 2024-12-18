@@ -17,6 +17,7 @@ import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.utils.DateUtil;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
@@ -33,38 +34,32 @@ import java.text.ParseException;
 
 /**
  * SIP命令类型： NOTIFY请求,这是作为上级发送订阅请求后，设备才会响应的
+ * @author ＭＧＡＲＹ
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class NotifyRequestProcessor extends SIPRequestProcessorParent implements InitializingBean, ISIPRequestProcessor {
 
-	@Autowired
-	private SipConfig sipConfig;
+	private final SipConfig sipConfig;
 
-	@Autowired
-	private IRedisCatchStorage redisCatchStorage;
+	private final IRedisCatchStorage redisCatchStorage;
 
-	@Autowired
-	private EventPublisher publisher;
+	private final EventPublisher publisher;
 
-	private final String method = "NOTIFY";
+    private final SIPProcessorObserver sipProcessorObserver;
 
-	@Autowired
-	private SIPProcessorObserver sipProcessorObserver;
+	private final IDeviceChannelService deviceChannelService;
 
-	@Autowired
-	private IDeviceChannelService deviceChannelService;
+	private final NotifyRequestForCatalogProcessor notifyRequestForCatalogProcessor;
 
-	@Autowired
-	private NotifyRequestForCatalogProcessor notifyRequestForCatalogProcessor;
-
-	@Autowired
-	private NotifyRequestForMobilePositionProcessor notifyRequestForMobilePositionProcessor;
+	private final NotifyRequestForMobilePositionProcessor notifyRequestForMobilePositionProcessor;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// 添加消息处理的订阅
-		sipProcessorObserver.addRequestProcessor(method, this);
+        String method = "NOTIFY";
+        sipProcessorObserver.addRequestProcessor(method, this);
 	}
 
 	@Override
@@ -134,7 +129,7 @@ public class NotifyRequestProcessor extends SIPRequestProcessorParent implements
 				log.warn("[ NotifyAlarm ] AlarmTime cannot be null");
 				return;
 			}
-			deviceAlarm.setAlarmTime(DateUtil.ISO8601Toyyyy_MM_dd_HH_mm_ss(alarmTime));
+			deviceAlarm.setAlarmTime(DateUtil.iso8601ToYyyyMmDdHhMmSs(alarmTime));
 			if (XmlUtil.getText(rootElement, "AlarmDescription") == null) {
 				deviceAlarm.setAlarmDescription("");
 			} else {

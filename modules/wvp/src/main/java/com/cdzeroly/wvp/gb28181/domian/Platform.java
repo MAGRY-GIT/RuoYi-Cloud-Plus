@@ -27,10 +27,10 @@ public class Platform extends TenantEntity {
     private String name;
 
     @Schema(description = "SIP服务国标编码")
-    private String serverGBId;
+    private String serverGbId;
 
     @Schema(description = "SIP服务国标域")
-    private String serverGBDomain;
+    private String serverGbDomain;
 
     @Schema(description = "SIP服务IP")
     private String serverIp;
@@ -39,7 +39,7 @@ public class Platform extends TenantEntity {
     private int serverPort;
 
     @Schema(description = "设备国标编号")
-    private String deviceGBId;
+    private String deviceGbId;
 
     @Schema(description = "设备ip")
     private String deviceIp;

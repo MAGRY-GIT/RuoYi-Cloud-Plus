@@ -108,7 +108,7 @@ public class RedisAlarmMsgListener implements MessageListener {
                         if (!parentPlatforms.isEmpty()) {
                             for (Platform parentPlatform : parentPlatforms) {
                                 try {
-                                    deviceAlarm.setChannelId(parentPlatform.getDeviceGBId());
+                                    deviceAlarm.setChannelId(parentPlatform.getServerGbId());
                                     commanderForPlatform.sendAlarmMessage(parentPlatform, deviceAlarm);
                                 } catch (SipException | InvalidArgumentException | ParseException e) {
                                     log.error("[命令发送失败] 国标级联 发送报警: {}", e.getMessage());
@@ -121,7 +121,7 @@ public class RedisAlarmMsgListener implements MessageListener {
                         if (!parentPlatforms.isEmpty()) {
                             for (Platform parentPlatform : parentPlatforms) {
                                 try {
-                                    deviceAlarm.setChannelId(parentPlatform.getDeviceGBId());
+                                    deviceAlarm.setChannelId(parentPlatform.getServerGbId());
                                     commanderForPlatform.sendAlarmMessage(parentPlatform, deviceAlarm);
                                 } catch (SipException | InvalidArgumentException | ParseException e) {
                                     log.error("[命令发送失败] 国标级联 发送报警: {}", e.getMessage());

@@ -1,8 +1,8 @@
 package com.cdzeroly.wvp.streamPush.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
+import com.cdzeroly.common.core.domain.R;
 import com.cdzeroly.wvp.common.StreamInfo;
-import com.cdzeroly.wvp.conf.DynamicTask;
+import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
@@ -16,38 +16,34 @@ import com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo;
 import com.cdzeroly.wvp.streamPush.mapper.StreamPushMapper;
 import com.cdzeroly.wvp.streamPush.service.IStreamPushPlayService;
 import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.UUID;
 
+/**
+ * @author MGARY
+ */
 @Service
 @Slf4j
-@DS("master")
+@AllArgsConstructor
 public class StreamPushPlayServiceImpl implements IStreamPushPlayService {
 
-    @Autowired
-    private StreamPushMapper streamPushMapper;
+    private final StreamPushMapper streamPushMapper;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private DynamicTask dynamicTask;
+    private final DynamicTask dynamicTask;
 
-    @Autowired
-    private IRedisRpcService redisRpcService;
+    private final IRedisRpcService redisRpcService;
 
-    @Autowired
-    private RedisPushStreamResponseListener redisPushStreamResponseListener;
+    private final RedisPushStreamResponseListener redisPushStreamResponseListener;
 
     @Override
     public void start(Integer id, ErrorCallback<StreamInfo> callback, String platformDeviceId, String platformName ) {
@@ -60,7 +56,7 @@ public class StreamPushPlayServiceImpl implements IStreamPushPlayService {
             if (streamAuthorityInfo != null) {
                 callId = streamAuthorityInfo.getCallId();
             }
-            callback.run(ErrorCode.SUCCESS.getCode(), ErrorCode.SUCCESS.getMsg(), mediaServerService.getStreamInfoByAppAndStream(mediaInfo.getMediaServer(),
+            callback.run(R.SUCCESS, "SUCCESS", mediaServerService.getStreamInfoByAppAndStream(mediaInfo.getMediaServer(),
                     streamPushVo.getApp(), streamPushVo.getStream(), mediaInfo, callId));
             return;
         }
@@ -76,7 +72,7 @@ public class StreamPushPlayServiceImpl implements IStreamPushPlayService {
         dynamicTask.startDelay(timeOutTaskKey, () -> {
             redisRpcService.unPushStreamOnlineEvent(streamPushVo.getApp(), streamPushVo.getStream());
             log.info("[ app={}, stream={} ] 等待设备开始推流超时", streamPushVo.getApp(), streamPushVo.getStream());
-            callback.run(ErrorCode.ERROR100.getCode(), "timeout", null);
+            callback.run(R.FAIL, "timeout", null);
 
         }, userSetting.getPlatformPlayTimeout());
         //
@@ -84,9 +80,9 @@ public class StreamPushPlayServiceImpl implements IStreamPushPlayService {
             dynamicTask.stop(timeOutTaskKey);
             if (streamInfo == null) {
                 log.warn("等待推流得到结果未空： {}/{}", streamPushVo.getApp(), streamPushVo.getStream());
-                callback.run(ErrorCode.ERROR100.getCode(), "fail", null);
+                callback.run(R.FAIL, "fail", null);
             }else {
-                callback.run(ErrorCode.SUCCESS.getCode(), ErrorCode.SUCCESS.getMsg(), streamInfo);
+                callback.run(R.SUCCESS, "SUCCESS", streamInfo);
             }
         });
         // 添加回复的拒绝或者错误的通知

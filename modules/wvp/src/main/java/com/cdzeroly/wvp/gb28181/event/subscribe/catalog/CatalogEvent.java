@@ -7,6 +7,11 @@ import org.springframework.context.ApplicationEvent;
 
 import java.util.List;
 
+/**
+ * @author MGARY
+ */
+@Setter
+@Getter
 public class CatalogEvent  extends ApplicationEvent {
 
     public CatalogEvent(Object source) {
@@ -48,16 +53,10 @@ public class CatalogEvent  extends ApplicationEvent {
      */
     public static final String UPDATE = "UPDATE";
 
-    @Setter
-    @Getter
     private List<CommonGBChannel> channels;
 
-    @Setter
-    @Getter
     private String type;
 
-    @Setter
-    @Getter
     private Integer platformId;
 
 }

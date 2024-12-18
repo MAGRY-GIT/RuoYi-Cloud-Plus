@@ -154,7 +154,7 @@ public class AssistRESTfulUtils {
     }
 
     public JSONObject sendPost(MediaServer mediaServerItem, String url,
-                               JSONObject param, ZLMRESTfulUtils.RequestCallback callback,
+                               JSONObject param, ZLMRESTFullUtils.RequestCallback callback,
                                Integer readTimeOut) {
         OkHttpClient client = getClient(readTimeOut);
 

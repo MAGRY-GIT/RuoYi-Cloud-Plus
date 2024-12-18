@@ -1,9 +1,9 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.CivilCodePo;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Region;
 import com.cdzeroly.wvp.gb28181.domian.bean.RegionTree;
@@ -14,10 +14,9 @@ import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
 import com.cdzeroly.wvp.gb28181.service.IRegionService;
 import com.cdzeroly.wvp.utils.CivilCodeUtil;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,23 +27,21 @@ import java.util.*;
 
 /**
  * 区域管理类
+ * @author Administrator
  */
+@AllArgsConstructor
 @Service
 public class RegionServiceImpl implements IRegionService {
 
-
     private static final Logger log = LoggerFactory.getLogger(RegionServiceImpl.class);
-    @Autowired
-    private RegionMapper regionMapper;
 
-    @Autowired
-    private CommonGBChannelMapper commonGBChannelMapper;
+    private final RegionMapper regionMapper;
 
-    @Autowired
-    private IGbChannelService gbChannelService;
+    private final CommonGBChannelMapper commonGBChannelMapper;
 
-    @Autowired
-    private EventPublisher eventPublisher;
+    private final IGbChannelService gbChannelService;
+
+    private final EventPublisher eventPublisher;
 
     @Override
     public void add(Region region) {
@@ -56,7 +53,7 @@ public class RegionServiceImpl implements IRegionService {
         try {
             regionMapper.insert(region);
         }catch (DuplicateKeyException e){
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "此行政区划已存在");
+            throw new ServiceException("此行政区划已存在");
         }
 
     }
@@ -235,7 +232,7 @@ public class RegionServiceImpl implements IRegionService {
     public List<Region> getPath(String deviceId) {
         Region region = regionMapper.queryByDeviceId(deviceId);
         if (region == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "行政区划不存在");
+            throw new ServiceException("行政区划不存在");
         }
         List<Region> allParent = getAllParent(region);
         allParent.add(region);

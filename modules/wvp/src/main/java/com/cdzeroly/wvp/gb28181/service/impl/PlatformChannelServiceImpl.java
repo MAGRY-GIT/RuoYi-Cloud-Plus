@@ -414,7 +414,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
         if (channelList.isEmpty()){
             return;
         }
-        SubscribeInfo subscribeInfo = SubscribeInfo.buildSimulated(platform.getServerGBId(), platform.getServerIp());
+        SubscribeInfo subscribeInfo = SubscribeInfo.buildSimulated(platform.getServerGbId(), platform.getServerIp());
 
         try {
             sipCommanderFroPlatform.sendNotifyForCatalogAddOrUpdate(CatalogEvent.ADD, platform, channelList, subscribeInfo, null);

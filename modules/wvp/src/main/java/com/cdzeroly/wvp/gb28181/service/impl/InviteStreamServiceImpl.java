@@ -301,7 +301,7 @@ public class InviteStreamServiceImpl implements IInviteStreamService {
     }
 
     @Override
-    public InviteInfo getInviteInfoBySSRC(String ssrc) {
+    public InviteInfo getInviteInfoBySsrc(String ssrc) {
         List<InviteInfo> inviteInfoList = getAllInviteInfo();
         if (inviteInfoList.isEmpty()) {
             return null;
@@ -315,7 +315,7 @@ public class InviteStreamServiceImpl implements IInviteStreamService {
     }
 
     @Override
-    public InviteInfo updateInviteInfoForSSRC(InviteInfo inviteInfo, String ssrc) {
+    public InviteInfo updateInviteInfoForSsrc(InviteInfo inviteInfo, String ssrc) {
         InviteInfo inviteInfoInDb = getInviteInfo(inviteInfo.getType(), inviteInfo.getChannelId(), inviteInfo.getStream());
         if (inviteInfoInDb == null) {
             return null;

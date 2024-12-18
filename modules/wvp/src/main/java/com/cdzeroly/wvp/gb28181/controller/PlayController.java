@@ -2,11 +2,11 @@ package com.cdzeroly.wvp.gb28181.controller;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.web.core.BaseController;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
@@ -24,7 +24,7 @@ import com.cdzeroly.wvp.service.domian.bean.InviteErrorCode;
 import com.cdzeroly.wvp.utils.DateUtil;
 import com.cdzeroly.wvp.vmanager.bean.AudioBroadcastResult;
 import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
-import com.cdzeroly.wvp.vmanager.bean.StreamContent;
+import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
 import com.cdzeroly.wvp.vmanager.bean.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -79,7 +79,7 @@ public class PlayController extends BaseController {
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @Parameter(name = "channelId", description = "通道国标编号", required = true)
     @GetMapping("/start/{deviceId}/{channelId}")
-    public DeferredResult<WVPResult<StreamContent>> play(@PathVariable String deviceId, @PathVariable String channelId) {
+    public DeferredResult<WVPResult<StreamContentVo>> play(@PathVariable String deviceId, @PathVariable String channelId) {
 
         log.info("[开始点播] deviceId：{}, channelId：{}, ", deviceId, channelId);
         Assert.notNull(deviceId, "设备国标编号不可为NULL");
@@ -96,7 +96,7 @@ public class PlayController extends BaseController {
         requestMessage.setKey(key);
         String uuid = UUID.randomUUID().toString();
         requestMessage.setId(uuid);
-        DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
+        DeferredResult<WVPResult<StreamContentVo>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
 
         result.onTimeout(() -> {
             log.info("[点播等待超时] deviceId：{}, channelId：{}, ", deviceId, channelId);
@@ -114,7 +114,7 @@ public class PlayController extends BaseController {
         resultHolder.put(key, uuid, result);
 
         playService.play(newMediaServerItem, deviceId, channelId, null, (code, msg, streamInfo) -> {
-            WVPResult<StreamContent> wvpResult = new WVPResult<>();
+            WVPResult<StreamContentVo> wvpResult = new WVPResult<>();
             if (code == InviteErrorCode.SUCCESS.getCode()) {
                 wvpResult.setCode(ErrorCode.SUCCESS.getCode());
                 wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
@@ -134,7 +134,7 @@ public class PlayController extends BaseController {
                     if (!ObjectUtils.isEmpty(newMediaServerItem.getTranscodeSuffix()) && !"null".equalsIgnoreCase(newMediaServerItem.getTranscodeSuffix())) {
                         streamInfo.setStream(streamInfo.getStream() + "_" + newMediaServerItem.getTranscodeSuffix());
                     }
-                    wvpResult.setData(new StreamContent(streamInfo));
+                    wvpResult.setData(new StreamContentVo(streamInfo));
                 } else {
                     wvpResult.setCode(code);
                     wvpResult.setMsg(msg);
@@ -159,7 +159,7 @@ public class PlayController extends BaseController {
         log.debug(String.format("设备预览/回放停止API调用，streamId：%s_%s", deviceId, channelId));
 
         if (deviceId == null || channelId == null) {
-            throw new ControllerException(ErrorCode.ERROR400);
+            throw new ServiceException("参数或方法错误");
         }
 
         Device device = deviceService.getDeviceByDeviceId(deviceId);
@@ -183,15 +183,15 @@ public class PlayController extends BaseController {
     @PostMapping("/convertStop/{key}")
     public void playConvertStop(@PathVariable String key, String mediaServerId) {
         if (mediaServerId == null) {
-            throw new ControllerException(ErrorCode.ERROR400.getCode(), "流媒体：" + mediaServerId + "不存在");
+            throw new ServiceException( "流媒体：" + mediaServerId + "不存在");
         }
         MediaServer mediaInfo = mediaServerService.getOne(mediaServerId);
         if (mediaInfo == null) {
-            throw new ControllerException(ErrorCode.ERROR100.getCode(), "使用的流媒体已经停止运行");
+            throw new ServiceException("使用的流媒体已经停止运行");
         } else {
             Boolean deleted = mediaServerService.delFFmpegSource(mediaInfo, key);
             if (!deleted) {
-                throw new ControllerException(ErrorCode.ERROR100);
+                throw new ServiceException("失败");
             }
         }
     }
@@ -208,11 +208,11 @@ public class PlayController extends BaseController {
         }
         Device device = deviceService.getDeviceByDeviceId(deviceId);
         if (device == null) {
-            throw new ControllerException(ErrorCode.ERROR400.getCode(), "未找到设备： " + deviceId);
+            throw new ServiceException( "未找到设备： " + deviceId);
         }
         DeviceChannel channel = deviceChannelService.getOne(deviceId, channelId);
         if (channel == null) {
-            throw new ControllerException(ErrorCode.ERROR400.getCode(), "未找到通道： " + channelId);
+            throw new ServiceException( "未找到通道： " + channelId);
         }
 
         return playService.audioBroadcast(device, channel, broadcastMode);

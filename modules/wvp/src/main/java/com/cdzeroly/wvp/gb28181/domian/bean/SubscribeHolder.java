@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.gb28181.domian.bean;
 
 import com.cdzeroly.wvp.common.VideoManagerConstants;
-import com.cdzeroly.wvp.conf.DynamicTask;
+import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.task.ISubscribeTask;
 import lombok.AllArgsConstructor;

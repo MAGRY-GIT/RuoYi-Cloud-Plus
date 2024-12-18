@@ -25,7 +25,7 @@
             AND (pp.name LIKE CONCAT('%', #{query}, '%') ESCAPE '/' OR pp.server_gb_id LIKE CONCAT('%', #{query}, '%') ESCAPE '/')
         </if>
         ORDER BY pp.id DESC
-        ${ew.customSqlSegment}
+
     </select>
     <select id="getByEnable" resultType="com.cdzeroly.wvp.gb28181.domian.Platform">
 

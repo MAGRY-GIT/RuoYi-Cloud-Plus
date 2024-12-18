@@ -1,8 +1,14 @@
 package com.cdzeroly.wvp.gb28181.enums;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 收录行业编码
+ *
+ * @author MGARY
  */
+@Getter
 public enum NetworkIdentificationTypeEnum {
     PUBLIC_SECURITY_VIDEO_TRANSMISSION_NETWORK("0", "公安视频传输网"),
     PUBLIC_SECURITY_VIDEO_TRANSMISSION_NETWORK2("1", "公安视频传输网"),
@@ -19,32 +25,16 @@ public enum NetworkIdentificationTypeEnum {
     /**
      * 接入类型码
      */
-    private String name;
+    private final String name;
 
     /**
      * 名称
      */
-    private String code;
+    private final String code;
 
 
     NetworkIdentificationTypeEnum(String code, String name) {
         this.name = name;
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
         this.code = code;
     }
 

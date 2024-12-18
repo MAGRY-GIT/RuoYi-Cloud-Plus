@@ -12,8 +12,7 @@ import java.util.List;
 
 /**
  * @author : MGARY
- * @description : 报警信息管理
- * @createDate : 2024/12/12 11:51
+ *  报警信息管理
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

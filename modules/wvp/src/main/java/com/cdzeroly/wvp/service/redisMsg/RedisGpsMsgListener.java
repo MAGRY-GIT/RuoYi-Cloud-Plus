@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.cdzeroly.wvp.service.domian.bean.GPSMsgInfo;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.streamPush.service.IStreamPushService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +26,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class RedisGpsMsgListener implements MessageListener {
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private IStreamPushService streamPushService;
+    private final IStreamPushService streamPushService;
 
     private final ConcurrentLinkedQueue<Message> taskQueue = new ConcurrentLinkedQueue<>();
 

@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.*;
 /**
  * @author MGARY
  */
-@Mapper
 public interface RecordPlanItemMapper extends BaseMapperPlus<RecordPlanItem, RecordPlanVo> {
 
 }

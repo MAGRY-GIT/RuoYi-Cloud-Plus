@@ -8,8 +8,8 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
@@ -62,7 +62,7 @@ public class DeviceControl {
 			cmder.teleBootCmd(device);
 		} catch (InvalidArgumentException | SipException | ParseException e) {
 			log.error("[命令发送失败] 远程启动: {}", e.getMessage());
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+			throw new ServiceException( "命令发送失败: " + e.getMessage());
 		}
     }
 
@@ -79,7 +79,7 @@ public class DeviceControl {
 	@Parameter(name = "recordCmdStr", description = "命令， 可选值：Record（手动录像），StopRecord（停止手动录像）", required = true)
     @GetMapping("/record/{deviceId}/{recordCmdStr}")
     public DeferredResult<ResponseEntity<WVPResult<String>>> recordApi(@PathVariable String deviceId,
-															   @PathVariable String recordCmdStr, String channelId) {
+                                                                       @PathVariable String recordCmdStr, String channelId) {
         if (log.isDebugEnabled()) {
             log.debug("开始/停止录像API调用");
         }
@@ -110,7 +110,7 @@ public class DeviceControl {
 			},null);
 		} catch (InvalidArgumentException | SipException | ParseException e) {
 			log.error("[命令发送失败] 开始/停止录像: {}", e.getMessage());
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+			throw new ServiceException( "命令发送失败: " + e.getMessage());
 		}
 
 		return result;
@@ -143,7 +143,7 @@ public class DeviceControl {
 			},null);
 		} catch (InvalidArgumentException | SipException | ParseException e) {
 			log.error("[命令发送失败] 布防/撤防操作: {}", e.getMessage());
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送: " + e.getMessage());
+			throw new ServiceException( "命令发送: " + e.getMessage());
 		}
 		DeferredResult<WVPResult<String>> result = new DeferredResult<>(3 * 1000L);
 		resultHolder.put(key, uuid, result);
@@ -192,7 +192,7 @@ public class DeviceControl {
 			},null);
 		} catch (InvalidArgumentException | SipException | ParseException e) {
 			log.error("[命令发送失败] 报警复位: {}", e.getMessage());
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+			throw new ServiceException( "命令发送失败: " + e.getMessage());
 		}
 		DeferredResult<ResponseEntity<WVPResult<String>>> result = new DeferredResult<>(3 * 1000L);
 		result.onTimeout(() -> {
@@ -228,7 +228,7 @@ public class DeviceControl {
 			cmder.iFrameCmd(device, channelId);
 		} catch (InvalidArgumentException | SipException | ParseException e) {
 			log.error("[命令发送失败] 强制关键帧: {}", e.getMessage());
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+			throw new ServiceException( "命令发送失败: " + e.getMessage());
 		}
 		JSONObject json = new JSONObject();
 		json.put("DeviceID", deviceId);
@@ -272,7 +272,7 @@ public class DeviceControl {
 			},null);
 		} catch (InvalidArgumentException | SipException | ParseException e) {
 			log.error("[命令发送失败] 看守位控制: {}", e.getMessage());
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " + e.getMessage());
+			throw new ServiceException( "命令发送失败: " + e.getMessage());
 		}
 		DeferredResult<WVPResult<String>> result = new DeferredResult<>(3 * 1000L);
 		result.onTimeout(() -> {
@@ -334,7 +334,7 @@ public class DeviceControl {
 			cmder.dragZoomCmd(device, channelId, cmdXml.toString());
 		} catch (InvalidArgumentException | SipException | ParseException e) {
 			log.error("[命令发送失败] 拉框放大: {}", e.getMessage());
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " +  e.getMessage());
+			throw new ServiceException( "命令发送失败: " +  e.getMessage());
 		}
 	}
 
@@ -386,7 +386,7 @@ public class DeviceControl {
 			cmder.dragZoomCmd(device, channelId, cmdXml.toString());
 		} catch (InvalidArgumentException | SipException | ParseException e) {
 			log.error("[命令发送失败] 拉框缩小: {}", e.getMessage());
-			throw new ControllerException(ErrorCode.ERROR100.getCode(), "命令发送失败: " +  e.getMessage());
+			throw new ServiceException( "命令发送失败: " +  e.getMessage());
 		}
 	}
 }

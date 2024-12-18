@@ -71,7 +71,7 @@ public class DeviceInfoQueryMessageHandler extends SIPRequestProcessorParent imp
 
         String channelId = getText(rootElement, "DeviceID");
         // 查询这是通道id还是设备id
-        if (platform.getDeviceGBId().equals(channelId)) {
+        if (platform.getServerGbId().equals(channelId)) {
             // id指向平台的国标编号，那么就是查询平台的信息
             try {
                 cmderFroPlatform.deviceInfoResponse(platform, null, sn, fromHeader.getTag());

@@ -3,15 +3,17 @@ package com.cdzeroly.wvp.streamPush.controller;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.read.metadata.ReadSheet;
+import com.cdzeroly.common.core.domain.R;
+import com.cdzeroly.common.core.exception.ServiceException;
+import com.cdzeroly.common.core.validate.AddGroup;
+import com.cdzeroly.common.core.validate.EditGroup;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.conf.exception.ControllerException;
 
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
-import com.cdzeroly.wvp.service.IMediaService;
 import com.cdzeroly.wvp.streamPush.domian.bean.BatchRemoveParam;
 import com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo;
 import com.cdzeroly.wvp.streamPush.domian.bean.StreamPushExcelDto;
@@ -19,18 +21,19 @@ import com.cdzeroly.wvp.streamPush.enent.StreamPushUploadFileHandler;
 import com.cdzeroly.wvp.streamPush.service.IStreamPushPlayService;
 import com.cdzeroly.wvp.streamPush.service.IStreamPushService;
 import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
-import com.cdzeroly.wvp.vmanager.bean.StreamContent;
-import com.cdzeroly.wvp.vmanager.bean.WVPResult;
+import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
 
+import com.cdzeroly.wvp.vmanager.bean.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,29 +51,22 @@ import java.util.UUID;
 @Tag(name  = "推流信息管理")
 @RestController
 @Slf4j
+@AllArgsConstructor
 @RequestMapping(value = "/api/push")
 public class StreamPushController {
 
-    @Autowired
-    private IStreamPushService streamPushService;
+    private final IStreamPushService streamPushService;
 
-    @Autowired
-    private IStreamPushPlayService streamPushPlayService;
+    private final IStreamPushPlayService streamPushPlayService;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private DeferredResultHolder resultHolder;
+    private final DeferredResultHolder resultHolder;
 
-    @Autowired
-    private IMediaService mediaService;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
     @GetMapping(value = "/list")
-    @ResponseBody
     @Operation(summary = "推流列表查询")
     @Parameter(name = "query", description = "查询内容")
     @Parameter(name = "pushing", description = "是否正在推流")
@@ -91,17 +87,15 @@ public class StreamPushController {
 
 
     @PostMapping(value = "/remove")
-    @ResponseBody
     @Operation(summary = "删除")
     @Parameter(name = "id", description = "应用名", required = true)
     public void delete(int id){
         if (streamPushService.delete(id) > 0){
-            throw new ControllerException(ErrorCode.ERROR100);
+            throw new ServiceException("失败");
         }
     }
 
     @PostMapping(value = "upload")
-    @ResponseBody
     public DeferredResult<ResponseEntity<WVPResult<Object>>> uploadChannelFile(@RequestParam(value = "file") MultipartFile file){
 
         // 最多处理文件一个小时
@@ -194,44 +188,32 @@ public class StreamPushController {
         return result;
     }
 
-    /**
-     * 添加推流信息
-     * @param stream 推流信息
-     * @return
-     */
     @PostMapping(value = "/add")
-    @ResponseBody
     @Operation(summary = "添加推流信息")
-    public StreamPushVo add(@RequestBody StreamPushVo stream){
-        if (ObjectUtils.isEmpty(stream.getGbId())) {
-            throw new ControllerException(ErrorCode.ERROR400.getCode(), "国标ID不可为空");
-        }
+    public StreamPushVo add( @Validated(AddGroup.class) @RequestBody StreamPushVo stream){
+
         if (ObjectUtils.isEmpty(stream.getApp()) && ObjectUtils.isEmpty(stream.getStream())) {
-            throw new ControllerException(ErrorCode.ERROR400.getCode(), "app或stream不可为空");
+            throw new ServiceException( "app或stream不可为空");
         }
         stream.setGbStatus("OFF");
         stream.setPushing(false);
         if (!streamPushService.add(stream)) {
-            throw new ControllerException(ErrorCode.ERROR100);
+            throw new ServiceException("失败");
         }
         stream.setStreamPushId(stream.getId());
         return stream;
     }
 
     @PostMapping(value = "/update")
-    @ResponseBody
     @Operation(summary = "更新推流信息")
-    public void update(@RequestBody StreamPushVo stream){
-        if (ObjectUtils.isEmpty(stream.getId())) {
-            throw new ControllerException(ErrorCode.ERROR400.getCode(), "ID不可为空");
-        }
+
+    public void update(@RequestBody @Validated(EditGroup.class) StreamPushVo stream){
         if (!streamPushService.update(stream)) {
-            throw new ControllerException(ErrorCode.ERROR100);
+            throw new ServiceException("失败");
         }
     }
 
     @DeleteMapping(value = "/batchRemove")
-    @ResponseBody
     @Operation(summary = "删除多个推流")
     public void batchStop(@RequestBody BatchRemoveParam ids){
         if(ids.getIds().isEmpty()) {
@@ -241,18 +223,17 @@ public class StreamPushController {
     }
 
     @GetMapping(value = "/start")
-    @ResponseBody
     @Operation(summary = "开始播放")
-    public DeferredResult<WVPResult<StreamContent>> batchStop(Integer id){
+    public DeferredResult<R<StreamContentVo>> batchStop(Integer id){
         Assert.notNull(id, "推流ID不可为NULL");
-        DeferredResult<WVPResult<StreamContent>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
+        DeferredResult<R<StreamContentVo>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
         result.onTimeout(()->{
-            WVPResult<StreamContent> fail = WVPResult.fail(ErrorCode.ERROR100.getCode(), "等待推流超时");
+            R<StreamContentVo> fail = R.fail("等待推流超时");
             result.setResult(fail);
         });
         streamPushPlayService.start(id, (code, msg, streamInfo) -> {
-            if (code == 0 && streamInfo != null) {
-                WVPResult<StreamContent> success = WVPResult.success(new StreamContent(streamInfo));
+            if (code == 200 && streamInfo != null) {
+                R<StreamContentVo> success = R.ok(new StreamContentVo(streamInfo));
                 result.setResult(success);
             }
         }, null, null);

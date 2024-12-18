@@ -5,6 +5,7 @@ import com.cdzeroly.wvp.media.zlm.dto.hook.OnStreamChangedHookParam;
 
 /**
  * 流离开事件
+ * @author MGARY
  */
 public class MediaDepartureEvent extends MediaEvent {
     public MediaDepartureEvent(Object source) {

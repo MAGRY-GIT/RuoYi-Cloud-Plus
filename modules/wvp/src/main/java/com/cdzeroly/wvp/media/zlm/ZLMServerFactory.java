@@ -15,7 +15,7 @@ import java.util.Map;
 @Component
 public class ZLMServerFactory {
     @Autowired
-    private ZLMRESTfulUtils zlmresTfulUtils;
+    private ZLMRESTFullUtils zlmresTfulUtils;
 
 
     /**
@@ -153,7 +153,7 @@ public class ZLMServerFactory {
         return zlmresTfulUtils.startSendRtpPassive(mediaServerItem, param);
     }
 
-    public JSONObject startSendRtpPassive(MediaServer mediaServerItem, Map<String, Object>param, ZLMRESTfulUtils.RequestCallback callback) {
+    public JSONObject startSendRtpPassive(MediaServer mediaServerItem, Map<String, Object>param, ZLMRESTFullUtils.RequestCallback callback) {
         return zlmresTfulUtils.startSendRtpPassive(mediaServerItem, param, callback);
     }
 

@@ -76,10 +76,10 @@ public interface IInviteStreamService {
     /**
      * 获取MediaServer下的流信息
      */
-    InviteInfo getInviteInfoBySSRC(String ssrc);
+    InviteInfo getInviteInfoBySsrc(String ssrc);
 
     /**
      * 更新ssrc
      */
-    InviteInfo updateInviteInfoForSSRC(InviteInfo inviteInfo, String ssrcInResponse);
+    InviteInfo updateInviteInfoForSsrc(InviteInfo inviteInfo, String ssrcInResponse);
 }

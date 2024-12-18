@@ -34,9 +34,7 @@ public class SseController extends BaseController {
      * @param browserId 浏览器ID
      */
     @GetMapping("/emit")
-    public SseEmitter emit(@RequestParam String browserId) throws IOException, InterruptedException {
-//        response.setContentType("text/event-stream");
-//        response.setCharacterEncoding("utf-8");
+    public SseEmitter emit(@RequestParam String browserId) {
         return sseSessionManager.conect(browserId);
     }
 }

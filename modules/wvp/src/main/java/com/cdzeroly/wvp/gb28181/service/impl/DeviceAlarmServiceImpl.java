@@ -31,8 +31,8 @@ public class DeviceAlarmServiceImpl implements IDeviceAlarmService {
 
     @Override
     public TableDataInfo<DeviceAlarmVo> getAllAlarm(PageQuery pageQuery, DeviceAlarmBo bo) {
-        List<DeviceAlarmVo> all = deviceAlarmMapper.selectVoPage(pageQuery.build(),this.buildQueryWrapper(bo));
-           return  TableDataInfo.build(all);
+        List<DeviceAlarmVo> all = deviceAlarmMapper.selectVoPage(pageQuery.build(), this.buildQueryWrapper(bo));
+        return TableDataInfo.build(all);
     }
 
     @Override
@@ -42,10 +42,10 @@ public class DeviceAlarmServiceImpl implements IDeviceAlarmService {
 
     @Override
     public int clearAlarmBeforeTime(AlarmBo bo) {
-        LambdaQueryWrapper<DeviceAlarm> wrapper =   Wrappers.lambdaQuery();
-        wrapper.eq(CollUtil.isNotEmpty(bo.getDeviceIds())&& ObjUtil.isEmpty(bo.getId()),DeviceAlarm::getDeviceId,bo.getDeviceIds());
-        wrapper.le(ObjUtil.isNotEmpty(bo.getTime())&& ObjUtil.isEmpty(bo.getId()),DeviceAlarm::getAlarmTime,bo.getTime());
-        wrapper.eq(ObjUtil.isNotEmpty(bo.getId()),DeviceAlarm::getId,bo.getId());
+        LambdaQueryWrapper<DeviceAlarm> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(CollUtil.isNotEmpty(bo.getDeviceIds()) && ObjUtil.isEmpty(bo.getId()), DeviceAlarm::getDeviceId, bo.getDeviceIds());
+        wrapper.le(ObjUtil.isNotEmpty(bo.getTime()) && ObjUtil.isEmpty(bo.getId()), DeviceAlarm::getAlarmTime, bo.getTime());
+        wrapper.eq(ObjUtil.isNotEmpty(bo.getId()), DeviceAlarm::getId, bo.getId());
 
         return deviceAlarmMapper.delete(wrapper);
     }

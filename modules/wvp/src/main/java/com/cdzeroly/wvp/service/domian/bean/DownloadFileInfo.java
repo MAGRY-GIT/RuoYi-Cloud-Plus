@@ -1,5 +1,14 @@
 package com.cdzeroly.wvp.service.domian.bean;
 
+import com.cdzeroly.wvp.media.domian.MediaServer;
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * @author MGARY
+ */
+@Setter
+@Getter
 public class DownloadFileInfo {
 
     private String httpPath;
@@ -7,35 +16,20 @@ public class DownloadFileInfo {
     private String httpDomainPath;
     private String httpsDomainPath;
 
-    public String getHttpPath() {
-        return httpPath;
+
+    public static DownloadFileInfo convert(MediaServer mediaServerItem, String filePath) {
+        DownloadFileInfo downloadFileInfo = new DownloadFileInfo();
+
+        String pathTemplate = "%s://%s:%s/index/api/downloadFile?file_path=" + filePath;
+
+        downloadFileInfo.setHttpPath(String.format(pathTemplate, "http", mediaServerItem.getStreamIp(),
+            mediaServerItem.getHttpPort()));
+
+        if (mediaServerItem.getHttpSslPort() > 0) {
+            downloadFileInfo.setHttpsPath(String.format(pathTemplate, "https", mediaServerItem.getStreamIp(),
+                mediaServerItem.getHttpSslPort()));
+        }
+        return downloadFileInfo;
     }
 
-    public void setHttpPath(String httpPath) {
-        this.httpPath = httpPath;
-    }
-
-    public String getHttpsPath() {
-        return httpsPath;
-    }
-
-    public void setHttpsPath(String httpsPath) {
-        this.httpsPath = httpsPath;
-    }
-
-    public String getHttpDomainPath() {
-        return httpDomainPath;
-    }
-
-    public void setHttpDomainPath(String httpDomainPath) {
-        this.httpDomainPath = httpDomainPath;
-    }
-
-    public String getHttpsDomainPath() {
-        return httpsDomainPath;
-    }
-
-    public void setHttpsDomainPath(String httpsDomainPath) {
-        this.httpsDomainPath = httpsDomainPath;
-    }
 }

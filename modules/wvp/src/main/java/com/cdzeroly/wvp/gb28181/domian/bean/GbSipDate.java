@@ -11,18 +11,15 @@ import java.util.*;
  */
 public class GbSipDate extends SIPDate {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
-    private Calendar javaCal;
+    private final Calendar javaCal;
 
     public GbSipDate(long timeMillis) {
         this.javaCal = new GregorianCalendar(TimeZone.getDefault(), Locale.getDefault());
         Date date = new Date(timeMillis);
         this.javaCal.setTime(date);
-        this.wkday = this.javaCal.get(7);
+        this.wkday = this.javaCal.get(Calendar.DAY_OF_WEEK);
         switch(this.wkday) {
             case 1:
                 this.sipWkDay = "Sun";
@@ -49,8 +46,8 @@ public class GbSipDate extends SIPDate {
                 InternalErrorHandler.handleException("No date map for wkday " + this.wkday);
         }
 
-        this.day = this.javaCal.get(5);
-        this.month = this.javaCal.get(2);
+        this.day = this.javaCal.get(Calendar.DATE);
+        this.month = this.javaCal.get(Calendar.MONTH);
         switch(this.month) {
             case 0:
                 this.sipMonth = "Jan";
@@ -92,10 +89,10 @@ public class GbSipDate extends SIPDate {
                 InternalErrorHandler.handleException("No date map for month " + this.month);
         }
 
-        this.year = this.javaCal.get(1);
-        this.hour = this.javaCal.get(11);
-        this.minute = this.javaCal.get(12);
-        this.second = this.javaCal.get(13);
+        this.year = this.javaCal.get(Calendar.YEAR);
+        this.hour = this.javaCal.get(Calendar.HOUR_OF_DAY);
+        this.minute = this.javaCal.get(Calendar.MINUTE);
+        this.second = this.javaCal.get(Calendar.SECOND);
     }
 
     @Override
@@ -135,7 +132,7 @@ public class GbSipDate extends SIPDate {
             var6 = "" + this.second;
         }
 
-        int var8 = this.javaCal.get(14);
+        int var8 = this.javaCal.get(Calendar.MILLISECOND);
         String var7;
         if (var8 < 10) {
             var7 = "00" + var8;

@@ -12,6 +12,7 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHandler;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.response.ResponseMessageHandler;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,26 +27,25 @@ import java.text.ParseException;
 
 import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
 
+/**
+ * @author MGARY
+ */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class BroadcastResponseMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "Broadcast";
+    private final ResponseMessageHandler responseMessageHandler;
 
-    @Autowired
-    private ResponseMessageHandler responseMessageHandler;
+    private final IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
+    private final AudioBroadcastManager audioBroadcastManager;
 
-    @Autowired
-    private AudioBroadcastManager audioBroadcastManager;
-
-    @Autowired
-    private IPlayService playService;
+    private final IPlayService playService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "Broadcast";
         responseMessageHandler.addHandler(cmdType, this);
     }
 
