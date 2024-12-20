@@ -93,7 +93,7 @@ public class StreamInfo implements Serializable, Cloneable{
     private boolean pause;
 
     @Schema(description = "产生源类型，包括 unknown = 0,rtmp_push=1,rtsp_push=2,rtp_push=3,pull=4,ffmpeg_pull=5,mp4_vod=6,device_chn=7")
-    private int originType;
+    private Integer originType;
 
     @Schema(description = "转码后的视频流")
     private StreamInfo transcodeStream;

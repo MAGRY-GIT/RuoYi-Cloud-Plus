@@ -5,7 +5,7 @@ package com.cdzeroly.wvp.media.zlm.dto.hook;
  * @author lin
  */
 public class OnRtpServerTimeoutHookParam extends HookParam{
-    private int local_port;
+    private Integer local_port;
     private String stream_id;
     private int tcpMode;
     private boolean re_use_port;

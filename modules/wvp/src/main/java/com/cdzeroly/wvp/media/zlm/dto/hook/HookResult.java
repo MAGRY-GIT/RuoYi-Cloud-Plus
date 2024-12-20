@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 public class HookResult {
 
-    private int code;
+    private Integer code;
     private String msg;
 
 

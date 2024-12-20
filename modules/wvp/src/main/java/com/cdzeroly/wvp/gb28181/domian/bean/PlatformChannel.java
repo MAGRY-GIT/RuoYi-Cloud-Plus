@@ -10,10 +10,10 @@ import lombok.EqualsAndHashCode;
 public class PlatformChannel extends CommonGBChannel {
 
     @Schema(description = "Id")
-    private int id;
+    private Integer id;
 
     @Schema(description = "平台ID")
-    private int platformId;
+    private Integer platformId;
 
     @Schema(description = "国标-编码")
     private String customDeviceId;

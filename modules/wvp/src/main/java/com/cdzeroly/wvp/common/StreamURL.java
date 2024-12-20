@@ -24,7 +24,7 @@ public class StreamURL implements Serializable,Cloneable {
     @Setter
     @Getter
     @Schema(description = "端口")
-    private int port = -1;
+    private Integer port = -1;
     @Setter
     @Getter
     @Schema(description = "定位位置")

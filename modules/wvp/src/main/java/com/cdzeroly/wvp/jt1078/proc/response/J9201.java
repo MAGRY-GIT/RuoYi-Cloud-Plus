@@ -19,7 +19,7 @@ public class J9201 extends Rs {
     private String ip;
 
     // 实时视频服务器TCP端口号
-    private int tcpPort;
+    private Integer tcpPort;
 
     // 实时视频服务器UDP端口号
     private int udpPort;

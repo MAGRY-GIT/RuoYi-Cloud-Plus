@@ -99,7 +99,7 @@ public class ZLMServerConfig extends HookParam {
     private String generalMaxStreamWaitMS;
 
     @JSONField(name = "general.streamNoneReaderDelayMS")
-    private int generalStreamNoneReaderDelayMS;
+    private Integer generalStreamNoneReaderDelayMS;
 
     @JSONField(name = "general.resetWhenRePlay")
     private String generalResetWhenRePlay;

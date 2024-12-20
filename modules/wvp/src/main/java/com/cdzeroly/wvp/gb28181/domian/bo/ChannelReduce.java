@@ -12,7 +12,7 @@ public class ChannelReduce {
      * deviceChannel的数据库自增ID
      */
     @Schema(description = "deviceChannel的数据库自增ID")
-    private int id;
+    private Integer id;
 
     /**
      * 通道id
@@ -48,7 +48,7 @@ public class ChannelReduce {
      * 子节点数
      */
     @Schema(description = "子节点数")
-    private int  subCount;
+    private Integer  subCount;
 
     /**
      * 平台Id

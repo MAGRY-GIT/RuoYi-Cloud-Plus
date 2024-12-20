@@ -58,7 +58,7 @@ public class ServerController {
     private final IStreamProxyService proxyService;
 
     @Value("${server.port}")
-    private int serverPort;
+    private Integer serverPort;
 
 
     private final ApplicationEventPublisher applicationEventPublisher;

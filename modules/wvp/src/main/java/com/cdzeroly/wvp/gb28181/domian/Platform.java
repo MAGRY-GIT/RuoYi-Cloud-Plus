@@ -36,7 +36,7 @@ public class Platform extends TenantEntity {
     private String serverIp;
 
     @Schema(description = "SIP服务端口")
-    private int serverPort;
+    private Integer serverPort;
 
     @Schema(description = "设备国标编号")
     private String deviceGbId;
@@ -45,7 +45,7 @@ public class Platform extends TenantEntity {
     private String deviceIp;
 
     @Schema(description = "设备端口")
-    private int devicePort;
+    private Integer devicePort;
 
     @Schema(description = "SIP认证用户名(默认使用设备国标编号)")
     private String username;
@@ -54,10 +54,10 @@ public class Platform extends TenantEntity {
     private String password;
 
     @Schema(description = "注册周期 (秒)")
-    private int expires;
+    private Integer expires;
 
     @Schema(description = "心跳周期(秒)")
-    private int keepTimeout;
+    private Integer keepTimeout;
 
     @Schema(description = "传输协议")
     private String transport;
@@ -75,7 +75,7 @@ public class Platform extends TenantEntity {
     private boolean status;
 
     @Schema(description = "通道数量")
-    private int channelCount;
+    private Integer channelCount;
 
     @Schema(description = "已被订阅目录信息")
     private boolean catalogSubscribe;

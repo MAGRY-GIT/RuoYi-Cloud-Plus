@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class InviteDecodeException extends RuntimeException{
-    private int code;
+    private Integer code;
     private String msg;
 
     public InviteDecodeException(int code, String msg) {

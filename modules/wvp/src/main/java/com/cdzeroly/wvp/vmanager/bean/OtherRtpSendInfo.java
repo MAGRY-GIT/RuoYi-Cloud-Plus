@@ -18,12 +18,12 @@ public class OtherRtpSendInfo {
     /**
      * 音频发流端口
      */
-    private int sendLocalPortForAudio;
+    private Integer sendLocalPortForAudio;
 
     /**
      * 视频发流端口
      */
-    private int sendLocalPortForVideo;
+    private Integer sendLocalPortForVideo;
 
     /**
      * 收流IP
@@ -33,12 +33,12 @@ public class OtherRtpSendInfo {
     /**
      * 音频收流端口
      */
-    private int receivePortForAudio;
+    private Integer receivePortForAudio;
 
     /**
      * 视频收流端口
      */
-    private int receivePortForVideo;
+    private Integer receivePortForVideo;
 
     /**
      * 会话ID

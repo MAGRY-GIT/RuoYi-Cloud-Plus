@@ -14,10 +14,10 @@ public class PlatformCatch {
     /**
      * 心跳未回复次数
      */
-    private int keepAliveReply;
+    private Integer keepAliveReply;
 
     // 注册未回复次数
-    private int registerAliveReply;
+    private Integer registerAliveReply;
 
     private String callId;
 

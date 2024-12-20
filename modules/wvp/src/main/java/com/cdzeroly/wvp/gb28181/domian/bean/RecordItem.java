@@ -42,7 +42,7 @@ public class RecordItem  implements Comparable<RecordItem>{
 	private String endTime;
 
 	@Schema(description = "保密属性(必选)缺省为0;0:不涉密,1:涉密")
-	private int secrecy;
+	private Integer secrecy;
 
 	@Schema(description = "录像产生类型(可选)time或alarm 或 manua")
 	private String type;

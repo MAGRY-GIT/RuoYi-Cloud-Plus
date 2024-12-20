@@ -31,7 +31,7 @@ public class RedisRpcResponse {
     /**
      * 状态码
      */
-    private int statusCode;
+    private Integer statusCode;
 
     /**
      * 访问的路径

@@ -15,7 +15,7 @@ import io.netty.buffer.Unpooled;
 @MsgId(id = "9202")
 public class J9202 extends Rs {
     // 逻辑通道号
-    private int channel;
+    private Integer channel;
 
     // 回放控制：0.开始回放 1.暂停回放 2.结束回放 3.快进回放 4.关键帧快退回放 5.拖动回放 6.关键帧播放
     private int playbackType;

@@ -12,7 +12,7 @@ public class DeviceChannelExtendVo {
 	/**
 	 * 数据库自增ID
 	 */
-	private int id;
+	private Integer id;
 
 	/**
 	 * 通道id
@@ -66,7 +66,7 @@ public class DeviceChannelExtendVo {
 	/**
 	 * 是否有子设备 1有, 0没有
 	 */
-	private int parental;
+	private Integer parental;
 
 	/**
 	 * 父级id
@@ -76,12 +76,12 @@ public class DeviceChannelExtendVo {
 	/**
 	 * 信令安全模式  缺省为0; 0:不采用; 2: S/MIME签名方式; 3: S/ MIME加密签名同时采用方式; 4:数字摘要方式
 	 */
-	private int safetyWay;
+	private Integer safetyWay;
 
 	/**
 	 * 注册方式 缺省为1;1:符合IETFRFC3261标准的认证注册模 式; 2:基于口令的双向认证注册模式; 3:基于数字证书的双向认证注册模式
 	 */
-	private int registerWay;
+	private Integer registerWay;
 
 	/**
 	 * 证书序列号
@@ -91,12 +91,12 @@ public class DeviceChannelExtendVo {
 	/**
 	 * 证书有效标识 缺省为0;证书有效标识:0:无效1: 有效
 	 */
-	private int certifiable;
+	private Integer certifiable;
 
 	/**
 	 * 证书无效原因码
 	 */
-	private int errCode;
+	private Integer errCode;
 
 	/**
 	 * 证书终止有效期
@@ -116,7 +116,7 @@ public class DeviceChannelExtendVo {
 	/**
 	 * 端口号
 	 */
-	private int port;
+	private Integer port;
 
 	/**
 	 * 密码
@@ -126,7 +126,7 @@ public class DeviceChannelExtendVo {
 	/**
 	 * 云台类型
 	 */
-	private int PTZType;
+	private Integer PTZType;
 
 	/**
 	 * 云台类型描述字符串
@@ -187,7 +187,7 @@ public class DeviceChannelExtendVo {
 	/**
 	 * 子设备数
 	 */
-	private int subCount;
+	private Integer subCount;
 
 	/**
 	 * 流唯一编号，存在表示正在直播
@@ -202,7 +202,7 @@ public class DeviceChannelExtendVo {
 	/**
 	 * 标记通道的类型，0->国标通道 1->直播流通道 2->业务分组/虚拟组织/行政区划
 	 */
-	private int channelType;
+	private Integer channelType;
 
 	/**
 	 * 业务分组

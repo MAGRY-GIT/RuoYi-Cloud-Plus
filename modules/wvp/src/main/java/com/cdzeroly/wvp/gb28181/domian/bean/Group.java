@@ -17,7 +17,7 @@ public class Group implements Comparable<Group>{
      * 数据库自增ID
      */
     @Schema(description = "数据库自增ID")
-    private int id;
+    private Integer id;
 
     /**
      * 区域国标编号

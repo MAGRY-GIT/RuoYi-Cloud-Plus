@@ -23,7 +23,7 @@ public class StreamAuthorityInfo {
      * mp4_vod=6,
      * device_chn=7
      */
-    private int originType;
+    private Integer originType;
 
     /**
      * 产生源类型的字符串描述

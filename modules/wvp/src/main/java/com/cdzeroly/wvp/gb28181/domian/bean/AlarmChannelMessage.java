@@ -18,11 +18,11 @@ public class AlarmChannelMessage {
     /**
      * 报警编号
      */
-    private int alarmSn;
+    private Integer alarmSn;
     /**
      * 告警类型
      */
-    private int alarmType;
+    private Integer alarmType;
 
     /**
      * 报警描述

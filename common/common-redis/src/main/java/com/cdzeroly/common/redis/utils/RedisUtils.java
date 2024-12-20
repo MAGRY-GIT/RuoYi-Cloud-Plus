@@ -1,15 +1,14 @@
 package com.cdzeroly.common.redis.utils;
 
+import com.cdzeroly.common.core.utils.CollectionUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import com.cdzeroly.common.core.utils.SpringUtils;
 import org.redisson.api.*;
+import org.springframework.data.redis.core.*;
 
 import java.time.Duration;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -410,6 +409,17 @@ public class RedisUtils {
     }
 
     /**
+     * 获得缓存Map的key列表
+     *
+     * @param key 缓存的键值
+     * @return key列表
+     */
+    public static <T> Collection<T> getCacheMapValue(final String key) {
+        RMap<String, T> rMap = CLIENT.getMap(key);
+        return rMap.values();
+    }
+
+    /**
      * 往Hash中存入数据
      *
      * @param key   Redis键
@@ -544,5 +554,28 @@ public class RedisUtils {
     public static Boolean hasKey(String key) {
         RKeys rKeys = CLIENT.getKeys();
         return rKeys.countExists(key) > 0;
+    }
+
+    /**
+     * 模糊查询
+     *
+     * @param query 查询参数
+     * @return List<Object>
+     */
+    public static List<Object> scan(RedisTemplate redisTemplate, String query) {
+
+        Set<String> resultKeys = (Set<String>) redisTemplate.execute((RedisCallback<Set<String>>) connection -> {
+            ScanOptions scanOptions = KeyScanOptions.scanOptions().match("*" + query + "*").count(1000).build();
+            Cursor<byte[]> scan = connection.scan(scanOptions);
+            Set<String> keys = new HashSet<>();
+            while (scan.hasNext()) {
+                byte[] next = scan.next();
+                keys.add(new String(next));
+            }
+            return keys;
+        });
+
+        List<String> list = CollectionUtil.safeStream(resultKeys).toList();
+        return Collections.singletonList(list);
     }
 }

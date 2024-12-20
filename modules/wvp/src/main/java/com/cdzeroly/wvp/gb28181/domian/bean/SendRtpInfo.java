@@ -19,7 +19,7 @@ public class SendRtpInfo {
     /**
      * 推流端口
      */
-    private int port;
+    private Integer port;
 
     /**
      * 推流标识
@@ -57,7 +57,7 @@ public class SendRtpInfo {
      * 1 等待上级平台回复ack
      * 2 推流中
      */
-    private int status = 0;
+    private Integer status = 0;
 
 
     /**
@@ -83,7 +83,7 @@ public class SendRtpInfo {
     /**
      * 自己推流使用的端口
      */
-    private int localPort;
+    private Integer localPort;
 
     /**
      * 使用的流媒体
@@ -113,7 +113,7 @@ public class SendRtpInfo {
     /**
      * 发送时，rtp的pt（uint8_t）,不传时默认为96
      */
-    private int pt = 96;
+    private Integer pt = 96;
 
     /**
      * 发送时，rtp的负载类型。为true时，负载为ps；为false时，为es；

@@ -18,7 +18,7 @@ public class OtherPsSendInfo {
     /**
      * 发流端口
      */
-    private int sendLocalPort;
+    private Integer sendLocalPort;
 
     /**
      * 收流IP
@@ -28,7 +28,7 @@ public class OtherPsSendInfo {
     /**
      * 收流端口
      */
-    private int receivePort;
+    private Integer receivePort;
 
 
     /**

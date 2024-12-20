@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 public class RemoteAddressInfo {
     private String ip;
-    private int port;
+    private Integer port;
 
     public RemoteAddressInfo(String ip, int port) {
         this.ip = ip;

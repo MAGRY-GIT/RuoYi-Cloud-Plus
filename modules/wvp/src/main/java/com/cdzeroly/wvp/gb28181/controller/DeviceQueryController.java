@@ -1,7 +1,17 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.hutool.core.text.CharSequenceUtil;
 import com.alibaba.fastjson2.JSONObject;
+import com.cdzeroly.common.core.domain.R;
 import com.cdzeroly.common.core.exception.ServiceException;
+import com.cdzeroly.common.core.utils.AssertUtils;
+import com.cdzeroly.common.core.utils.MapstructUtils;
+import com.cdzeroly.common.core.utils.StringUtils;
+import com.cdzeroly.common.core.validate.AddGroup;
+import com.cdzeroly.common.core.validate.EditGroup;
+import com.cdzeroly.common.log.annotation.Log;
+import com.cdzeroly.common.log.enums.BusinessType;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.web.core.BaseController;
@@ -10,6 +20,8 @@ import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.bean.SyncStatus;
+import com.cdzeroly.wvp.gb28181.domian.bo.DeviceBo;
+import com.cdzeroly.wvp.gb28181.domian.vo.DeviceVo;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
 import com.cdzeroly.wvp.gb28181.service.IInviteStreamService;
@@ -26,6 +38,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.ibatis.annotations.Options;
@@ -35,6 +49,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -45,10 +60,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author MGARY
@@ -57,26 +69,21 @@ import java.util.UUID;
 @SuppressWarnings("rawtypes")
 @Slf4j
 @RestController
-@RequestMapping("/api/device/query")
+@RequestMapping("/device")
+@AllArgsConstructor
 public class DeviceQueryController extends BaseController {
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
+    private final IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private IInviteStreamService inviteStreamService;
+    private final IInviteStreamService inviteStreamService;
 
-    @Autowired
-    private SIPCommander cmder;
+    private final SIPCommander cmder;
 
-    @Autowired
-    private DeferredResultHolder resultHolder;
+    private final DeferredResultHolder resultHolder;
 
-    @Autowired
-    private IDeviceService deviceService;
+    private final IDeviceService deviceService;
 
-    @Autowired
-    private DynamicTask dynamicTask;
+    private final DynamicTask dynamicTask;
 
     /**
      * 使用ID查询国标设备
@@ -86,11 +93,13 @@ public class DeviceQueryController extends BaseController {
      */
     @Operation(summary = "查询国标设备")
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @GetMapping("/devices/{deviceId}")
-    public Device devices(@PathVariable String deviceId) {
-
-        return deviceService.getDeviceByDeviceId(deviceId);
+    @GetMapping("/{deviceId}")
+    public R<DeviceVo> getDevice(@PathVariable String deviceId) {
+        Device deviceByDeviceId = deviceService.getDeviceByDeviceId(deviceId);
+        DeviceVo device = MapstructUtils.convert(deviceByDeviceId, DeviceVo.class);
+        return R.ok(device);
     }
+
 
     /**
      * 分页查询国标设备
@@ -98,14 +107,11 @@ public class DeviceQueryController extends BaseController {
      * @return 分页国标列表
      */
     @Operation(summary = "分页查询国标设备")
-    @Parameter(name = "query", description = "搜索", required = false)
-    @Parameter(name = "status", description = "状态", required = false)
-    @GetMapping("/devices")
-    @Options()
+    @Parameter(name = "query", description = "搜索")
+    @Parameter(name = "status", description = "状态")
+    @GetMapping("/list")
+    @SaCheckPermission("wvp:device:list")
     public TableDataInfo<Device> devices(PageQuery pageQuery, String query, Boolean status) {
-        if (ObjectUtils.isEmpty(query)) {
-            query = null;
-        }
         return deviceService.getAll(pageQuery, query, status);
     }
 
@@ -127,14 +133,14 @@ public class DeviceQueryController extends BaseController {
      */
     @Operation(summary = "同步设备通道")
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @GetMapping("/devices/{deviceId}/sync")
+    @GetMapping("/{deviceId}/sync")
     public WVPResult<SyncStatus> devicesSync(@PathVariable String deviceId) {
 
         if (log.isDebugEnabled()) {
             log.debug("设备通道信息同步API调用，deviceId：" + deviceId);
         }
         Device device = deviceService.getDeviceByDeviceId(deviceId);
-        boolean status = deviceService.isSyncRunning(deviceId);
+         deviceService.isSyncRunning(deviceId);
         // 已存在则返回进度
         if (deviceService.isSyncRunning(deviceId)) {
             SyncStatus channelSyncStatus = deviceService.getChannelSyncStatus(deviceId);
@@ -168,36 +174,34 @@ public class DeviceQueryController extends BaseController {
      */
     @Operation(summary = "移除设备")
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @DeleteMapping("/devices/{deviceId}/delete")
-    public String delete(@PathVariable String deviceId) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("设备信息删除API调用，deviceId：" + deviceId);
-        }
-
-        // 清除redis记录
-        boolean isSuccess = deviceService.delete(deviceId);
-        if (isSuccess) {
-            inviteStreamService.clearInviteInfo(deviceId);
-            // 停止此设备的订阅更新
-            Set<String> allKeys = dynamicTask.getAllKeys();
-            for (String key : allKeys) {
-                if (key.startsWith(deviceId)) {
-                    Runnable runnable = dynamicTask.get(key);
-                    if (runnable instanceof ISubscribeTask) {
-                        ISubscribeTask subscribeTask = (ISubscribeTask) runnable;
-                        subscribeTask.stop(null);
+    @DeleteMapping("/{deviceIds}")
+    @SaCheckPermission("wvp:device:remove")
+    @Log(title = "国标设备/平台", businessType = BusinessType.DELETE)
+    public R<Void> delete(@PathVariable String deviceIds) {
+        List<String> list = Arrays.stream(deviceIds.split(StringUtils.SEPARATOR)).toList();
+        list.forEach(deviceId->{
+            // 清除redis记录
+            boolean isSuccess = deviceService.delete(deviceId);
+            if (isSuccess) {
+                inviteStreamService.clearInviteInfo(deviceId);
+                // 停止此设备的订阅更新
+                Set<String> allKeys = dynamicTask.getAllKeys();
+                for (String key : allKeys) {
+                    if (key.startsWith(deviceId)) {
+                        Runnable runnable = dynamicTask.get(key);
+                        if (runnable instanceof ISubscribeTask subscribeTask) {
+                            subscribeTask.stop(null);
+                        }
+                        dynamicTask.stop(key);
                     }
-                    dynamicTask.stop(key);
                 }
+
+            } else {
+                log.warn("设备信息删除API调用失败！");
+                throw new ServiceException( "设备信息删除API调用失败！");
             }
-            JSONObject json = new JSONObject();
-            json.put("deviceId", deviceId);
-            return json.toString();
-        } else {
-            log.warn("设备信息删除API调用失败！");
-            throw new ServiceException( "设备信息删除API调用失败！");
-        }
+        });
+        return R.ok();
     }
 
     /**
@@ -262,42 +266,30 @@ public class DeviceQueryController extends BaseController {
         deviceService.updateCustomDevice(device);
     }
 
-    /**
-     * 添加设备信息
-     *
-     * @param device 设备信息
-     * @return
-     */
     @Operation(summary = "添加设备信息")
-    @Parameter(name = "device", description = "设备", required = true)
-    @PostMapping("/device/add/")
-    public void addDevice(Device device) {
-
-        if (device == null || device.getDeviceId() == null) {
-            // throw new ServiceException(ErrorCode.ERROR400); TODO
-        }
-
-        // 查看deviceId是否存在
-        boolean exist = deviceService.isExist(device.getDeviceId());
-        if (exist) {
-            throw new ServiceException( "设备编号已存在");
-        }
+    @Parameter(name = "deviceBo", description = "设备", required = true)
+    @PostMapping
+    @SaCheckPermission("wvp:device:add")
+    @Log(title = "国标设备/平台", businessType = BusinessType.INSERT)
+    public void addDevice(@Validated(AddGroup.class)@RequestBody DeviceBo deviceBo) {
+        boolean exist = deviceService.isExist(deviceBo.getDeviceId());
+        AssertUtils.isFalse(exist,"设备编号已存在");
+        Device device = MapstructUtils.convert(deviceBo, Device.class);
         deviceService.addDevice(device);
     }
 
     /**
      * 更新设备信息
      *
-     * @param device 设备信息
-     * @return
+     * @param deviceBo 设备信息
      */
     @Operation(summary = "更新设备信息")
     @Parameter(name = "device", description = "设备", required = true)
-    @PostMapping("/device/update/")
-    public void updateDevice(Device device) {
-        if (device == null || device.getDeviceId() == null || device.getId() <= 0) {
-            // throw new ServiceException(ErrorCode.ERROR400);TODO
-        }
+    @PutMapping()
+    @SaCheckPermission("wvp:device:edit")
+    @Log(title = "国标设备/平台", businessType = BusinessType.UPDATE)
+    public void updateDevice(@Validated(EditGroup.class) @RequestBody DeviceBo deviceBo) {
+        Device device = MapstructUtils.convert(deviceBo, Device.class);
         deviceService.updateCustomDevice(device);
     }
 

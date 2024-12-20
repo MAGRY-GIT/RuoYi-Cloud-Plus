@@ -10,7 +10,7 @@ public class OnPlayHookParam extends HookParam{
     private String stream;
     private String ip;
     private String params;
-    private int port;
+    private Integer port;
     private String schema;
     private String vhost;
 

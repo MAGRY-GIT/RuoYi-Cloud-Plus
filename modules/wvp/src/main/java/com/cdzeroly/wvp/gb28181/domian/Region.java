@@ -23,7 +23,7 @@ public class Region  extends BaseEntity implements Comparable<Region>{
      */
     @Schema(description = "数据库自增ID")
     @TableId
-    private int id;
+    private Integer id;
 
     /**
      * 区域国标编号

@@ -23,7 +23,7 @@ public class DeviceVo  implements Serializable{
 
 	@Schema(description = "数据库自增ID")
     @TableId(value = "id")
-	private int id;
+	private Integer id;
 
 	/**
 	 * 设备国标编号
@@ -81,7 +81,7 @@ public class DeviceVo  implements Serializable{
 	 * wan地址_port
 	 */
 	@Schema(description = "端口")
-	private int port;
+	private Integer port;
 
 	/**
 	 * wan地址
@@ -114,19 +114,19 @@ public class DeviceVo  implements Serializable{
 	 * 心跳间隔
 	 */
 	@Schema(description = "心跳间隔")
-	private int keepaliveIntervalTime;
+	private Integer keepaliveIntervalTime;
 
 	/**
 	 * 通道个数
 	 */
 	@Schema(description = "通道个数")
-	private int channelCount;
+	private Integer channelCount;
 
 	/**
 	 * 注册有效期
 	 */
 	@Schema(description = "注册有效期")
-	private int expires;
+	private Integer expires;
 
 	/**
 	 * 创建时间
@@ -156,25 +156,25 @@ public class DeviceVo  implements Serializable{
 	 * 目录订阅周期，0为不订阅
 	 */
 	@Schema(description = "目录订阅周期，o为不订阅")
-	private int subscribeCycleForCatalog;
+	private Integer subscribeCycleForCatalog;
 
 	/**
 	 * 移动设备位置订阅周期，0为不订阅
 	 */
 	@Schema(description = "移动设备位置订阅周期，0为不订阅")
-	private int subscribeCycleForMobilePosition;
+	private Integer subscribeCycleForMobilePosition;
 
 	/**
 	 * 移动设备位置信息上报时间间隔,单位:秒,默认值5
 	 */
 	@Schema(description = "移动设备位置信息上报时间间隔,单位:秒,默认值5")
-	private int mobilePositionSubmissionInterval = 5;
+	private Integer mobilePositionSubmissionInterval = 5;
 
 	/**
 	 * 报警订阅周期，0为不订阅
 	 */
 	@Schema(description = "报警心跳时间订阅周期，0为不订阅")
-	private int subscribeCycleForAlarm;
+	private Integer subscribeCycleForAlarm;
 
 	/**
 	 * 是否开启ssrc校验，默认关闭，开启可以防止串流

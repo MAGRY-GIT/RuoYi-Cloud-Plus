@@ -20,7 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 public class DeviceChannelBo   extends BaseEntity {
 
 	@Schema(description = "数据库自增ID")
-	private int id;
+	private Integer id;
 
 	@Schema(description = "设备的数据库自增ID")
 	private Integer deviceDbId;
@@ -175,7 +175,7 @@ public class DeviceChannelBo   extends BaseEntity {
 	private String ptzTypeText;
 
 	@Schema(description = "子设备数")
-	private int subCount;
+	private Integer subCount;
 
 	@Schema(description = "流唯一编号，存在表示正在直播")
 	private String  streamId;
@@ -191,7 +191,7 @@ public class DeviceChannelBo   extends BaseEntity {
 	private String streamIdentification;
 
 	@Schema(description = "通道类型， 默认0, 0： 普通通道，1 行政区划 2 业务分组/虚拟组织")
-	private int channelType;
+	private Integer channelType;
 
 	public void setPtzType(int ptzType) {
 		this.ptzType = ptzType;

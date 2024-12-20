@@ -1327,7 +1327,7 @@ public class SIPCommander implements ISIPCommander {
         playbackControlCmd(device, channel, streamInfo, content.toString(), null, null);
     }
 
-    private int getInfoCseq() {
+    private Integer getInfoCseq() {
         return (int) ((Math.random() * 9 + 1) * Math.pow(10, 8));
     }
 

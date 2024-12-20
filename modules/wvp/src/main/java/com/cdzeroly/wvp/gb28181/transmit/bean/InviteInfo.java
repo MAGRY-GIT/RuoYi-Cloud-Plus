@@ -20,6 +20,6 @@ public class InviteInfo {
     private Long stopTime;
     private String downloadSpeed;
     private String ip;
-    private int port;
+    private Integer port;
 
 }

@@ -37,7 +37,7 @@ import java.util.UUID;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/device/control")
-public class DeviceControl {
+public class DeviceController {
 
     private final IDeviceService deviceService;
 

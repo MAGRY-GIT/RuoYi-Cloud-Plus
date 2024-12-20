@@ -21,7 +21,7 @@ public class RegionTree extends Region {
     private boolean isLeaf;
 
     @Schema(description = "类型, 行政区划:0 摄像头: 1")
-    private int type;
+    private Integer type;
 
     @Schema(description = "在线状态")
     private String status;

@@ -21,7 +21,7 @@ public class CommonGBChannelBo extends BaseEntity {
 
     @Schema(description = "国标-数据库自增ID")
     @TableId("gb_id")
-    private int gbId;
+    private Integer gbId;
 
     @Schema(description = "国标-编码")
     private String gbDeviceId;

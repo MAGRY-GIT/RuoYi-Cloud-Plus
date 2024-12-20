@@ -6,7 +6,9 @@ import com.cdzeroly.wvp.common.CommonCallback;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.bean.SipTransactionInfo;
 import com.cdzeroly.wvp.gb28181.domian.bean.SyncStatus;
+import com.cdzeroly.wvp.gb28181.domian.vo.DeviceVo;
 import com.cdzeroly.wvp.vmanager.bean.ResourceBaseInfo;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -162,4 +164,5 @@ public interface IDeviceService {
     Device getDeviceByChannelId(Integer channelId);
 
     Device getDeviceBySourceChannelDeviceId(String requesterId);
+
 }

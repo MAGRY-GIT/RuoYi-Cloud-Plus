@@ -40,7 +40,7 @@ public class MediaServer  extends BaseDateEntity {
     private String streamIp;
 
     @Schema(description = "HTTP端口")
-    private int httpPort;
+    private Integer httpPort;
 
     @Schema(description = "HTTPS端口")
     private int httpSslPort;

@@ -30,7 +30,7 @@ public class SubscribeInfo {
     private String id;
 
     private SIPRequest request;
-    private int expires;
+    private Integer expires;
     private String eventId;
     private String eventType;
     private SIPResponse response;
@@ -40,7 +40,7 @@ public class SubscribeInfo {
      */
     private String sn;
 
-    private int gpsInterval;
+    private Integer gpsInterval;
 
     /**
      * 模拟的FromTag

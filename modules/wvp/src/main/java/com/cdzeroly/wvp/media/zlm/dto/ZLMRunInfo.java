@@ -8,7 +8,7 @@ public class ZLMRunInfo {
     /**
      * zlm当前流数量
      */
-    private int mediaCount;
+    private Integer mediaCount;
 
     /**
      * 在线状态

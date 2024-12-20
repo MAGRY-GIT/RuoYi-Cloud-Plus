@@ -32,7 +32,7 @@ public class OnPublishHookParam extends HookParam{
 
     @Getter
     @Setter
-    private int port;
+    private Integer port;
 
     @Getter
     @Setter

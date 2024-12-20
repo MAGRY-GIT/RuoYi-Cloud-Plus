@@ -42,7 +42,7 @@ public class UserSetting {
     /**
      * 上级点播等待超时时间,单位：毫秒
      */
-    private int platformPlayTimeout = 20000;
+    private Integer platformPlayTimeout = 20000;
 
     /**
      * 是否开启接口鉴权
@@ -150,12 +150,12 @@ public class UserSetting {
     /**
      * 设置notify缓存队列最大长度，超过此长度的数据将返回486 BUSY_HERE，消息丢弃, 默认100000
      */
-    private int maxNotifyCountQueue = 100000;
+    private Integer maxNotifyCountQueue = 100000;
 
     /**
      * 国标级联离线后多久重试一次注册
      */
-    private int registerAgainAfterTime = 60;
+    private Integer registerAgainAfterTime = 60;
 
     /**
      * 国标续订方式，true为续订，每次注册在同一个会话里，false为重新注册，每次使用新的会话
@@ -167,6 +167,6 @@ public class UserSetting {
      *     # 0： 国标标准实现，设备离线后不回复心跳，直到设备重新注册上线，
      *     # 1（默认）： 对于离线设备，收到心跳就把设备设置为上线，并更新注册时间为上次这次心跳的时间。防止过期时间判断异常
      */
-    private int gbDeviceOnline = 1;
+    private Integer gbDeviceOnline = 1;
 
 }

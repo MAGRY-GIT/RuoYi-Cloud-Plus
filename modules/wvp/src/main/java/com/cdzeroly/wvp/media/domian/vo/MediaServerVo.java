@@ -36,16 +36,16 @@ public class MediaServerVo  implements Serializable {
     private String streamIp;
 
     @Schema(description = "HTTP端口")
-    private int httpPort;
+    private Integer httpPort;
 
     @Schema(description = "HTTPS端口")
-    private int httpSSlPort;
+    private Integer httpSSlPort;
 
     @Schema(description = "RTMP端口")
-    private int rtmpPort;
+    private Integer rtmpPort;
 
     @Schema(description = "flv端口")
-    private int flvPort;
+    private Integer flvPort;
 
     @Schema(description = "https-flv端口")
     private int flvSSLPort;

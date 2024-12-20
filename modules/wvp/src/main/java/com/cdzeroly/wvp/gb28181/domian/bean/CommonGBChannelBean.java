@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode;
 public class CommonGBChannelBean extends TenantEntity {
 
     @Schema(description = "国标-数据库自增ID")
-    private int gbId;
+    private Integer gbId;
 
     @Schema(description = "国标-编码")
     private String gbDeviceId;

@@ -15,7 +15,7 @@ public class CatalogData {
     /**
      * 命令序列号
      */
-    private int sn;
+    private Integer sn;
     private Integer total;
     private Instant time;
     private Device device;

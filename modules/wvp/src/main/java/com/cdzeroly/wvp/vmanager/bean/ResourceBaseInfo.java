@@ -12,11 +12,11 @@ public class ResourceBaseInfo {
     /**
      * 全部设备
      */
-    private int total;
+    private Integer total;
     /**
      * 在线的设备
      */
-    private int online;
+    private Integer online;
 
     public ResourceBaseInfo() {
     }

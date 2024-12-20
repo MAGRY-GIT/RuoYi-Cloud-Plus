@@ -12,6 +12,6 @@ public class CloudRecordUrlVo {
 
     private String playUrl;
     private String downloadUrl;
-    private int id;
+    private Integer id;
 
 }

@@ -78,7 +78,7 @@ public class J1205 extends Re {
     public static class JRecordItem {
 
         // 逻辑通道号
-        private int channelId;
+        private Integer channelId;
 
         // 开始时间
         private String startTime;

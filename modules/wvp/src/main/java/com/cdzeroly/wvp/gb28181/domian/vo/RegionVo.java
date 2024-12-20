@@ -23,7 +23,7 @@ public class RegionVo implements Comparable<RegionVo> , Serializable {
      * 数据库自增ID
      */
     @Schema(description = "数据库自增ID")
-    private int id;
+    private Integer id;
 
     /**
      * 区域国标编号

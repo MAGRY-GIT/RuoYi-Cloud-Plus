@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class PlayException extends RuntimeException{
-    private int code;
+    private Integer code;
     private String msg;
 
     public PlayException(int code, String msg) {

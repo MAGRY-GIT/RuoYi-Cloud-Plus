@@ -12,6 +12,7 @@ import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.gb28181.domian.vo.DeviceVo;
 import com.cdzeroly.wvp.gb28181.mapper.DeviceChannelMapper;
 import com.cdzeroly.wvp.gb28181.mapper.DeviceMapper;
 import com.cdzeroly.wvp.gb28181.mapper.PlatformChannelMapper;
@@ -33,8 +34,10 @@ import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.utils.DateUtil;
 import com.cdzeroly.wvp.vmanager.bean.ResourceBaseInfo;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,53 +53,38 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Service
-@DS("master")
+@AllArgsConstructor
 public class DeviceServiceImpl implements IDeviceService {
 
-    @Autowired
-    private DynamicTask dynamicTask;
+    private final DynamicTask dynamicTask;
 
-    @Autowired
-    private ISIPCommander sipCommander;
+    private final ISIPCommander sipCommander;
 
-    @Autowired
-    private CatalogResponseMessageHandler catalogResponseMessageHandler;
+    private final CatalogResponseMessageHandler catalogResponseMessageHandler;
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private IInviteStreamService inviteStreamService;
+    private final IInviteStreamService inviteStreamService;
 
-    @Autowired
-    private DeviceMapper deviceMapper;
+    private final DeviceMapper deviceMapper;
 
-    @Autowired
-    private PlatformChannelMapper platformChannelMapper;
+    private final PlatformChannelMapper platformChannelMapper;
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
+    private final IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private DeviceChannelMapper deviceChannelMapper;
+    private final DeviceChannelMapper deviceChannelMapper;
 
-    @Autowired
-    private ISendRtpServerService sendRtpServerService;
+    private final ISendRtpServerService sendRtpServerService;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private ISIPCommander commander;
+    private final ISIPCommander commander;
 
-    @Autowired
-    private SipInviteSessionManager sessionManager;
+    private final SipInviteSessionManager sessionManager;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private AudioBroadcastManager audioBroadcastManager;
+    private final AudioBroadcastManager audioBroadcastManager;
 
     @Override
     public void online(Device device, SipTransactionInfo sipTransactionInfo) {
@@ -109,7 +97,6 @@ public class DeviceServiceImpl implements IDeviceService {
             // redis 存在脏数据
             inviteStreamService.clearInviteInfo(device.getDeviceId());
         }
-        device.setUpdateTime(now);
         device.setKeepaliveTime(now);
         if (device.getKeepaliveIntervalTime() == 0) {
             // 默认心跳间隔60
@@ -126,8 +113,6 @@ public class DeviceServiceImpl implements IDeviceService {
         // 第一次上线 或则设备之前是离线状态--进行通道同步和设备信息查询
         if (deviceInDb == null) {
             device.setOnLine(true);
-            device.setCreateTime(now);
-            device.setUpdateTime(now);
             log.info("[设备上线,首次注册]: {}，查询设备信息以及通道信息", device.getDeviceId());
             deviceMapper.insert(device);
             redisCatchStorage.updateDevice(device);
@@ -140,7 +125,6 @@ public class DeviceServiceImpl implements IDeviceService {
         }else {
             if(!device.isOnLine()){
                 device.setOnLine(true);
-                device.setCreateTime(now);
                 deviceMapper.insertOrUpdate(device);
                 redisCatchStorage.updateDevice(device);
                 if (userSetting.getSyncChannelOnDeviceOnline()) {
@@ -387,11 +371,7 @@ public class DeviceServiceImpl implements IDeviceService {
 
     @Override
     public void updateDevice(Device device) {
-
-        String now = DateUtil.getNow();
-        device.setUpdateTime(now);
         device.setCharset(device.getCharset() == null ? "" : device.getCharset().toUpperCase());
-        device.setUpdateTime(DateUtil.getNow());
         if (deviceMapper.insertOrUpdate(device)) {
             redisCatchStorage.updateDevice(device);
         }
@@ -405,8 +385,6 @@ public class DeviceServiceImpl implements IDeviceService {
     @Override
     public void addDevice(Device device) {
         device.setOnLine(false);
-        device.setCreateTime(DateUtil.getNow());
-        device.setUpdateTime(DateUtil.getNow());
         if(device.getStreamMode() == null) {
             device.setStreamMode(NetProtocol.UDP.name());
         }
@@ -540,4 +518,6 @@ public class DeviceServiceImpl implements IDeviceService {
     public Device getDeviceBySourceChannelDeviceId(String channelId) {
         return deviceMapper.getDeviceBySourceChannelDeviceId(channelId);
     }
+
+
 }

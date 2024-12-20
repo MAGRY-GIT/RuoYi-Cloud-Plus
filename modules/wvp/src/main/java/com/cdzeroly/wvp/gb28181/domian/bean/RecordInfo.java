@@ -31,9 +31,9 @@ public class RecordInfo {
 	private String name;
 
 	@Schema(description = "列表总数")
-	private int sumNum;
+	private Integer sumNum;
 
-	private int count;
+	private Integer count;
 
 	private Instant lastTime;
 

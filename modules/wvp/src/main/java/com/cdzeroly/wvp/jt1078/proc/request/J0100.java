@@ -17,7 +17,7 @@ import io.netty.buffer.ByteBuf;
 @MsgId(id = "0100")
 public class J0100 extends Re {
 
-    private int provinceId;
+    private Integer provinceId;
 
     private int cityId;
 

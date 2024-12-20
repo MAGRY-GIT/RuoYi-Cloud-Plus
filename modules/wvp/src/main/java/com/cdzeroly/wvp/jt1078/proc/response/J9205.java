@@ -15,7 +15,7 @@ import io.netty.buffer.Unpooled;
 @MsgId(id = "9205")
 public class J9205 extends Rs {
     // 逻辑通道号
-    private int channelId;
+    private Integer channelId;
 
     // 开始时间YYMMDDHHMMSS,全0表示无起始时间
     private String startTime;
