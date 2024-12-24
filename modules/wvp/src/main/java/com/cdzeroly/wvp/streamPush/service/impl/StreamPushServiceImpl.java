@@ -31,6 +31,7 @@ import com.cdzeroly.wvp.streamPush.service.IStreamPushService;
 import com.cdzeroly.wvp.utils.DateUtil;
 import com.cdzeroly.wvp.vmanager.bean.ResourceBaseInfo;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -42,28 +43,25 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.*;
 
+/**
+ * @author MGARY
+ */
 @Service
 @Slf4j
-@DS("master")
+@AllArgsConstructor
 public class StreamPushServiceImpl implements IStreamPushService {
 
-    @Autowired
-    private StreamPushMapper streamPushMapper;
+    private final StreamPushMapper streamPushMapper;
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private ISendRtpServerService sendRtpServerService;
+    private final ISendRtpServerService sendRtpServerService;
 
-    @Autowired
-    private IGbChannelService gbChannelService;
+    private final IGbChannelService gbChannelService;
 
     /**
      * 流到来的处理

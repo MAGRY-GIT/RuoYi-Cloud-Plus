@@ -1,11 +1,11 @@
 package com.cdzeroly.common.redis.utils;
 
-import com.cdzeroly.common.core.utils.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import com.cdzeroly.common.core.utils.SpringUtils;
 import org.redisson.api.*;
-import org.springframework.data.redis.core.*;
+import org.redisson.api.options.KeysScanOptions;
 
 import java.time.Duration;
 import java.util.*;
@@ -562,20 +562,25 @@ public class RedisUtils {
      * @param query 查询参数
      * @return List<Object>
      */
-    public static List<Object> scan(RedisTemplate redisTemplate, String query) {
+    public static ArrayList<String> scan(String query) {
+        // 使用通配符来匹配键
+        KeysScanOptions keysScanOptions = KeysScanOptions.defaults().pattern("*" + query + "*").limit(1000);
 
-        Set<String> resultKeys = (Set<String>) redisTemplate.execute((RedisCallback<Set<String>>) connection -> {
-            ScanOptions scanOptions = KeyScanOptions.scanOptions().match("*" + query + "*").count(1000).build();
-            Cursor<byte[]> scan = connection.scan(scanOptions);
-            Set<String> keys = new HashSet<>();
-            while (scan.hasNext()) {
-                byte[] next = scan.next();
-                keys.add(new String(next));
-            }
-            return keys;
-        });
+        Iterator<String> iterator = CLIENT.getKeys().getKeys(keysScanOptions).iterator();
 
-        List<String> list = CollectionUtil.safeStream(resultKeys).toList();
-        return Collections.singletonList(list);
+
+        return ListUtil.toList(iterator);
+    }
+
+
+    /**
+     * 获得缓存的基本对象列表(全局匹配忽略租户 自行拼接租户id)
+     *
+     * @param pattern 字符串前缀
+     * @return 对象列表
+     */
+    public static Collection<String> keys(final String pattern) {
+        Stream<String> stream = CLIENT.getKeys().getKeysStreamByPattern(pattern);
+        return stream.collect(Collectors.toList());
     }
 }

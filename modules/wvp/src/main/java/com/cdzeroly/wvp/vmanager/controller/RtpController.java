@@ -145,13 +145,7 @@ public class RtpController {
         mediaServerService.closeRTPServer(mediaServerItem, stream);
         mediaServerService.closeRTPServer(mediaServerItem, stream + "_a");
         String receiveKey = VideoManagerConstants.WVP_OTHER_RECEIVE_RTP_INFO + userSetting.getServerId() + "_*_" + stream;
-        List<Object> scan = RedisUtils.scan(redisTemplate, receiveKey);
-        if (!scan.isEmpty()) {
-            for (Object key : scan) {
-                // 将信息写入redis中，以备后用
-                redisTemplate.delete(key);
-            }
-        }
+         RedisUtils.deleteKeys(receiveKey);
         return R.ok();
     }
 

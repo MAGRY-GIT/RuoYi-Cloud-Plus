@@ -399,6 +399,7 @@
         <module>api</module>
         <module>common</module>
         <module>example</module>
+        <module>wvp</module>
     </modules>
     <packaging>pom</packaging>
 

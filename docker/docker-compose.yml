@@ -1,7 +1,7 @@
 services:
   mysql:
     image: mysql:8.0.33
-    container_name:  base_platform_mysql
+    container_name: base_platform_mysql
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -45,7 +45,7 @@ services:
 
   redis:
     image: redis:6.2.12
-    container_name:  base_platform_redis
+    container_name: base_platform_redis
     ports:
       - "6379:6379"
     environment:
@@ -62,7 +62,7 @@ services:
 
   minio:
     image: minio/minio:RELEASE.2023-03-24T21-41-23Z
-    container_name:  base_platform_minio
+    container_name: base_platform_minio
     ports:
       # api 端口
       - "9000:9000"
@@ -95,7 +95,7 @@ services:
 
   seata-server:
     image: cdzeroly/seata-server:2.2.2
-    container_name:  base_platform_seata_server
+    container_name: base_platform_seata_server
     ports:
       - "7091:7091"
       - "8091:8091"
@@ -113,7 +113,7 @@ services:
 
   nginx-web:
     image: nginx:1.22.1
-    container_name:  base_platform_nginx-web
+    container_name: base_platform_nginx-web
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -134,7 +134,7 @@ services:
 
   sentinel:
     image: cdzeroly/sentinel-dashboard:2.2.2
-    container_name:  base_platform_sentinel
+    container_name: base_platform_sentinel
     environment:
       TZ: Asia/Shanghai
     ports:
@@ -149,7 +149,7 @@ services:
 
   monitor:
     image: cdzeroly/monitor:2.2.2
-    container_name:  base_platform_monitor
+    container_name: base_platform_monitor
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -165,7 +165,7 @@ services:
 
   snailjob-server:
     image: cdzeroly/snailjob-server:2.2.2
-    container_name:  base_platform_snailjob_server
+    container_name: base_platform_snailjob_server
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -179,7 +179,7 @@ services:
 
   gateway:
     image: cdzeroly/gateway:2.2.2
-    container_name:  base_platform_gateway
+    container_name: base_platform_gateway
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -195,7 +195,7 @@ services:
 
   auth:
     image: cdzeroly/auth:2.2.2
-    container_name:  base_platform_auth
+    container_name: base_platform_auth
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -211,7 +211,7 @@ services:
 
   system:
     image: cdzeroly/system:2.2.2
-    container_name:  base_platform_system
+    container_name: base_platform_system
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -227,7 +227,7 @@ services:
 
   gen:
     image: cdzeroly/gen:2.2.2
-    container_name:  base_platform_gen
+    container_name: base_platform_gen
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -243,7 +243,7 @@ services:
 
   job:
     image: cdzeroly/job:2.2.2
-    container_name:  base_platform_job
+    container_name: base_platform_job
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -259,7 +259,7 @@ services:
 
   resource:
     image: cdzeroly/resource:2.2.2
-    container_name:  base_platform_resource
+    container_name: base_platform_resource
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -275,7 +275,7 @@ services:
 
   workflow:
     image: cdzeroly/workflow:2.2.2
-    container_name:  base_platform_workflow
+    container_name: base_platform_workflow
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -288,13 +288,13 @@ services:
       - /docker/skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
 
-#################################################################################################
-#################################### 以下为扩展根据需求搭建 #########################################
-#################################################################################################
+  #################################################################################################
+  #################################### 以下为扩展根据需求搭建 #########################################
+  #################################################################################################
 
   rabbitmq:
     image: rabbitmq:3.13.3
-    container_name:  base_platform_rabbitmq
+    container_name: base_platform_rabbitmq
     build:
       context: ./rabbitmq
     environment:
@@ -308,6 +308,26 @@ services:
       - ../docker/rabbitmq/data:/var/lib/rabbitmq
 
 
+
+  ZLMediaKit:
+    image: zlmediakit/zlmediakit:master
+    container_name: base_platform_zlmediakit
+    #此镜像为github action 持续集成自动编译推送，跟代码(master分支)保持最新状态
+
+    ports:
+      - "1935:1935" # rtmp
+      - "8554:554"   # rtsp
+      - "9520:80"   # 服务的端口
+      - "8443:443"   # https
+      - "9000:9000/udp"   # srt
+      - "8000:8000/udp"   # rtc
+      - "10000:10000"  #  rtp_proxy
+      - "30000-30500:30000-30500"   #rtsp服务器端口范围
+    volumes:
+      - ../docker/rabbitmq/log:/var/log/rabbitmq
+      - ../docker/rabbitmq/data:/var/lib/rabbitmq
+
+  #此镜像为github action 持续集成自动编译推送，跟代码(master分支)保持最新状态
   sky-oap:
     image: apache/skywalking-oap-server:9.7.0
     container_name: sky-oap

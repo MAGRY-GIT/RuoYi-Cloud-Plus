@@ -1,12 +1,17 @@
 package com.cdzeroly.wvp.conf;
 
+import com.cdzeroly.common.core.utils.Threads;
+import jakarta.annotation.PreDestroy;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  *  ThreadPoolTask 配置类
@@ -14,6 +19,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 @Configuration
 @Order(1)
+@Slf4j
 @EnableAsync(proxyTargetClass = true)
 public class ThreadPoolTaskConfig {
 
@@ -46,7 +52,7 @@ public class ThreadPoolTaskConfig {
      * 线程池名前缀
      */
     private static final String THREAD_NAME_PREFIX = "wvp-";
-
+    private ThreadPoolTaskExecutor taskExecutor;
     /**
      *
      * @return

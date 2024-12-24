@@ -2,7 +2,6 @@ package com.cdzeroly.wvp.storager.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.cdzeroly.common.core.constant.CacheNames;
 import com.cdzeroly.common.redis.utils.RedisUtils;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.UserSetting;
@@ -24,7 +23,6 @@ import com.cdzeroly.wvp.storager.dto.PlatformRegisterInfo;
 import com.cdzeroly.wvp.utils.JsonUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
@@ -42,7 +40,6 @@ import java.util.*;
 public class RedisCatchStorageImpl implements IRedisCatchStorage {
 
 
-    private final DeviceChannelMapper deviceChannelMapper;
 
     private final DeviceMapper deviceMapper;
 
@@ -145,19 +142,16 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
     @Override
     public void removeStream(String mediaServerId, String type) {
         String key = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_" + type.toUpperCase() + "_*_*_" + mediaServerId;
-        List<Object> streams = RedisUtils.scan(redisTemplate, key);
-        for (Object stream : streams) {
-            redisTemplate.delete(stream);
-        }
+        RedisUtils.deleteKeys(key);
     }
 
     @Override
     public List<MediaInfo> getStreams(String mediaServerId, String type) {
         List<MediaInfo> result = new ArrayList<>();
         String key = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_" + type.toUpperCase() + "_*_*_" + mediaServerId;
-        List<Object> streams = RedisUtils.scan(redisTemplate, key);
-        for (Object stream : streams) {
-            MediaInfo mediaInfo = (MediaInfo)redisTemplate.opsForValue().get(stream);
+        List<String> keys = RedisUtils.scan(key);
+        for (String keyFinal : keys) {
+            MediaInfo mediaInfo = (MediaInfo)redisTemplate.opsForValue().get(keyFinal);
             result.add(mediaInfo);
         }
         return result;
@@ -275,9 +269,9 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
         String scanKey = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX  + userSetting.getServerId() + "_*_" + app + "_" + streamId + "_" + mediaServerId;
 
         MediaInfo result = null;
-        List<Object> keys = RedisUtils.scan(redisTemplate, scanKey);
-        if (keys.size() > 0) {
-            String key = (String) keys.get(0);
+        List<String> keys = RedisUtils.scan(scanKey);
+        if (!keys.isEmpty()) {
+            String key = keys.get(0);
             result = JsonUtil.redisJsonToObject(redisTemplate, key, MediaInfo.class);
         }
 
@@ -289,9 +283,9 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
         String scanKey = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX  + userSetting.getServerId() + "_PULL_" + app + "_" + streamId + "_*";
 
         MediaInfo result = null;
-        List<Object> keys = RedisUtils.scan(redisTemplate, scanKey);
-        if (keys.size() > 0) {
-            String key = (String) keys.get(0);
+        List<String> keys = RedisUtils.scan(scanKey);
+        if (!keys.isEmpty()) {
+            String key = keys.get(0);
             result = JsonUtil.redisJsonToObject(redisTemplate, key, MediaInfo.class);
         }
 
@@ -342,13 +336,13 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
     @Override
     public int getPushStreamCount(String id) {
         String key = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_PUSH_*_*_" + id;
-        return RedisUtils.scan(redisTemplate, key).size();
+        return RedisUtils.scan(key).size();
     }
 
     @Override
     public int getProxyStreamCount(String id) {
         String key = VideoManagerConstants.WVP_SERVER_STREAM_PREFIX + userSetting.getServerId() + "_PULL_*_*_" + id;
-        return RedisUtils.scan(redisTemplate, key).size();
+        return RedisUtils.scan(key).size();
     }
 
     @Override

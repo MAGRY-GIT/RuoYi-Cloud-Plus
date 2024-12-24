@@ -146,13 +146,7 @@ public class PsController {
         MediaServer mediaServerItem = mediaServerService.getDefaultMediaServer();
         mediaServerService.closeRTPServer(mediaServerItem, stream);
         String receiveKey = VideoManagerConstants.WVP_OTHER_RECEIVE_PS_INFO + userSetting.getServerId() + "_*_"  + stream;
-        List<Object> scan = RedisUtils.scan(redisTemplate, receiveKey);
-        if (!scan.isEmpty()) {
-            for (Object key : scan) {
-                // 将信息写入redis中，以备后用
-                redisTemplate.delete(key);
-            }
-        }
+        RedisUtils.deleteKeys(receiveKey);
     }
 
     @GetMapping(value = "/send/start")
