@@ -26,25 +26,28 @@ public interface DeviceChannelMapper extends BaseMapperPlus<DeviceChannel, Devic
 
 
     @SelectProvider(type = DeviceChannelProvider.class, method = "queryChannels")
-    List<DeviceChannel> queryChannels(@Param("page") Page<DeviceChannel> page, @Param("deviceDbId") int deviceDbId, @Param("civilCode") String civilCode,
+    List<DeviceChannel> queryChannels(@Param("page") Page<DeviceChannel> page,@Param("dataDeviceId") int dataDeviceId, @Param("civilCode") String civilCode,
                                       @Param("businessGroupId") String businessGroupId, @Param("parentChannelId") String parentChannelId,
                                       @Param("query") String query, @Param("hasSubChannel") Boolean hasSubChannel,
                                       @Param("online") Boolean online, @Param("channelIds") List<String> channelIds);
 
     @SelectProvider(type = DeviceChannelProvider.class, method = "queryChannelsByDeviceDbId")
-    List<DeviceChannel> queryChannelsByDeviceDbId(@Param("deviceDbId") int deviceDbId);
+    List<DeviceChannel> queryChannelsByDeviceDbId(@Param("dataDeviceId") int dataDeviceId);
+
 
 
     List<Integer> queryChaneIdListByDeviceDbIds(List<Integer> deviceDbIds);
 
 
 
-    int cleanChannelsByDeviceId(@Param("deviceId") int deviceId);
+    int cleanChannelsByDeviceId(@Param("dataDeviceId") int dataDeviceId);
+
 
     int del(@Param("id") int id);
 
 
-    List<DeviceChannelExtendVo> queryChannelsWithDeviceInfo(@Param("deviceId") String deviceId, @Param("parentChannelId") String parentChannelId, @Param("query") String query, @Param("hasSubChannel") Boolean hasSubChannel, @Param("online") Boolean online, @Param("channelIds") List<String> channelIds);
+    List<DeviceChannelExtendVo> queryChannelsWithDeviceInfo( @Param("deviceId") String deviceId, @Param("parentChannelId") String parentChannelId, @Param("query") String query, @Param("hasSubChannel") Boolean hasSubChannel, @Param("online") Boolean online, @Param("channelIds") List<String> channelIds);
+
 
 
 
@@ -75,11 +78,12 @@ public interface DeviceChannelMapper extends BaseMapperPlus<DeviceChannel, Devic
 
     /**
      * 更新频道子计数
-     * @param deviceDbId
+     * @param dataDeviceId
      * @param channelId
      * @return
      */
-    int updateChannelSubCount(@Param("deviceDbId") int deviceDbId, @Param("channelId") String channelId);
+    int updateChannelSubCount(@Param("dataDeviceId") int dataDeviceId, @Param("channelId") String channelId);
+
 
     /**
      * 更新位置
@@ -90,17 +94,18 @@ public interface DeviceChannelMapper extends BaseMapperPlus<DeviceChannel, Devic
 
     /**
      * 查询所有频道以进行刷新
-     * @param deviceDbId
+     * @param dataDeviceId
      * @return
      */
-    List<DeviceChannel> queryAllChannelsForRefresh(@Param("deviceDbId") int deviceDbId);
+    List<DeviceChannel> queryAllChannelsForRefresh(@Param("dataDeviceId") int dataDeviceId);
 
     /**
      *  按通道设备 ID 获取设备
      * @param channelId
      * @return
      */
-    List<Device> getDeviceByChannelDeviceId(String channelId);
+    List<Device> getDeviceByChannelDeviceId(@Param("channelId") String channelId);
+
 
 
     /**
@@ -148,7 +153,7 @@ public interface DeviceChannelMapper extends BaseMapperPlus<DeviceChannel, Devic
     DeviceChannel getOneForSource(@Param("id") int id);
 
     @SelectProvider(type = DeviceChannelProvider.class, method = "getOneByDeviceId")
-    DeviceChannel getOneByDeviceId(@Param("deviceDbId") int deviceDbId, @Param("channelId") String channelId);
+    DeviceChannel getOneByDeviceId(@Param("dataDeviceId") int dataDeviceId, @Param("channelId") String channelId);
 
 
     /**
@@ -195,11 +200,11 @@ public interface DeviceChannelMapper extends BaseMapperPlus<DeviceChannel, Devic
 
     /**
      * 按源通道 ID 获取一个
-     * @param deviceDbId
+     * @param dataDeviceId
      * @param channelId
      * @return
      */
-    DeviceChannel getOneBySourceChannelId(int deviceDbId, String channelId);
+    DeviceChannel getOneBySourceChannelId(@Param("dataDeviceId") int dataDeviceId, @Param("channelId") String channelId);
 
 
 }

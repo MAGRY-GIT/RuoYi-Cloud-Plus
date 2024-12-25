@@ -29,6 +29,7 @@ import com.cdzeroly.wvp.vmanager.bean.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -48,32 +49,25 @@ import java.util.UUID;
 @Tag(name = "国标设备点播")
 @Slf4j
 @RestController
-@RequestMapping("/api/play")
+@AllArgsConstructor
+@RequestMapping("/play")
 public class PlayController extends BaseController {
 
-    @Autowired
-    private SipInviteSessionManager sessionManager;
+    private final SipInviteSessionManager sessionManager;
 
-    @Autowired
-    private IInviteStreamService inviteStreamService;
+    private final IInviteStreamService inviteStreamService;
 
-    @Autowired
-    private DeferredResultHolder resultHolder;
+    private final DeferredResultHolder resultHolder;
 
-    @Autowired
-    private IPlayService playService;
+    private final IPlayService playService;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private IDeviceService deviceService;
+    private final IDeviceService deviceService;
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
+    private final IDeviceChannelService deviceChannelService;
 
     @Operation(summary = "开始点播")
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)

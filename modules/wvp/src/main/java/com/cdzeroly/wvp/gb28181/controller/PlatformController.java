@@ -18,6 +18,7 @@ import com.cdzeroly.wvp.vmanager.bean.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
@@ -31,20 +32,17 @@ import org.springframework.web.context.request.async.DeferredResult;
 @Tag(name  = "级联平台管理")
 @Slf4j
 @RestController
-@RequestMapping("/api/platform")
+@AllArgsConstructor
+@RequestMapping("/platform")
 public class PlatformController {
 
-    @Autowired
-    private IPlatformChannelService platformChannelService;
+    private final IPlatformChannelService platformChannelService;
 
-    @Autowired
-    private SubscribeHolder subscribeHolder;
+    private final SubscribeHolder subscribeHolder;
 
-    @Autowired
-    private SipConfig sipConfig;
+    private final SipConfig sipConfig;
 
-	@Autowired
-	private IPlatformService platformService;
+	private final IPlatformService platformService;
 
 
     @Operation(summary = "获取国标服务的配置")

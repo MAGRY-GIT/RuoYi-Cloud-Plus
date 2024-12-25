@@ -32,7 +32,7 @@ import java.util.UUID;
 @Slf4j
 @Tag(name = "国标设备配置")
 @RestController
-@RequestMapping("/api/device/config")
+@RequestMapping("/deviceConfig")
 public class DeviceConfig {
 
     @Autowired

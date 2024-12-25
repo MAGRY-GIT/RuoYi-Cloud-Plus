@@ -36,7 +36,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/device/control")
+@RequestMapping("/deviceControl")
 public class DeviceController {
 
     private final IDeviceService deviceService;

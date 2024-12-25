@@ -1,16 +1,20 @@
 package com.cdzeroly.wvp.gb28181.mapper.provider;
 
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author MGARY
+ */
 public class DeviceChannelProvider {
 
-    public String getBaseSelectSql() {
+    public String getBaseSelectSql(){
         return "SELECT " +
             " dc.id,\n" +
-            " dc.device_db_id,\n" +
+            " dc.data_device_id,\n" +
             " dc.create_time,\n" +
             " dc.update_time,\n" +
             " dc.sub_count,\n" +
@@ -57,17 +61,16 @@ public class DeviceChannelProvider {
             " wvp_device_channel dc "
             ;
     }
-
-    public String queryChannels(Map<String, Object> params) {
+    public String queryChannels(Map<String, Object> params ){
         StringBuilder sqlBuild = new StringBuilder();
         sqlBuild.append(getBaseSelectSql());
-        sqlBuild.append(" where dc.device_db_id = #{deviceDbId} ");
-        if (params.get("businessGroupId") != null) {
+        sqlBuild.append(" where data_type = " + ChannelDataType.GB28181.value + " and dc.data_device_id = #{dataDeviceId} ");
+        if (params.get("businessGroupId") != null ) {
             sqlBuild.append(" AND coalesce(dc.gb_business_group_id, dc.business_group_id)=#{businessGroupId} AND coalesce(dc.gb_parent_id, dc.parent_id) is null");
-        } else if (params.get("parentChannelId") != null) {
+        }else if (params.get("parentChannelId") != null ) {
             sqlBuild.append(" AND coalesce(dc.gb_parent_id, dc.parent_id)=#{parentChannelId}");
         }
-        if (params.get("civilCode") != null) {
+        if (params.get("civilCode") != null ) {
             sqlBuild.append(" AND (coalesce(dc.gb_civil_code, dc.civil_code) = #{civilCode} " +
                 "OR (LENGTH(coalesce(dc.gb_device_id, dc.device_id))=LENGTH(#{civilCode}) + 2) AND coalesce(dc.gb_device_id, dc.device_id) LIKE concat(#{civilCode},'%'))");
         }
@@ -76,19 +79,19 @@ public class DeviceChannelProvider {
                 " OR coalesce(dc.gb_name, dc.name) LIKE concat('%',#{query},'%') escape '/')")
             ;
         }
-        if (params.get("online") != null && (Boolean) params.get("online")) {
+        if (params.get("online") != null && (Boolean)params.get("online")) {
             sqlBuild.append(" AND coalesce(gb_status, status) = 'ON'");
         }
-        if (params.get("online") != null && !(Boolean) params.get("online")) {
+        if (params.get("online") != null && !(Boolean)params.get("online")) {
             sqlBuild.append(" AND coalesce(gb_status, status) = 'OFF'");
         }
-        if (params.get("hasSubChannel") != null && (Boolean) params.get("hasSubChannel")) {
+        if (params.get("hasSubChannel") != null && (Boolean)params.get("hasSubChannel")) {
             sqlBuild.append(" AND dc.sub_count > 0");
         }
-        if (params.get("hasSubChannel") != null && !(Boolean) params.get("hasSubChannel")) {
+        if (params.get("hasSubChannel") != null && !(Boolean)params.get("hasSubChannel")) {
             sqlBuild.append(" AND dc.sub_count = 0");
         }
-        List<String> channelIds = (List<String>) params.get("channelIds");
+        List<String> channelIds = (List<String>)params.get("channelIds");
         if (channelIds != null && !channelIds.isEmpty()) {
             sqlBuild.append(" AND dc.device_id in (");
             boolean first = true;
@@ -105,77 +108,70 @@ public class DeviceChannelProvider {
     }
 
 
-    public String queryChannelsByDeviceDbId(Map<String, Object> params) {
+    public String queryChannelsByDeviceDbId(Map<String, Object> params ){
         StringBuilder sqlBuild = new StringBuilder();
         sqlBuild.append(getBaseSelectSql());
-        sqlBuild.append(" where dc.device_db_id = #{deviceDbId}");
+        sqlBuild.append(" where data_type = " + ChannelDataType.GB28181.value + " and dc.data_device_id = #{dataDeviceId}");
         return sqlBuild.toString();
     }
 
-    public String queryAllChannels(Map<String, Object> params) {
+    public String queryAllChannels(Map<String, Object> params ){
         StringBuilder sqlBuild = new StringBuilder();
         sqlBuild.append(getBaseSelectSql());
-        sqlBuild.append(" where dc.device_db_id = #{deviceDbId}");
+        sqlBuild.append(" where data_type = " + ChannelDataType.GB28181.value + " and dc.data_device_id = #{dataDeviceId}");
         return sqlBuild.toString();
     }
 
-    public String getOne(Map<String, Object> params) {
+    public String getOne(Map<String, Object> params ){
         StringBuilder sqlBuild = new StringBuilder();
         sqlBuild.append(getBaseSelectSql());
         sqlBuild.append(" where dc.id=#{id}");
         return sqlBuild.toString();
     }
 
-    public String getOneByDeviceId(Map<String, Object> params) {
+    public String getOneByDeviceId(Map<String, Object> params ){
         StringBuilder sqlBuild = new StringBuilder();
         sqlBuild.append(getBaseSelectSql());
-        sqlBuild.append(" where dc.device_db_id=#{deviceDbId} and coalesce(dc.gb_device_id, dc.device_id) = #{channelId}");
+        sqlBuild.append(" where data_type = " + ChannelDataType.GB28181.value + " and dc.data_device_id=#{dataDeviceId} and coalesce(dc.gb_device_id, dc.device_id) = #{channelId}");
         return sqlBuild.toString();
     }
 
 
-    public String queryByDeviceId(Map<String, Object> params) {
-        return getBaseSelectSql() + " where channel_type = 0 and coalesce(gb_device_id, device_id) = #{gbDeviceId}";
+
+    public String queryByDeviceId(Map<String, Object> params ){
+        return getBaseSelectSql() + " where data_type = " + ChannelDataType.GB28181.value + " and channel_type = 0 and coalesce(gb_device_id, device_id) = #{gbDeviceId}";
     }
 
-    public String queryById(Map<String, Object> params) {
-        return getBaseSelectSql() + " where channel_type = 0 and id = #{gbId}";
-    }
-
-    public String queryByStreamPushId(Map<String, Object> params) {
-        return getBaseSelectSql() + " where channel_type = 0 and stream_push_id = #{streamPushId}";
-    }
-
-    public String queryByStreamProxyId(Map<String, Object> params) {
-        return getBaseSelectSql() + " where channel_type = 0 and stream_proxy_id = #{streamProxyId}";
+    public String queryById(Map<String, Object> params ){
+        return getBaseSelectSql() + " where data_type = " + ChannelDataType.GB28181.value + " and channel_type = 0 and id = #{gbId}";
     }
 
 
-    public String queryList(Map<String, Object> params) {
+    public String queryList(Map<String, Object> params ){
         StringBuilder sqlBuild = new StringBuilder();
         sqlBuild.append(getBaseSelectSql());
-        sqlBuild.append(" where channel_type = 0 ");
+        sqlBuild.append(" where channel_type = 0 and data_type = " + ChannelDataType.GB28181.value);
         if (params.get("query") != null) {
             sqlBuild.append(" AND (coalesce(gb_device_id, device_id) LIKE concat('%',#{query},'%')" +
                 " OR coalesce(gb_name, name) LIKE concat('%',#{query},'%') )")
             ;
         }
-        if (params.get("online") != null && (Boolean) params.get("online")) {
+        if (params.get("online") != null && (Boolean)params.get("online")) {
             sqlBuild.append(" AND coalesce(gb_status, status) = 'ON'");
         }
-        if (params.get("online") != null && !(Boolean) params.get("online")) {
+        if (params.get("online") != null && !(Boolean)params.get("online")) {
             sqlBuild.append(" AND coalesce(gb_status, status) = 'OFF'");
         }
-        if (params.get("hasCivilCode") != null && (Boolean) params.get("hasCivilCode")) {
+        if (params.get("hasCivilCode") != null && (Boolean)params.get("hasCivilCode")) {
             sqlBuild.append(" AND coalesce(gb_civil_code, civil_code) is not null");
         }
-        if (params.get("hasCivilCode") != null && !(Boolean) params.get("hasCivilCode")) {
+        if (params.get("hasCivilCode") != null && !(Boolean)params.get("hasCivilCode")) {
             sqlBuild.append(" AND coalesce(gb_civil_code, civil_code) is null");
         }
-        if (params.get("hasGroup") != null && (Boolean) params.get("hasGroup")) {
+        if (params.get("hasGroup") != null && (Boolean)params.get("hasGroup")) {
             sqlBuild.append(" AND coalesce(gb_parent_id, parent_id) is not null");
         }
-        if (params.get("hasGroup") != null && !(Boolean) params.get("hasGroup")) {
+        if (params.get("hasGroup") != null && !(Boolean)params.get("hasGroup")) {
             sqlBuild.append(" AND coalesce(gb_parent_id, parent_id) is null");
         }
         return sqlBuild.toString();

@@ -1,6 +1,5 @@
 package com.cdzeroly.wvp.streamProxy.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.wvp.common.StreamInfo;
@@ -12,7 +11,6 @@ import com.cdzeroly.wvp.streamProxy.mapper.StreamProxyMapper;
 import com.cdzeroly.wvp.streamProxy.service.IStreamProxyPlayService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;

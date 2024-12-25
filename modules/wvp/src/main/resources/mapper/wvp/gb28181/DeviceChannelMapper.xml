@@ -8,7 +8,8 @@
         insert into wvp_device_channel
         (
         device_id,
-        device_db_id,
+        data_type,
+        data_device_id,
         name,
         manufacturer,
         model,
@@ -55,7 +56,8 @@
         <foreach collection="addChannels" index="index" item="item" separator=",">
             (
             #{item.deviceId},
-            #{item.deviceDbId},
+            #{item.dataType},
+             #{item.dataDeviceId}
             #{item.name},
             #{item.manufacturer},
             #{item.model},
@@ -122,7 +124,8 @@
             SET
             update_time=#{item.updateTime},
             device_id=#{item.deviceId},
-            device_db_id=#{item.deviceDbId},
+            data_type=#{item.dataType},
+            data_device_id=#{item.dataDeviceId},
             name=#{item.name},
             manufacturer=#{item.manufacturer},
             model=#{item.model},
@@ -172,7 +175,8 @@
             SET
             update_time=#{item.updateTime},
             device_id=#{item.deviceId},
-            device_db_id=#{item.deviceDbId},
+            data_type=#{item.dataType},
+            data_device_id=#{item.dataDeviceId},
             name=#{item.name},
             manufacturer=#{item.manufacturer},
             model=#{item.model},
@@ -212,7 +216,7 @@
             gps_time=#{item.gpsTime},
             stream_identification=#{item.streamIdentification},
             channel_type=#{item.channelType}
-            WHERE device_db_id = #{item.deviceDbId} AND device_id = #{item.deviceId}
+            WHERE data_type = #{item.dataType} and data_device_id = #{item.dataDeviceId} AND device_id = #{item.deviceId}
         </foreach>
 
     </update>
@@ -222,9 +226,9 @@
         set sub_count = (
             select count(0)
             from wvp_device_channel
-            where device_db_id = #{deviceDbId} and parent_id = #{channelId}
+            where data_type = 1 and data_device_id = #{dataDeviceId} and parent_id = #{channelId}
         )
-        where device_db_id = #{deviceDbId} and device_id = #{channelId}
+        where data_type = 1 and data_device_id = #{dataDeviceId} and device_id = #{channelId}
 
     </update>
     <update id="updatePosition">
@@ -240,7 +244,7 @@
         <foreach collection="channels" item="item" separator=";">
             UPDATE wvp_device_channel
             SET status = #{item.status}
-            WHERE device_id = #{item.deviceId}
+            WHERE  data_type = #{item.dataType} and device_id = #{item.deviceId}
         </foreach>
 
     </update>
@@ -258,14 +262,14 @@
             <if test="item.latitude != null">, latitude = #{item.latitude}</if>
             <if test="item.gpsTime != null">, gps_time = #{item.gpsTime}</if>
             <if test="item.id > 0">WHERE id = #{item.id}</if>
-            <if test="item.id == 0">WHERE device_db_id = #{item.deviceDbId} AND device_id = #{item.deviceId}</if>
+            <if test="item.id == 0">WHERE data_type = #{item.dataType} and data_device_id=#{item.dataDeviceId} AND device_id = #{item.deviceId}</if>
         </foreach>
 
     </update>
     <delete id="cleanChannelsByDeviceId">
         DELETE
         FROM wvp_device_channel
-        WHERE device_db_id = #{deviceId}
+        WHERE data_type =1 and data_device_id=#{deviceId}
     </delete>
     <delete id="del">
         DELETE
@@ -288,7 +292,7 @@
     <select id="queryChaneIdListByDeviceDbIds" resultType="java.lang.Integer">
         select id
         from wvp_device_channel
-        where device_db_id in
+        where data_type =1 and data_device_id in
         <foreach item="item" index="index" collection="deviceDbIds" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -331,8 +335,8 @@
         coalesce(dc.gb_business_group_id, dc.business_group_id) as business_group_id
         FROM
         wvp_device_channel dc
-        LEFT JOIN wvp_device de ON dc.device_db_id = de.id
-        WHERE 1=1
+        LEFT JOIN wvp_device de ON  dc.data_device_id = de.id
+        WHERE dc.data_type = 1
         <if test="deviceId != null">
             AND de.device_id = #{deviceId}
         </if>
@@ -376,9 +380,9 @@
         pgc.platform_id as platform_id,
         pgc.catalog_id as catalog_id
         FROM wvp_device_channel dc
-        LEFT JOIN wvp_device de ON dc.device_db_id = de.id
+        LEFT JOIN wvp_device de ON dc.data_device_id = de.id
         LEFT JOIN wvp_platform_channel pgc ON pgc.device_channel_id = dc.id
-        WHERE 1=1
+        WHERE dc.data_type = 1
         <if test="query != null">
             AND (
             COALESCE(dc.gb_device_id, dc.device_id) LIKE CONCAT('%', #{query}, '%')
@@ -414,7 +418,7 @@
     <select id="queryAllChannelsForRefresh" resultType="com.cdzeroly.wvp.gb28181.domian.DeviceChannel">
         select
             id,
-            device_db_id,
+            data_device_id,
             create_time,
             update_time,
             sub_count,
@@ -458,14 +462,14 @@
             svc_space_support_mod,
             svc_time_support_mode
         from wvp_device_channel
-        where device_db_id = #{deviceDbId}
+        where data_type = 1 and data_device_id = #{dataDeviceId}
 
     </select>
     <select id="getDeviceByChannelDeviceId" resultType="com.cdzeroly.wvp.gb28181.domian.Device">
         select de.*
         from wvp_device de
                  left join wvp_device_channel dc on de.device_id = dc.device_id
-        where dc.device_id = #{channelId}
+        where dc.data_type = 1 and dc.device_id = #{channelId}
     </select>
     <select id="getOnlineCount" resultType="java.lang.Integer">
         select count(1) from wvp_device_channel where status = 'ON'
@@ -475,7 +479,7 @@
     <select id="getOneForSource" resultType="com.cdzeroly.wvp.gb28181.domian.DeviceChannel">
         SELECT
             id,
-            device_db_id,
+            data_device_id,
             create_time,
             update_time,
             sub_count,
@@ -525,7 +529,7 @@
     <select id="getOneByDeviceIdForSource" resultType="com.cdzeroly.wvp.gb28181.domian.DeviceChannel">
         SELECT
             id,
-            device_db_id,
+            data_device_id,
             create_time,
             update_time,
             sub_count,
@@ -569,14 +573,14 @@
             svc_space_support_mod,
             svc_time_support_mode
         FROM wvp_device_channel
-        WHERE device_db_id = #{deviceDbId}
+        WHERE data_type = 1 and data_device_id=#{dataDeviceId}
           AND COALESCE(gb_device_id, device_id) = #{channelId}
 
     </select>
     <select id="getOneBySourceChannelId" resultType="com.cdzeroly.wvp.gb28181.domian.DeviceChannel">
         SELECT
             id,
-            device_db_id,
+            data_device_id,
             create_time,
             update_time,
             sub_count,
@@ -620,7 +624,7 @@
             svc_space_support_mod,
             svc_time_support_mode
         FROM wvp_device_channel
-        WHERE device_db_id = #{deviceDbId}
+        WHERE data_type = 1 AND data_device_id=#{dataDeviceId}
           AND device_id = #{channelId}
 
     </select>
@@ -649,7 +653,7 @@
     <update id="updateStatus">
         UPDATE wvp_device_channel
         SET status = #{status}
-        WHERE device_db_id = #{deviceDbId}
+        WHERE data_type=#{dataType} AND data_device_id=#{dataDeviceId}
           AND device_id = #{deviceId}
 
     </update>
@@ -658,7 +662,7 @@
         SET
             update_time = #{updateTime},
             device_id = #{deviceId},
-            device_db_id = #{deviceDbId},
+            data_device_id=#{dataDeviceId},
             name = #{name},
             manufacturer = #{manufacturer},
             model = #{model},

@@ -38,8 +38,8 @@ import java.util.List;
 @Tag(name = "服务控制")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/server")
-public class ServerController {
+@RequestMapping("/mediaServer")
+public class MediaServerController {
 
 
     private final IMediaServerService mediaServerService;
@@ -64,19 +64,19 @@ public class ServerController {
     private final ApplicationEventPublisher applicationEventPublisher;
 
 
-    @GetMapping(value = "/media_server/list")
+    @GetMapping(value = "/list")
     @Operation(summary = "流媒体服务列表")
     public R<List<MediaServer>> getMediaServerList() {
         return R.ok(mediaServerService.getAll());
     }
 
-    @GetMapping(value = "/media_server/online/list")
+    @GetMapping(value = "/online/list")
     @Operation(summary = "在线流媒体服务列表")
     public R<List<MediaServer>> getOnlineMediaServerList() {
         return  R.ok(mediaServerService.getAllOnline());
     }
 
-    @GetMapping(value = "/media_server/one/{id}")
+    @GetMapping(value = "/one/{id}")
     @Operation(summary = "获取单个流媒体")
     @Parameter(name = "id", description = "流媒体服务ID", required = true)
     public R<MediaServer> getMediaServer(@PathVariable String id) {
@@ -87,7 +87,7 @@ public class ServerController {
     @Parameter(name = "ip", description = "流媒体服务IP", required = true)
     @Parameter(name = "port", description = "流媒体服务HTT端口", required = true)
     @Parameter(name = "secret", description = "流媒体服务secret", required = true)
-    @GetMapping(value = "/media_server/check")
+    @GetMapping(value = "/check")
     public R<MediaServer>  checkMediaServer(@RequestParam String ip, @RequestParam int port, @RequestParam String secret, @RequestParam String type) {
         return R.ok(mediaServerService.checkMediaServer(ip, port, secret, type));
     }
@@ -95,7 +95,7 @@ public class ServerController {
     @Operation(summary = "测试流媒体录像管理服务")
     @Parameter(name = "ip", description = "流媒体服务IP", required = true)
     @Parameter(name = "port", description = "流媒体服务HTT端口", required = true)
-    @GetMapping(value = "/media_server/record/check")
+    @GetMapping(value = "/record/check")
     public R<Void> checkMediaRecordServer(@RequestParam String ip, @RequestParam int port) {
         boolean checkResult = mediaServerService.checkMediaRecordServer(ip, port);
         AssertUtils.isTrue(checkResult, "连接失败");
@@ -104,7 +104,7 @@ public class ServerController {
 
     @Operation(summary = "保存流媒体服务")
     @Parameter(name = "mediaServerItem", description = "流媒体信息", required = true)
-    @PostMapping(value = "/media_server/save")
+    @PostMapping(value = "")
     public R<Void> saveMediaServer(@RequestBody MediaServerBo bo) {
 
         MediaServer database = mediaServerService.getMediaServer(bo.getId());
@@ -123,7 +123,7 @@ public class ServerController {
 
     @Operation(summary = "移除流媒体服务")
     @Parameter(name = "id", description = "流媒体ID", required = true)
-    @DeleteMapping(value = "/media_server/delete")
+    @DeleteMapping(value = "/delete")
     public  R<Void> deleteMediaServer(@RequestParam String id) {
         MediaServer mediaServer = mediaServerService.getOne(id);
         AssertUtils.isNotNull(mediaServer, "流媒体不存在");
@@ -135,7 +135,7 @@ public class ServerController {
     @Parameter(name = "app", description = "应用名", required = true)
     @Parameter(name = "stream", description = "流ID", required = true)
     @Parameter(name = "mediaServerId", description = "流媒体ID", required = true)
-    @GetMapping(value = "/media_server/media_info")
+    @GetMapping(value = "/media_info")
     public R<MediaInfo> getMediaInfo(String app, String stream, String mediaServerId) {
         MediaServer mediaServer = mediaServerService.getOne(mediaServerId);
         AssertUtils.isNotNull(mediaServer, "流媒体不存在");
@@ -169,7 +169,7 @@ public class ServerController {
     }
 
 
-    @GetMapping(value = "/media_server/load")
+    @GetMapping(value = "/load")
     @Operation(summary = "获取负载信息")
     public R<List<MediaServerLoadVo>> getMediaLoad() {
         List<MediaServerLoadVo> result = new ArrayList<>();

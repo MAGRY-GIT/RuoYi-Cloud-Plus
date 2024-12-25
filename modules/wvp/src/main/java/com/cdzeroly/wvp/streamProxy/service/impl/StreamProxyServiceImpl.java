@@ -7,6 +7,7 @@ import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.StreamInfo;
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
@@ -168,7 +169,6 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
         }
         StreamProxy streamProxy = MapstructUtils.convert(proxyBo, StreamProxy.class);
         streamProxyMapper.insert(streamProxy);
-        proxyBo.setStreamProxyId(streamProxy.getId());
     }
 
     @Override

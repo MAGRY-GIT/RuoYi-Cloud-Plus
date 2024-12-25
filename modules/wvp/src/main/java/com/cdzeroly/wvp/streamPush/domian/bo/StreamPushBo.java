@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.streamPush.domian.bo;
 
 import cn.hutool.core.date.DateUtil;
 import com.cdzeroly.wvp.common.StreamInfo;
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.media.event.media.MediaArrivalEvent;
 import com.cdzeroly.wvp.streamPush.domian.StreamPush;
@@ -108,7 +109,8 @@ public class StreamPushBo extends CommonGBChannel implements Comparable<StreamPu
         if (ObjectUtils.isEmpty(this.getGbName())) {
             this.setGbName( app+ "-" +stream);
         }
-        this.setStreamPushId(this.getId());
+        this.setDataType(ChannelDataType.STREAM_PROXY.value);
+        this.setDataDeviceId(this.getId());
         return this;
     }
 

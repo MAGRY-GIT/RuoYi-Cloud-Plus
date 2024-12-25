@@ -40,7 +40,7 @@ import java.util.List;
 @Tag(name  = "全局通道管理")
 @RestController
 @AllArgsConstructor
-@RequestMapping(value = "/api/common/channel")
+@RequestMapping(value = "/commonChannel")
 public class CommonChannelController extends BaseController {
 
 

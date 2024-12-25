@@ -13,6 +13,7 @@ import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.domian.bean.*;
 import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
+import com.cdzeroly.wvp.gb28181.mapper.CommonGBChannelMapper;
 import com.cdzeroly.wvp.gb28181.session.SipInviteSessionManager;
 import com.cdzeroly.wvp.gb28181.transmit.SIPSender;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommanderForPlatform;
@@ -32,6 +33,7 @@ import com.cdzeroly.wvp.utils.GitUtil;
 import gov.nist.javax.sip.message.MessageFactoryImpl;
 import gov.nist.javax.sip.message.SIPRequest;
 import gov.nist.javax.sip.message.SIPResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -53,41 +55,31 @@ import java.util.List;
 @Slf4j
 @Component
 @DependsOn("sipLayer")
+@AllArgsConstructor
 public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
 
-    @Autowired
-    private SIPRequestHeaderPlarformProvider headerProviderPlatformProvider;
+    private final SIPRequestHeaderPlarformProvider headerProviderPlatformProvider;
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
-
-    @Autowired
-    private SipSubscribe sipSubscribe;
-
-    @Autowired
-    private SipLayer sipLayer;
-
-    @Autowired
-    private SIPSender sipSender;
-
-    @Autowired
-    private HookSubscribe subscribe;
-
-    @Autowired
-    private UserSetting userSetting;
+    private final IMediaServerService mediaServerService;
 
 
-    @Autowired
-    private SipInviteSessionManager sessionManager;
+    private final SipLayer sipLayer;
 
-    @Autowired
-    private DynamicTask dynamicTask;
+    private final SIPSender sipSender;
 
-    @Autowired
-    private GitUtil gitUtil;
+    private final HookSubscribe subscribe;
+
+    private final UserSetting userSetting;
+
+
+    private final SipInviteSessionManager sessionManager;
+
+    private final DynamicTask dynamicTask;
+
+    private final GitUtil gitUtil;
+
 
     @Override
     public void register(Platform parentPlatform, SipSubscribe.Event errorEvent , SipSubscribe.Event okEvent) throws InvalidArgumentException, ParseException, SipException {
@@ -604,11 +596,10 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
     }
 
     @Override
-    public void sendMediaStatusNotify(Platform parentPlatform, SendRtpInfo sendRtpItem) throws SipException, InvalidArgumentException, ParseException {
-        if (sendRtpItem == null || parentPlatform == null) {
+    public void sendMediaStatusNotify(Platform parentPlatform, SendRtpInfo sendRtpInfo, CommonGBChannel channel) throws SipException, InvalidArgumentException, ParseException {
+        if (channel == null || parentPlatform == null) {
             return;
         }
-
 
         String characterSet = parentPlatform.getCharacterSet();
         StringBuffer mediaStatusXml = new StringBuffer(200);
@@ -616,12 +607,12 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
                 .append("<Notify>\r\n")
                 .append("<CmdType>MediaStatus</CmdType>\r\n")
                 .append("<SN>" + (int)((Math.random()*9+1)*100000) + "</SN>\r\n")
-                .append("<DeviceID>" + sendRtpItem.getChannelId() + "</DeviceID>\r\n")
+                .append("<DeviceID>" + channel.getGbDeviceId() + "</DeviceID>\r\n")
                 .append("<NotifyType>121</NotifyType>\r\n")
                 .append("</Notify>\r\n");
 
         SIPRequest messageRequest = (SIPRequest)headerProviderPlatformProvider.createMessageRequest(parentPlatform, mediaStatusXml.toString(),
-                sendRtpItem);
+            sendRtpInfo);
 
         sipSender.transmitRequest(parentPlatform.getDeviceIp(),messageRequest);
 

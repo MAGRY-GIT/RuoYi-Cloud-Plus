@@ -8,6 +8,7 @@ import com.cdzeroly.wvp.gb28181.domian.Region;
 import com.cdzeroly.wvp.gb28181.domian.vo.CommonGBChannelVo;
 import com.cdzeroly.wvp.gb28181.mapper.provider.ChannelProvider;
 import com.cdzeroly.wvp.gb28181.domian.bean.*;
+import com.cdzeroly.wvp.streamPush.domian.StreamPush;
 import com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.annotations.Param;
@@ -47,28 +48,23 @@ public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGBChannel, C
     int updateStatus(List<CommonGBChannel> commonGBChannels);
 
 
-    void reset(@Param("id") int id, @Param("gbDeviceDbId") int gbDeviceDbId, @Param("updateTime") String updateTime);
+    void reset(@Param("id") int id, @Param("dataType") Integer dataType, @Param("dataDeviceId") int dataDeviceId, @Param("updateTime") String updateTime);
 
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByIds")
     List<CommonGBChannel> queryByIds(Collection<Integer> ids);
 
 
-    @SelectProvider(type = ChannelProvider.class, method = "queryByStreamPushId")
-    CommonGBChannel queryByStreamPushId(@Param("streamPushId") Integer streamPushId);
-
-    @SelectProvider(type = ChannelProvider.class, method = "queryByStreamProxyId")
-    CommonGBChannel queryByStreamProxyId(@Param("streamProxyId") Integer streamProxyId);
-
     @SelectProvider(type = ChannelProvider.class, method = "queryListByCivilCode")
-    List<CommonGBChannel> queryListByCivilCode(PageQuery pageQuery, @Param("query") String query, @Param("online") Boolean online,
-                                               @Param("channelType") Integer channelType, @Param("civilCode") String civilCode);
+    List<CommonGBChannel> queryListByCivilCode(PageQuery pageQuery,@Param("query") String query, @Param("online") Boolean online,
+                                               @Param("dataType") Integer dataType, @Param("civilCode") String civilCode);
+
 
 
 
     @SelectProvider(type = ChannelProvider.class, method = "queryListByParentId")
-    List<CommonGBChannel> queryListByParentId(PageQuery pageQuery, @Param("query") String query, @Param("online") Boolean online,
-                                              @Param("channelType") Integer channelType, @Param("groupDeviceId") String groupDeviceId);
+    List<CommonGBChannel> queryListByParentId(PageQuery pageQuery,@Param("query") String query, @Param("online") Boolean online,
+                                              @Param("dataType") Integer dataType, @Param("groupDeviceId") String groupDeviceId);
 
 
 
@@ -90,10 +86,9 @@ public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGBChannel, C
     List<CommonGBChannel> queryByCivilCode(@Param("civilCode") String civilCode);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByGbDeviceIds")
-    List<CommonGBChannel> queryByGbDeviceIds(List<Integer> deviceIds);
+    List<CommonGBChannel> queryByGbDeviceIds(@Param("dataType") Integer dataType, List<Integer> deviceIds);
 
-
-    List<Integer> queryByGbDeviceIdsForIds(List<Integer> deviceIds);
+    List<Integer> queryByGbDeviceIdsForIds(@Param("dataType") Integer dataType, List<Integer> deviceIds);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByGroupList")
     List<CommonGBChannel> queryByGroupList(List<Group> groupList);
@@ -136,13 +131,15 @@ public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGBChannel, C
     int updateCivilCodeByChannelList(@Param("civilCode") String civilCode, List<CommonGBChannel> channelList);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryListByStreamPushList")
-    List<CommonGBChannel> queryListByStreamPushList(List<StreamPushVo> streamPushVoList);
+    List<CommonGBChannel> queryListByStreamPushList(@Param("dataType") Integer dataType, List<StreamPushVo> streamPushVoList);
 
 
-    void updateGpsByDeviceIdForStreamPush(List<CommonGBChannel> channels);
+
+    void updateGpsByDeviceIdForStreamPush(@Param("dataType") Integer dataType,  List<CommonGBChannel> channels);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryList")
-    List<CommonGBChannel> queryList(@Param("page") Page<CommonGBChannel> page, @Param("query") String query, @Param("online") Boolean online, @Param("hasRecordPlan") Boolean hasRecordPlan, @Param("channelType") Integer channelType);
+    List<CommonGBChannel> queryList(@Param("page") Page<CommonGBChannel> page, @Param("query") String query, @Param("online") Boolean online,
+                                    @Param("hasRecordPlan") Boolean hasRecordPlan, @Param("dataType") Integer dataType);
 
 
     void removeRecordPlan(List<Integer> channelIds);
@@ -158,8 +155,13 @@ public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGBChannel, C
 
 
 
-    List<CommonGBChannel> queryForRecordPlanForWebList(@Param("planId") Integer planId, @Param("query") String query,
-                                                       @Param("channelType") Integer channelType, @Param("online") Boolean online,
+    List<CommonGBChannel> queryForRecordPlanForWebList(PageQuery pageQuery, @Param("planId") Integer planId, @Param("query") String query,
+                                                       @Param("dataType") Integer dataType, @Param("online") Boolean online,
                                                        @Param("hasLink") Boolean hasLink);
+
+
+    @SelectProvider(type = ChannelProvider.class, method = "queryByDataId")
+    CommonGBChannel queryByDataId(@Param("dataType") Integer dataType, @Param("dataDeviceId") Integer dataDeviceId);
+
 
 }

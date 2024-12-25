@@ -14,6 +14,7 @@ import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,24 +28,22 @@ import java.util.UUID;
 
 /**
  *  位置信息管理
+ * @author MGARY
  */
 @Tag(name  = "位置信息管理")
 @Slf4j
 @RestController
-@RequestMapping("/api/position")
+@AllArgsConstructor
+@RequestMapping("/position")
 public class MobilePositionController {
 
-    @Autowired
-    private IMobilePositionService mobilePositionService;
+    private final IMobilePositionService mobilePositionService;
 
-	@Autowired
-	private SIPCommander cmder;
+	private final SIPCommander cmder;
 
-	@Autowired
-	private DeferredResultHolder resultHolder;
+	private final DeferredResultHolder resultHolder;
 
-	@Autowired
-	private IDeviceService deviceService;
+	private final IDeviceService deviceService;
 
 
     /**

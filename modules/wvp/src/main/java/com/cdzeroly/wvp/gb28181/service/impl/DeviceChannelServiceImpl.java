@@ -9,6 +9,7 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.InviteInfo;
 import com.cdzeroly.wvp.common.InviteSessionType;
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
@@ -77,7 +78,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
             List<DeviceChannel> channelList = channelMapper.queryChannelsByDeviceDbId(device.getId());
             if (channelList.isEmpty()) {
                 for (DeviceChannel channel : channels) {
-                    channel.setDeviceDbId(device.getId());
+                    channel.setDataDeviceId(device.getId());
                     InviteInfo inviteInfo = inviteStreamService.getInviteInfoByDeviceAndChannel(InviteSessionType.PLAY, channel.getId());
                     if (inviteInfo != null && inviteInfo.getStreamInfo() != null) {
                         channel.setStreamId(inviteInfo.getStreamInfo().getStream());
@@ -87,14 +88,14 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
                 }
             }else {
                 for (DeviceChannel deviceChannel : channelList) {
-                    channelsInStore.put(deviceChannel.getDeviceDbId() + deviceChannel.getDeviceId(), deviceChannel);
+                    channelsInStore.put(deviceChannel.getDataDeviceId() + deviceChannel.getDeviceId(), deviceChannel);
                 }
                 for (DeviceChannel channel : channels) {
                     InviteInfo inviteInfo = inviteStreamService.getInviteInfoByDeviceAndChannel(InviteSessionType.PLAY, channel.getId());
                     if (inviteInfo != null && inviteInfo.getStreamInfo() != null) {
                         channel.setStreamId(inviteInfo.getStreamInfo().getStream());
                     }
-                    DeviceChannel deviceChannelInDb = channelsInStore.get(channel.getDeviceDbId() + channel.getDeviceId());
+                    DeviceChannel deviceChannelInDb = channelsInStore.get(channel.getDataDeviceId() + channel.getDeviceId());
                     if ( deviceChannelInDb != null) {
                         channel.setId(deviceChannelInDb.getId());
                         updateChannels.add(channel);
@@ -301,7 +302,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
         }
         for (DeviceChannel channel : channels) {
             if (channel.getParentId() != null) {
-                channelMapper.updateChannelSubCount(channel.getDeviceDbId(), channel.getParentId());
+                channelMapper.updateChannelSubCount(channel.getDataDeviceId(), channel.getParentId());
             }
         }
     }
@@ -451,7 +452,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
         Map<String,DeviceChannel> allChannelMap = new HashMap<>();
         if (!allChannels.isEmpty()) {
             for (DeviceChannel deviceChannel : allChannels) {
-                allChannelMap.put(deviceChannel.getDeviceDbId() + deviceChannel.getDeviceId(), deviceChannel);
+                allChannelMap.put(deviceChannel.getDataDeviceId() + deviceChannel.getDeviceId(), deviceChannel);
             }
         }
         // 数据去重
@@ -464,7 +465,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
         Map<String, Integer> subContMap = new HashMap<>();
 
         for (DeviceChannel deviceChannel : deviceChannelList) {
-            DeviceChannel channelInDb = allChannelMap.get(deviceChannel.getDeviceDbId() + deviceChannel.getDeviceId());
+            DeviceChannel channelInDb = allChannelMap.get(deviceChannel.getDataDeviceId() + deviceChannel.getDeviceId());
             if (channelInDb != null) {
                 deviceChannel.setStreamId(channelInDb.getStreamId());
                 deviceChannel.setHasAudio(channelInDb.isHasAudio());
@@ -481,7 +482,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
             }else {
                 addChannels.add(deviceChannel);
             }
-            allChannelMap.remove(deviceChannel.getDeviceDbId() + deviceChannel.getDeviceId());
+            allChannelMap.remove(deviceChannel.getDataDeviceId() + deviceChannel.getDeviceId());
             channels.add(deviceChannel);
             if (!ObjectUtils.isEmpty(deviceChannel.getParentId())) {
                 if (subContMap.get(deviceChannel.getParentId()) == null) {
@@ -609,6 +610,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
                     .replaceAll("%", "/%")
                     .replaceAll("_", "/_");
         }
+
         List<DeviceChannel> all = channelMapper.queryChannels(pageQuery.build(),device.getId(), null,null, null, query, hasSubChannel, online,null);
         return  TableDataInfo.build(all);
     }
@@ -665,6 +667,8 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
 
     @Override
     public void addChannel(DeviceChannel channel) {
+        channel.setDataType(ChannelDataType.GB28181.value);
+        channel.setDataDeviceId(channel.getDataDeviceId());
         channelMapper.insert(channel);
     }
 

@@ -55,7 +55,6 @@ public class PsController {
 
 
     @GetMapping(value = "/receive/open")
-    @ResponseBody
     @Operation(summary = "开启收流和获取发流信息")
     @Parameter(name = "isSend", description = "是否发送，false时只开启收流， true同时返回推流信息", required = true)
     @Parameter(name = "callId", description = "整个过程的唯一标识，为了与后续接口关联", required = true)
@@ -138,7 +137,7 @@ public class PsController {
     }
 
     @GetMapping(value = "/receive/close")
-    @ResponseBody
+
     @Operation(summary = "关闭收流")
     @Parameter(name = "stream", description = "流的ID", required = true)
     public void closeRtpServer(String stream) {
@@ -150,7 +149,7 @@ public class PsController {
     }
 
     @GetMapping(value = "/send/start")
-    @ResponseBody
+
     @Operation(summary = "发送流")
     @Parameter(name = "ssrc", description = "发送流的SSRC", required = true)
     @Parameter(name = "dstIp", description = "目标收流IP", required = true)
@@ -226,7 +225,7 @@ public class PsController {
     }
 
     @GetMapping(value = "/send/stop")
-    @ResponseBody
+
     @Operation(summary = "关闭发送流")
     @Parameter(name = "callId", description = "整个过程的唯一标识，不传则使用随机端口发流", required = true)
     public void closeSendRTP(String callId) {
@@ -249,7 +248,7 @@ public class PsController {
 
 
     @GetMapping(value = "/getTestPort")
-    @ResponseBody
+
     public int getTestPort() {
         MediaServer defaultMediaServer = mediaServerService.getDefaultMediaServer();
 

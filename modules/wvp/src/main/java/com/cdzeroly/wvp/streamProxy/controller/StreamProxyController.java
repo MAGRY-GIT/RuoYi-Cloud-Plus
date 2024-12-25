@@ -3,6 +3,7 @@ package com.cdzeroly.wvp.streamProxy.controller;
 import com.alibaba.fastjson2.JSONObject;
 import com.cdzeroly.common.core.domain.R;
 import com.cdzeroly.common.core.exception.ServiceException;
+import com.cdzeroly.common.core.utils.AssertUtils;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.StreamInfo;
@@ -29,6 +30,7 @@ import java.util.Map;
 
 /**
  * 拉流代理接口
+ *
  * @author MAGRY
  */
 @Tag(name = "拉流代理", description = "")
@@ -50,7 +52,6 @@ public class StreamProxyController {
     @Parameter(name = "pulling", description = "是否正在拉流")
     @Parameter(name = "mediaServerId", description = "流媒体ID")
     @GetMapping(value = "/list")
-    @ResponseBody
     public TableDataInfo<StreamProxyVo> list(PageQuery pageQuery, @RequestParam(required = false) String query, @RequestParam(required = false) Boolean pulling, @RequestParam(required = false) String mediaServerId) {
 
         if (ObjectUtils.isEmpty(mediaServerId)) {
@@ -65,15 +66,13 @@ public class StreamProxyController {
     @Operation(summary = "查询流代理")
     @Parameter(name = "app", description = "应用名")
     @Parameter(name = "stream", description = "流Id")
-    @GetMapping(value = "/one")
-    @ResponseBody
+    @GetMapping
     public R<StreamProxyVo> one(String app, String stream) {
         return R.ok(streamProxyService.getStreamProxyByAppAndStream(app, stream));
     }
 
     @Operation(summary = "保存代理(已存在会覆盖)", parameters = {@Parameter(name = "param", description = "代理参数", required = true),})
     @PostMapping(value = "/save")
-    @ResponseBody
     public R<StreamContentVo> save(@RequestBody StreamProxyParam param) {
         log.info("添加代理： " + JSONObject.toJSONString(param));
         if (ObjectUtils.isEmpty(param.getMediaServerId())) {
@@ -97,9 +96,8 @@ public class StreamProxyController {
     }
 
     @Operation(summary = "新增代理", parameters = {@Parameter(name = "proxyBo", description = "代理参数", required = true),})
-    @PostMapping(value = "/add")
-    @ResponseBody
-    public StreamProxyBo add(@RequestBody StreamProxyBo proxyBo) {
+    @PostMapping
+    public R<StreamProxyBo> add(@RequestBody StreamProxyBo proxyBo) {
         log.info("添加代理： " + JSONObject.toJSONString(proxyBo));
         if (ObjectUtils.isEmpty(proxyBo.getMediaServerId())) {
             proxyBo.setMediaServerId(null);
@@ -111,13 +109,12 @@ public class StreamProxyController {
             proxyBo.setGbDeviceId(null);
         }
         streamProxyService.add(proxyBo);
-        return proxyBo;
+        return R.ok(proxyBo);
     }
 
     @Operation(summary = "更新代理", parameters = {@Parameter(name = "proxyBo", description = "代理参数", required = true),})
-    @PostMapping(value = "/update")
-    @ResponseBody
-    public StreamProxyBo update(@RequestBody StreamProxyBo proxyBo) {
+    @PutMapping()
+    public R<StreamProxyBo> update(@RequestBody StreamProxyBo proxyBo) {
         log.info("更新代理： " + JSONObject.toJSONString(proxyBo));
         if (proxyBo.getId() == 0) {
             throw new ServiceException("缺少代理信息的ID");
@@ -126,25 +123,24 @@ public class StreamProxyController {
             proxyBo.setGbDeviceId(null);
         }
         streamProxyService.update(proxyBo);
-        return proxyBo;
+        return R.ok(proxyBo);
     }
 
     @GetMapping(value = "/ffmpeg_cmd/list")
-    @ResponseBody
+
     @Operation(summary = "获取ffmpeg.cmd模板")
     @Parameter(name = "mediaServerId", description = "流媒体ID", required = true)
-    public Map<String, String> getFFmpegCMDs(@RequestParam String mediaServerId) {
+    public R<Map<String, String>> getFfmpegCmdList(@RequestParam String mediaServerId) {
         log.debug("获取节点[ {} ]ffmpeg.cmd模板", mediaServerId);
 
         MediaServer mediaServerItem = mediaServerService.getOne(mediaServerId);
         if (mediaServerItem == null) {
             throw new ServiceException("流媒体： " + mediaServerId + "未找到");
         }
-        return streamProxyService.getFFmpegCMDs(mediaServerItem);
+        return R.ok(streamProxyService.getFFmpegCMDs(mediaServerItem));
     }
 
     @DeleteMapping(value = "/del")
-    @ResponseBody
     @Operation(summary = "移除代理")
     @Parameter(name = "app", description = "应用名", required = true)
     @Parameter(name = "stream", description = "流id", required = true)
@@ -159,34 +155,28 @@ public class StreamProxyController {
     }
 
     @DeleteMapping(value = "/delete")
-    @ResponseBody
     @Operation(summary = "移除代理")
     @Parameter(name = "id", description = "代理ID", required = true)
-    public  R<Void>  delete(int id) {
+    public R<Void> delete(int id) {
         log.info("移除代理： {}", id);
         streamProxyService.delete(id);
         return R.ok();
     }
 
     @GetMapping(value = "/start")
-    @ResponseBody
     @Operation(summary = "启用代理")
     @Parameter(name = "id", description = "代理Id", required = true)
-    public StreamContentVo start(int id) {
+    public R<StreamContentVo> start(int id) {
         log.info("播放代理： {}", id);
         StreamInfo streamInfo = streamProxyPlayService.start(id);
-        if (streamInfo == null) {
-            throw new ServiceException(ErrorCode.ERROR100.getMsg());
-        } else {
-            return new StreamContentVo(streamInfo);
-        }
+        AssertUtils.isNotNull(streamInfo, "播放代理无数据");
+        return R.ok(new StreamContentVo(streamInfo));
     }
 
     @GetMapping(value = "/stop")
-    @ResponseBody
     @Operation(summary = "停用代理")
     @Parameter(name = "id", description = "代理Id", required = true)
-    public  R<Void>  stop(int id) {
+    public R<Void> stop(int id) {
         log.info("停用代理： {}", id);
         streamProxyPlayService.stop(id);
         return R.ok();

@@ -9,6 +9,7 @@ import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.CommonCallback;
 import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.domian.Device;
@@ -70,7 +71,6 @@ public class DeviceServiceImpl implements IDeviceService {
 
     private final PlatformChannelMapper platformChannelMapper;
 
-    private final IDeviceChannelService deviceChannelService;
 
     private final DeviceChannelMapper deviceChannelMapper;
 
@@ -86,11 +86,15 @@ public class DeviceServiceImpl implements IDeviceService {
 
     private final AudioBroadcastManager audioBroadcastManager;
 
+
+    private Device getDeviceByDeviceIdFromDb(String deviceId) {
+        return deviceMapper.getDeviceByDeviceId(deviceId);
+    }
     @Override
     public void online(Device device, SipTransactionInfo sipTransactionInfo) {
         log.info("[设备上线] deviceId：{}->{}:{}", device.getDeviceId(), device.getIp(), device.getPort());
         Device deviceInRedis = redisCatchStorage.getDevice(device.getDeviceId());
-        Device deviceInDb = deviceMapper.getDeviceByDeviceId(device.getDeviceId());
+        Device deviceInDb = this.getDeviceByDeviceIdFromDb(device.getDeviceId());
 
         String now = DateUtil.getNow();
         if (deviceInRedis != null && deviceInDb == null) {
@@ -181,7 +185,7 @@ public class DeviceServiceImpl implements IDeviceService {
     @Override
     public void offline(String deviceId, String reason) {
         log.warn("[设备离线]，{}, device：{}", reason, deviceId);
-        Device device = deviceMapper.getDeviceByDeviceId(deviceId);
+        Device device = getDeviceByDeviceIdFromDb(deviceId);
         if (device == null) {
             return;
         }
@@ -331,7 +335,14 @@ public class DeviceServiceImpl implements IDeviceService {
 
     @Override
     public Device getDeviceByDeviceId(String deviceId) {
-        return redisCatchStorage.getDevice(deviceId);
+        Device device = redisCatchStorage.getDevice(deviceId);
+        if (device == null) {
+            device = getDeviceByDeviceIdFromDb(deviceId);
+            if (device != null) {
+                redisCatchStorage.updateDevice(device);
+            }
+        }
+        return device;
     }
 
     @Override
@@ -341,7 +352,8 @@ public class DeviceServiceImpl implements IDeviceService {
 
     @Override
     public List<Device> getAllByStatus(Boolean status) {
-        return deviceMapper.getDevices(status);
+        return deviceMapper.getDevices(ChannelDataType.GB28181.value, status);
+
     }
 
     @Override
@@ -379,7 +391,7 @@ public class DeviceServiceImpl implements IDeviceService {
 
     @Override
     public boolean isExist(String deviceId) {
-        return deviceMapper.getDeviceByDeviceId(deviceId) != null;
+        return getDeviceByDeviceIdFromDb(deviceId) != null;
     }
 
     @Override
@@ -470,7 +482,7 @@ public class DeviceServiceImpl implements IDeviceService {
     @Override
     @Transactional
     public boolean delete(String deviceId) {
-        Device device = deviceMapper.getDeviceByDeviceId(deviceId);
+        Device device = getDeviceByDeviceIdFromDb(deviceId);
         if (device == null) {
             throw new ServiceException("未找到设备:" + deviceId);
         }
@@ -500,7 +512,7 @@ public class DeviceServiceImpl implements IDeviceService {
                     .replaceAll("%", "/%")
                     .replaceAll("_", "/_");
         }
-        Page<Device> all = deviceMapper.getDeviceList(pageQuery.build(),query, status);
+        Page<Device> all = deviceMapper.getDeviceList(pageQuery.build(),ChannelDataType.GB28181.value,query, status);
         return  TableDataInfo.build(all);
     }
 
@@ -511,12 +523,12 @@ public class DeviceServiceImpl implements IDeviceService {
 
     @Override
     public Device getDeviceByChannelId(Integer channelId) {
-        return deviceMapper.queryByChannelId(channelId);
+        return deviceMapper.queryByChannelId(ChannelDataType.GB28181.value,channelId);
     }
 
     @Override
     public Device getDeviceBySourceChannelDeviceId(String channelId) {
-        return deviceMapper.getDeviceBySourceChannelDeviceId(channelId);
+        return deviceMapper.getDeviceBySourceChannelDeviceId(ChannelDataType.GB28181.value,channelId);
     }
 
 

@@ -4,6 +4,7 @@ import com.cdzeroly.wvp.conf.MediaConfig;
 import com.cdzeroly.wvp.media.domian.MediaServer;
 import com.cdzeroly.wvp.media.event.mediaServer.MediaServerChangeEvent;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -15,20 +16,19 @@ import java.util.List;
 
 /**
  * 启动是从配置文件加载节点信息，以及发送个节点状态管理去控制节点状态
+ * @author MAGRY
  */
 @Slf4j
 @Component
 @Order(value=12)
-public class MediaServerConfig implements CommandLineRunner {
+@AllArgsConstructor
+public class  MediaServerConfig implements CommandLineRunner {
 
-    @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private MediaConfig mediaConfig;
+    private final MediaConfig mediaConfig;
 
 
     @Override
@@ -38,7 +38,6 @@ public class MediaServerConfig implements CommandLineRunner {
         MediaServer defaultMediaServer = mediaServerService.getDefaultMediaServer();
         MediaServer mediaSerItemInConfig = mediaConfig.getMediaSerItem();
         if (defaultMediaServer != null && mediaSerItemInConfig.getId().equals(defaultMediaServer.getId())) {
-            mediaSerItemInConfig.setPrimaryId(defaultMediaServer.getPrimaryId());
             mediaServerService.update(mediaSerItemInConfig);
         }else {
             if (defaultMediaServer != null) {

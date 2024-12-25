@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -26,16 +27,16 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name  = "媒体流相关")
 @RestController
 @Slf4j
-@RequestMapping(value = "/api/media")
+@RequestMapping(value = "/media")
 public class MediaController extends BaseController {
 
-    @Autowired
+    @Resource
     private IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
+    @Resource
     private IStreamProxyService streamProxyService;
 
-    @Autowired
+    @Resource
     private IMediaServerService mediaServerService;
 
 

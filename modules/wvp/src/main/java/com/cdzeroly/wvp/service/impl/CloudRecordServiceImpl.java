@@ -28,6 +28,7 @@ import com.cdzeroly.wvp.service.domian.bo.CloudRecordItemBo;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.storager.mapper.CloudRecordServiceMapper;
 import com.google.common.collect.Lists;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,19 +47,16 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
+@AllArgsConstructor
 public class CloudRecordServiceImpl implements ICloudRecordService {
 
-    @Autowired
-    private CloudRecordServiceMapper cloudRecordServiceMapper;
+    private final CloudRecordServiceMapper cloudRecordServiceMapper;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private AssistRESTfulUtils assistRESTfulUtils;
+    private final AssistRESTfulUtils assistRESTfulUtils;
 
     @Override
     public TableDataInfo<CloudRecordItem> getList(CloudRecordItemBo bo, PageQuery pageQuery) {

@@ -73,7 +73,7 @@
             gb_download_speed = null,
             gb_svc_space_support_mod = null,
             gb_svc_time_support_mode = null
-        WHERE id = #{id} and device_db_id = #{gbDeviceDbId}
+        WHERE id = #{id} and data_type = #{dataType} and data_device_id = #{dataDeviceId}
 
     </update>
     <update id="updateRegion">
@@ -192,7 +192,7 @@
         <foreach collection="channels" item="item" separator=";">
             UPDATE wvp_device_channel
             SET gb_longitude=#{item.gbLongitude}, gb_latitude=#{item.gbLatitude}
-            WHERE stream_push_id IS NOT NULL AND gb_device_id=#{item.gbDeviceId}
+            WHERE data_type = #{dataType} AND gb_device_id=#{item.gbDeviceId}
         </foreach>
     </update>
     <update id="removeRecordPlan">
@@ -229,7 +229,7 @@
     </select>
     <select id="queryByGbDeviceIdsForIds" resultType="java.lang.Integer">
         select id from wvp_device_channel
-        where channel_type = 0 and device_db_id in
+        where channel_type = 0 and data_type = #{dataType} and data_device_id in
         <foreach collection="deviceIds" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
@@ -259,9 +259,8 @@
 
         select
         wdc.id as gb_id,
-        wdc.device_db_id as gb_device_db_id,
-        wdc.stream_push_id,
-        wdc.stream_proxy_id,
+        wdc.data_type,
+        wdc.data_device_id,
         wdc.create_time,
         wdc.update_time,
         wdc.record_plan_id,
@@ -286,8 +285,8 @@
         coalesce( wdc.gb_port, wdc.port) as gb_port,
         coalesce( wdc.gb_password, wdc.password) as gb_password,
         coalesce( wdc.gb_status, wdc.status) as gb_status,
-        coalesce( wdc.gb_longitude, wdc.longitude) as gb_longitude,
-        coalesce( wdc.gb_latitude, wdc.latitude) as gb_latitude,
+#         coalesce( wdc.gb_longitude, wdc.longitude) as gb_longitude,
+#         coalesce( wdc.gb_latitude, wdc.latitude) as gb_latitude,
         coalesce( wdc.gb_ptz_type, wdc.ptz_type) as gb_ptz_type,
         coalesce( wdc.gb_position_type, wdc.position_type) as gb_position_type,
         coalesce( wdc.gb_room_type, wdc.room_type) as gb_room_type,
@@ -317,14 +316,8 @@
         <if test="hasLink == false">
             AND wdc.record_plan_id is null
         </if>
-        <if test="channelType == 0">
-            AND wdc.device_db_id is not null
-        </if>
-        <if test="channelType == 1">
-            AND wdc.stream_push_id is not null
-        </if>
-        <if test="channelType == 2">
-            AND wdc.stream_proxy_id is not null
+        <if test='dataType != null'>
+          AND wdc.data_type = #{dataType}
         </if>
     </select>
 </mapper>

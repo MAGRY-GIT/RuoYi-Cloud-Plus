@@ -24,10 +24,11 @@ public interface DeviceMapper extends BaseMapperPlus<Device, DeviceVo> {
 
     /**
      * 查询设备
-     * @param onLine 是否在线
+     * @param online 是否在线
      * @return  List<Device>
      */
-    List<Device> getDevices(Boolean onLine);
+    List<Device> getDevices(@Param("dataType") Integer dataType, @Param("online") Boolean online);
+
 
     /**
      * 根据设备ID删除数据
@@ -56,10 +57,11 @@ public interface DeviceMapper extends BaseMapperPlus<Device, DeviceVo> {
 
 
 
-    Page<Device> getDeviceList(@Param("page")Page<Device> page,@Param("query") String query, @Param("status") Boolean status);
+    Page<Device> getDeviceList(@Param("page")Page<Device> page,@Param("dataType") Integer dataType,@Param("query") String query, @Param("status") Boolean status);
 
-    Device queryByChannelId(@Param("channelId") Integer channelId);
+    Device queryByChannelId(@Param("dataType") Integer dataType, @Param("channelId") Integer channelId);
 
-    Device getDeviceBySourceChannelDeviceId(@Param("channelDeviceId") String channelDeviceId);
+    Device getDeviceBySourceChannelDeviceId(@Param("dataType") Integer dataType, @Param("channelDeviceId") String channelDeviceId);
+
 
 }

@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
 import com.cdzeroly.wvp.common.StreamInfo;
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.transmit.bean.InviteInfo;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -34,7 +35,7 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
 
     @Override
     public void start(CommonGBChannel channel, InviteInfo inviteInfo, Platform platform, ErrorCallback<StreamInfo> callback) {
-        if (channel == null || inviteInfo == null || callback == null) {
+        if (channel == null || inviteInfo == null || callback == null || channel.getDataType() == null) {
             log.warn("[通用通道点播] 参数异常, channel: {}, inviteInfo: {}, callback: {}", channel != null, inviteInfo != null, callback != null);
             throw new PlayException(Response.SERVER_INTERNAL_ERROR, "server internal error");
         }
@@ -42,14 +43,14 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
         if ("Play".equalsIgnoreCase(inviteInfo.getSessionName())) {
             play(channel, platform, callback);
         }else if ("Playback".equals(inviteInfo.getSessionName())) {
-            if (channel.getGbDeviceDbId() != null) {
+            if (channel.getDataType() == ChannelDataType.GB28181.value) {
                 // 国标通道
                 playbackGbDeviceChannel(channel, inviteInfo.getStartTime(), inviteInfo.getStopTime(), callback);
-            } else if (channel.getStreamProxyId() != null) {
+            } else if (channel.getDataType() == ChannelDataType.STREAM_PROXY.value) {
                 // 拉流代理
                 log.warn("[回放通用通道] 不支持回放拉流代理的录像： {}({})", channel.getGbName(), channel.getGbDeviceId());
                 throw new PlayException(Response.FORBIDDEN, "forbidden");
-            } else if (channel.getStreamPushId() != null) {
+            } else if (channel.getDataType() == ChannelDataType.STREAM_PUSH.value) {
                 // 推流
                 log.warn("[回放通用通道] 不支持回放推流的录像： {}({})", channel.getGbName(), channel.getGbDeviceId());
                 throw new PlayException(Response.FORBIDDEN, "forbidden");
@@ -59,7 +60,7 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
                 throw new PlayException(Response.SERVER_INTERNAL_ERROR, "server internal error");
             }
         }else if ("Download".equals(inviteInfo.getSessionName())) {
-            if (channel.getGbDeviceDbId() != null) {
+            if (channel.getDataType() == ChannelDataType.GB28181.value) {
                 int downloadSpeed = 4;
                 try {
                     if (inviteInfo.getDownloadSpeed() != null){
@@ -69,11 +70,11 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
 
                 // 国标通道
                 downloadGbDeviceChannel(channel, inviteInfo.getStartTime(), inviteInfo.getStopTime(), downloadSpeed, callback);
-            } else if (channel.getStreamProxyId() != null) {
+            } else if (channel.getDataType() == ChannelDataType.STREAM_PROXY.value) {
                 // 拉流代理
                 log.warn("[下载通用通道录像] 不支持下载拉流代理的录像： {}({})", channel.getGbName(), channel.getGbDeviceId());
                 throw new PlayException(Response.FORBIDDEN, "forbidden");
-            } else if (channel.getStreamPushId() != null) {
+            } else if (channel.getDataType() == ChannelDataType.STREAM_PUSH.value) {
                 // 推流
                 log.warn("[下载通用通道录像] 不支持下载推流的录像： {}({})", channel.getGbName(), channel.getGbDeviceId());
                 throw new PlayException(Response.FORBIDDEN, "forbidden");
@@ -91,13 +92,13 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
 
     @Override
     public void play(CommonGBChannel channel, Platform platform, ErrorCallback<StreamInfo> callback) {
-        if (channel.getGbDeviceDbId() != null) {
+        if (channel.getDataType() == ChannelDataType.GB28181.value) {
             // 国标通道
             playGbDeviceChannel(channel, callback);
-        } else if (channel.getStreamProxyId() != null) {
+        } else if (channel.getDataType() == ChannelDataType.STREAM_PROXY.value) {
             // 拉流代理
             playProxy(channel, callback);
-        } else if (channel.getStreamPushId() != null) {
+        } else if (channel.getDataType() == ChannelDataType.STREAM_PUSH.value) {
             if (platform != null) {
                 // 推流
                 playPush(channel, platform.getServerGbId(), platform.getName(), callback);
@@ -129,7 +130,7 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
     public void playProxy(CommonGBChannel channel, ErrorCallback<StreamInfo> callback){
         // 拉流代理通道
         try {
-            StreamInfo streamInfo = streamProxyPlayService.start(channel.getStreamProxyId());
+            StreamInfo streamInfo = streamProxyPlayService.start(channel.getDataDeviceId());
             if (streamInfo == null) {
                 callback.run(Response.BUSY_HERE, "busy here", null);
             }else {
@@ -144,7 +145,7 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
     public void playPush(CommonGBChannel channel, String platformDeviceId, String platformName, ErrorCallback<StreamInfo> callback){
         // 推流
         try {
-            streamPushPlayService.start(channel.getStreamPushId(), callback, platformDeviceId, platformName);
+            streamPushPlayService.start(channel.getDataDeviceId(), callback, platformDeviceId, platformName);
         }catch (PlayException e) {
             callback.run(e.getCode(), e.getMsg(), null);
         }catch (Exception e) {

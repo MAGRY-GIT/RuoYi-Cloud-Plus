@@ -38,8 +38,9 @@ public interface PlatformChannelMapper   {
 
 
     List<PlatformChannel> queryForPlatformForWebList(@Param("platformId") Integer platformId, @Param("query") String query,
-                                                     @Param("channelType") Integer channelType, @Param("online") Boolean online,
+                                                     @Param("dataType") Integer dataType, @Param("online") Boolean online,
                                                      @Param("hasShare") Boolean hasShare);
+
 
 
     List<CommonGBChannel> queryOneWithPlatform(@Param("platformId") Integer platformId, @Param("channelDeviceId") String channelDeviceId);

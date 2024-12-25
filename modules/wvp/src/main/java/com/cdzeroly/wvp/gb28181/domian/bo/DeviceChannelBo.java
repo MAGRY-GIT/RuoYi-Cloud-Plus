@@ -22,9 +22,6 @@ public class DeviceChannelBo   extends BaseEntity {
 	@Schema(description = "数据库自增ID")
 	private Integer id;
 
-	@Schema(description = "设备的数据库自增ID")
-	private Integer deviceDbId;
-
 	@MessageElementForCatalog("DeviceID")
 	@Schema(description = "编码")
 	private String deviceId;

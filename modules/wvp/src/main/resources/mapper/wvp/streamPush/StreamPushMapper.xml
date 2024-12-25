@@ -31,13 +31,13 @@
 
         SELECT
         st.*,
-        st.id as stream_push_id,
+        st.id as data_device_id,
         wdc.*,
         wdc.id as gb_id
         FROM
         wvp_stream_push st
-        LEFT JOIN wvp_device_channel wdc ON st.id = wdc.stream_push_id
-        WHERE 1=1
+        LEFT JOIN wvp_device_channel wdc ON st.id = wdc.data_device_id
+        WHERE wdc.data_type = 2
         <if test="query != null">
             AND (
             st.app LIKE CONCAT('%', #{query}, '%') ESCAPE '/'
@@ -62,12 +62,12 @@
 
         SELECT
         st.*,
-        st.id as stream_push_id,
+        st.id as data_device_id,
         wdc.*,
         wdc.id as gb_id
         FROM
         wvp_stream_push st
-        LEFT JOIN wvp_device_channel wdc ON st.id = wdc.stream_push_id
+        LEFT JOIN wvp_device_channel wdc ON  wdc.data_type = 2 and st.id = wdc.data_device_id
         WHERE 1=1
         <if test="query != null">
             AND (
@@ -92,13 +92,13 @@
     <select id="selectByAppAndStream" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
         SELECT
             st.*,
-            st.id as stream_push_id,
+            st.id as data_device_id,
             wdc.*,
             wdc.id as gb_id
         FROM
             wvp_stream_push st
                 LEFT JOIN
-            wvp_device_channel wdc ON st.id = wdc.stream_push_id
+            wvp_device_channel wdc ON  wdc.data_type = 2 and st.id = wdc.data_device_id
         WHERE
             st.app = #{app}
           AND st.stream = #{stream}
@@ -108,13 +108,13 @@
     <select id="selectAllByMediaServerId" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
         SELECT
             st.*,
-            st.id as stream_push_id,
+            st.id as data_device_id,
             wdc.*,
             wdc.id as gb_id
         FROM
             wvp_stream_push st
                 LEFT JOIN
-            wvp_device_channel wdc ON st.id = wdc.stream_push_id
+            wvp_device_channel wdc ON  wdc.data_type = 2 and st.id = wdc.data_device_id
         WHERE
             st.media_server_id = #{mediaServerId}
 
@@ -124,13 +124,13 @@
             resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
         SELECT
             st.*,
-            st.id as stream_push_id,
+            st.id as data_device_id,
             wdc.*,
             wdc.id as gb_id
         FROM
             wvp_stream_push st
                 LEFT JOIN
-            wvp_device_channel wdc ON st.id = wdc.stream_push_id
+            wvp_device_channel wdc ON  wdc.data_type = 2 and st.id = wdc.data_device_id
         WHERE
             st.media_server_id = #{mediaServerId}
           AND wdc.gb_device_id IS NULL
@@ -140,13 +140,13 @@
     <select id="getListFromRedis" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
         SELECT
         st.*,
-        st.id as stream_push_id,
+        st.id as data_device_id,
         wdc.*,
         wdc.id as gb_id
         FROM
         wvp_stream_push st
         LEFT JOIN
-        wvp_device_channel wdc ON st.id = wdc.stream_push_id
+        wvp_device_channel wdc ON  wdc.data_type = 2 and st.id = wdc.data_device_id
         WHERE
         (st.app, st.stream) IN
         <foreach collection="offlineStreams" item="item" separator=",">
@@ -165,13 +165,13 @@
     <select id="queryOne" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
         SELECT
             st.*,
-            st.id as stream_push_id,
+            st.id as data_device_id,
             wdc.*,
             wdc.id as gb_id
         FROM
             wvp_stream_push st
                 LEFT JOIN
-            wvp_device_channel wdc ON st.id = wdc.stream_push_id
+            wvp_device_channel wdc ON  wdc.data_type = 2 and st.id = wdc.data_device_id
         WHERE
             st.id = #{id}
 
@@ -179,13 +179,13 @@
     <select id="selectInSet" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
         SELECT
         st.*,
-        st.id as stream_push_id,
+        st.id as data_device_id,
         wdc.*,
         wdc.id as gb_id
         FROM
         wvp_stream_push st
         LEFT JOIN
-        wvp_device_channel wdc ON st.id = wdc.stream_push_id
+        wvp_device_channel wdc ON  wdc.data_type = 2 and st.id = wdc.data_device_id
         WHERE
         st.id IN
         <foreach collection="ids" item="item" separator=",">
@@ -196,13 +196,13 @@
     <select id="getAllGBId" resultType="java.util.Map">
         SELECT
             wdc.gb_device_id,
-            wsp.id as stream_push_id,
+            wsp.id as data_device_id,
             wsp.*,
             wdc.id as gb_id
         FROM
             wvp_stream_push wsp
                 LEFT JOIN
-            wvp_device_channel wdc ON wsp.id = wdc.stream_push_id
+            wvp_device_channel wdc ON  wdc.data_type = 2 and wsp.id = wdc.data_device_id
 
     </select>
     <select id="getAllAppAndStreamMap" resultType="java.util.Map">
@@ -213,7 +213,7 @@
         FROM
             wvp_stream_push wsp
                 LEFT JOIN
-            wvp_device_channel wdc ON wsp.id = wdc.stream_push_id
+            wvp_device_channel wdc ON wdc.data_type = 2 and wsp.id = wdc.data_device_id
 
     </select>
 </mapper>

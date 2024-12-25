@@ -16,24 +16,28 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import javax.annotation.Resource;
 import javax.sip.InvalidArgumentException;
 import javax.sip.SipException;
 import java.text.ParseException;
 import java.util.UUID;
 
+/**
+ * @author MGARY
+ */
 @Tag(name  = "前端设备控制")
 @Slf4j
 @RestController
-@RequestMapping("/api/front-end")
+@RequestMapping("/ptz")
 public class PtzController {
 
-	@Autowired
+	@Resource
 	private SIPCommander cmder;
 
-	@Autowired
+	@Resource
 	private IDeviceService deviceService;
 
-	@Autowired
+	@Resource
 	private DeferredResultHolder resultHolder;
 
 	@Operation(summary = "通用前端控制命令(参考国标文档A.3.1指令格式)")

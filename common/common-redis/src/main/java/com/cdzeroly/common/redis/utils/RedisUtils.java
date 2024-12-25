@@ -565,22 +565,9 @@ public class RedisUtils {
     public static ArrayList<String> scan(String query) {
         // 使用通配符来匹配键
         KeysScanOptions keysScanOptions = KeysScanOptions.defaults().pattern("*" + query + "*").limit(1000);
-
         Iterator<String> iterator = CLIENT.getKeys().getKeys(keysScanOptions).iterator();
-
-
         return ListUtil.toList(iterator);
     }
 
 
-    /**
-     * 获得缓存的基本对象列表(全局匹配忽略租户 自行拼接租户id)
-     *
-     * @param pattern 字符串前缀
-     * @return 对象列表
-     */
-    public static Collection<String> keys(final String pattern) {
-        Stream<String> stream = CLIENT.getKeys().getKeysStreamByPattern(pattern);
-        return stream.collect(Collectors.toList());
-    }
 }

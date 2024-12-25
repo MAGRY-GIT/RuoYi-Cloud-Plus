@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.media.domian;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -21,11 +22,8 @@ import org.springframework.util.ObjectUtils;
 public class MediaServer  extends BaseDateEntity {
 
     @Schema(description = "ID")
+    @TableId(value = "id",type = IdType.INPUT)
     private String id;
-
-    @Schema(description = "主键ID")
-    @TableId(value = "primary_id")
-    private Integer primaryId;
 
     @Schema(description = "IP")
     private String ip;

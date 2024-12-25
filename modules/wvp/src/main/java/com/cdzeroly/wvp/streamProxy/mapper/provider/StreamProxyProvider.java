@@ -1,18 +1,24 @@
 package com.cdzeroly.wvp.streamProxy.mapper.provider;
 
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
+
 import java.util.Map;
 
+/**
+ * @author MAGRY
+ */
 public class StreamProxyProvider {
 
     public String getBaseSelectSql(){
         return "SELECT " +
-                " st.*, " +
-                " st.id as stream_proxy_id, " +
-                " wdc.*, " +
-                " wdc.id as gb_id" +
-                " FROM wvp_stream_proxy st " +
-                " LEFT join wvp_device_channel wdc " +
-                " on st.id = wdc.stream_proxy_id ";
+            " st.*, " +
+            ChannelDataType.STREAM_PROXY.value +  " as data_type, " +
+            " st.id as data_device_id, " +
+            " wdc.*, " +
+            " wdc.id as gb_id" +
+            " FROM wvp_stream_proxy st " +
+            " LEFT join wvp_device_channel wdc " +
+            " on wdc.data_type = 3 and st.id = wdc.data_device_id ";
     }
 
     public String select(Map<String, Object> params ){
@@ -20,12 +26,12 @@ public class StreamProxyProvider {
     }
 
     public String selectForPushingInMediaServer(Map<String, Object> params ){
-        return getBaseSelectSql() + " WHERE st.pulling=1 and st.media_server_id=#{mediaServerId} order by st.create_time desc";
+        return getBaseSelectSql() + " WHERE st.pulling=true and st.media_server_id=#{mediaServerId} order by st.create_time desc";
     }
 
     public String selectOneByAppAndStream(Map<String, Object> params ){
         return getBaseSelectSql() + String.format(" WHERE st.app='%s' AND st.stream='%s' order by st.create_time desc",
-                params.get("app"), params.get("stream"));
+            params.get("app"), params.get("stream"));
     }
 
     public String selectAll(Map<String, Object> params ){
@@ -34,15 +40,15 @@ public class StreamProxyProvider {
         sqlBuild.append(" WHERE 1=1 ");
         if (params.get("query") != null) {
             sqlBuild.append(" AND ")
-                    .append(" (")
-                    .append(" st.app LIKE ").append("'%").append(params.get("query")).append("%' escape '/'")
-                    .append(" OR")
-                    .append(" st.stream LIKE ").append("'%").append(params.get("query")).append("%' escape '/'")
-                    .append(" OR")
-                    .append(" wdc.gb_device_id LIKE ").append("'%").append(params.get("query")).append("%' escape '/'")
-                    .append(" OR")
-                    .append(" wdc.gb_name LIKE ").append("'%").append(params.get("query")).append("%' escape '/'")
-                    .append(" )")
+                .append(" (")
+                .append(" st.app LIKE ").append("'%").append(params.get("query")).append("%' escape '/'")
+                .append(" OR")
+                .append(" st.stream LIKE ").append("'%").append(params.get("query")).append("%' escape '/'")
+                .append(" OR")
+                .append(" wdc.gb_device_id LIKE ").append("'%").append(params.get("query")).append("%' escape '/'")
+                .append(" OR")
+                .append(" wdc.gb_name LIKE ").append("'%").append(params.get("query")).append("%' escape '/'")
+                .append(" )")
             ;
         }
         Object pulling = params.get("pulling");
@@ -60,3 +66,4 @@ public class StreamProxyProvider {
         return sqlBuild.toString();
     }
 }
+

@@ -14,6 +14,7 @@ import com.cdzeroly.wvp.media.zlm.event.HookZlmServerKeepaliveEvent;
 import com.cdzeroly.wvp.media.zlm.event.HookZlmServerStartEvent;
 import com.cdzeroly.wvp.service.IMediaService;
 import com.cdzeroly.wvp.utils.MediaServerUtils;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +28,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @description:针对 ZLMediaServer的hook事件监听
+ * ZLMediaServer的hook事件监听
  * @author swwheihei
- * @date: 2020年5月8日 上午10:46:48
  */
+@Tag(name = "ZLMH")
 @Slf4j
 @RestController
 @AllArgsConstructor

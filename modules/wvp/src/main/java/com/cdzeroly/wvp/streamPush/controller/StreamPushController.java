@@ -9,6 +9,7 @@ import com.cdzeroly.common.core.validate.AddGroup;
 import com.cdzeroly.common.core.validate.EditGroup;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.conf.UserSetting;
 
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
@@ -20,7 +21,6 @@ import com.cdzeroly.wvp.streamPush.domian.bean.StreamPushExcelDto;
 import com.cdzeroly.wvp.streamPush.enent.StreamPushUploadFileHandler;
 import com.cdzeroly.wvp.streamPush.service.IStreamPushPlayService;
 import com.cdzeroly.wvp.streamPush.service.IStreamPushService;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
 
 import com.cdzeroly.wvp.vmanager.bean.WVPResult;
@@ -89,10 +89,11 @@ public class StreamPushController {
     @PostMapping(value = "/remove")
     @Operation(summary = "删除")
     @Parameter(name = "id", description = "应用名", required = true)
-    public void delete(int id){
+    public R<Void> delete(int id){
         if (streamPushService.delete(id) > 0){
             throw new ServiceException("失败");
         }
+        return R.ok();
     }
 
     @PostMapping(value = "upload")
@@ -188,9 +189,9 @@ public class StreamPushController {
         return result;
     }
 
-    @PostMapping(value = "/add")
+    @PostMapping()
     @Operation(summary = "添加推流信息")
-    public StreamPushVo add( @Validated(AddGroup.class) @RequestBody StreamPushVo stream){
+    public R<StreamPushVo> add( @Validated(AddGroup.class) @RequestBody StreamPushVo stream){
 
         if (ObjectUtils.isEmpty(stream.getApp()) && ObjectUtils.isEmpty(stream.getStream())) {
             throw new ServiceException( "app或stream不可为空");
@@ -200,26 +201,28 @@ public class StreamPushController {
         if (!streamPushService.add(stream)) {
             throw new ServiceException("失败");
         }
-        stream.setStreamPushId(stream.getId());
-        return stream;
+        stream.setDataType(ChannelDataType.STREAM_PUSH.value);
+        stream.setDataDeviceId(stream.getId());
+        return R.ok(stream);
     }
 
-    @PostMapping(value = "/update")
+    @PutMapping()
     @Operation(summary = "更新推流信息")
-
-    public void update(@RequestBody @Validated(EditGroup.class) StreamPushVo stream){
+    public R<Void> update(@RequestBody @Validated(EditGroup.class) StreamPushVo stream){
         if (!streamPushService.update(stream)) {
             throw new ServiceException("失败");
         }
+        return R.ok();
     }
 
     @DeleteMapping(value = "/batchRemove")
     @Operation(summary = "删除多个推流")
-    public void batchStop(@RequestBody BatchRemoveParam ids){
+    public R<Void> batchStop(@RequestBody BatchRemoveParam ids){
         if(ids.getIds().isEmpty()) {
-            return;
+            return R.ok();
         }
         streamPushService.batchRemove(ids.getIds());
+        return R.ok();
     }
 
     @GetMapping(value = "/start")

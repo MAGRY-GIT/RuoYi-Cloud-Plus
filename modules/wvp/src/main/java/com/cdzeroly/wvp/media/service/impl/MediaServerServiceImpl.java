@@ -322,12 +322,12 @@ public class MediaServerServiceImpl implements IMediaServerService {
         List<MediaServer> result = new ArrayList<>();
         String key = VideoManagerConstants.MEDIA_SERVER_PREFIX + userSetting.getServerId();
         String onlineKey = VideoManagerConstants.ONLINE_MEDIA_SERVERS_PREFIX + userSetting.getServerId();
-        List<Object> values = redisTemplate.opsForHash().values(key);
-        for (Object value : values) {
-            if (Objects.isNull(value)) {
+
+        Collection<MediaServer> values = RedisUtils.getCacheMapValue(key);
+        for (MediaServer mediaServer : values) {
+            if (Objects.isNull(mediaServer)) {
                 continue;
             }
-            MediaServer mediaServer = (MediaServer) value;
             // 检查状态
             Double aDouble = redisTemplate.opsForZSet().score(onlineKey, mediaServer.getId());
             if (aDouble != null) {
@@ -372,7 +372,8 @@ public class MediaServerServiceImpl implements IMediaServerService {
             for (Object mediaServerId : mediaServerIdSet) {
                 String mediaServerIdStr = (String) mediaServerId;
                 String serverKey = VideoManagerConstants.MEDIA_SERVER_PREFIX + userSetting.getServerId();
-                result.add((MediaServer) redisTemplate.opsForHash().get(serverKey, mediaServerIdStr));
+
+                result.add(RedisUtils.getCacheMapValue(serverKey, mediaServerIdStr));
             }
         }
         Collections.reverse(result);
@@ -548,10 +549,8 @@ public class MediaServerServiceImpl implements IMediaServerService {
                 .url(url)
                 .build();
         try {
-            Response response = client.newCall(request).execute();
-            if (response != null) {
-                result = true;
-            }
+            client.newCall(request).execute();
+            result = true;
         } catch (Exception e) {}
 
         return result;

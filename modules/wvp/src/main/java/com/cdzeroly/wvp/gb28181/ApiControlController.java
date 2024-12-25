@@ -36,7 +36,6 @@ public class ApiControlController {
      * @param channel 通道序号
      * @param code 通道编号
      * @param speed 速度(0~255) 默认值: 129
-     * @return
      */
     @GetMapping(value = "/ptz")
     private void list(String serial,String command,

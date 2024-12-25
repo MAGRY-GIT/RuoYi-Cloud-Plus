@@ -3,6 +3,7 @@ package com.cdzeroly.wvp.streamProxy.domain.bo;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cdzeroly.common.core.utils.MapstructUtils;
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.bean.CommonGBChannelBean;
 import com.cdzeroly.wvp.streamProxy.domain.StreamProxy;
@@ -86,7 +87,8 @@ public class StreamProxyBo extends CommonGBChannelBean {
         if (ObjectUtils.isEmpty(this.getGbName())) {
             this.setGbName( app+ "-" +stream);
         }
-        this.setStreamProxyId(this.getId());
+        this.setDataType(ChannelDataType.STREAM_PROXY.value);
+        this.setDataDeviceId(this.getId());
 
         return MapstructUtils.convert(this, CommonGBChannel.class);
     }

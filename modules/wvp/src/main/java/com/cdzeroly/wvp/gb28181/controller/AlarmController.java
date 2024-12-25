@@ -36,7 +36,7 @@ import java.text.ParseException;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/alarm")
+@RequestMapping("/alarm")
 public class AlarmController {
 
     private final IDeviceAlarmService deviceAlarmService;

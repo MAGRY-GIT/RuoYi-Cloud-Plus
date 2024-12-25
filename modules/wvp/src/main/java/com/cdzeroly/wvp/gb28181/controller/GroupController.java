@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
+import com.cdzeroly.common.core.domain.R;
 import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.gb28181.domian.bean.Group;
 import com.cdzeroly.wvp.gb28181.domian.bean.GroupTree;
@@ -14,31 +15,34 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @author MGARY
+ */
 @Slf4j
 @Tag(name = "分组管理")
 @RestController
-@RequestMapping("/api/group")
+@RequestMapping("/group")
 public class GroupController {
 
-    @Autowired
+    @Resource
     private IGroupService groupService;
 
     @Operation(summary = "添加分组")
     @Parameter(name = "group", description = "group", required = true)
-    @ResponseBody
-    @PostMapping("/add")
-    public void add(@RequestBody Group group){
+    @PostMapping("")
+    public R<Void> add(@RequestBody Group group){
         groupService.add(group);
+        return R.ok();
     }
 
     @Operation(summary = "查询分组")
     @Parameter(name = "query", description = "要搜索的内容", required = true)
     @Parameter(name = "parent", description = "所属分组编号", required = true)
-    @ResponseBody
     @GetMapping("/tree/list")
-    public List<GroupTree> queryForTree(
+    public R<List<GroupTree>> queryForTree(
             @RequestParam(required = false) String query,
             @RequestParam(required = false) Integer parent,
             @RequestParam(required = false) Boolean hasChannel
@@ -46,52 +50,35 @@ public class GroupController {
         if (ObjectUtils.isEmpty(query)) {
             query = null;
         }
-        return groupService.queryForTree(query, parent, hasChannel);
+        return R.ok(groupService.queryForTree(query, parent, hasChannel));
     }
 
     @Operation(summary = "更新分组")
     @Parameter(name = "group", description = "Group", required = true)
-    @ResponseBody
-    @PostMapping("/update")
-    public void update(@RequestBody Group group){
+    @PutMapping("")
+    public R<Void> update(@RequestBody Group group){
         groupService.update(group);
+        return R.ok();
+
     }
 
     @Operation(summary = "删除分组")
     @Parameter(name = "id", description = "分组id", required = true)
-    @ResponseBody
-    @DeleteMapping("/delete")
-    public void delete(Integer id){
+    @DeleteMapping("")
+    public R<Void> delete(Integer id){
         Assert.notNull(id, "分组id（deviceId）不需要存在");
         boolean result = groupService.delete(id);
         if (!result) {
             throw new ServiceException( "移除失败");
         }
+        return R.ok();
+
     }
 
     @Operation(summary = "获取所属的行政区划下的行政区划")
-    @Parameter(name = "deviceId", description = "当前的行政区划", required = false)
-    @ResponseBody
+    @Parameter(name = "deviceId", description = "当前的行政区划")
     @GetMapping("/path")
-    public List<Group> getPath(String deviceId, String businessGroup){
-        return groupService.getPath(deviceId, businessGroup);
+    public R<List<Group>> getPath(String deviceId, String businessGroup){
+        return R.ok(groupService.getPath(deviceId, businessGroup));
     }
-
-//    @Operation(summary = "根据分组Id查询分组")
-//    @Parameter(name = "groupDeviceId", description = "分组节点编号", required = true)
-//    @ResponseBody
-//    @GetMapping("/one")
-//    public Group queryGroupByDeviceId(
-//            @RequestParam(required = true) String deviceId
-//    ){
-//        Assert.hasLength(deviceId, "");
-//        return groupService.queryGroupByDeviceId(deviceId);
-//    }
-
-//    @Operation(summary = "从通道中同步分组")
-//    @ResponseBody
-//    @GetMapping("/sync")
-//    public void sync(){
-//        groupService.syncFromChannel();
-//    }
 }

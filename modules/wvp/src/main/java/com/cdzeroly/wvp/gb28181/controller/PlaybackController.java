@@ -23,6 +23,7 @@ import com.cdzeroly.wvp.vmanager.bean.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
@@ -45,29 +46,23 @@ import java.util.UUID;
 @Tag(name = "视频回放")
 @Slf4j
 @RestController
-@RequestMapping("/api/playback")
+@AllArgsConstructor
+@RequestMapping("/playback")
 public class PlaybackController extends BaseController {
 
-	@Autowired
-	private SIPCommander cmder;
+	private final SIPCommander cmder;
 
-	@Autowired
-	private IInviteStreamService inviteStreamService;
+	private final IInviteStreamService inviteStreamService;
 
-	@Autowired
-	private IPlayService playService;
+	private final IPlayService playService;
 
-	@Autowired
-	private DeferredResultHolder resultHolder;
+	private final DeferredResultHolder resultHolder;
 
-	@Autowired
-	private UserSetting userSetting;
+	private final UserSetting userSetting;
 
-	@Autowired
-	private IDeviceService deviceService;
+	private final IDeviceService deviceService;
 
-	@Autowired
-	private IDeviceChannelService channelService;
+	private final IDeviceChannelService channelService;
 
 	@Operation(summary = "开始视频回放")
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)

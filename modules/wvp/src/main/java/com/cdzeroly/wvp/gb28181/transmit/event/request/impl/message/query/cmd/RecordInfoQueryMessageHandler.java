@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.query.cmd;
 
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
@@ -104,8 +105,8 @@ public class RecordInfoQueryMessageHandler extends SIPRequestProcessorParent imp
             }
             return;
         }
-        if (channel.getGbId() == 0 ) {
-            log.info("[平台查询录像记录] 不支持查询推流和拉流代理的录像数据 {}/{}", platform.getName(), channelId );
+        if (channel.getDataType() != ChannelDataType.GB28181.value) {
+            log.info("[平台查询录像记录] 只支持查询国标28181的录像数据 {}/{}", platform.getName(), channelId );
             try {
                 // 回复未实现
                 responseAck(request, Response.NOT_IMPLEMENTED);
@@ -114,7 +115,7 @@ public class RecordInfoQueryMessageHandler extends SIPRequestProcessorParent imp
             }
             return;
         }
-        Device device = deviceService.getDevice(channel.getGbDeviceDbId());
+        Device device = deviceService.getDevice(channel.getDataDeviceId());
         if (device == null) {
             log.warn("[平台查询录像记录] 未找到通道对应的设备 {}/{}", platform.getName(), channelId );
             try {

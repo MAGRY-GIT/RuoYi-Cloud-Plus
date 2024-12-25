@@ -22,7 +22,7 @@ import java.io.IOException;
  */
 @Tag(name = "SSE 推送")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/sse")
 public class SseController extends BaseController {
 
     @Resource

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cdzeroly.common.tenant.core.TenantEntity;
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -72,7 +73,7 @@ public class StreamPush extends TenantEntity {
     @TableField(exist = false)
     private String uniqueKey;
 
-
+    private Integer dataType = ChannelDataType.STREAM_PUSH.value;
 
 
 }

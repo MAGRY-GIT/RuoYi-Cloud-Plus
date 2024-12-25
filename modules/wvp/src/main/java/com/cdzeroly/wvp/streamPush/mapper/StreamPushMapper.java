@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.streamPush.mapper;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdzeroly.common.mybatis.core.mapper.BaseMapperPlus;
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.streamPush.domian.StreamPush;
 import com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo;
 import com.cdzeroly.wvp.service.domian.bean.StreamPushItemFromRedis;
@@ -19,7 +20,7 @@ import java.util.Set;
 @Mapper
 @Repository
 public interface StreamPushMapper extends BaseMapperPlus<StreamPush, StreamPushVo> {
-
+    Integer dataType = ChannelDataType.GB28181.value;
 
     List<StreamPushVo> selectPage(@Param("page") Page<StreamPushVo> page, @Param("query") String query, @Param("pushing") Boolean pushing, @Param("mediaServerId") String mediaServerId);
 

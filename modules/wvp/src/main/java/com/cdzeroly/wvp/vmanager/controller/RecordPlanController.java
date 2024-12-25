@@ -8,6 +8,7 @@ import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.service.IRecordPlanService;
 import com.cdzeroly.wvp.service.domian.bean.RecordPlan;
+import com.cdzeroly.wvp.service.domian.bo.RecordPlanBo;
 import com.cdzeroly.wvp.service.domian.vo.RecordPlanVo;
 import com.cdzeroly.wvp.vmanager.bean.bo.RecordPlanDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +29,7 @@ import java.util.List;
 @Tag(name = "录制计划")
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/record/plan")
+@RequestMapping("/recordPlan")
 public class RecordPlanController {
 
     private IRecordPlanService recordPlanService;
@@ -37,10 +38,10 @@ public class RecordPlanController {
 
 
 
-    @PostMapping("/add")
+    @PostMapping("")
     @Operation(summary = "添加录制计划")
     @Parameter(name = "plan", description = "计划", required = true)
-    public R<Void> add(@RequestBody com.cdzeroly.wvp.service.domian.bo.RecordPlanBo plan) {
+    public R<Void> add(@RequestBody RecordPlanBo plan) {
         if (plan.getPlanItemList() == null || plan.getPlanItemList().isEmpty()) {
             throw new ServiceException("添加录制计划时，录制计划不可为空");
         }
@@ -80,7 +81,7 @@ public class RecordPlanController {
     }
 
 
-    @GetMapping("/get")
+    @GetMapping("")
     @Operation(summary = "查询录制计划")
     @Parameter(name = "planId", description = "计划ID", required = true)
     public R<RecordPlanVo> get(Integer planId) {
@@ -91,7 +92,7 @@ public class RecordPlanController {
     }
 
 
-    @GetMapping("/query")
+    @GetMapping("/list")
     @Operation(summary = "查询录制计划列表")
     public TableDataInfo<RecordPlan> query(@RequestParam(required = false) String query, PageQuery pageQuery) {
         if (query != null && ObjectUtils.isEmpty(query.trim())) {
@@ -126,7 +127,7 @@ public class RecordPlanController {
     }
 
 
-    @PostMapping("/update")
+    @PutMapping("")
     @Operation(summary = "更新录制计划")
     @Parameter(name = "plan", description = "计划", required = true)
     public R<Void> update(@RequestBody com.cdzeroly.wvp.service.domian.bo.RecordPlanBo plan) {
@@ -138,7 +139,7 @@ public class RecordPlanController {
     }
 
 
-    @DeleteMapping("/delete")
+    @DeleteMapping()
     @Operation(summary = "删除录制计划")
     @Parameter(name = "planId", description = "计划ID", required = true)
     public R<Void> delete(Integer planId) {

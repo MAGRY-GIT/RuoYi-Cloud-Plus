@@ -1535,7 +1535,7 @@ public class PlayServiceImpl implements IPlayService {
             log.warn("[停止点播] 发现通道不存在");
             return;
         }
-        Device device = deviceService.getDevice(channel.getDeviceDbId());
+        Device device = deviceService.getDevice(channel.getDataDeviceId());
         if (device == null) {
             log.warn("[停止点播] 发现设备不存在");
             return;
@@ -1560,7 +1560,8 @@ public class PlayServiceImpl implements IPlayService {
 
     @Override
     public void play(CommonGBChannel channel, ErrorCallback<StreamInfo> callback) {
-        Device device = deviceService.getDevice(channel.getGbDeviceDbId());
+        Device device = deviceService.getDevice(channel.getDataDeviceId());
+
         if (device == null) {
             log.warn("[点播] 未找到通道{}的设备信息", channel);
             throw new PlayException(Response.SERVER_INTERNAL_ERROR, "server internal error");
@@ -1580,7 +1581,8 @@ public class PlayServiceImpl implements IPlayService {
             throw new PlayException(Response.BAD_REQUEST, "bad request");
         }
         // 国标通道
-        Device device = deviceService.getDevice(channel.getGbDeviceDbId());
+        Device device = deviceService.getDevice(channel.getDataDeviceId());
+
         if (device == null) {
             log.warn("[点播] 未找到通道{}的设备信息", channel);
             throw new PlayException(Response.SERVER_INTERNAL_ERROR, "server internal error");
@@ -1601,7 +1603,7 @@ public class PlayServiceImpl implements IPlayService {
             throw new PlayException(Response.BAD_REQUEST, "bad request");
         }
         // 国标通道
-        Device device = deviceService.getDevice(channel.getGbDeviceDbId());
+        Device device = deviceService.getDevice(channel.getDataDeviceId());
         if (device == null) {
             log.warn("[点播] 未找到通道{}的设备信息", channel);
             throw new PlayException(Response.SERVER_INTERNAL_ERROR, "server internal error");

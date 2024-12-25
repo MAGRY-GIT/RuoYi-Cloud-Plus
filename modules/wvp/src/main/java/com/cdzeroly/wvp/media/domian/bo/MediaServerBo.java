@@ -27,9 +27,6 @@ public class MediaServerBo extends BaseEntity {
     @Schema(description = "ID")
     private String id;
 
-    @Schema(description = "主键ID")
-    @TableId(value = "primary_id")
-    private Integer primaryId;
 
     @Schema(description = "IP")
     private String ip;

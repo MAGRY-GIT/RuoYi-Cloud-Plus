@@ -278,14 +278,13 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
     }
 
     @Override
-    public TableDataInfo<CommonGBChannel> queryChannelList(PageQuery pageQuery, String query, Integer channelType, Boolean online, Integer planId, Boolean hasLink) {
-        // PageHelper.startPage(page, count); TODO
+    public TableDataInfo<CommonGBChannel> queryChannelList(PageQuery pageQuery, String query, Integer dataType, Boolean online, Integer planId, Boolean hasLink) {
         if (query != null) {
             query = query.replaceAll("/", "//")
                     .replaceAll("%", "/%")
                     .replaceAll("_", "/_");
         }
-        List<CommonGBChannel> all = channelMapper.queryForRecordPlanForWebList(planId, query, channelType, online, hasLink);
+        List<CommonGBChannel> all = channelMapper.queryForRecordPlanForWebList(pageQuery,planId, query, dataType, online, hasLink);
         return  TableDataInfo.build(all);
     }
 

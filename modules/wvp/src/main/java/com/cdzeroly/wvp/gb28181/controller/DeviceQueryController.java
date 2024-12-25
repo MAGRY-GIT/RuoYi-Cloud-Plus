@@ -1,8 +1,7 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import cn.hutool.core.text.CharSequenceUtil;
-import com.alibaba.fastjson2.JSONObject;
+import cn.hutool.http.HttpStatus;
 import com.cdzeroly.common.core.domain.R;
 import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.core.utils.AssertUtils;
@@ -38,17 +37,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.IOUtils;
-import org.apache.ibatis.annotations.Options;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -66,7 +60,6 @@ import java.util.*;
  * @author MGARY
  */
 @Tag(name = "国标设备查询", description = "国标设备查询")
-@SuppressWarnings("rawtypes")
 @Slf4j
 @RestController
 @RequestMapping("/device")
@@ -115,18 +108,7 @@ public class DeviceQueryController extends BaseController {
         return deviceService.getAll(pageQuery, query, status);
     }
 
-    /**
-     * 分页查询通道数
-     */
-    @GetMapping("/devices/{deviceId}/channels")
-    @Operation(summary = "分页查询通道")
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "query", description = "查询内容")
-    @Parameter(name = "online", description = "是否在线")
-    @Parameter(name = "channelType", description = "设备/子目录-> false/true")
-    public TableDataInfo<DeviceChannel> channels(@PathVariable String deviceId, PageQuery pageQuery, @RequestParam(required = false) String query, @RequestParam(required = false) Boolean online, @RequestParam(required = false) Boolean channelType) {
-        return deviceChannelService.queryChannelsByDeviceId(deviceId, query, channelType, online, pageQuery);
-    }
+
 
     /**
      * 同步设备通道
@@ -134,44 +116,27 @@ public class DeviceQueryController extends BaseController {
     @Operation(summary = "同步设备通道")
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @GetMapping("/{deviceId}/sync")
-    public WVPResult<SyncStatus> devicesSync(@PathVariable String deviceId) {
-
+    public R<SyncStatus> devicesSync(@PathVariable String deviceId) {
         if (log.isDebugEnabled()) {
             log.debug("设备通道信息同步API调用，deviceId：" + deviceId);
         }
         Device device = deviceService.getDeviceByDeviceId(deviceId);
-         deviceService.isSyncRunning(deviceId);
+        deviceService.isSyncRunning(deviceId);
         // 已存在则返回进度
         if (deviceService.isSyncRunning(deviceId)) {
             SyncStatus channelSyncStatus = deviceService.getChannelSyncStatus(deviceId);
-            WVPResult wvpResult = new WVPResult();
             if (channelSyncStatus.getErrorMsg() != null) {
-                wvpResult.setCode(ErrorCode.ERROR100.getCode());
-                wvpResult.setMsg(channelSyncStatus.getErrorMsg());
+                return R.fail(HttpStatus.HTTP_CONTINUE, channelSyncStatus.getErrorMsg());
             } else if (channelSyncStatus.getTotal() == null || channelSyncStatus.getTotal() == 0) {
-                wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-                wvpResult.setMsg("等待通道信息...");
+                return R.ok("等待通道信息...");
             } else {
-                wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-                wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
-                wvpResult.setData(channelSyncStatus);
+                return R.ok(channelSyncStatus);
             }
-            return wvpResult;
         }
         deviceService.sync(device);
-
-        WVPResult<SyncStatus> wvpResult = new WVPResult<>();
-        wvpResult.setCode(0);
-        wvpResult.setMsg("开始同步");
-        return wvpResult;
+        return R.ok("开始同步");
     }
 
-    /**
-     * 移除设备
-     *
-     * @param deviceId 设备id
-     * @return
-     */
     @Operation(summary = "移除设备")
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @DeleteMapping("/{deviceIds}")
@@ -179,7 +144,7 @@ public class DeviceQueryController extends BaseController {
     @Log(title = "国标设备/平台", businessType = BusinessType.DELETE)
     public R<Void> delete(@PathVariable String deviceIds) {
         List<String> list = Arrays.stream(deviceIds.split(StringUtils.SEPARATOR)).toList();
-        list.forEach(deviceId->{
+        list.forEach(deviceId -> {
             // 清除redis记录
             boolean isSuccess = deviceService.delete(deviceId);
             if (isSuccess) {
@@ -198,7 +163,7 @@ public class DeviceQueryController extends BaseController {
 
             } else {
                 log.warn("设备信息删除API调用失败！");
-                throw new ServiceException( "设备信息删除API调用失败！");
+                throw new ServiceException("设备信息删除API调用失败！");
             }
         });
         return R.ok();
@@ -230,7 +195,7 @@ public class DeviceQueryController extends BaseController {
             return new TableDataInfo<>();
         }
 
-        return deviceChannelService.getSubChannels(deviceChannel.getDeviceDbId(), channelId, query, channelType, online, pageQuery);
+        return deviceChannelService.getSubChannels(deviceChannel.getDataDeviceId(), channelId, query, channelType, online, pageQuery);
     }
 
     @Operation(summary = "开启/关闭通道的音频")
@@ -243,11 +208,7 @@ public class DeviceQueryController extends BaseController {
         deviceChannelService.changeAudio(channelId, audio);
     }
 
-    @Operation(summary = "修改通道的码流类型")
-    @PostMapping("/channel/stream/identification/update/")
-    public void updateChannelStreamIdentification(DeviceChannel channel) {
-        deviceChannelService.updateChannelStreamIdentification(channel);
-    }
+
 
     /**
      * 修改数据流传输模式
@@ -271,9 +232,9 @@ public class DeviceQueryController extends BaseController {
     @PostMapping
     @SaCheckPermission("wvp:device:add")
     @Log(title = "国标设备/平台", businessType = BusinessType.INSERT)
-    public void addDevice(@Validated(AddGroup.class)@RequestBody DeviceBo deviceBo) {
+    public void addDevice(@Validated(AddGroup.class) @RequestBody DeviceBo deviceBo) {
         boolean exist = deviceService.isExist(deviceBo.getDeviceId());
-        AssertUtils.isFalse(exist,"设备编号已存在");
+        AssertUtils.isFalse(exist, "设备编号已存在");
         Device device = MapstructUtils.convert(deviceBo, Device.class);
         deviceService.addDevice(device);
     }
@@ -310,7 +271,7 @@ public class DeviceQueryController extends BaseController {
         String key = DeferredResultHolder.CALLBACK_CMD_DEVICESTATUS + deviceId;
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<ResponseEntity<String>>(2 * 1000L);
         if (device == null) {
-            result.setResult(new ResponseEntity(String.format("设备%s不存在", deviceId), HttpStatus.OK));
+            result.setResult(new ResponseEntity(String.format("设备%s不存在", deviceId), org.springframework.http.HttpStatus.OK));
             return result;
         }
         try {
@@ -323,7 +284,7 @@ public class DeviceQueryController extends BaseController {
             });
         } catch (InvalidArgumentException | SipException | ParseException e) {
             log.error("[命令发送失败] 获取设备状态: {}", e.getMessage());
-            throw new ServiceException( "命令发送失败: " + e.getMessage());
+            throw new ServiceException("命令发送失败: " + e.getMessage());
         }
         result.onTimeout(() -> {
             log.warn(String.format("获取设备状态超时"));
@@ -376,7 +337,7 @@ public class DeviceQueryController extends BaseController {
             });
         } catch (InvalidArgumentException | SipException | ParseException e) {
             log.error("[命令发送失败] 设备报警查询: {}", e.getMessage());
-            throw new ServiceException( "命令发送失败: " + e.getMessage());
+            throw new ServiceException("命令发送失败: " + e.getMessage());
         }
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<ResponseEntity<String>>(3 * 1000L);
         result.onTimeout(() -> {
@@ -396,24 +357,19 @@ public class DeviceQueryController extends BaseController {
     @GetMapping("/{deviceId}/sync_status")
     @Operation(summary = "获取通道同步进度")
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    public WVPResult<SyncStatus> getSyncStatus(@PathVariable String deviceId) {
+    public R<SyncStatus> getSyncStatus(@PathVariable String deviceId) {
         SyncStatus channelSyncStatus = deviceService.getChannelSyncStatus(deviceId);
-        WVPResult<SyncStatus> wvpResult = new WVPResult<>();
         if (channelSyncStatus == null) {
-            wvpResult.setCode(ErrorCode.ERROR100.getCode());
-            wvpResult.setMsg("同步不存在");
+            log.error("同步不存在");
+            return  R.fail(HttpStatus.HTTP_ACCEPTED,"同步不存在");
         } else if (channelSyncStatus.getErrorMsg() != null) {
-            wvpResult.setCode(ErrorCode.ERROR100.getCode());
-            wvpResult.setMsg(channelSyncStatus.getErrorMsg());
+            log.error(channelSyncStatus.getErrorMsg());
+            return R.fail(HttpStatus.HTTP_ACCEPTED,channelSyncStatus.getErrorMsg());
         } else if (channelSyncStatus.getTotal() == null || channelSyncStatus.getTotal() == 0) {
-            wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-            wvpResult.setMsg("等待通道信息...");
+            return R.ok("等待通道信息...");
         } else {
-            wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-            wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
-            wvpResult.setData(channelSyncStatus);
+           return R.ok(channelSyncStatus);
         }
-        return wvpResult;
     }
 
     @GetMapping("/{deviceId}/subscribe_info")

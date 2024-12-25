@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.notify.cmd;
 
 import com.cdzeroly.common.core.exception.ServiceException;
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
@@ -102,7 +103,6 @@ public class BroadcastNotifyMessageHandler extends SIPRequestProcessorParent imp
             }else {
                 sourceId = targetId;
             }
-
             log.info("[国标级联 语音喊话] platform: {}, channel: {}", platform.getServerGbId(), targetId);
 
             CommonGBChannel channel = channelService.queryOneWithPlatform(platform.getId(), targetId);
@@ -111,8 +111,18 @@ public class BroadcastNotifyMessageHandler extends SIPRequestProcessorParent imp
                 responseAck(request, Response.NOT_FOUND, "TargetID not found");
                 return;
             }
+            if (channel.getDataType() != ChannelDataType.GB28181.value) {
+                // 只支持国标的语音喊话
+                log.warn("[INFO 消息] 只支持国标的语音喊话命令， 通道ID： {}", channel.getGbId());
+                try {
+                    responseAck(request, Response.FORBIDDEN, "");
+                } catch (SipException | InvalidArgumentException | ParseException e) {
+                    log.error("[命令发送失败] 错误信息: {}", e.getMessage());
+                }
+                return;
+            }
             // 向下级发送语音的喊话请求
-            Device device = deviceService.getDevice(channel.getGbDeviceDbId());
+            Device device = deviceService.getDevice(channel.getDataDeviceId());
             if (device == null) {
                 responseAck(request, Response.NOT_FOUND, "device not found");
                 return;
@@ -188,7 +198,7 @@ public class BroadcastNotifyMessageHandler extends SIPRequestProcessorParent imp
                     }, eventResultForBroadcastInvite -> {
                         // 收到错误
                         log.info("[国标级联-语音喊话] 与下级通道建立失败 device: {}, channel: {}， 错误：{}/{}", device.getDeviceId(),
-                                targetId, eventResultForBroadcastInvite.statusCode, eventResultForBroadcastInvite.msg);
+                            targetId, eventResultForBroadcastInvite.statusCode, eventResultForBroadcastInvite.msg);
                     }, (code, msg)->{
                         // 超时
                         log.info("[国标级联-语音喊话] 与下级通道建立超时 device: {}, channel: {}， 错误：{}/{}", device.getDeviceId(),
