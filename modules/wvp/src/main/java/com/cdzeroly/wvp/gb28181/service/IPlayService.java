@@ -4,17 +4,17 @@ import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.common.InviteInfo;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.common.StreamInfo;
+import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.bo.AudioBroadcastEvent;
-import com.cdzeroly.wvp.gb28181.domian.bean.*;
-import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
-import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.service.domian.bean.ErrorCallback;
-import com.cdzeroly.wvp.service.domian.bean.SSRCInfo;
-import com.cdzeroly.wvp.vmanager.bean.AudioBroadcastResult;
+import com.cdzeroly.wvp.domain.bo.AudioBroadcastEvent;
+import com.cdzeroly.wvp.domain.bean.MediaInfo;
+import com.cdzeroly.wvp.domain.MediaServer;
+import com.cdzeroly.wvp.domain.bean.ErrorCallback;
+import com.cdzeroly.wvp.domain.bean.SSRCInfo;
+import com.cdzeroly.wvp.domain.vo.AudioBroadcastVo;
 import gov.nist.javax.sip.message.SIPResponse;
 
 import javax.sip.InvalidArgumentException;
@@ -42,7 +42,7 @@ public interface IPlayService {
 
     void zlmServerOnline(MediaServer mediaServer);
 
-    AudioBroadcastResult audioBroadcast(Device device, DeviceChannel deviceChannel, Boolean broadcastMode);
+    AudioBroadcastVo audioBroadcast(Device device, DeviceChannel deviceChannel, Boolean broadcastMode);
 
     boolean audioBroadcastCmd(Device device, DeviceChannel channel, MediaServer mediaServerItem, String app, String stream, int timeout, boolean isFromPlatform, AudioBroadcastEvent event) throws InvalidArgumentException, ParseException, SipException;
 

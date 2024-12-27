@@ -1,9 +1,9 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl;
 
-import com.cdzeroly.wvp.gb28181.domian.bean.CmdType;
+import com.cdzeroly.wvp.domain.bean.CmdType;
+import com.cdzeroly.wvp.domain.bean.SubscribeInfo;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.bean.SubscribeHolder;
-import com.cdzeroly.wvp.gb28181.domian.bean.SubscribeInfo;
+import com.cdzeroly.wvp.domain.bean.SubscribeHolder;
 import com.cdzeroly.wvp.gb28181.service.IPlatformService;
 import com.cdzeroly.wvp.gb28181.transmit.SIPProcessorObserver;
 import com.cdzeroly.wvp.gb28181.transmit.SIPSender;
@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sip.InvalidArgumentException;

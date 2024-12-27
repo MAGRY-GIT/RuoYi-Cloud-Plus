@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.service;
 
 import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.service.domian.bean.GPSMsgInfo;
+import com.cdzeroly.wvp.domain.bean.GPSMsgInfo;
 
 import java.util.List;
 

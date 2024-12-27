@@ -7,20 +7,21 @@ import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.conf.SipConfig;
 
+
+
+import com.cdzeroly.wvp.domain.bean.SubscribeHolder;
+import com.cdzeroly.wvp.domain.bo.UpdateChannelParam;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.domian.bean.PlatformChannel;
-import com.cdzeroly.wvp.gb28181.domian.bean.SubscribeHolder;
-import com.cdzeroly.wvp.gb28181.domian.bo.UpdateChannelParam;
+
 import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
 import com.cdzeroly.wvp.gb28181.service.IPlatformService;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
-import com.cdzeroly.wvp.vmanager.bean.WVPResult;
+import com.cdzeroly.wvp.domain.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 /**
  * 级联平台管理
+ * @author MGARY
  */
 @Tag(name  = "级联平台管理")
 @Slf4j
@@ -191,7 +193,7 @@ public class PlatformController {
     @GetMapping("/channel/list")
     @ResponseBody
     public TableDataInfo<PlatformChannel> queryChannelList(PageQuery pageQuery,
-                                                           @RequestParam(required = false) Integer platformId,
+                                                           @RequestParam(required = false) Long platformId,
                                                       @RequestParam(required = false) String query,
                                                       @RequestParam(required = false) Integer channelType,
                                                       @RequestParam(required = false) Boolean online,
@@ -253,7 +255,7 @@ public class PlatformController {
     @Parameter(name = "id", description = "平台ID", required = true)
     @GetMapping("/channel/push")
     @ResponseBody
-    public void pushChannel(Integer id) {
+    public void pushChannel(Long id) {
         Assert.notNull(id, "平台ID不可为空");
         platformChannelService.pushChannel(id);
     }

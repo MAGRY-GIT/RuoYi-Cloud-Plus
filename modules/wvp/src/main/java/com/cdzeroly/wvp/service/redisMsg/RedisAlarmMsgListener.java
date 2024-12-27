@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.service.redisMsg;
 
 import com.alibaba.fastjson2.JSON;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.gb28181.domian.bean.AlarmChannelMessage;
+import com.cdzeroly.wvp.domain.bean.AlarmChannelMessage;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
 import com.cdzeroly.wvp.gb28181.domian.Platform;

@@ -1,12 +1,16 @@
 package com.cdzeroly.wvp.jt1078.proc.entity;
 
 import com.cdzeroly.wvp.jt1078.proc.response.Rs;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author QingtaiJiang
  * @date 2023/4/27 18:23
  * @email qingtaij@163.com
  */
+@Setter
+@Getter
 public class Cmd {
     String devId;
     Long packageNo;
@@ -23,46 +27,6 @@ public class Cmd {
         this.msgId = builder.msgId;
         this.respId = builder.respId;
         this.rs = builder.rs;
-    }
-
-    public String getDevId() {
-        return devId;
-    }
-
-    public void setDevId(String devId) {
-        this.devId = devId;
-    }
-
-    public Long getPackageNo() {
-        return packageNo;
-    }
-
-    public void setPackageNo(Long packageNo) {
-        this.packageNo = packageNo;
-    }
-
-    public String getMsgId() {
-        return msgId;
-    }
-
-    public void setMsgId(String msgId) {
-        this.msgId = msgId;
-    }
-
-    public String getRespId() {
-        return respId;
-    }
-
-    public void setRespId(String respId) {
-        this.respId = respId;
-    }
-
-    public Rs getRs() {
-        return rs;
-    }
-
-    public void setRs(Rs rs) {
-        this.rs = rs;
     }
 
     public static class Builder {

@@ -2,8 +2,8 @@ package com.cdzeroly.wvp.service.redisMsg;
 
 import com.cdzeroly.wvp.common.CommonCallback;
 import com.cdzeroly.wvp.common.StreamInfo;
-import com.cdzeroly.wvp.gb28181.domian.bean.SendRtpInfo;
-import com.cdzeroly.wvp.vmanager.bean.WVPResult;
+import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
+import com.cdzeroly.wvp.domain.WVPResult;
 
 public interface IRedisRpcService {
 
@@ -13,7 +13,7 @@ public interface IRedisRpcService {
 
     WVPResult stopSendRtp(String callId);
 
-    long waitePushStreamOnline(SendRtpInfo sendRtpItem, CommonCallback<Integer> callback);
+    long waitePushStreamOnline(SendRtpInfo sendRtpItem, CommonCallback<Long> callback);
 
     void stopWaitePushStreamOnline(SendRtpInfo sendRtpItem);
 

@@ -9,10 +9,11 @@ import com.cdzeroly.wvp.common.*;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.conf.exception.SsrcTransactionNotFoundException;
+import com.cdzeroly.wvp.domain.bean.*;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.mapper.PlatformChannelMapper;
-import com.cdzeroly.wvp.gb28181.mapper.PlatformMapper;
+import com.cdzeroly.wvp.mapper.PlatformChannelMapper;
+import com.cdzeroly.wvp.mapper.PlatformMapper;
 import com.cdzeroly.wvp.gb28181.domian.bean.*;
 import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
@@ -22,15 +23,14 @@ import com.cdzeroly.wvp.gb28181.session.SSRCFactory;
 import com.cdzeroly.wvp.gb28181.session.SipInviteSessionManager;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommanderForPlatform;
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
-import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.bean.MediaInfo;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.event.hook.HookData;
 import com.cdzeroly.wvp.media.event.hook.HookSubscribe;
 import com.cdzeroly.wvp.media.event.media.MediaDepartureEvent;
 import com.cdzeroly.wvp.media.event.mediaServer.MediaSendRtpStoppedEvent;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.service.ISendRtpServerService;
-import com.cdzeroly.wvp.service.domian.bean.*;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 
 import gov.nist.javax.sip.message.SIPResponse;
@@ -543,7 +543,7 @@ public class PlatformServiceImpl implements IPlatformService {
                 platform.getServerGbId(), channel.getGbDeviceId(), ssrcInfo.getPort(), userSetting.getBroadcastForPlatform(), ssrcInfo.getSsrc(), ssrcCheck);
 
         // 初始化redis中的invite消息状态
-        InviteInfo inviteInfo = InviteInfo.getInviteInfo(platform.getServerGbId(), channel.getGbId(), ssrcInfo.getStream(), ssrcInfo, mediaServerItem.getId(),
+        InviteInfo inviteInfo = InviteInfo.getInviteInfo(platform.getServerGbId(), channel.getGbId(), ssrcInfo.getString(), ssrcInfo, mediaServerItem.getId(),
                 mediaServerItem.getSdpIp(), ssrcInfo.getPort(), userSetting.getBroadcastForPlatform(), InviteSessionType.BROADCAST,
                 InviteSessionStatus.READY);
         inviteStreamService.updateInviteInfo(inviteInfo);
@@ -555,15 +555,15 @@ public class PlatformServiceImpl implements IPlatformService {
                 log.info("[国标级联] 发起语音喊话 收流超时 deviceId: {}, channelId: {}，端口：{}, SSRC: {}", platform.getServerGbId(), channel.getGbDeviceId(), ssrcInfo.getPort(), ssrcInfo.getSsrc());
                 // 点播超时回复BYE 同时释放ssrc以及此次点播的资源
                 try {
-                    commanderForPlatform.streamByeCmd(platform, channel, ssrcInfo.getStream(), null, null);
+                    commanderForPlatform.streamByeCmd(platform, channel, ssrcInfo.getString(), null, null);
                 } catch (InvalidArgumentException | ParseException | SipException | SsrcTransactionNotFoundException e) {
                     log.error("[点播超时]， 发送BYE失败 {}", e.getMessage());
                 } finally {
                     timeoutCallback.run(1, "收流超时");
                     mediaServerService.releaseSsrc(mediaServerItem.getId(), ssrcInfo.getSsrc());
-                    mediaServerService.closeRTPServer(mediaServerItem, ssrcInfo.getStream());
-                    sessionManager.removeByStream(ssrcInfo.getStream());
-                    mediaServerService.closeRTPServer(mediaServerItem, ssrcInfo.getStream());
+                    mediaServerService.closeRTPServer(mediaServerItem, ssrcInfo.getString());
+                    sessionManager.removeByStream(ssrcInfo.getString());
+                    mediaServerService.closeRTPServer(mediaServerItem, ssrcInfo.getString());
                 }
             }
         }, userSetting.getPlayTimeout());
@@ -636,11 +636,11 @@ public class PlatformServiceImpl implements IPlatformService {
                     log.info("[Invite 200OK] SSRC修正 {}->{}", ssrcInfo.getSsrc(), ssrcInResponse);
                     // 释放ssrc
                     mediaServerService.releaseSsrc(mediaServer.getId(), ssrcInfo.getSsrc());
-                    Boolean result = mediaServerService.updateRtpServerSSRC(mediaServer, ssrcInfo.getStream(), ssrcInResponse);
+                    Boolean result = mediaServerService.updateRtpServerSSRC(mediaServer, ssrcInfo.getString(), ssrcInResponse);
                     if (!result) {
                         try {
                             log.warn("[Invite 200OK] 更新ssrc失败，停止喊话 {}/{}", platform.getServerGbId(), channel.getGbDeviceId());
-                            commanderForPlatform.streamByeCmd(platform, channel, ssrcInfo.getStream(), null, null);
+                            commanderForPlatform.streamByeCmd(platform, channel, ssrcInfo.getString(), null, null);
                         } catch (InvalidArgumentException | SipException | ParseException | SsrcTransactionNotFoundException e) {
                             log.error("[命令发送失败] 停止播放， 发送BYE: {}", e.getMessage());
                         }
@@ -649,7 +649,7 @@ public class PlatformServiceImpl implements IPlatformService {
                         // 释放ssrc
                         mediaServerService.releaseSsrc(mediaServer.getId(), ssrcInfo.getSsrc());
 
-                        sessionManager.removeByStream(ssrcInfo.getStream());
+                        sessionManager.removeByStream(ssrcInfo.getString());
 
                         callback.run(InviteErrorCode.ERROR_FOR_RESET_SSRC.getCode(),
                                 "下级自定义了ssrc,重新设置收流信息失败", null);
@@ -660,7 +660,7 @@ public class PlatformServiceImpl implements IPlatformService {
                     }else {
                         ssrcInfo.setSsrc(ssrcInResponse);
                         inviteInfo.setSsrcInfo(ssrcInfo);
-                        inviteInfo.setStream(ssrcInfo.getStream());
+                        inviteInfo.setStream(ssrcInfo.getString());
                         if (tcpMode == 2) {
                             if (mediaServer.isRtpEnable()) {
                                 tcpActiveHandler(platform, channel, contentString, mediaServer, tcpMode, ssrcCheck,
@@ -674,7 +674,7 @@ public class PlatformServiceImpl implements IPlatformService {
                 }else {
                     ssrcInfo.setSsrc(ssrcInResponse);
                     inviteInfo.setSsrcInfo(ssrcInfo);
-                    inviteInfo.setStream(ssrcInfo.getStream());
+                    inviteInfo.setStream(ssrcInfo.getString());
                     if (tcpMode == 2) {
                         if (mediaServer.isRtpEnable()) {
                             tcpActiveHandler(platform, channel, contentString, mediaServer, tcpMode, ssrcCheck,
@@ -737,16 +737,16 @@ public class PlatformServiceImpl implements IPlatformService {
             }
             log.info("[TCP主动连接对方] serverGbId: {}, channelId: {}, 连接对方的地址：{}:{}, SSRC: {}, SSRC校验：{}",
                     platform.getServerGbId(), channel.getGbDeviceId(), sdp.getConnection().getAddress(), port, ssrcInfo.getSsrc(), ssrcCheck);
-            Boolean result = mediaServerService.connectRtpServer(mediaServerItem, sdp.getConnection().getAddress(), port, ssrcInfo.getStream());
+            Boolean result = mediaServerService.connectRtpServer(mediaServerItem, sdp.getConnection().getAddress(), port, ssrcInfo.getString());
             log.info("[TCP主动连接对方] 结果： {}", result);
         } catch (SdpException e) {
             log.error("[TCP主动连接对方] serverGbId: {}, channelId: {}, 解析200OK的SDP信息失败", platform.getServerGbId(), channel.getGbDeviceId(), e);
             dynamicTask.stop(timeOutTaskKey);
-            mediaServerService.closeRTPServer(mediaServerItem, ssrcInfo.getStream());
+            mediaServerService.closeRTPServer(mediaServerItem, ssrcInfo.getString());
             // 释放ssrc
             mediaServerService.releaseSsrc(mediaServerItem.getId(), ssrcInfo.getSsrc());
 
-            sessionManager.removeByStream(ssrcInfo.getStream());
+            sessionManager.removeByStream(ssrcInfo.getString());
 
             callback.run(InviteErrorCode.ERROR_FOR_SDP_PARSING_EXCEPTIONS.getCode(),
                     InviteErrorCode.ERROR_FOR_SDP_PARSING_EXCEPTIONS.getMsg(), null);
@@ -778,7 +778,7 @@ public class PlatformServiceImpl implements IPlatformService {
     }
 
     @Override
-    public Platform queryOne(Integer platformId) {
+    public Platform queryOne(Long platformId) {
         return platformMapper.selectById(platformId);
     }
 

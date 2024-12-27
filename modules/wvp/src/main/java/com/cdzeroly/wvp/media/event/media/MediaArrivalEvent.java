@@ -1,9 +1,9 @@
 package com.cdzeroly.wvp.media.event.media;
 
-import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.bean.MediaInfo;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.zlm.dto.hook.OnStreamChangedHookParam;
-import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
+import com.cdzeroly.wvp.domain.vo.StreamContentVo;
 import lombok.Getter;
 import lombok.Setter;
 

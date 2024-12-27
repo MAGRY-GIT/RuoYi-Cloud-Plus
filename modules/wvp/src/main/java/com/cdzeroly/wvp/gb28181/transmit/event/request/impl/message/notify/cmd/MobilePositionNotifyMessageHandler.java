@@ -1,10 +1,10 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.notify.cmd;
 
+import com.cdzeroly.wvp.domain.bean.SipMsgInfo;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.bean.*;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHandler;
@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;

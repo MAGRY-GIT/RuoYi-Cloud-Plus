@@ -3,9 +3,9 @@ package com.cdzeroly.wvp.service.redisMsg;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
-import com.cdzeroly.wvp.streamPush.domian.bean.RedisPushStreamMessage;
-import com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo;
-import com.cdzeroly.wvp.streamPush.service.IStreamPushService;
+import com.cdzeroly.wvp.domain.bean.RedisPushStreamMessage;
+import com.cdzeroly.wvp.domain.vo.StreamPushVo;
+import com.cdzeroly.wvp.service.IStreamPushService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
@@ -81,7 +81,7 @@ public class RedisPushStreamListMsgListener implements MessageListener {
                                     streamPushVoInDb.getGbDeviceId(), streamPushVoInDb.getApp(), streamPushVoInDb.getStream());
                             continue;
                         }
-                        StreamPushVo streamPushVo = pushStreamMessage.buildstreamPush();
+                        StreamPushVo streamPushVo = pushStreamMessage.buildStreamPush();
                         streamPushVo.setMediaServerId(mediaServerService.getDefaultMediaServer().getId());
                         streamPushVoItemForSave.add(streamPushVo);
                         allGBId.put(streamPushVo.getGbDeviceId(), streamPushVo);

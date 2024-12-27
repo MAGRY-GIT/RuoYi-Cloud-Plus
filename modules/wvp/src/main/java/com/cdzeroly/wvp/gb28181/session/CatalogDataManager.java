@@ -1,15 +1,16 @@
 package com.cdzeroly.wvp.gb28181.session;
 
+import com.cdzeroly.wvp.domain.bean.CatalogData;
+import com.cdzeroly.wvp.domain.Group;
+import com.cdzeroly.wvp.domain.bean.SyncStatus;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
-import com.cdzeroly.wvp.gb28181.domian.Region;
-import com.cdzeroly.wvp.gb28181.domian.bean.*;
+import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.gb28181.service.IGroupService;
 import com.cdzeroly.wvp.gb28181.service.IRegionService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;

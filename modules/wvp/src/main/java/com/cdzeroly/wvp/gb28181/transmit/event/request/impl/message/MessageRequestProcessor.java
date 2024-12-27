@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.event.device.DeviceNotFoundEvent;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.bean.SsrcTransaction;
+import com.cdzeroly.wvp.domain.bean.SsrcTransaction;
 import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
 import com.cdzeroly.wvp.gb28181.event.sip.SipEvent;
 import com.cdzeroly.wvp.gb28181.service.IPlatformService;

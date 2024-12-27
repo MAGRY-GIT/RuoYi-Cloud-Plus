@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.service;
 
-import com.cdzeroly.wvp.service.domian.bean.LogFileInfo;
+import com.cdzeroly.wvp.domain.bean.LogFileInfo;
 
 import java.io.File;
 import java.util.List;

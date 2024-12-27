@@ -1,11 +1,13 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
 import com.cdzeroly.common.core.exception.ServiceException;
+import com.cdzeroly.wvp.domain.bean.GbCode;
+import com.cdzeroly.wvp.domain.Group;
+import com.cdzeroly.wvp.domain.bean.GroupTree;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.mapper.CommonGBChannelMapper;
-import com.cdzeroly.wvp.gb28181.mapper.GroupMapper;
-import com.cdzeroly.wvp.gb28181.domian.bean.*;
+import com.cdzeroly.wvp.mapper.CommonGBChannelMapper;
+import com.cdzeroly.wvp.mapper.GroupMapper;
 import com.cdzeroly.wvp.gb28181.event.EventPublisher;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
@@ -81,7 +83,7 @@ public class GroupServiceImpl implements IGroupService {
         groupManager.addBusinessGroup(group);
     }
 
-    private List<Group> queryAllChildren(Integer id) {
+    private List<Group> queryAllChildren(Long id) {
         List<Group> children = groupManager.getChildren(id);
         if (ObjectUtils.isEmpty(children)) {
             return children;
@@ -154,7 +156,7 @@ public class GroupServiceImpl implements IGroupService {
     }
 
     @Override
-    public List<GroupTree> queryForTree(String query, Integer parentId, Boolean hasChannel) {
+    public List<GroupTree> queryForTree(String query, Long parentId, Boolean hasChannel) {
 
         List<GroupTree> groupTrees = groupManager.queryForTree(query, parentId);
         if (parentId == null) {
@@ -178,7 +180,7 @@ public class GroupServiceImpl implements IGroupService {
 
     @Override
     @Transactional
-    public boolean delete(int id) {
+    public boolean delete(Long id) {
         Group group = groupManager.queryOne(id);
         Assert.notNull(group, "分组不存在");
         List<Group> groupListForDelete = new ArrayList<>();

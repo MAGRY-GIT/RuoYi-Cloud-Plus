@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.media.zlm.dto.hook;
 
-import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
+import com.cdzeroly.wvp.domain.vo.StreamContentVo;
 
 import java.util.List;
 import java.util.Map;

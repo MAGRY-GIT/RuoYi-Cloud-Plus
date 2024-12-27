@@ -8,38 +8,24 @@ import lombok.Setter;
  * @author lin
  */
 
+@Setter
+@Getter
 public class OnPublishHookParam extends HookParam{
 
-    @Getter
-    @Setter
     private String id;
 
-    @Getter
-    @Setter
     private String app;
 
-    @Getter
-    @Setter
     private String stream;
 
-    @Getter
-    @Setter
     private String ip;
 
-    @Getter
-    @Setter
     private String params;
 
-    @Getter
-    @Setter
     private Integer port;
 
-    @Getter
-    @Setter
     private String schema;
 
-    @Getter
-    @Setter
     private String vhost;
 
 

@@ -10,11 +10,10 @@ import com.cdzeroly.wvp.gb28181.event.device.RequestTimeoutEvent;
 import com.cdzeroly.wvp.gb28181.event.record.RecordEndEvent;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import com.cdzeroly.wvp.gb28181.event.subscribe.mobilePosition.MobilePositionEvent;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.event.mediaServer.MediaServerOfflineEvent;
 import com.cdzeroly.wvp.media.event.mediaServer.MediaServerOnlineEvent;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -69,7 +68,7 @@ public class EventPublisher {
      * @param deviceChannel  设备通道
      * @param type  类型
      */
-	public void catalogEventPublish(Integer platformId, CommonGBChannel deviceChannel, String type) {
+	public void catalogEventPublish(Long platformId, CommonGBChannel deviceChannel, String type) {
 		List<CommonGBChannel> deviceChannelList = new ArrayList<>();
 		deviceChannelList.add(deviceChannel);
 		catalogEventPublish(platformId, deviceChannelList, type);
@@ -92,7 +91,7 @@ public class EventPublisher {
      * @param deviceChannels  设备通道集合
      * @param type  类型
      */
-	public void catalogEventPublish(Integer platformId, List<CommonGBChannel> deviceChannels, String type) {
+	public void catalogEventPublish(Long platformId, List<CommonGBChannel> deviceChannels, String type) {
 		CatalogEvent outEvent = new CatalogEvent(this);
         ArrayList<CommonGBChannel> channels = CollectionUtil.safeStream(deviceChannels).collect(Collectors.collectingAndThen(
             Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(CommonGBChannel::getGbDeviceId))), ArrayList::new));

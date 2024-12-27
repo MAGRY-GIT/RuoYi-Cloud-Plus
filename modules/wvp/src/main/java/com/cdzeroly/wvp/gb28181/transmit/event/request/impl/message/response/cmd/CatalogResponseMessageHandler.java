@@ -1,11 +1,12 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.response.cmd;
 
 import com.cdzeroly.wvp.conf.SipConfig;
+import com.cdzeroly.wvp.domain.Group;
+import com.cdzeroly.wvp.domain.bean.SyncStatus;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.Region;
-import com.cdzeroly.wvp.gb28181.domian.bean.*;
+import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.gb28181.service.IGroupService;
 import com.cdzeroly.wvp.gb28181.service.IRegionService;

@@ -1,19 +1,30 @@
 package com.cdzeroly.wvp.media.zlm.dto.hook;
 
-import com.cdzeroly.wvp.media.domian.bean.ResultForOnPublish;
+import com.cdzeroly.wvp.media.zlm.dto.ResultForOnPublish;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author mgary
+ */
 @Setter
 @Getter
 public class HookResultForOnPublish extends HookResult{
 
-    private boolean enable_audio;
-    private boolean enable_mp4;
-    private Integer mp4_max_second;
-    private String mp4_save_path;
-    private String stream_replace;
-    private Integer modify_stamp;
+    @JsonProperty("enable_audio")
+    private boolean enableAudio;
+     @JsonProperty("enable_mp4")
+    private boolean enableMp4;
+     @JsonProperty("mp4_max_second")
+    private Integer mp4MaxSecond;
+     @JsonProperty("mp4_save_path")
+    private String mp4SavePath;
+     @JsonProperty("stream_replace")
+    private String streamReplace;
+     @JsonProperty("modify_stamp")
+    private Integer modifyStamp;
+
 
     public HookResultForOnPublish() {
     }
@@ -24,12 +35,12 @@ public class HookResultForOnPublish extends HookResult{
 
     public static HookResultForOnPublish getInstance(ResultForOnPublish resultForOnPublish){
         HookResultForOnPublish successResult = new HookResultForOnPublish(0, "success");
-        successResult.setEnable_audio(resultForOnPublish.isEnable_audio());
-        successResult.setEnable_mp4(resultForOnPublish.isEnable_mp4());
-        successResult.setModify_stamp(resultForOnPublish.getModify_stamp());
-        successResult.setStream_replace(resultForOnPublish.getStream_replace());
-        successResult.setMp4_max_second(resultForOnPublish.getMp4_max_second());
-        successResult.setMp4_save_path(resultForOnPublish.getMp4_save_path());
+        successResult.setEnableAudio(resultForOnPublish.isEnable_audio());
+        successResult.setEnableMp4(resultForOnPublish.isEnable_mp4());
+        successResult.setModifyStamp(resultForOnPublish.getModify_stamp());
+        successResult.setStreamReplace(resultForOnPublish.getStream_replace());
+        successResult.setMp4MaxSecond(resultForOnPublish.getMp4_max_second());
+        successResult.setMp4SavePath(resultForOnPublish.getMp4_save_path());
         return successResult;
     }
 
@@ -41,12 +52,12 @@ public class HookResultForOnPublish extends HookResult{
     @Override
     public String toString() {
         return "HookResultForOnPublish{" +
-                "enable_audio=" + enable_audio +
-                ", enable_mp4=" + enable_mp4 +
-                ", mp4_max_second=" + mp4_max_second +
-                ", mp4_save_path='" + mp4_save_path + '\'' +
-                ", stream_replace='" + stream_replace + '\'' +
-                ", modify_stamp='" + modify_stamp + '\'' +
+                "enable_audio=" + enableAudio +
+                ", enable_mp4=" + enableMp4 +
+                ", mp4_max_second=" + mp4MaxSecond +
+                ", mp4_save_path='" + mp4SavePath + '\'' +
+                ", stream_replace='" + streamReplace + '\'' +
+                ", modify_stamp='" + modifyStamp + '\'' +
                 '}';
     }
 }

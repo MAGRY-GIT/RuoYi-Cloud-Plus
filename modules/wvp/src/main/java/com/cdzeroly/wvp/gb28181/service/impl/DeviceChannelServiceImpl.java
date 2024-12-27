@@ -1,10 +1,12 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdzeroly.common.core.exception.ServiceException;
+import com.cdzeroly.common.core.utils.AssertUtils;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.InviteInfo;
@@ -13,13 +15,13 @@ import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
-import com.cdzeroly.wvp.gb28181.domian.bean.GbCode;
+import com.cdzeroly.wvp.domain.bean.GbCode;
 import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
-import com.cdzeroly.wvp.gb28181.domian.bo.ChannelReduce;
-import com.cdzeroly.wvp.gb28181.mapper.DeviceChannelMapper;
-import com.cdzeroly.wvp.gb28181.mapper.DeviceMapper;
-import com.cdzeroly.wvp.gb28181.mapper.DeviceMobilePositionMapper;
-import com.cdzeroly.wvp.gb28181.mapper.PlatformChannelMapper;
+import com.cdzeroly.wvp.domain.bo.ChannelReduce;
+import com.cdzeroly.wvp.mapper.DeviceChannelMapper;
+import com.cdzeroly.wvp.mapper.DeviceMapper;
+import com.cdzeroly.wvp.mapper.DeviceMobilePositionMapper;
+import com.cdzeroly.wvp.mapper.PlatformChannelMapper;
 import com.cdzeroly.wvp.gb28181.event.EventPublisher;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
@@ -28,14 +30,13 @@ import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.utils.DateUtil;
-import com.cdzeroly.wvp.vmanager.bean.ResourceBaseInfo;
-import com.cdzeroly.wvp.gb28181.domian.vo.DeviceChannelExtendVo;
+import com.cdzeroly.wvp.domain.ResourceBaseInfo;
+import com.cdzeroly.wvp.domain.vo.DeviceChannelExtendVo;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
@@ -254,12 +255,12 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
     }
 
     @Override
-    public DeviceChannel getOneForSource(int deviceDbId, String channelId) {
+    public DeviceChannel getOneForSource(Long deviceDbId, String channelId) {
         return channelMapper.getOneByDeviceIdForSource(deviceDbId, channelId);
     }
 
     @Override
-    public DeviceChannel getOneBySourceId(int deviceDbId, String channelId) {
+    public DeviceChannel getOneBySourceId(Long deviceDbId, String channelId) {
         return channelMapper.getOneBySourceChannelId(deviceDbId, channelId);
     }
 
@@ -309,14 +310,14 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
 
     @Override
     public void updateChannelStreamIdentification(DeviceChannel channel) {
-        Assert.hasLength(channel.getStreamIdentification(), "码流标识必须存在");
+        AssertUtils.notBlack(channel.getStreamIdentification(), "码流标识必须存在");
         if (ObjectUtils.isEmpty(channel.getStreamIdentification())) {
             log.info("[重置通道码流类型] 设备: {}, 码流： {}", channel.getDeviceId(), channel.getStreamIdentification());
         }else {
             log.info("[更新通道码流类型] 设备: {}, 通道：{}， 码流： {}", channel.getDeviceId(), channel.getDeviceId(),
                     channel.getStreamIdentification());
         }
-        if (channel.getId() > 0) {
+        if (ObjUtil.isNotNull(channel.getId())) {
             channelMapper.updateChannelStreamIdentification(channel);
         }else {
             channelMapper.updateAllChannelStreamIdentification(channel.getStreamIdentification());
@@ -334,12 +335,12 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
     }
 
     @Override
-    public List<DeviceChannel> queryChaneListByDeviceDbId(Integer deviceDbId) {
+    public List<DeviceChannel> queryChaneListByDeviceDbId(Long deviceDbId) {
         return channelMapper.queryChannelsByDeviceDbId(deviceDbId);
     }
 
     @Override
-    public List<Integer> queryChaneIdListByDeviceDbIds(List<Integer> deviceDbIds) {
+    public List<Long> queryChaneIdListByDeviceDbIds(List<Integer> deviceDbIds) {
         return channelMapper.queryChaneIdListByDeviceDbIds(deviceDbIds);
     }
 
@@ -399,12 +400,12 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
     }
 
     @Override
-    public void startPlay(Integer channelId, String stream) {
+    public void startPlay(Long channelId, String stream) {
         channelMapper.startPlay(channelId, stream);
     }
 
     @Override
-    public void stopPlay(Integer channelId) {
+    public void stopPlay(Long channelId) {
         channelMapper.stopPlayById(channelId);
     }
 
@@ -438,13 +439,13 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
     }
 
     @Override
-    public void cleanChannelsForDevice(int deviceId) {
+    public void cleanChannelsForDevice(Long deviceId) {
         channelMapper.cleanChannelsByDeviceId(deviceId);
     }
 
     @Override
     @Transactional
-    public boolean resetChannels(int deviceDbId, List<DeviceChannel> deviceChannelList) {
+    public boolean resetChannels(Long deviceDbId, List<DeviceChannel> deviceChannelList) {
         if (CollectionUtils.isEmpty(deviceChannelList)) {
             return false;
         }
@@ -471,7 +472,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
                 deviceChannel.setHasAudio(channelInDb.isHasAudio());
                 deviceChannel.setId(channelInDb.getId());
                 if (channelInDb.getStatus() != null && channelInDb.getStatus().equalsIgnoreCase(deviceChannel.getStatus())){
-                    List<Integer> ids = platformChannelMapper.queryParentPlatformByChannelId(deviceChannel.getDeviceId());
+                    List<Long> ids = platformChannelMapper.queryParentPlatformByChannelId(deviceChannel.getDeviceId());
                     if (!CollectionUtils.isEmpty(ids)){
                         ids.forEach(platformId->{
                             eventPublisher.catalogEventPublish(platformId, deviceChannel, "ON".equals(deviceChannel.getStatus())? CatalogEvent.ON:CatalogEvent.OFF);
@@ -545,7 +546,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
         if (!deleteChannels.isEmpty()) {
             try {
                 // 这些通道可能关联了，上级平台需要删除同时发送消息
-                List<Integer> ids = new ArrayList<>();
+                List<Long> ids = new ArrayList<>();
                 deleteChannels.stream().forEach(deviceChannel -> {
                     ids.add(deviceChannel.getId());
                 });
@@ -570,7 +571,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
     }
 
     @Override
-    public TableDataInfo<DeviceChannel> getSubChannels(int deviceDbId, String channelId, String query, Boolean channelType, Boolean online, PageQuery pageQuery) {
+    public TableDataInfo<DeviceChannel> getSubChannels(Long deviceDbId, String channelId, String query, Boolean channelType, Boolean online, PageQuery pageQuery) {
         String civilCode = null;
         String parentId = null;
         String businessGroupId = null;
@@ -626,22 +627,22 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
     }
 
     @Override
-    public DeviceChannel getRawChannel(int id) {
+    public DeviceChannel getRawChannel(Long id) {
         return channelMapper.selectById(id);
     }
 
     @Override
-    public DeviceChannel getOneById(Integer channelId) {
+    public DeviceChannel getOneById(Long channelId) {
         return channelMapper.getOne(channelId);
     }
 
     @Override
-    public DeviceChannel getOneForSourceById(Integer channelId) {
+    public DeviceChannel getOneForSourceById(Long channelId) {
         return channelMapper.getOneForSource(channelId);
     }
 
     @Override
-    public DeviceChannel getBroadcastChannel(int deviceDbId) {
+    public DeviceChannel getBroadcastChannel(Long deviceDbId) {
         List<DeviceChannel> channels = channelMapper.queryChannelsByDeviceDbId(deviceDbId);
         if (channels.size() == 1) {
             return channels.get(0);
@@ -656,7 +657,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
     }
 
     @Override
-    public void changeAudio(Integer channelId, Boolean audio) {
+    public void changeAudio(Long channelId, Boolean audio) {
         channelMapper.changeAudio(channelId, audio);
     }
 

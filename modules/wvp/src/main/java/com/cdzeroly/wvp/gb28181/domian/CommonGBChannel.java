@@ -3,11 +3,11 @@ package com.cdzeroly.wvp.gb28181.domian;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cdzeroly.common.tenant.core.TenantEntity;
-import com.cdzeroly.wvp.gb28181.domian.bean.GbCode;
-import com.cdzeroly.wvp.gb28181.domian.bean.Group;
+import com.cdzeroly.wvp.domain.Region;
+import com.cdzeroly.wvp.domain.bean.GbCode;
+import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,7 +22,7 @@ public class CommonGBChannel extends TenantEntity {
 
     @Schema(description = "国标-数据库自增ID")
     @TableId("gb_id")
-    private Integer gbId;
+    private Long gbId;
 
     @Schema(description = "国标-编码")
     private String gbDeviceId;
@@ -144,7 +144,7 @@ public class CommonGBChannel extends TenantEntity {
     private Integer dataType;
 
     @Schema(description = "关联的设备ID")
-    private Integer dataDeviceId;
+    private Long dataDeviceId;
 
 
 

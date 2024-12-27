@@ -297,6 +297,12 @@ public class RemoteUserServiceImpl implements RemoteUserService {
         return MapstructUtils.convert(sysUserVos, RemoteUserVo.class);
     }
 
+    @Override
+    public List<RemoteUserVo> selectListAll() {
+        List<SysUserVo> sysUserVos = userService.selectUserAll();
+        return MapstructUtils.convert(sysUserVos, RemoteUserVo.class);
+    }
+
     /**
      * 通过角色ID查询用户ID
      *

@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.gb28181.domian.bean;
 
 
+import com.cdzeroly.wvp.domain.bean.RecordItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;

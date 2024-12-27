@@ -1,15 +1,14 @@
 package com.cdzeroly.wvp.gb28181.event.subscribe.mobilePosition;
 
+import com.cdzeroly.wvp.domain.bean.SubscribeInfo;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.bean.SubscribeHolder;
-import com.cdzeroly.wvp.gb28181.domian.bean.SubscribeInfo;
+import com.cdzeroly.wvp.domain.bean.SubscribeHolder;
 import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommanderForPlatform;
-import com.cdzeroly.wvp.service.domian.bean.GPSMsgInfo;
+import com.cdzeroly.wvp.domain.bean.GPSMsgInfo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 

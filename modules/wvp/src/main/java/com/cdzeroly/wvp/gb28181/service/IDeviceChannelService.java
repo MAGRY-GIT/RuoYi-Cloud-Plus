@@ -2,12 +2,16 @@ package com.cdzeroly.wvp.gb28181.service;
 
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
+
+import com.cdzeroly.wvp.domain.bo.ChannelReduce;
+
+import com.cdzeroly.wvp.domain.vo.DeviceChannelExtendVo;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
-import com.cdzeroly.wvp.gb28181.domian.bo.ChannelReduce;
-import com.cdzeroly.wvp.vmanager.bean.ResourceBaseInfo;
-import com.cdzeroly.wvp.gb28181.domian.vo.DeviceChannelExtendVo;
+
+import com.cdzeroly.wvp.domain.ResourceBaseInfo;
+
 
 
 import java.util.List;
@@ -77,9 +81,9 @@ public interface IDeviceChannelService {
 
     void updateChannelGPS(Device device, DeviceChannel deviceChannel, MobilePosition mobilePosition);
 
-    void startPlay(Integer channelId, String stream);
+    void startPlay(Long channelId, String stream);
 
-    void stopPlay(Integer channelId);
+    void stopPlay(Long channelId);
 
     void batchUpdateChannelGPS(List<DeviceChannel> channelList);
 
@@ -91,11 +95,11 @@ public interface IDeviceChannelService {
 
     void delete(DeviceChannel channel);
 
-    void cleanChannelsForDevice(int deviceId);
+    void cleanChannelsForDevice(Long deviceId);
 
-    boolean resetChannels(int deviceDbId, List<DeviceChannel> deviceChannels);
+    boolean resetChannels(Long deviceDbId, List<DeviceChannel> deviceChannels);
 
-    TableDataInfo<DeviceChannel> getSubChannels(int deviceDbId, String channelId, String query, Boolean channelType, Boolean online, PageQuery pageQuery);
+    TableDataInfo<DeviceChannel> getSubChannels(Long deviceDbId, String channelId, String query, Boolean channelType, Boolean online, PageQuery pageQuery);
 
     List<DeviceChannelExtendVo> queryChannelExtendsByDeviceId(String deviceId, List<String> channelIds, Boolean online);
 
@@ -104,15 +108,15 @@ public interface IDeviceChannelService {
 
     List<Device> queryDeviceWithAsMessageChannel();
 
-    DeviceChannel getRawChannel(int id);
+    DeviceChannel getRawChannel(Long id);
 
-    DeviceChannel getOneById(Integer channelId);
+    DeviceChannel getOneById(Long channelId);
 
-    DeviceChannel getOneForSourceById(Integer channelId);
+    DeviceChannel getOneForSourceById(Long channelId);
 
-    DeviceChannel getBroadcastChannel(int deviceDbId);
+    DeviceChannel getBroadcastChannel(Long deviceDbId);
 
-    void changeAudio(Integer channelId, Boolean audio);
+    void changeAudio(Long channelId, Boolean audio);
 
     void updateChannelStatus(DeviceChannel channel);
 
@@ -120,11 +124,11 @@ public interface IDeviceChannelService {
 
     void updateChannelForNotify(DeviceChannel channel);
 
-    DeviceChannel getOneForSource(int deviceDbId, String channelId);
+    DeviceChannel getOneForSource(Long deviceDbId, String channelId);
 
-    DeviceChannel getOneBySourceId(int deviceDbId, String channelId);
+    DeviceChannel getOneBySourceId(Long deviceDbId, String channelId);
 
-    List<DeviceChannel> queryChaneListByDeviceDbId(Integer deviceDbId);
+    List<DeviceChannel> queryChaneListByDeviceDbId(Long deviceDbId);
 
-    List<Integer> queryChaneIdListByDeviceDbIds(List<Integer> deviceDbId);
+    List<Long> queryChaneIdListByDeviceDbIds(List<Integer> deviceDbId);
 }

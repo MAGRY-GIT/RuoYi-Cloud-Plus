@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cdzeroly.wvp.gb28181.mapper.PlatformChannelMapper">
+<mapper namespace="com.cdzeroly.wvp.mapper.PlatformChannelMapper">
 
     <insert id="addChannels">
         INSERT INTO wvp_platform_channel (platform_id, device_channel_id) VALUES
@@ -166,7 +166,7 @@
           and dc.channel_id = #{channelId}
           and pgc.platform_id = #{platformId}
     </select>
-    <select id="queryParentPlatformByChannelId" resultType="java.lang.Integer">
+    <select id="queryParentPlatformByChannelId" resultType="java.lang.Long">
         SELECT pgc.platform_id
         FROM wvp_platform_channel pgc
                  LEFT JOIN wvp_device_channel dc ON dc.id = pgc.device_channel_id
@@ -425,7 +425,7 @@
         </if>
         order by wdc.id
     </select>
-    <select id="queryShareRegion" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+    <select id="queryShareRegion" resultType="com.cdzeroly.wvp.domain.Region">
         SELECT wcr.*
         FROM wvp_common_region wcr
                  LEFT JOIN wvp_platform_region wpr ON wpr.region_id = wcr.id
@@ -433,7 +433,7 @@
         ORDER BY wcr.id DESC
 
     </select>
-    <select id="queryShareGroup" resultType="com.cdzeroly.wvp.gb28181.domian.bean.Group">
+    <select id="queryShareGroup" resultType="com.cdzeroly.wvp.domain.Group">
 
         SELECT wcg.*
         FROM wvp_common_group wcg
@@ -507,7 +507,7 @@
 
 
     </select>
-    <select id="queryShareParentRegionByRegionSet" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+    <select id="queryShareParentRegionByRegionSet" resultType="com.cdzeroly.wvp.domain.Region">
         SELECT wcr.*
         FROM wvp_common_region wcr
         LEFT JOIN wvp_platform_region wpr ON wpr.region_id = wcr.id AND wpr.platform_id = #{platformId}
@@ -517,7 +517,7 @@
         </foreach>
 
     </select>
-    <select id="queryShareParentGroupByGroupSet" resultType="com.cdzeroly.wvp.gb28181.domian.bean.Group">
+    <select id="queryShareParentGroupByGroupSet" resultType="com.cdzeroly.wvp.domain.Group">
         SELECT wcg.*
         FROM wvp_common_group wcg
         LEFT JOIN wvp_platform_group wpg ON wpg.group_id = wcg.id AND wpg.platform_id = #{platformId}
@@ -526,13 +526,13 @@
             #{item.parentId}
         </foreach>
     </select>
-    <select id="queryShareChildrenRegion" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+    <select id="queryShareChildrenRegion" resultType="com.cdzeroly.wvp.domain.Region">
         SELECT wcr.*
         FROM wvp_common_region wcr
                  LEFT JOIN wvp_platform_region wpr ON wpr.region_id = wcr.id AND wpr.platform_id = #{platformId}
         WHERE wpr.platform_id IS NOT NULL AND wcr.parent_device_id = #{parentId}
     </select>
-    <select id="queryShareChildrenGroup" resultType="com.cdzeroly.wvp.gb28181.domian.bean.Group">
+    <select id="queryShareChildrenGroup" resultType="com.cdzeroly.wvp.domain.Group">
         SELECT wcg.*
         FROM wvp_common_group wcg
                  LEFT JOIN wvp_platform_group wpg ON wpg.group_id = wcg.id AND wpg.platform_id = #{platformId}

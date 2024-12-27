@@ -10,7 +10,7 @@ import com.cdzeroly.wvp.conf.UserSetting;
 
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
-import com.cdzeroly.wvp.gb28181.domian.bean.SsrcTransaction;
+import com.cdzeroly.wvp.domain.bean.SsrcTransaction;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
 import com.cdzeroly.wvp.gb28181.service.IInviteStreamService;
@@ -18,20 +18,19 @@ import com.cdzeroly.wvp.gb28181.service.IPlayService;
 import com.cdzeroly.wvp.gb28181.session.SipInviteSessionManager;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
-import com.cdzeroly.wvp.service.domian.bean.InviteErrorCode;
+import com.cdzeroly.wvp.domain.bean.InviteErrorCode;
 import com.cdzeroly.wvp.utils.DateUtil;
-import com.cdzeroly.wvp.vmanager.bean.AudioBroadcastResult;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
-import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
-import com.cdzeroly.wvp.vmanager.bean.WVPResult;
+import com.cdzeroly.wvp.domain.vo.AudioBroadcastVo;
+import com.cdzeroly.wvp.domain.ErrorCode;
+import com.cdzeroly.wvp.domain.vo.StreamContentVo;
+import com.cdzeroly.wvp.domain.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -196,7 +195,7 @@ public class PlayController extends BaseController {
     @Parameter(name = "timeout", description = "推流超时时间(秒)", required = true)
     @GetMapping("/broadcast/{deviceId}/{channelId}")
     @PostMapping("/broadcast/{deviceId}/{channelId}")
-    public AudioBroadcastResult broadcastApi(@PathVariable String deviceId, @PathVariable String channelId, Integer timeout, Boolean broadcastMode) {
+    public AudioBroadcastVo broadcastApi(@PathVariable String deviceId, @PathVariable String channelId, Integer timeout, Boolean broadcastMode) {
         if (log.isDebugEnabled()) {
             log.debug("语音广播API调用");
         }

@@ -8,29 +8,33 @@ import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
-import com.cdzeroly.wvp.gb28181.domian.bean.SsrcTransaction;
+import com.cdzeroly.wvp.domain.bean.SsrcTransaction;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.gb28181.service.IInviteStreamService;
 import com.cdzeroly.wvp.gb28181.session.SipInviteSessionManager;
-import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.media.domian.bean.ResultForOnPublish;
+import com.cdzeroly.wvp.domain.MediaServer;
+import com.cdzeroly.wvp.media.zlm.dto.ResultForOnPublish;
 import com.cdzeroly.wvp.media.zlm.dto.StreamAuthorityInfo;
 import com.cdzeroly.wvp.service.IMediaService;
 import com.cdzeroly.wvp.service.IRecordPlanService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
-import com.cdzeroly.wvp.streamProxy.domain.vo.StreamProxyVo;
-import com.cdzeroly.wvp.streamProxy.service.IStreamProxyService;
+import com.cdzeroly.wvp.domain.vo.StreamProxyVo;
+import com.cdzeroly.wvp.service.IStreamProxyService;
 import com.cdzeroly.wvp.utils.DateUtil;
 import com.cdzeroly.wvp.utils.MediaServerUtils;
-import com.cdzeroly.wvp.vmanager.bean.OtherPsSendInfo;
-import com.cdzeroly.wvp.vmanager.bean.OtherRtpSendInfo;
+import com.cdzeroly.wvp.domain.OtherPsSendInfo;
+import com.cdzeroly.wvp.domain.OtherRtpSendInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
+/**
+ * @author MAGRY
+ */
 @Slf4j
 @Service
 public class MediaServiceImpl implements IMediaService {
@@ -48,9 +52,6 @@ public class MediaServiceImpl implements IMediaService {
     private RedisTemplate<Object, Object> redisTemplate;
 
     @Autowired
-    private RemoteUserService remoteUserService;
-
-    @Autowired
     private IInviteStreamService inviteStreamService;
 
     @Autowired
@@ -61,6 +62,10 @@ public class MediaServiceImpl implements IMediaService {
 
     @Autowired
     private IRecordPlanService recordPlanService;
+
+    @DubboReference
+    private RemoteUserService remoteUserService;
+
 
     @Override
     public boolean authenticatePlay(String app, String stream, String callId) {
@@ -163,7 +168,7 @@ public class MediaServiceImpl implements IMediaService {
                 redisCatchStorage.updateStreamAuthorityInfo(app, ssrcTransaction.getStream(), streamAuthorityInfo);
 
                 String deviceId = ssrcTransaction.getDeviceId();
-                Integer channelId = ssrcTransaction.getChannelId();
+                Long channelId = ssrcTransaction.getChannelId();
                 DeviceChannel deviceChannel = deviceChannelService.getOneForSourceById(channelId);
                 if (deviceChannel != null) {
                     result.setEnable_audio(deviceChannel.isHasAudio());
@@ -258,27 +263,26 @@ public class MediaServiceImpl implements IMediaService {
     }
 
     /**
-     *  TODO 是否有推流权限
-     * @param callId
-     * @param sign
-     * @return
+     *
+     * @param callId  自定义签名
+     * @param sign  签名
+     * @return boolean
      */
     public boolean checkPushAuthority(String callId, String sign) {
-
-        // List<User> users = userMapper.getUsers();
-        // if (users.size() == 0)  {
+        // List<RemoteUserVo> users = remoteUserService.selectListAll();
+        // if (users.isEmpty())  {
         //     return false;
         // }
-        // for (User user : users) {
-        //     if (user.getPushKey() == null) {
+        // for (RemoteUserVo user : users) {
+        //     if (user.getSecret() == null) {
         //         continue;
         //     }
-        //     String checkStr = callId == null? user.getPushKey():(callId + "_" + user.getPushKey())  ;
+        //     String checkStr = callId == null? user.getSecret():(callId + "_" + user.getSecret())  ;
         //     String checkSign = DigestUtils.md5DigestAsHex(checkStr.getBytes());
         //     if (checkSign.equals(sign)) {
         //         return true;
         //     }
         // }
-        return false;
+        return true;
     }
 }

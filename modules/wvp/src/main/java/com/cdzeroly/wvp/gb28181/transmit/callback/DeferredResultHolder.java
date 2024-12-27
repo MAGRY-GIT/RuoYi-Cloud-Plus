@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.callback;
 
-import com.cdzeroly.wvp.vmanager.bean.DeferredResultEx;
+import com.cdzeroly.wvp.domain.DeferredResultEx;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.async.DeferredResult;

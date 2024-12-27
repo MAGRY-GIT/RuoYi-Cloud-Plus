@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cdzeroly.common.tenant.core.TenantEntity;
-import com.cdzeroly.wvp.gb28181.domian.bean.SipTransactionInfo;
+import com.cdzeroly.wvp.domain.bean.SipTransactionInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,7 +22,7 @@ public class Device extends TenantEntity {
 
 	@Schema(description = "数据库自增ID")
     @TableId(value = "id")
-	private Integer id;
+	private Long id;
 
 	/**
 	 * 设备国标编号

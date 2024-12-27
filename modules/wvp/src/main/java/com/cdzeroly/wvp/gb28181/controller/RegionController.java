@@ -5,17 +5,15 @@ import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.core.utils.AssertUtils;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
-import com.cdzeroly.wvp.gb28181.domian.Region;
+import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.gb28181.domian.bean.RegionTree;
 import com.cdzeroly.wvp.gb28181.service.IRegionService;
 
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -75,7 +73,7 @@ public class RegionController {
     @Operation(summary = "删除区域")
     @Parameter(name = "id", description = "区域ID", required = true)
     @DeleteMapping("")
-    public R<Void> delete(Integer id) {
+    public R<Void> delete(Long id) {
         Assert.notNull(id, "区域ID需要存在");
         boolean result = regionService.deleteByDeviceId(id);
         if (!result) {

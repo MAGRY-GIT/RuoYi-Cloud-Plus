@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.service;
 
-import com.cdzeroly.wvp.gb28181.domian.bean.SendRtpInfo;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.MediaServer;
+import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public interface ISendRtpServerService {
      * @return
      */
     SendRtpInfo createSendRtpInfo(MediaServer mediaServer, String ip, Integer port, String ssrc, String requesterId,
-                                  String deviceId, Integer channelId, Boolean isTcp, Boolean rtcp);
+                                  String deviceId, Long channelId, Boolean isTcp, Boolean rtcp);
 
     /**
      *  创建发送rtp信息
@@ -42,7 +42,7 @@ public interface ISendRtpServerService {
      * @return
      */
     SendRtpInfo createSendRtpInfo(MediaServer mediaServer, String ip, Integer port, String ssrc, String platformId,
-                                  String app, String stream, Integer channelId, Boolean tcp, Boolean rtcp);
+                                  String app, String stream, Long channelId, Boolean tcp, Boolean rtcp);
 
     /**
      * 更新
@@ -56,7 +56,7 @@ public interface ISendRtpServerService {
      * @param targetId
      * @return
      */
-    SendRtpInfo queryByChannelId(Integer channelId, String targetId);
+    SendRtpInfo queryByChannelId(Long channelId, String targetId);
 
     SendRtpInfo queryByCallId(String callId);
 
@@ -68,9 +68,9 @@ public interface ISendRtpServerService {
 
     void deleteByCallId(String callId);
 
-    void deleteByStream(String Stream, String targetId);
+    void deleteByStream(String stream, String targetId);
 
-    void deleteByChannel(Integer channelId, String targetId);
+    void deleteByChannel(Long channelId, String targetId);
 
     List<SendRtpInfo> queryAll();
 

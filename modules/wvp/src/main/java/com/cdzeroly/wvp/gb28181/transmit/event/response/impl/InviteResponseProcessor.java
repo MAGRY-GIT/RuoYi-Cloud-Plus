@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.response.impl;
 
-import com.cdzeroly.wvp.gb28181.domian.bean.Gb28181Sdp;
+import com.cdzeroly.wvp.domain.bean.Gb28181Sdp;
 import com.cdzeroly.wvp.gb28181.transmit.SIPProcessorObserver;
 import com.cdzeroly.wvp.gb28181.transmit.SIPSender;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.SIPRequestHeaderProvider;

@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.gb28181.service;
 
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
-import com.cdzeroly.wvp.gb28181.domian.Region;
+import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.gb28181.domian.bean.RegionTree;
 
 
@@ -13,7 +13,7 @@ public interface IRegionService {
 
     void add(Region region);
 
-    boolean deleteByDeviceId(Integer regionDeviceId);
+    boolean deleteByDeviceId(Long regionDeviceId);
 
     /**
      * 查询区划列表

@@ -2,15 +2,14 @@ package com.cdzeroly.wvp.gb28181.controller;
 
 import com.cdzeroly.common.core.domain.R;
 import com.cdzeroly.common.core.exception.ServiceException;
-import com.cdzeroly.wvp.gb28181.domian.bean.Group;
-import com.cdzeroly.wvp.gb28181.domian.bean.GroupTree;
+import com.cdzeroly.wvp.domain.bean.GroupTree;
+import com.cdzeroly.wvp.domain.Group;
+
 import com.cdzeroly.wvp.gb28181.service.IGroupService;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +43,7 @@ public class GroupController {
     @GetMapping("/tree/list")
     public R<List<GroupTree>> queryForTree(
             @RequestParam(required = false) String query,
-            @RequestParam(required = false) Integer parent,
+            @RequestParam(required = false) Long parent,
             @RequestParam(required = false) Boolean hasChannel
     ){
         if (ObjectUtils.isEmpty(query)) {
@@ -65,7 +64,7 @@ public class GroupController {
     @Operation(summary = "删除分组")
     @Parameter(name = "id", description = "分组id", required = true)
     @DeleteMapping("")
-    public R<Void> delete(Integer id){
+    public R<Void> delete(Long id){
         Assert.notNull(id, "分组id（deviceId）不需要存在");
         boolean result = groupService.delete(id);
         if (!result) {

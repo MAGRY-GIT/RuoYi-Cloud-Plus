@@ -1,12 +1,17 @@
 package com.cdzeroly.wvp.media.zlm.dto;
 
 import com.cdzeroly.wvp.media.event.media.MediaArrivalEvent;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 流的鉴权信息
  * @author lin
  */
+@Setter
+@Getter
 public class StreamAuthorityInfo {
+
 
     private String id;
     private String app;
@@ -40,61 +45,6 @@ public class StreamAuthorityInfo {
      */
     private String sign;
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getApp() {
-        return app;
-    }
-
-    public void setApp(String app) {
-        this.app = app;
-    }
-
-    public String getStream() {
-        return stream;
-    }
-
-    public void setStream(String stream) {
-        this.stream = stream;
-    }
-
-    public int getOriginType() {
-        return originType;
-    }
-
-    public void setOriginType(int originType) {
-        this.originType = originType;
-    }
-
-    public String getOriginTypeStr() {
-        return originTypeStr;
-    }
-
-    public void setOriginTypeStr(String originTypeStr) {
-        this.originTypeStr = originTypeStr;
-    }
-
-    public String getCallId() {
-        return callId;
-    }
-
-    public void setCallId(String callId) {
-        this.callId = callId;
-    }
-
-    public String getSign() {
-        return sign;
-    }
-
-    public void setSign(String sign) {
-        this.sign = sign;
-    }
 
     public static StreamAuthorityInfo getInstanceByHook(String app, String stream, String id) {
         StreamAuthorityInfo streamAuthorityInfo = new StreamAuthorityInfo();

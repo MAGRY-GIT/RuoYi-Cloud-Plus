@@ -2,14 +2,15 @@ package com.cdzeroly.wvp.gb28181.transmit.cmd;
 
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.conf.exception.SsrcTransactionNotFoundException;
+import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
+import com.cdzeroly.wvp.domain.bean.SipTransactionInfo;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
-import com.cdzeroly.wvp.gb28181.domian.bean.*;
 import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
 import com.cdzeroly.wvp.media.event.hook.HookSubscribe;
-import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.service.domian.bean.SSRCInfo;
+import com.cdzeroly.wvp.domain.MediaServer;
+import com.cdzeroly.wvp.domain.bean.SSRCInfo;
 import gov.nist.javax.sip.message.SIPRequest;
 
 import javax.sip.InvalidArgumentException;
@@ -326,7 +327,6 @@ public interface ISIPCommander {
 	 * @param expires		订阅过期时间（0 = 取消订阅）
 	 * @param startPriority	报警起始级别（可选）
 	 * @param endPriority	报警终止级别（可选）
-	 * @param alarmType		报警类型
 	 * @param startTime		报警发生起始时间（可选）
 	 * @param endTime		报警发生终止时间（可选）
 	 * @return				true = 命令发送成功

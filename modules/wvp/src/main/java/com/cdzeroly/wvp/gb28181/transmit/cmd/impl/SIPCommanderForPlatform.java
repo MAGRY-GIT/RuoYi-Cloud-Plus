@@ -6,26 +6,25 @@ import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.conf.exception.SsrcTransactionNotFoundException;
+import com.cdzeroly.wvp.domain.bean.*;
 import com.cdzeroly.wvp.gb28181.SipLayer;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.domian.bean.*;
+import com.cdzeroly.wvp.gb28181.domian.bean.RecordInfo;
 import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
-import com.cdzeroly.wvp.gb28181.mapper.CommonGBChannelMapper;
 import com.cdzeroly.wvp.gb28181.session.SipInviteSessionManager;
 import com.cdzeroly.wvp.gb28181.transmit.SIPSender;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommanderForPlatform;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.SIPRequestHeaderPlarformProvider;
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.event.hook.Hook;
 import com.cdzeroly.wvp.media.event.hook.HookSubscribe;
 import com.cdzeroly.wvp.media.event.hook.HookType;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
-import com.cdzeroly.wvp.service.domian.bean.GPSMsgInfo;
-import com.cdzeroly.wvp.service.domian.bean.SSRCInfo;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.storager.dto.PlatformRegisterInfo;
 import com.cdzeroly.wvp.utils.DateUtil;
@@ -35,7 +34,6 @@ import gov.nist.javax.sip.message.SIPRequest;
 import gov.nist.javax.sip.message.SIPResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
@@ -690,7 +688,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
     public void broadcastInviteCmd(Platform platform, CommonGBChannel channel,String sourceId, MediaServer mediaServerItem,
                                    SSRCInfo ssrcInfo, HookSubscribe.Event event, SipSubscribe.Event okEvent,
                                    SipSubscribe.Event errorEvent) throws ParseException, SipException, InvalidArgumentException {
-        String stream = ssrcInfo.getStream();
+        String stream = ssrcInfo.getString();
 
         if (platform == null) {
             return;
@@ -741,7 +739,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
             content.toString(), SipUtils.getNewViaTag(), SipUtils.getNewFromTag(),  ssrcInfo.getSsrc(),
             callIdHeader);
         sipSender.transmitRequest(sipLayer.getLocalIp(platform.getDeviceIp()), request, (e -> {
-            sessionManager.removeByStream(ssrcInfo.getStream());
+            sessionManager.removeByStream(ssrcInfo.getString());
             mediaServerService.releaseSsrc(mediaServerItem.getId(), ssrcInfo.getSsrc());
             subscribe.removeSubscribe(hook);
             errorEvent.response(e);

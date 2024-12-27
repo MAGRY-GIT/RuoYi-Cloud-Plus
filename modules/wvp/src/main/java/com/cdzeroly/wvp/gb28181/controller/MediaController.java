@@ -9,13 +9,12 @@ import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.media.zlm.dto.StreamAuthorityInfo;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
-import com.cdzeroly.wvp.streamProxy.service.IStreamProxyService;
-import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
+import com.cdzeroly.wvp.service.IStreamProxyService;
+import com.cdzeroly.wvp.domain.vo.StreamContentVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;

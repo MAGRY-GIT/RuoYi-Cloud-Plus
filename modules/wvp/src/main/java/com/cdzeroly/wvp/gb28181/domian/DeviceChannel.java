@@ -1,7 +1,8 @@
 package com.cdzeroly.wvp.gb28181.domian;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.cdzeroly.wvp.gb28181.domian.bean.GbCode;
+
+import com.cdzeroly.wvp.domain.bean.GbCode;
 import com.cdzeroly.wvp.gb28181.utils.MessageElementForCatalog;
 import com.cdzeroly.wvp.gb28181.utils.XmlUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,7 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 public class DeviceChannel  extends CommonGBChannel {
 
 	@Schema(description = "数据库自增ID")
-	private Integer id;
+	private Long id;
 
 
 	@MessageElementForCatalog("DeviceID")

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cdzeroly.wvp.streamPush.mapper.StreamPushMapper">
+<mapper namespace="com.cdzeroly.wvp.mapper.StreamPushMapper">
     <update id="updatePushStatus">
         UPDATE wvp_stream_push
         SET pushing = #{pushing}
@@ -27,7 +27,7 @@
 
     </update>
 
-    <select id="selectAll" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+    <select id="selectAll" resultType="com.cdzeroly.wvp.domain.vo.StreamPushVo">
 
         SELECT
         st.*,
@@ -58,7 +58,7 @@
         ORDER BY st.create_time DESC
     </select>
 
-    <select id="selectPage" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+    <select id="selectPage" resultType="com.cdzeroly.wvp.domain.vo.StreamPushVo">
 
         SELECT
         st.*,
@@ -89,7 +89,7 @@
         ORDER BY st.create_time DESC
 
     </select>
-    <select id="selectByAppAndStream" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+    <select id="selectByAppAndStream" resultType="com.cdzeroly.wvp.domain.vo.StreamPushVo">
         SELECT
             st.*,
             st.id as data_device_id,
@@ -105,7 +105,7 @@
 
 
     </select>
-    <select id="selectAllByMediaServerId" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+    <select id="selectAllByMediaServerId" resultType="com.cdzeroly.wvp.domain.vo.StreamPushVo">
         SELECT
             st.*,
             st.id as data_device_id,
@@ -121,7 +121,7 @@
 
     </select>
     <select id="selectAllByMediaServerIdWithOutGbID"
-            resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+            resultType="com.cdzeroly.wvp.domain.vo.StreamPushVo">
         SELECT
             st.*,
             st.id as data_device_id,
@@ -137,7 +137,7 @@
 
 
     </select>
-    <select id="getListFromRedis" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+    <select id="getListFromRedis" resultType="com.cdzeroly.wvp.domain.vo.StreamPushVo">
         SELECT
         st.*,
         st.id as data_device_id,
@@ -162,7 +162,7 @@
         select count(1) from wvp_stream_push where pushing = true
 
     </select>
-    <select id="queryOne" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+    <select id="queryOne" resultType="com.cdzeroly.wvp.domain.vo.StreamPushVo">
         SELECT
             st.*,
             st.id as data_device_id,
@@ -176,7 +176,7 @@
             st.id = #{id}
 
     </select>
-    <select id="selectInSet" resultType="com.cdzeroly.wvp.streamPush.domian.vo.StreamPushVo">
+    <select id="selectInSet" resultType="com.cdzeroly.wvp.domain.vo.StreamPushVo">
         SELECT
         st.*,
         st.id as data_device_id,

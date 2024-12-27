@@ -16,11 +16,12 @@ import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.web.core.BaseController;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 
+import com.cdzeroly.wvp.domain.bo.DeviceBo;
+import com.cdzeroly.wvp.domain.vo.DeviceVo;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
-import com.cdzeroly.wvp.gb28181.domian.bean.SyncStatus;
-import com.cdzeroly.wvp.gb28181.domian.bo.DeviceBo;
-import com.cdzeroly.wvp.gb28181.domian.vo.DeviceVo;
+import com.cdzeroly.wvp.domain.bean.SyncStatus;
+
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
 import com.cdzeroly.wvp.gb28181.service.IInviteStreamService;
@@ -30,8 +31,7 @@ import com.cdzeroly.wvp.gb28181.task.impl.MobilePositionSubscribeTask;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
-import com.cdzeroly.wvp.vmanager.bean.WVPResult;
+import com.cdzeroly.wvp.domain.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -198,15 +198,6 @@ public class DeviceQueryController extends BaseController {
         return deviceChannelService.getSubChannels(deviceChannel.getDataDeviceId(), channelId, query, channelType, online, pageQuery);
     }
 
-    @Operation(summary = "开启/关闭通道的音频")
-    @Parameter(name = "channelId", description = "通道的数据库ID", required = true)
-    @Parameter(name = "audio", description = "开启/关闭音频", required = true)
-    @PostMapping("/channel/audio")
-    public void changeAudio(Integer channelId, Boolean audio) {
-        Assert.notNull(channelId, "通道的数据库ID不可为NULL");
-        Assert.notNull(audio, "开启/关闭音频不可为NULL");
-        deviceChannelService.changeAudio(channelId, audio);
-    }
 
 
 
@@ -416,7 +407,7 @@ public class DeviceQueryController extends BaseController {
     @GetMapping("/channel/raw")
     @Operation(summary = "国标通道编辑时的数据回显")
     @Parameter(name = "id", description = "通道的Id", required = true)
-    public DeviceChannel getRawChannel(int id) {
+    public DeviceChannel getRawChannel(Long id) {
         return deviceChannelService.getRawChannel(id);
     }
 }

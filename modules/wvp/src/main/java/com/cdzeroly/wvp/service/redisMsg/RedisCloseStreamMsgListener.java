@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.service.redisMsg;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.cdzeroly.wvp.streamPush.service.IStreamPushService;
+import com.cdzeroly.wvp.service.IStreamPushService;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;

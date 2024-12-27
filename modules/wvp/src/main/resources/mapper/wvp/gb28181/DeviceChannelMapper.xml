@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cdzeroly.wvp.gb28181.mapper.DeviceChannelMapper">
+<mapper namespace="com.cdzeroly.wvp.mapper.DeviceChannelMapper">
     <insert id="batchAdd">
 
         insert into wvp_device_channel
@@ -289,7 +289,7 @@
 
     </delete>
 
-    <select id="queryChaneIdListByDeviceDbIds" resultType="java.lang.Integer">
+    <select id="queryChaneIdListByDeviceDbIds" resultType="java.lang.Long">
         select id
         from wvp_device_channel
         where data_type =1 and data_device_id in
@@ -299,7 +299,7 @@
 
     </select>
     <select id="queryChannelsWithDeviceInfo"
-            resultType="com.cdzeroly.wvp.gb28181.domian.vo.DeviceChannelExtendVo">
+            resultType="com.cdzeroly.wvp.domain.vo.DeviceChannelExtendVo">
         SELECT
         dc.id,
         dc.create_time,
@@ -369,7 +369,7 @@
 
 
     </select>
-    <select id="queryChannelListInAll" resultType="com.cdzeroly.wvp.gb28181.domian.bo.ChannelReduce">
+    <select id="queryChannelListInAll" resultType="com.cdzeroly.wvp.domain.bo.ChannelReduce">
         SELECT
         dc.id,
         COALESCE(dc.gb_device_id, dc.device_id) AS name,

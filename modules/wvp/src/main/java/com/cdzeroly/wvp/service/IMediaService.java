@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.service;
 
-import com.cdzeroly.wvp.media.domian.bean.ResultForOnPublish;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.media.zlm.dto.ResultForOnPublish;
+import com.cdzeroly.wvp.domain.MediaServer;
 
 /**
  * 媒体信息业务

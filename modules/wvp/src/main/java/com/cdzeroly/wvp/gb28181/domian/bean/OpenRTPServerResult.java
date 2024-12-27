@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.gb28181.domian.bean;
 
 import com.cdzeroly.wvp.media.event.hook.HookData;
-import com.cdzeroly.wvp.service.domian.bean.SSRCInfo;
+import com.cdzeroly.wvp.domain.bean.SSRCInfo;
 import lombok.Data;
 
 /**

@@ -21,7 +21,7 @@ public class MobilePosition extends TenantEntity {
 
     @Schema(description = "ID(数据库中)")
     @TableId
-    private Integer id;
+    private Long id;
     /**
      * 设备Id
      */
@@ -30,7 +30,7 @@ public class MobilePosition extends TenantEntity {
     /**
      * 通道Id
      */
-    private Integer channelId;
+    private Long channelId;
 
     /**
      * 设备名称

@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.jt1078.config;
 
 import com.cdzeroly.wvp.jt1078.cmd.JT1078Template;
 import com.cdzeroly.wvp.jt1078.proc.response.*;
-import com.cdzeroly.wvp.vmanager.bean.WVPResult;
+import com.cdzeroly.wvp.domain.WVPResult;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

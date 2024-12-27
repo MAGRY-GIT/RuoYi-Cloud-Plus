@@ -57,6 +57,6 @@ public class CatalogEvent  extends ApplicationEvent {
 
     private String type;
 
-    private Integer platformId;
+    private Long platformId;
 
 }

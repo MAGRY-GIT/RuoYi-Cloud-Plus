@@ -2,9 +2,9 @@ package com.cdzeroly.wvp.gb28181.session;
 
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.gb28181.domian.bean.SsrcTransaction;
+import com.cdzeroly.wvp.domain.bean.SsrcTransaction;
+
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 

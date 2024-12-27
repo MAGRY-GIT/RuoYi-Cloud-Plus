@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.common;
 
-import com.cdzeroly.wvp.service.domian.bean.SSRCInfo;
+import com.cdzeroly.wvp.domain.bean.SSRCInfo;
 import lombok.Data;
 
 /**
@@ -12,7 +12,7 @@ public class InviteInfo {
 
     private String deviceId;
 
-    private Integer channelId;
+    private Long channelId;
 
     private String stream;
 
@@ -37,7 +37,7 @@ public class InviteInfo {
     private Long createTime;
 
 
-    public static InviteInfo getInviteInfo(String deviceId, Integer channelId, String stream, SSRCInfo ssrcInfo, String mediaServerId,
+    public static InviteInfo getInviteInfo(String deviceId, Long channelId, String stream, SSRCInfo ssrcInfo, String mediaServerId,
                                            String receiveIp, Integer receivePort, String streamMode,
                                            InviteSessionType type, InviteSessionStatus status) {
         InviteInfo inviteInfo = new InviteInfo();

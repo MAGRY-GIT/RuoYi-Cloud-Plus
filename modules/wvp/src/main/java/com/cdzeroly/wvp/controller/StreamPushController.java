@@ -1,0 +1,245 @@
+package com.cdzeroly.wvp.controller;
+
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelReader;
+import com.alibaba.excel.read.metadata.ReadSheet;
+import com.cdzeroly.common.core.domain.R;
+import com.cdzeroly.common.core.exception.ServiceException;
+import com.cdzeroly.common.core.validate.AddGroup;
+import com.cdzeroly.common.core.validate.EditGroup;
+import com.cdzeroly.common.mybatis.core.page.PageQuery;
+import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
+import com.cdzeroly.wvp.conf.UserSetting;
+
+import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
+import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
+import com.cdzeroly.wvp.media.service.IMediaServerService;
+import com.cdzeroly.wvp.domain.bean.BatchRemoveParam;
+import com.cdzeroly.wvp.domain.vo.StreamPushVo;
+import com.cdzeroly.wvp.domain.bean.StreamPushExcelDto;
+import com.cdzeroly.wvp.streamPush.StreamPushUploadFileHandler;
+import com.cdzeroly.wvp.service.IStreamPushPlayService;
+import com.cdzeroly.wvp.service.IStreamPushService;
+import com.cdzeroly.wvp.domain.vo.StreamContentVo;
+
+import com.cdzeroly.wvp.domain.WVPResult;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * @author MGARY
+ */
+@Tag(name  = "推流信息管理")
+@RestController
+@Slf4j
+@AllArgsConstructor
+@RequestMapping(value = "/streamPush")
+public class StreamPushController {
+
+    private final IStreamPushService streamPushService;
+
+    private final IStreamPushPlayService streamPushPlayService;
+
+    private final IMediaServerService mediaServerService;
+
+    private final DeferredResultHolder resultHolder;
+
+
+    private final UserSetting userSetting;
+
+    @GetMapping(value = "/list")
+    @Operation(summary = "推流列表查询")
+    @Parameter(name = "query", description = "查询内容")
+    @Parameter(name = "pushing", description = "是否正在推流")
+    @Parameter(name = "mediaServerId", description = "流媒体ID")
+    public TableDataInfo<StreamPushVo> list(PageQuery pageQuery,
+                                            @RequestParam(required = false)String query,
+                                            @RequestParam(required = false)Boolean pushing,
+                                            @RequestParam(required = false)String mediaServerId ){
+
+        if (ObjectUtils.isEmpty(query)) {
+            query = null;
+        }
+        if (ObjectUtils.isEmpty(mediaServerId)) {
+            mediaServerId = null;
+        }
+        return streamPushService.getPushList(pageQuery, query, pushing, mediaServerId);
+    }
+
+
+    @PostMapping(value = "/remove")
+    @Operation(summary = "删除")
+    @Parameter(name = "id", description = "应用名", required = true)
+    public R<Void> delete(Long id){
+        if (streamPushService.delete(id) > 0){
+            throw new ServiceException("失败");
+        }
+        return R.ok();
+    }
+
+    @PostMapping(value = "upload")
+    public DeferredResult<ResponseEntity<WVPResult<Object>>> uploadChannelFile(@RequestParam(value = "file") MultipartFile file){
+
+        // 最多处理文件一个小时
+        DeferredResult<ResponseEntity<WVPResult<Object>>> result = new DeferredResult<>(60*60*1000L);
+        // 录像查询以channelId作为deviceId查询
+        String key = DeferredResultHolder.UPLOAD_FILE_CHANNEL;
+        String uuid = UUID.randomUUID().toString();
+        log.info("通道导入文件类型: {}",file.getContentType() );
+        if (file.isEmpty()) {
+            log.warn("通道导入文件为空");
+            WVPResult<Object> wvpResult = new WVPResult<>();
+            wvpResult.setCode(-1);
+            wvpResult.setMsg("文件为空");
+            result.setResult(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(wvpResult));
+            return result;
+        }
+        if (file.getContentType() == null) {
+            WVPResult<Object> wvpResult = new WVPResult<>();
+            wvpResult.setCode(-1);
+            wvpResult.setMsg("无法识别文件类型");
+            result.setResult(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(wvpResult));
+            return result;
+        }
+        // 同时只处理一个文件
+        if (resultHolder.exist(key, null)) {
+            log.warn("已有导入任务正在执行");
+            WVPResult<Object> wvpResult = new WVPResult<>();
+            wvpResult.setCode(-1);
+            wvpResult.setMsg("已有导入任务正在执行");
+            result.setResult(ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(wvpResult));
+            return result;
+        }
+
+        resultHolder.put(key, uuid, result);
+        result.onTimeout(()->{
+            log.warn("通道导入超时，可能文件过大");
+            RequestMessage msg = new RequestMessage();
+            msg.setKey(key);
+            WVPResult<Object> wvpResult = new WVPResult<>();
+            wvpResult.setCode(-1);
+            wvpResult.setMsg("导入超时，可能文件过大");
+            msg.setData(wvpResult);
+            resultHolder.invokeAllResult(msg);
+        });
+        //获取文件流
+        InputStream inputStream = null;
+        try {
+            String name = file.getName();
+            inputStream = file.getInputStream();
+        } catch (IOException e) {
+            log.error("未处理的异常 ", e);
+        }
+        try {
+            //传入参数
+            ExcelReader excelReader = EasyExcel.read(inputStream, StreamPushExcelDto.class,
+                    new StreamPushUploadFileHandler(streamPushService, mediaServerService.getDefaultMediaServer().getId(), (errorStreams, errorGBs)->{
+                        log.info("通道导入成功，存在重复App+Stream为{}个，存在国标ID为{}个", errorStreams.size(), errorGBs.size());
+                        RequestMessage msg = new RequestMessage();
+                        msg.setKey(key);
+                        WVPResult<Map<String, List<String>>> wvpResult = new WVPResult<>();
+                        if (errorStreams.isEmpty() && errorGBs.isEmpty()) {
+                            wvpResult.setCode(0);
+                            wvpResult.setMsg("成功");
+                        }else {
+                            wvpResult.setCode(1);
+                            wvpResult.setMsg("导入成功。但是存在重复数据");
+                            Map<String, List<String>> errorData = new HashMap<>();
+                            errorData.put("gbId", errorGBs);
+                            errorData.put("stream", errorStreams);
+                            wvpResult.setData(errorData);
+                        }
+                        msg.setData(wvpResult);
+                        resultHolder.invokeAllResult(msg);
+                    })).build();
+            ReadSheet readSheet = EasyExcel.readSheet(0).build();
+            excelReader.read(readSheet);
+            excelReader.finish();
+        }catch (Exception e) {
+            log.warn("通道导入失败：", e);
+            RequestMessage msg = new RequestMessage();
+            msg.setKey(key);
+            WVPResult<Object> wvpResult = new WVPResult<>();
+            wvpResult.setCode(-1);
+            wvpResult.setMsg("通道导入失败: " + e.getMessage() );
+            msg.setData(wvpResult);
+            resultHolder.invokeAllResult(msg);
+        }
+
+
+        return result;
+    }
+
+    @PostMapping()
+    @Operation(summary = "添加推流信息")
+    public R<StreamPushVo> add( @Validated(AddGroup.class) @RequestBody StreamPushVo stream){
+
+        if (ObjectUtils.isEmpty(stream.getApp()) && ObjectUtils.isEmpty(stream.getStream())) {
+            throw new ServiceException( "app或stream不可为空");
+        }
+        stream.setGbStatus("OFF");
+        stream.setPushing(false);
+        if (!streamPushService.add(stream)) {
+            throw new ServiceException("失败");
+        }
+        stream.setDataType(ChannelDataType.STREAM_PUSH.value);
+        stream.setDataDeviceId(stream.getId());
+        return R.ok(stream);
+    }
+
+    @PutMapping()
+    @Operation(summary = "更新推流信息")
+    public R<Void> update(@RequestBody @Validated(EditGroup.class) StreamPushVo stream){
+        if (!streamPushService.update(stream)) {
+            throw new ServiceException("失败");
+        }
+        return R.ok();
+    }
+
+    @DeleteMapping(value = "/batchRemove")
+    @Operation(summary = "删除多个推流")
+    public R<Void> batchStop(@RequestBody BatchRemoveParam ids){
+        if(ids.getIds().isEmpty()) {
+            return R.ok();
+        }
+        streamPushService.batchRemove(ids.getIds());
+        return R.ok();
+    }
+
+    @GetMapping(value = "/start")
+    @Operation(summary = "开始播放")
+    public DeferredResult<R<StreamContentVo>> batchStop(Long id){
+        Assert.notNull(id, "推流ID不可为NULL");
+        DeferredResult<R<StreamContentVo>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
+        result.onTimeout(()->{
+            R<StreamContentVo> fail = R.fail("等待推流超时");
+            result.setResult(fail);
+        });
+        streamPushPlayService.start(id, (code, msg, streamInfo) -> {
+            if (code == 200 && streamInfo != null) {
+                R<StreamContentVo> success = R.ok(new StreamContentVo(streamInfo));
+                result.setResult(success);
+            }
+        }, null, null);
+        return result;
+    }
+}

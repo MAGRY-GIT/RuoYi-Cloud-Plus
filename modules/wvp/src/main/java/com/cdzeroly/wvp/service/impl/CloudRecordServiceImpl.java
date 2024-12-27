@@ -17,21 +17,20 @@ import com.cdzeroly.common.core.utils.CollectionUtil;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.gb28181.service.ICloudRecordService;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.event.media.MediaRecordMp4Event;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.media.zlm.AssistRESTfulUtils;
 import com.cdzeroly.wvp.media.zlm.dto.StreamAuthorityInfo;
-import com.cdzeroly.wvp.service.domian.bean.CloudRecordItem;
-import com.cdzeroly.wvp.service.domian.bean.DownloadFileInfo;
-import com.cdzeroly.wvp.service.domian.bo.CloudRecordItemBo;
+import com.cdzeroly.wvp.domain.CloudRecord;
+import com.cdzeroly.wvp.domain.bean.DownloadFileInfo;
+import com.cdzeroly.wvp.domain.bo.CloudRecordItemBo;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.storager.mapper.CloudRecordServiceMapper;
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -59,9 +58,9 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
     private final AssistRESTfulUtils assistRESTfulUtils;
 
     @Override
-    public TableDataInfo<CloudRecordItem> getList(CloudRecordItemBo bo, PageQuery pageQuery) {
-        Wrapper<CloudRecordItem> cloudRecordItemWrapper = buildQueryWrapper(bo);
-        Page<CloudRecordItem> page = cloudRecordServiceMapper.selectPage(pageQuery.build(), cloudRecordItemWrapper);
+    public TableDataInfo<CloudRecord> getList(CloudRecordItemBo bo, PageQuery pageQuery) {
+        Wrapper<CloudRecord> cloudRecordItemWrapper = buildQueryWrapper(bo);
+        Page<CloudRecord> page = cloudRecordServiceMapper.selectPage(pageQuery.build(), cloudRecordItemWrapper);
         return TableDataInfo.build(page);
     }
 
@@ -84,7 +83,7 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
         cloudRecordItemBo.setEndTime(DateUtil.date(endTimeStamp));
         cloudRecordItemBo.setMediaServerIds(CollectionUtil.safeStream(mediaServerItems).map(MediaServer::getId).toList());
 
-        List<CloudRecordItem> cloudRecordItemList = this.getAllList(cloudRecordItemBo);
+        List<CloudRecord> cloudRecordItemList = this.getAllList(cloudRecordItemBo);
         ;
         return CollectionUtil.safeStream(cloudRecordItemList).map(cloudRecordItem -> DateUtil.formatDateTime(cloudRecordItem.getStartTime())).toList();
 
@@ -93,7 +92,7 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
     @Async("taskExecutor")
     @EventListener
     public void onApplicationEvent(MediaRecordMp4Event event) {
-        CloudRecordItem cloudRecordItem = CloudRecordItem.getInstance(event);
+        CloudRecord cloudRecordItem = CloudRecord.getInstance(event);
         if (ObjectUtils.isEmpty(cloudRecordItem.getCallId())) {
             StreamAuthorityInfo streamAuthorityInfo = redisCatchStorage.getStreamAuthorityInfo(event.getApp(), event.getStream());
             if (streamAuthorityInfo != null) {
@@ -117,18 +116,18 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
         List<MediaServer> mediaServers = new ArrayList<>();
         mediaServers.add(mediaServerItem);
 
-        LambdaQueryWrapper<CloudRecordItem> wrapper = Wrappers.lambdaQuery();
-        wrapper.eq(StrUtil.isNotEmpty(app), CloudRecordItem::getApp, app);
-        wrapper.eq(StrUtil.isNotEmpty(stream), CloudRecordItem::getStream, stream);
-        wrapper.eq(StrUtil.isNotEmpty(callId), CloudRecordItem::getCallId, callId);
-        wrapper.ge(ObjectUtil.isNotNull(startTime), CloudRecordItem::getStartTime, startTime);
-        wrapper.le(ObjectUtil.isNotNull(endTime), CloudRecordItem::getEndTime, endTime);
+        LambdaQueryWrapper<CloudRecord> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(StrUtil.isNotEmpty(app), CloudRecord::getApp, app);
+        wrapper.eq(StrUtil.isNotEmpty(stream), CloudRecord::getStream, stream);
+        wrapper.eq(StrUtil.isNotEmpty(callId), CloudRecord::getCallId, callId);
+        wrapper.ge(ObjectUtil.isNotNull(startTime), CloudRecord::getStartTime, startTime);
+        wrapper.le(ObjectUtil.isNotNull(endTime), CloudRecord::getEndTime, endTime);
 
         List<String> mediaServerIds = filterMediaServer ? mediaServers.stream().map(MediaServer::getId).toList() : Lists.newArrayList();
-        wrapper.in(CollUtil.isNotEmpty(mediaServerIds), CloudRecordItem::getMediaServerId, mediaServerIds);
+        wrapper.in(CollUtil.isNotEmpty(mediaServerIds), CloudRecord::getMediaServerId, mediaServerIds);
 
         // 检索相关的录像文件
-        List<String> filePathList = cloudRecordServiceMapper.selectList(wrapper).stream().map(CloudRecordItem::getFilePath).collect(Collectors.toList());
+        List<String> filePathList = cloudRecordServiceMapper.selectList(wrapper).stream().map(CloudRecord::getFilePath).collect(Collectors.toList());
         if (CollUtil.isEmpty(mediaServerIds)) {
             throw new ServiceException("未检索到视频文件");
         }
@@ -181,7 +180,7 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
         cloudRecordItemBo.setCallId(callId);
         cloudRecordItemBo.setMediaServerIds(CollectionUtil.safeStream(mediaServerItems).map(MediaServer::getId).toList());
 
-        List<CloudRecordItem> all = this.getAllList(cloudRecordItemBo);
+        List<CloudRecord> all = this.getAllList(cloudRecordItemBo);
         if (all.isEmpty()) {
             throw new ServiceException("未找到待收藏的视频");
         }
@@ -209,16 +208,16 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
      * @param cloudRecordItemList 插入值
      * @return 插入条数
      */
-    private int updateCollectList(boolean collect, List<CloudRecordItem> cloudRecordItemList) {
-        LambdaUpdateWrapper<CloudRecordItem> wrapper = Wrappers.lambdaUpdate();
-        List<String> filePaths = cloudRecordItemList.stream().map(CloudRecordItem::getFilePath).toList();
-        wrapper.set(CloudRecordItem::getCollect, collect).in(CloudRecordItem::getFileName, filePaths);
+    private int updateCollectList(boolean collect, List<CloudRecord> cloudRecordItemList) {
+        LambdaUpdateWrapper<CloudRecord> wrapper = Wrappers.lambdaUpdate();
+        List<String> filePaths = cloudRecordItemList.stream().map(CloudRecord::getFilePath).toList();
+        wrapper.set(CloudRecord::getCollect, collect).in(CloudRecord::getFileName, filePaths);
         return cloudRecordServiceMapper.update(wrapper);
     }
 
     @Override
     public int changeCollectById(Integer recordId, boolean result) {
-        QueryWrapper<CloudRecordItem> wrapper = Wrappers.query();
+        QueryWrapper<CloudRecord> wrapper = Wrappers.query();
         wrapper.eq("collect", result);
         wrapper.eq("id", recordId);
         return cloudRecordServiceMapper.update(wrapper);
@@ -226,7 +225,7 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
 
     @Override
     public DownloadFileInfo getPlayUrlPath(Integer recordId) {
-        CloudRecordItem recordItem = cloudRecordServiceMapper.selectById(recordId);
+        CloudRecord recordItem = cloudRecordServiceMapper.selectById(recordId);
         if (recordItem == null) {
             throw new ServiceException( "资源不存在");
         }
@@ -236,15 +235,15 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
     }
 
     @Override
-    public List<CloudRecordItem> getAllList(CloudRecordItemBo bo) {
-        Wrapper<CloudRecordItem> cloudRecordItemWrapper = buildQueryWrapper(bo);
+    public List<CloudRecord> getAllList(CloudRecordItemBo bo) {
+        Wrapper<CloudRecord> cloudRecordItemWrapper = buildQueryWrapper(bo);
         return cloudRecordServiceMapper.selectList(cloudRecordItemWrapper);
     }
 
 
-    private Wrapper<CloudRecordItem> buildQueryWrapper(CloudRecordItemBo bo) {
+    private Wrapper<CloudRecord> buildQueryWrapper(CloudRecordItemBo bo) {
         Map<String, Object> params = bo.getParams();
-        QueryWrapper<CloudRecordItem> wrapper = Wrappers.query();
+        QueryWrapper<CloudRecord> wrapper = Wrappers.query();
         wrapper.eq(StrUtil.isNotBlank(bo.getApp()), "app", bo.getApp()).eq(StrUtil.isNotBlank(bo.getStream()), "stream", bo.getStream()).ge(ObjectUtil.isNotNull(bo.getStartTime()), "end_time", bo.getStartTime()).le(ObjectUtil.isNotNull(bo.getEndTime()), "start_time", bo.getEndTime()).eq(StrUtil.isNotBlank(bo.getCallId()), "call_id", bo.getCallId()).in(CollUtil.isNotEmpty(bo.getMediaServerIds()), "media_server_id", bo.getMediaServerIds()).in(CollUtil.isNotEmpty(bo.getIds()), "id", bo.getIds()).eq(ObjectUtil.isNotNull(bo.getId()), "id", bo.getId()).and(StrUtil.isNotBlank(bo.getQuery()), w -> {
             w.like("app", bo.getQuery()).or().like("stream", bo.getQuery());
         }).orderByDesc("start_time");

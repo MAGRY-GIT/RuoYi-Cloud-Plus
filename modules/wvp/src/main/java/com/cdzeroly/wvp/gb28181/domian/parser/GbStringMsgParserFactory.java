@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.domian.parser;
 
+import com.cdzeroly.wvp.domain.parser.GBStringMsgParser;
 import gov.nist.javax.sip.parser.MessageParser;
 import gov.nist.javax.sip.parser.MessageParserFactory;
 import gov.nist.javax.sip.stack.SIPTransactionStack;

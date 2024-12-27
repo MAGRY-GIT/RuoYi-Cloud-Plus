@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.gb28181.transmit.cmd;
 import com.cdzeroly.wvp.conf.SipConfig;
 import com.cdzeroly.wvp.gb28181.SipLayer;
 import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.bean.SipTransactionInfo;
+import com.cdzeroly.wvp.domain.bean.SipTransactionInfo;
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.utils.GitUtil;

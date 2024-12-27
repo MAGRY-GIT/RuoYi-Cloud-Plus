@@ -3,12 +3,13 @@ package com.cdzeroly.wvp.gb28181.service;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.CommonCallback;
+
+import com.cdzeroly.wvp.domain.bean.SyncStatus;
 import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.bean.SipTransactionInfo;
-import com.cdzeroly.wvp.gb28181.domian.bean.SyncStatus;
-import com.cdzeroly.wvp.gb28181.domian.vo.DeviceVo;
-import com.cdzeroly.wvp.vmanager.bean.ResourceBaseInfo;
-import jakarta.validation.constraints.NotNull;
+import com.cdzeroly.wvp.domain.bean.SipTransactionInfo;
+
+
+import com.cdzeroly.wvp.domain.ResourceBaseInfo;
 
 import java.util.List;
 
@@ -159,9 +160,9 @@ public interface IDeviceService {
 
     TableDataInfo<Device> getAll(PageQuery pageQuery, String query, Boolean status);
 
-    Device getDevice(Integer gbDeviceDbId);
+    Device getDevice(Long gbDeviceDbId);
 
-    Device getDeviceByChannelId(Integer channelId);
+    Device getDeviceByChannelId(Long channelId);
 
     Device getDeviceBySourceChannelDeviceId(String requesterId);
 

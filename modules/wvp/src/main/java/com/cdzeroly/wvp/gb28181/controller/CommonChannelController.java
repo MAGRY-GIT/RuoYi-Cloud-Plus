@@ -6,20 +6,20 @@ import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.web.core.BaseController;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.gb28181.domian.bo.ChannelToGroupByGbDeviceParam;
-import com.cdzeroly.wvp.gb28181.domian.bo.ChannelToGroupParam;
-import com.cdzeroly.wvp.gb28181.domian.bo.ChannelToRegionByGbDeviceParam;
-import com.cdzeroly.wvp.gb28181.domian.bo.ChannelToRegionParam;
+
+import com.cdzeroly.wvp.domain.bo.ChannelToGroupByGbDeviceParam;
+import com.cdzeroly.wvp.domain.bo.ChannelToGroupParam;
+import com.cdzeroly.wvp.domain.bo.ChannelToRegionByGbDeviceParam;
+import com.cdzeroly.wvp.domain.bean.*;
+
+
+
+import com.cdzeroly.wvp.domain.bo.ChannelToRegionParam;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
-import com.cdzeroly.wvp.gb28181.domian.bean.DeviceType;
-import com.cdzeroly.wvp.gb28181.domian.bean.IndustryCodeType;
-import com.cdzeroly.wvp.gb28181.domian.bean.NetworkIdentificationType;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelPlayService;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
-import com.cdzeroly.wvp.service.domian.bean.ErrorCallback;
-import com.cdzeroly.wvp.service.domian.bean.InviteErrorCode;
-import com.cdzeroly.wvp.vmanager.bean.vo.StreamContentVo;
-import com.cdzeroly.wvp.vmanager.bean.WVPResult;
+import com.cdzeroly.wvp.domain.vo.StreamContentVo;
+import com.cdzeroly.wvp.domain.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,7 +55,7 @@ public class CommonChannelController extends BaseController {
     @Operation(summary = "查询通道信息")
     @Parameter(name = "id", description = "通道的数据库自增Id", required = true)
     @GetMapping(value = "/one")
-    public R<CommonGBChannel> getOne(int id){
+    public R<CommonGBChannel> getOne(Long id){
         return R.ok(channelService.getOne(id));
     }
 
@@ -86,7 +86,7 @@ public class CommonChannelController extends BaseController {
 
     @Operation(summary = "重置国标通道")
     @PostMapping("/reset")
-    public  R<Void> reset(Integer id){
+    public  R<Void> reset(Long id){
         channelService.reset(id);
         return R.ok();
     }
@@ -224,7 +224,7 @@ public class CommonChannelController extends BaseController {
 
     @Operation(summary = "播放通道")
     @GetMapping("/play")
-    public DeferredResult<WVPResult<StreamContentVo>> deleteChannelToGroupByGbDevice(Integer channelId){
+    public DeferredResult<WVPResult<StreamContentVo>> deleteChannelToGroupByGbDevice(Long channelId){
         Assert.notNull(channelId,"参数异常");
         CommonGBChannel channel = channelService.getOne(channelId);
         Assert.notNull(channel, "通道不存在");

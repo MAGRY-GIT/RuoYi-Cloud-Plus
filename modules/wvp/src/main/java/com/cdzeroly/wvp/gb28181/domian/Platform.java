@@ -18,7 +18,7 @@ public class Platform extends TenantEntity {
 
     @Schema(description = "ID(数据库中)")
     @TableId
-    private Integer id;
+    private Long id;
 
     @Schema(description = "是否启用")
     private boolean enable;

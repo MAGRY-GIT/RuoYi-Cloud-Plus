@@ -1,12 +1,11 @@
 package com.cdzeroly.wvp.media;
 
 import com.cdzeroly.wvp.conf.MediaConfig;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.event.mediaServer.MediaServerChangeEvent;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.annotation.Order;

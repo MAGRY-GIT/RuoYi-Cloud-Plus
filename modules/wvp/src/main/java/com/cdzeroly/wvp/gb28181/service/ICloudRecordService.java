@@ -3,10 +3,10 @@ package com.cdzeroly.wvp.gb28181.service;
 import com.alibaba.fastjson2.JSONArray;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
-import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.service.domian.bean.CloudRecordItem;
-import com.cdzeroly.wvp.service.domian.bean.DownloadFileInfo;
-import com.cdzeroly.wvp.service.domian.bo.CloudRecordItemBo;
+import com.cdzeroly.wvp.domain.MediaServer;
+import com.cdzeroly.wvp.domain.CloudRecord;
+import com.cdzeroly.wvp.domain.bean.DownloadFileInfo;
+import com.cdzeroly.wvp.domain.bo.CloudRecordItemBo;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface ICloudRecordService {
      * 分页回去云端录像列表
      */
 
-    TableDataInfo<CloudRecordItem> getList(CloudRecordItemBo bo, PageQuery pageQuery);
+    TableDataInfo<CloudRecord> getList(CloudRecordItemBo bo, PageQuery pageQuery);
 
     /**
      * 获取所有的日期
@@ -54,7 +54,7 @@ public interface ICloudRecordService {
      */
     DownloadFileInfo getPlayUrlPath(Integer recordId);
 
-    List<CloudRecordItem> getAllList(CloudRecordItemBo bo);
+    List<CloudRecord> getAllList(CloudRecordItemBo bo);
 
 
 }

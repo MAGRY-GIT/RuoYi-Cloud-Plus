@@ -5,10 +5,10 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.CivilCodePo;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
-import com.cdzeroly.wvp.gb28181.domian.Region;
+import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.gb28181.domian.bean.RegionTree;
-import com.cdzeroly.wvp.gb28181.mapper.CommonGBChannelMapper;
-import com.cdzeroly.wvp.gb28181.mapper.RegionMapper;
+import com.cdzeroly.wvp.mapper.CommonGBChannelMapper;
+import com.cdzeroly.wvp.mapper.RegionMapper;
 import com.cdzeroly.wvp.gb28181.event.EventPublisher;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
@@ -60,7 +60,7 @@ public class RegionServiceImpl implements IRegionService {
 
     @Override
     @Transactional
-    public boolean deleteByDeviceId(Integer regionDeviceId) {
+    public boolean deleteByDeviceId(Long regionDeviceId) {
         Region region = regionMapper.selectById(regionDeviceId);
         // 获取所有子节点
         List<Region> allChildren = getAllChildren(regionDeviceId);
@@ -71,7 +71,7 @@ public class RegionServiceImpl implements IRegionService {
         return true;
     }
 
-    private List<Region> getAllChildren(Integer deviceId) {
+    private List<Region> getAllChildren(Long deviceId) {
         if (deviceId == null) {
             return new ArrayList<>();
         }

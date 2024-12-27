@@ -1,8 +1,8 @@
 package com.cdzeroly.wvp.common;
 
-import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
-import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.service.domian.bean.DownloadFileInfo;
+import com.cdzeroly.wvp.domain.bean.MediaInfo;
+import com.cdzeroly.wvp.domain.MediaServer;
+import com.cdzeroly.wvp.domain.bean.DownloadFileInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +23,7 @@ public class StreamInfo implements Serializable, Cloneable{
     @Schema(description = "设备编号")
     private String deviceId;
     @Schema(description = "通道ID")
-    private Integer channelId;
+    private Long channelId;
 
     @Schema(description = "IP")
     private String ip;

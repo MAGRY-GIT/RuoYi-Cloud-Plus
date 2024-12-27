@@ -2,10 +2,10 @@ package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.response.cm
 
 import com.cdzeroly.common.json.utils.JsonUtils;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
+import com.cdzeroly.wvp.domain.bean.RecordItem;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.domian.bean.RecordInfo;
-import com.cdzeroly.wvp.gb28181.domian.bean.RecordItem;
 import com.cdzeroly.wvp.gb28181.event.EventPublisher;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;

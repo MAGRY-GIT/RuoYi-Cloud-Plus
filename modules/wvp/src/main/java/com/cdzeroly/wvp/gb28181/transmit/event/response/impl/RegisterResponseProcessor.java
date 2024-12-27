@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.gb28181.transmit.event.response.impl;
 
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.domian.bean.PlatformCatch;
-import com.cdzeroly.wvp.gb28181.domian.bean.SipTransactionInfo;
+import com.cdzeroly.wvp.domain.bean.SipTransactionInfo;
 import com.cdzeroly.wvp.gb28181.transmit.SIPProcessorObserver;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommanderForPlatform;
 import com.cdzeroly.wvp.gb28181.transmit.event.response.SIPResponseProcessorAbstract;

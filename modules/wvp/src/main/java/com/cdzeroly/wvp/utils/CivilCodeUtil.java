@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.utils;
 
 import com.cdzeroly.wvp.common.CivilCodePo;
-import com.cdzeroly.wvp.gb28181.domian.Region;
+import com.cdzeroly.wvp.domain.Region;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 

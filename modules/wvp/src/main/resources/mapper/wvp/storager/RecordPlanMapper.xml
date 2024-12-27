@@ -4,7 +4,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.cdzeroly.wvp.storager.mapper.RecordPlanMapper">
 
-    <select id="query" resultType="com.cdzeroly.wvp.service.domian.bean.RecordPlan">
+    <select id="query" resultType="com.cdzeroly.wvp.domain.RecordPlan">
         SELECT wrp.*, (SELECT count(1) FROM wvp_device_channel WHERE record_plan_id = wrp.id) AS channelCount
         FROM wvp_record_plan wrp
         WHERE 1=1
@@ -13,7 +13,7 @@
         </if>
 
     </select>
-    <select id="queryRecordIng" resultType="java.lang.Integer">
+    <select id="queryRecordIng" resultType="java.lang.Long">
         select wdc.id from wvp_device_channel wdc
                                left join wvp_record_plan_item wrpi on wrpi.plan_id = wdc.record_plan_id
         where wrpi.week_day = #{week} and wrpi.start &lt;= #{index} and wrpi.stop &gt;= #{index}

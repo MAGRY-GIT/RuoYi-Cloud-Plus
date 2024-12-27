@@ -13,7 +13,7 @@ public class PlatformChannel extends CommonGBChannel {
     private Integer id;
 
     @Schema(description = "平台ID")
-    private Integer platformId;
+    private Long platformId;
 
     @Schema(description = "国标-编码")
     private String customDeviceId;

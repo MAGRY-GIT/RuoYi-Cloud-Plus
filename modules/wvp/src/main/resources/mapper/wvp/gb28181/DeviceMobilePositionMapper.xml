@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cdzeroly.wvp.gb28181.mapper.DeviceMobilePositionMapper">
+<mapper namespace="com.cdzeroly.wvp.mapper.DeviceMobilePositionMapper">
     <delete id="clearMobilePositionsByDeviceId">
         DELETE FROM wvp_device_mobile_position WHERE device_id = #{deviceId}
 

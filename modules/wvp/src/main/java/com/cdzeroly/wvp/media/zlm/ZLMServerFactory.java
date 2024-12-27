@@ -2,8 +2,8 @@ package com.cdzeroly.wvp.media.zlm;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.cdzeroly.wvp.common.CommonCallback;
-import com.cdzeroly.wvp.gb28181.domian.bean.SendRtpInfo;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
+import com.cdzeroly.wvp.domain.MediaServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

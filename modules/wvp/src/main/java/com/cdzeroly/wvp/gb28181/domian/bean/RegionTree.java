@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.domian.bean;
 
-import com.cdzeroly.wvp.gb28181.domian.Region;
+import com.cdzeroly.wvp.domain.Region;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -1,12 +1,12 @@
 package com.cdzeroly.wvp.media.event.hook;
 
-import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
-import com.cdzeroly.wvp.media.domian.bean.RecordInfo;
+import com.cdzeroly.wvp.domain.bean.MediaInfo;
+import com.cdzeroly.wvp.domain.bean.RecordInfo;
 import com.cdzeroly.wvp.media.event.media.MediaArrivalEvent;
 import com.cdzeroly.wvp.media.event.media.MediaEvent;
 import com.cdzeroly.wvp.media.event.media.MediaPublishEvent;
 import com.cdzeroly.wvp.media.event.media.MediaRecordMp4Event;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.MediaServer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

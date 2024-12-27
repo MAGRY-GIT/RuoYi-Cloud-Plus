@@ -5,11 +5,11 @@ import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.CommonCallback;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.bean.SipTransactionInfo;
+import com.cdzeroly.wvp.domain.bean.SipTransactionInfo;
 import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.event.hook.HookSubscribe;
-import com.cdzeroly.wvp.service.domian.bean.InviteTimeOutCallback;
+import com.cdzeroly.wvp.domain.bean.InviteTimeOutCallback;
 
 
 import javax.sip.InvalidArgumentException;
@@ -87,7 +87,7 @@ public interface IPlatformService {
 
     void addSimulatedSubscribeInfo(Platform parentPlatform);
 
-    Platform queryOne(Integer platformId);
+    Platform queryOne(Long platformId);
 
     List<Platform> queryEnablePlatformList();
 

@@ -5,7 +5,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.gb28181.event.EventPublisher;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.event.mediaServer.MediaServerChangeEvent;
 import com.cdzeroly.wvp.media.event.mediaServer.MediaServerDeleteEvent;
 import com.cdzeroly.wvp.media.service.IMediaServerService;

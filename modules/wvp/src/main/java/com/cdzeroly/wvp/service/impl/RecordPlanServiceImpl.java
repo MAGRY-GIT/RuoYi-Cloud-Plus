@@ -8,17 +8,17 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
-import com.cdzeroly.wvp.gb28181.mapper.CommonGBChannelMapper;
+import com.cdzeroly.wvp.mapper.CommonGBChannelMapper;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelPlayService;
-import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
+import com.cdzeroly.wvp.domain.bean.MediaInfo;
 import com.cdzeroly.wvp.media.event.media.MediaDepartureEvent;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.service.IRecordPlanService;
-import com.cdzeroly.wvp.service.domian.bean.InviteErrorCode;
-import com.cdzeroly.wvp.service.domian.bean.RecordPlan;
-import com.cdzeroly.wvp.service.domian.bean.RecordPlanItem;
-import com.cdzeroly.wvp.service.domian.bo.RecordPlanBo;
-import com.cdzeroly.wvp.service.domian.vo.RecordPlanVo;
+import com.cdzeroly.wvp.domain.bean.InviteErrorCode;
+import com.cdzeroly.wvp.domain.RecordPlan;
+import com.cdzeroly.wvp.domain.RecordPlanItem;
+import com.cdzeroly.wvp.domain.bo.RecordPlanBo;
+import com.cdzeroly.wvp.domain.vo.RecordPlanVo;
 import com.cdzeroly.wvp.storager.mapper.RecordPlanItemMapper;
 import com.cdzeroly.wvp.storager.mapper.RecordPlanMapper;
 import com.google.common.base.Joiner;
@@ -60,7 +60,7 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
     @EventListener
     public void onApplicationEvent(MediaDepartureEvent event) {
         // 流断开，检查是否还处于录像状态， 如果是则继续录像
-        Integer channelId = recording(event.getApp(), event.getStream());
+        Long channelId = recording(event.getApp(), event.getStream());
         if(channelId == null) {
             return;
         }
@@ -82,14 +82,14 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
         }));
     }
 
-    private Map<Integer, StreamInfo> recordStreamMap;
+    private Map<Long, StreamInfo> recordStreamMap;
 
 //    @Scheduled(cron = "0 */30 * * * *")
     @Scheduled(fixedRate = 10, timeUnit = TimeUnit.MINUTES)
     public void execution() {
         log.info("[录制计划] 执行");
         // 查询现在需要录像的通道Id
-        List<Integer> startChannelIdList = queryCurrentChannelRecord();
+        List<Long> startChannelIdList = queryCurrentChannelRecord();
 
         if (startChannelIdList.isEmpty()) {
             // 当前没有录像任务, 如果存在旧的正在录像的就移除
@@ -99,7 +99,7 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
             }
         }else {
             // 当前存在录像任务, 获取正在录像中存在但是当前录制列表不存在的内容,进行停止; 获取正在录像中没有但是当前需录制的列表中存在的进行开启.
-            Set<Integer> recordStreamSet = new HashSet<>(recordStreamMap.keySet());
+            Set<Long> recordStreamSet = new HashSet<>(recordStreamMap.keySet());
             startChannelIdList.forEach(recordStreamSet::remove);
             if (!recordStreamSet.isEmpty()) {
                 // 正在录像中存在但是当前录制列表不存在的内容,进行停止;
@@ -134,7 +134,7 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
     /**
      * 获取当前时间段应该录像的通道Id列表
      */
-    private List<Integer> queryCurrentChannelRecord(){
+    private List<Long> queryCurrentChannelRecord(){
         // 获取当前时间在一周内的序号, 数据库存储的从第几个30分钟开始, 0-47, 包括首尾
         LocalDateTime now = LocalDateTime.now();
         int week = now.getDayOfWeek().getValue();
@@ -144,8 +144,8 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
         return recordPlanMapper.queryRecordIng(week, index);
     }
 
-    private void stopStreams(Collection<Integer> channelIds, Map<Integer, StreamInfo> recordStreamMap) {
-        for (Integer channelId : channelIds) {
+    private void stopStreams(Collection<Long> channelIds, Map<Long, StreamInfo> recordStreamMap) {
+        for (Long channelId : channelIds) {
             try {
                 StreamInfo streamInfo = recordStreamMap.get(channelId);
                 if (streamInfo == null) {
@@ -166,8 +166,8 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
     }
 
     @Override
-    public Integer recording(String app, String stream) {
-        for (Integer channelId : recordStreamMap.keySet()) {
+    public Long recording(String app, String stream) {
+        for (Long channelId : recordStreamMap.keySet()) {
             StreamInfo streamInfo = recordStreamMap.get(channelId);
             if (streamInfo != null && streamInfo.getApp().equals(app) && streamInfo.getStream().equals(stream)) {
                 return channelId;
@@ -262,7 +262,7 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
     }
 
     @Override
-    public void link(List<Integer> channelIds, Integer planId) {
+    public void link(List<Long> channelIds, Long planId) {
         if (channelIds == null || channelIds.isEmpty()) {
             log.info("[录制计划] 关联/移除关联时, 通道编号必须存在");
             throw new ServiceException( "通道编号必须存在");
@@ -289,12 +289,12 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
     }
 
     @Override
-    public void linkAll(Integer planId) {
+    public void linkAll(Long planId) {
         channelMapper.addRecordPlanForAll(planId);
     }
 
     @Override
-    public void cleanAll(Integer planId) {
+    public void cleanAll(Long planId) {
         channelMapper.removeRecordPlanByPlanId(planId);
     }
 }

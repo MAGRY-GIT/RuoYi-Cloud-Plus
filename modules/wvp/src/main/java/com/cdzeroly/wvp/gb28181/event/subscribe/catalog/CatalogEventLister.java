@@ -1,15 +1,14 @@
 package com.cdzeroly.wvp.gb28181.event.subscribe.catalog;
 
+import com.cdzeroly.wvp.domain.bean.SubscribeInfo;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.bean.SubscribeHolder;
-import com.cdzeroly.wvp.gb28181.domian.bean.SubscribeInfo;
+import com.cdzeroly.wvp.domain.bean.SubscribeHolder;
 import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
 import com.cdzeroly.wvp.gb28181.service.IPlatformService;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommanderForPlatform;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -61,9 +60,9 @@ public class CatalogEventLister implements ApplicationListener<CatalogEvent> {
             if (event.getChannels() != null) {
                 if (!platforms.isEmpty()) {
                     for (CommonGBChannel deviceChannel : event.getChannels()) {
-                        List<Platform> parentPlatformsForGB = platformChannelService.queryPlatFormListByChannelDeviceId(
+                        List<Platform> parentPlatformsForGb = platformChannelService.queryPlatFormListByChannelDeviceId(
                                 deviceChannel.getGbId(), platforms);
-                        parentPlatformMap.put(deviceChannel.getGbDeviceId(), parentPlatformsForGB);
+                        parentPlatformMap.put(deviceChannel.getGbDeviceId(), parentPlatformsForGb);
                         channelMap.put(deviceChannel.getGbDeviceId(), deviceChannel);
                     }
                 }

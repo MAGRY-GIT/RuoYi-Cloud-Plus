@@ -2,11 +2,11 @@ package com.cdzeroly.wvp.media.service;
 
 import com.cdzeroly.wvp.common.CommonCallback;
 import com.cdzeroly.wvp.common.StreamInfo;
-import com.cdzeroly.wvp.gb28181.domian.bean.SendRtpInfo;
-import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
-import com.cdzeroly.wvp.media.domian.MediaServer;
-import com.cdzeroly.wvp.streamProxy.domain.StreamProxy;
-import com.cdzeroly.wvp.vmanager.bean.WVPResult;
+import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
+import com.cdzeroly.wvp.domain.bean.MediaInfo;
+import com.cdzeroly.wvp.domain.MediaServer;
+import com.cdzeroly.wvp.domain.StreamProxy;
+import com.cdzeroly.wvp.domain.WVPResult;
 
 import java.util.List;
 import java.util.Map;

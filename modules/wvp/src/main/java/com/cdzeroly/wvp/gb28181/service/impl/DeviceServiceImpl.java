@@ -1,7 +1,6 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
 import com.alibaba.fastjson2.JSON;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
@@ -12,13 +11,11 @@ import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
+import com.cdzeroly.wvp.domain.bean.*;
 import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.vo.DeviceVo;
-import com.cdzeroly.wvp.gb28181.mapper.DeviceChannelMapper;
-import com.cdzeroly.wvp.gb28181.mapper.DeviceMapper;
-import com.cdzeroly.wvp.gb28181.mapper.PlatformChannelMapper;
-import com.cdzeroly.wvp.gb28181.domian.bean.*;
-import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
+import com.cdzeroly.wvp.mapper.DeviceChannelMapper;
+import com.cdzeroly.wvp.mapper.DeviceMapper;
+import com.cdzeroly.wvp.mapper.PlatformChannelMapper;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
 import com.cdzeroly.wvp.gb28181.service.IInviteStreamService;
 import com.cdzeroly.wvp.gb28181.session.AudioBroadcastManager;
@@ -28,17 +25,15 @@ import com.cdzeroly.wvp.gb28181.task.impl.CatalogSubscribeTask;
 import com.cdzeroly.wvp.gb28181.task.impl.MobilePositionSubscribeTask;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommander;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.response.cmd.CatalogResponseMessageHandler;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.service.ISendRtpServerService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.utils.DateUtil;
-import com.cdzeroly.wvp.vmanager.bean.ResourceBaseInfo;
+import com.cdzeroly.wvp.domain.ResourceBaseInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -517,12 +512,12 @@ public class DeviceServiceImpl implements IDeviceService {
     }
 
     @Override
-    public Device getDevice(Integer id) {
+    public Device getDevice(Long id) {
         return deviceMapper.selectById(id);
     }
 
     @Override
-    public Device getDeviceByChannelId(Integer channelId) {
+    public Device getDeviceByChannelId(Long channelId) {
         return deviceMapper.queryByChannelId(ChannelDataType.GB28181.value,channelId);
     }
 

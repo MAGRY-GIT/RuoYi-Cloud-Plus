@@ -5,7 +5,7 @@ import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.domian.bean.OpenRTPServerResult;
 import com.cdzeroly.wvp.gb28181.session.SSRCFactory;
 import com.cdzeroly.wvp.gb28181.session.SipInviteSessionManager;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.event.hook.Hook;
 import com.cdzeroly.wvp.media.event.hook.HookSubscribe;
 import com.cdzeroly.wvp.media.event.hook.HookType;
@@ -13,10 +13,10 @@ import com.cdzeroly.wvp.media.event.media.MediaArrivalEvent;
 import com.cdzeroly.wvp.media.event.media.MediaDepartureEvent;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.service.IReceiveRtpServerService;
-import com.cdzeroly.wvp.service.domian.bean.ErrorCallback;
-import com.cdzeroly.wvp.service.domian.bean.InviteErrorCode;
-import com.cdzeroly.wvp.service.domian.bean.RTPServerParam;
-import com.cdzeroly.wvp.service.domian.bean.SSRCInfo;
+import com.cdzeroly.wvp.domain.bean.ErrorCallback;
+import com.cdzeroly.wvp.domain.bean.InviteErrorCode;
+import com.cdzeroly.wvp.domain.bean.RTPServerParam;
+import com.cdzeroly.wvp.domain.bean.SSRCInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -157,6 +157,6 @@ public class RtpServerServiceImpl implements IReceiveRtpServerService {
             // 释放ssrc
             ssrcFactory.releaseSsrc(mediaServer.getId(), ssrcInfo.getSsrc());
         }
-        mediaServerService.closeRTPServer(mediaServer, ssrcInfo.getStream());
+        mediaServerService.closeRTPServer(mediaServer, ssrcInfo.getString());
     }
 }

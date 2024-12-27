@@ -124,6 +124,15 @@ public interface RemoteUserService {
      */
     List<RemoteUserVo> selectListByIds(List<Long> userIds);
 
+
+
+    /**
+     * 通过用户ID查询用户列表
+     *
+     * @return 用户列表
+     */
+    List<RemoteUserVo> selectListAll();
+
     /**
      * 通过角色ID查询用户ID
      *

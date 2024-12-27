@@ -3,9 +3,9 @@ package com.cdzeroly.wvp.conf.task;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
-import com.cdzeroly.wvp.service.domian.bean.CloudRecordItem;
+import com.cdzeroly.wvp.domain.CloudRecord;
 import com.cdzeroly.wvp.storager.mapper.CloudRecordServiceMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,17 +54,17 @@ public class CloudRecordTimer {
 
                 // 获取到截至日期之前的录像文件列表，文件列表满足未被收藏和保持的。这两个字段目前共能一致，
                 // 为我自己业务系统相关的代码，大家使用的时候直接使用收藏（collect）这一个类型即可
-                LambdaQueryWrapper<CloudRecordItem> wrapper = Wrappers.lambdaQuery();
-                wrapper.eq(CloudRecordItem::getCollect,false);
-                wrapper.lt(CloudRecordItem::getEndTime,lastDate);
-                wrapper.eq(CloudRecordItem::getMediaServerId, mediaServerItem.getId());
+                LambdaQueryWrapper<CloudRecord> wrapper = Wrappers.lambdaQuery();
+                wrapper.eq(CloudRecord::getCollect,false);
+                wrapper.lt(CloudRecord::getEndTime,lastDate);
+                wrapper.eq(CloudRecord::getMediaServerId, mediaServerItem.getId());
 
-                List<CloudRecordItem> cloudRecordItemList =  cloudRecordServiceMapper.selectList(wrapper);
+                List<CloudRecord> cloudRecordItemList =  cloudRecordServiceMapper.selectList(wrapper);
                 if (cloudRecordItemList.isEmpty()) {
                     continue;
                 }
                 // TODO 后续可以删除空了的过期日期文件夹
-                for (CloudRecordItem cloudRecordItem : cloudRecordItemList) {
+                for (CloudRecord cloudRecordItem : cloudRecordItemList) {
                     String date = new File(cloudRecordItem.getFilePath()).getParentFile().getName();
                     boolean deleteResult = mediaServerService.deleteRecordDirectory(mediaServerItem, cloudRecordItem.getApp(),
                             cloudRecordItem.getStream(), date, cloudRecordItem.getFileName());

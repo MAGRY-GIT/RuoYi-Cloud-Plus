@@ -4,16 +4,18 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
+import com.cdzeroly.wvp.domain.Group;
+import com.cdzeroly.wvp.domain.bean.SubscribeInfo;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.Region;
-import com.cdzeroly.wvp.gb28181.mapper.*;
+import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.gb28181.domian.bean.*;
 import com.cdzeroly.wvp.gb28181.event.EventPublisher;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommanderForPlatform;
 
+import com.cdzeroly.wvp.mapper.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,21 +59,19 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
 
 
     @Override
-    public TableDataInfo<PlatformChannel> queryChannelList(PageQuery pageQuery, String query, Integer channelType, Boolean online, Integer platformId, Boolean hasShare) {
+    public TableDataInfo<PlatformChannel> queryChannelList(PageQuery pageQuery, String query, Integer channelType, Boolean online, Long platformId, Boolean hasShare) {
         if (query != null) {
-            query = query.replaceAll("/", "//")
-                    .replaceAll("%", "/%")
-                    .replaceAll("_", "/_");
+            query = query.replaceAll("/", "//").replaceAll("%", "/%").replaceAll("_", "/_");
         }
         List<PlatformChannel> all = platformChannelMapper.queryForPlatformForWebList(platformId, query, channelType, online, hasShare);
-           return  TableDataInfo.build(all);
+        return TableDataInfo.build(all);
     }
 
     /**
      * 获取通道使用的分组中未分享的
      */
     @Transactional
-    public Set<Group> getGroupNotShareByChannelList(List<CommonGBChannel> channelList, Integer platformId) {
+    public Set<Group> getGroupNotShareByChannelList(List<CommonGBChannel> channelList, Long platformId) {
         // 获取分组中未分享的节点
         Set<Group> groupList = groupMapper.queryNotShareGroupForPlatformByChannelList(channelList, platformId);
         // 获取这些节点的所有父节点
@@ -87,7 +87,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
     /**
      * 获取通道使用的分组中未分享的
      */
-    private Set<Region> getRegionNotShareByChannelList(List<CommonGBChannel> channelList, Integer platformId) {
+    private Set<Region> getRegionNotShareByChannelList(List<CommonGBChannel> channelList, Long platformId) {
         // 获取分组中未分享的节点
         Set<Region> regionSet = regionMapper.queryNotShareRegionForPlatformByChannelList(channelList, platformId);
         // 获取这些节点的所有父节点
@@ -104,7 +104,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
      * 移除空的共享，并返回移除的分组
      */
     @Transactional
-    public Set<Group> deleteEmptyGroup(Set<Group> groupSet, Integer platformId) {
+    public Set<Group> deleteEmptyGroup(Set<Group> groupSet, Long platformId) {
         Iterator<Group> iterator = groupSet.iterator();
         while (iterator.hasNext()) {
             Group group = iterator.next();
@@ -127,10 +127,10 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
         if (groupSet.isEmpty()) {
             return new HashSet<>();
         }
-        Set<Group> parent =  platformChannelMapper.queryShareParentGroupByGroupSet(groupSet, platformId);
+        Set<Group> parent = platformChannelMapper.queryShareParentGroupByGroupSet(groupSet, platformId);
         if (parent.isEmpty()) {
             return groupSet;
-        }else {
+        } else {
             Set<Group> parentGroupSet = deleteEmptyGroup(parent, platformId);
             groupSet.addAll(parentGroupSet);
             return groupSet;
@@ -140,7 +140,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
     /**
      * 移除空的共享，并返回移除的行政区划
      */
-    private Set<Region> deleteEmptyRegion(Set<Region> regionSet, Integer platformId) {
+    private Set<Region> deleteEmptyRegion(Set<Region> regionSet, Long platformId) {
         Iterator<Region> iterator = regionSet.iterator();
         while (iterator.hasNext()) {
             Region region = iterator.next();
@@ -163,17 +163,17 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
         if (regionSet.isEmpty()) {
             return new HashSet<>();
         }
-        Set<Region> parent =  platformChannelMapper.queryShareParentRegionByRegionSet(regionSet, platformId);
+        Set<Region> parent = platformChannelMapper.queryShareParentRegionByRegionSet(regionSet, platformId);
         if (parent.isEmpty()) {
             return regionSet;
-        }else {
+        } else {
             Set<Region> parentGroupSet = deleteEmptyRegion(parent, platformId);
             regionSet.addAll(parentGroupSet);
             return regionSet;
         }
     }
 
-    private Set<Group> getAllGroup(Set<Group> groupList ) {
+    private Set<Group> getAllGroup(Set<Group> groupList) {
         if (groupList.isEmpty()) {
             return new HashSet<>();
         }
@@ -186,7 +186,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
         return channelList;
     }
 
-    private Set<Region> getAllRegion(Set<Region> regionSet ) {
+    private Set<Region> getAllRegion(Set<Region> regionSet) {
         if (regionSet.isEmpty()) {
             return new HashSet<>();
         }
@@ -202,7 +202,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
 
     @Override
     @Transactional
-    public int addAllChannel(Integer platformId) {
+    public int addAllChannel(Long platformId) {
         List<CommonGBChannel> channelListNotShare = platformChannelMapper.queryNotShare(platformId, null);
         Assert.notEmpty(channelListNotShare, "所有通道已共享");
         return addChannelList(platformId, channelListNotShare);
@@ -210,18 +210,18 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
 
     @Override
     @Transactional
-    public int addChannels(Integer platformId, List<Integer> channelIds) {
+    public int addChannels(Long platformId, List<Long> channelIds) {
         List<CommonGBChannel> channelListNotShare = platformChannelMapper.queryNotShare(platformId, channelIds);
         Assert.notEmpty(channelListNotShare, "通道已共享");
         return addChannelList(platformId, channelListNotShare);
     }
 
     @Transactional
-    public int addChannelList(Integer platformId, List<CommonGBChannel> channelList) {
+    public int addChannelList(Long platformId, List<CommonGBChannel> channelList) {
         int result = platformChannelMapper.addChannels(platformId, channelList);
         if (result > 0) {
             // 查询通道相关的行政区划信息是否共享，如果没共享就添加
-            Set<Region> regionListNotShare =  getRegionNotShareByChannelList(channelList, platformId);
+            Set<Region> regionListNotShare = getRegionNotShareByChannelList(channelList, platformId);
             if (!regionListNotShare.isEmpty()) {
                 int addGroupResult = platformChannelMapper.addPlatformRegion(new ArrayList<>(regionListNotShare), platformId);
                 if (addGroupResult > 0) {
@@ -233,7 +233,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
             }
 
             // 查询通道相关的分组信息是否共享，如果没共享就添加
-            Set<Group> groupListNotShare =  getGroupNotShareByChannelList(channelList, platformId);
+            Set<Group> groupListNotShare = getGroupNotShareByChannelList(channelList, platformId);
             if (!groupListNotShare.isEmpty()) {
                 int addGroupResult = platformChannelMapper.addPlatformGroup(new ArrayList<>(groupListNotShare), platformId);
                 if (addGroupResult > 0) {
@@ -256,8 +256,8 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
     }
 
     @Override
-    public int removeAllChannel(Integer platformId) {
-        List<CommonGBChannel> channelListShare = platformChannelMapper.queryShare(platformId,  null);
+    public int removeAllChannel(Long platformId) {
+        List<CommonGBChannel> channelListShare = platformChannelMapper.queryShare(platformId, null);
         Assert.notEmpty(channelListShare, "未共享任何通道");
         int result = platformChannelMapper.removeChannelsWithPlatform(platformId, channelListShare);
         if (result > 0) {
@@ -291,20 +291,20 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
 
     @Override
     @Transactional
-    public void addChannelByDevice(Integer platformId, List<Integer> deviceIds) {
-        List<Integer> channelList = commonGBChannelMapper.queryByGbDeviceIdsForIds(ChannelDataType.GB28181.value,deviceIds);
+    public void addChannelByDevice(Long platformId, List<Long> deviceIds) {
+        List<Long> channelList = commonGBChannelMapper.queryByGbDeviceIdsForIds(ChannelDataType.GB28181.value, deviceIds);
         addChannels(platformId, channelList);
     }
 
     @Override
     @Transactional
-    public void removeChannelByDevice(Integer platformId, List<Integer> deviceIds) {
-        List<Integer> channelList = commonGBChannelMapper.queryByGbDeviceIdsForIds(ChannelDataType.GB28181.value,deviceIds);
+    public void removeChannelByDevice(Long platformId, List<Long> deviceIds) {
+        List<Long> channelList = commonGBChannelMapper.queryByGbDeviceIdsForIds(ChannelDataType.GB28181.value, deviceIds);
         removeChannels(platformId, channelList);
     }
 
     @Transactional
-    public int removeChannelList(Integer platformId, List<CommonGBChannel> channelList) {
+    public int removeChannelList(Long platformId, List<CommonGBChannel> channelList) {
         int result = platformChannelMapper.removeChannelsWithPlatform(platformId, channelList);
         if (result > 0) {
             // 查询通道相关的分组信息
@@ -337,7 +337,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
 
     @Override
     @Transactional
-    public int removeChannels(Integer platformId, List<Integer> channelIds) {
+    public int removeChannels(Long platformId, List<Long> channelIds) {
         List<CommonGBChannel> channelList = platformChannelMapper.queryShare(platformId, channelIds);
         if (channelList.isEmpty()) {
             return 0;
@@ -347,7 +347,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
 
     @Override
     @Transactional
-    public void removeChannels(List<Integer> ids) {
+    public void removeChannels(List<Long> ids) {
         List<Platform> platformList = platformChannelMapper.queryPlatFormListByChannelList(ids);
         if (platformList.isEmpty()) {
             return;
@@ -360,13 +360,13 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
 
     @Override
     @Transactional
-    public void removeChannel(int channelId) {
+    public void removeChannel(Long channelId) {
         List<Platform> platformList = platformChannelMapper.queryPlatFormListByChannelId(channelId);
         if (platformList.isEmpty()) {
             return;
         }
         for (Platform platform : platformList) {
-            ArrayList<Integer> ids = new ArrayList<>();
+            ArrayList<Long> ids = new ArrayList<>();
             ids.add(channelId);
             removeChannels(platform.getId(), ids);
         }
@@ -397,7 +397,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
         }
         if (platform.getCatalogWithGroup() > 0) {
             // 关联的分组信息
-            List<CommonGBChannel> groupChannelList =  groupMapper.queryForPlatform(platform.getId());
+            List<CommonGBChannel> groupChannelList = groupMapper.queryForPlatform(platform.getId());
             if (!groupChannelList.isEmpty()) {
                 channelList.addAll(groupChannelList);
             }
@@ -408,19 +408,19 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
     }
 
     @Override
-    public void pushChannel(Integer platformId) {
+    public void pushChannel(Long platformId) {
         Platform platform = platformMapper.selectById(platformId);
         Assert.notNull(platform, "平台不存在");
         List<CommonGBChannel> channelList = queryByPlatform(platform);
-        if (channelList.isEmpty()){
+        if (channelList.isEmpty()) {
             return;
         }
         SubscribeInfo subscribeInfo = SubscribeInfo.buildSimulated(platform.getServerGbId(), platform.getServerIp());
 
         try {
             sipCommanderFroPlatform.sendNotifyForCatalogAddOrUpdate(CatalogEvent.ADD, platform, channelList, subscribeInfo, null);
-        } catch (InvalidArgumentException | ParseException | NoSuchFieldException |
-                 SipException | IllegalAccessException e) {
+        } catch (InvalidArgumentException | ParseException | NoSuchFieldException | SipException |
+                 IllegalAccessException e) {
             log.error("[命令发送失败] 国标级联 Catalog通知: {}", e.getMessage());
         }
     }
@@ -434,8 +434,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
             // 发送catalog
             eventPublisher.catalogEventPublish(channel.getPlatformId(), commonGBChannel, CatalogEvent.UPDATE);
         } catch (Exception e) {
-            log.warn("[自定义通道信息] 发送失败， 平台ID： {}， 通道： {}（{}）", channel.getPlatformId(),
-                    channel.getGbName(), channel.getId(), e);
+            log.warn("[自定义通道信息] 发送失败， 平台ID： {}， 通道： {}（{}）", channel.getPlatformId(), channel.getGbName(), channel.getId(), e);
         }
     }
 
@@ -443,10 +442,8 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
     @Transactional
     public void checkGroupRemove(List<CommonGBChannel> channelList, List<Group> groupList) {
 
-        List<Integer> channelIds = new ArrayList<>();
-        channelList.stream().forEach(commonGBChannel -> {
-            channelIds.add(commonGBChannel.getGbId());
-        });
+        List<Long> channelIds = channelList.stream().map(CommonGBChannel::getGbId).toList();
+
         // 获取关联这些通道的平台
         List<Platform> platformList = platformChannelMapper.queryPlatFormListByChannelList(channelIds);
         if (platformList.isEmpty()) {
@@ -456,7 +453,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
             Set<Group> groupSet;
             if (groupList == null || groupList.isEmpty()) {
                 groupSet = platformChannelMapper.queryShareGroup(platform.getId());
-            }else {
+            } else {
                 groupSet = new HashSet<>(groupList);
             }
             // 清理空的分组并发送消息
@@ -481,10 +478,8 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
     @Override
     @Transactional
     public void checkRegionRemove(List<CommonGBChannel> channelList, List<Region> regionList) {
-        List<Integer> channelIds = new ArrayList<>();
-        channelList.stream().forEach(commonGBChannel -> {
-            channelIds.add(commonGBChannel.getGbId());
-        });
+        List<Long> channelIds    =  channelList.stream().map(CommonGBChannel::getGbId).toList();
+
         // 获取关联这些通道的平台
         List<Platform> platformList = platformChannelMapper.queryPlatFormListByChannelList(channelIds);
         if (platformList.isEmpty()) {
@@ -494,7 +489,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
             Set<Region> regionSet;
             if (regionList == null || regionList.isEmpty()) {
                 regionSet = platformChannelMapper.queryShareRegion(platform.getId());
-            }else {
+            } else {
                 regionSet = new HashSet<>(regionList);
             }
             // 清理空的分组并发送消息
@@ -519,17 +514,15 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
     @Override
     @Transactional
     public void checkGroupAdd(List<CommonGBChannel> channelList) {
-        List<Integer> channelIds = new ArrayList<>();
-        channelList.stream().forEach(commonGBChannel -> {
-            channelIds.add(commonGBChannel.getGbId());
-        });
+        List<Long> channelIds =     channelList.stream().map(CommonGBChannel::getGbId).toList();
+
         List<Platform> platformList = platformChannelMapper.queryPlatFormListByChannelList(channelIds);
         if (platformList.isEmpty()) {
             return;
         }
         for (Platform platform : platformList) {
 
-            Set<Group> addGroup =  getGroupNotShareByChannelList(channelList, platform.getId());
+            Set<Group> addGroup = getGroupNotShareByChannelList(channelList, platform.getId());
 
             List<CommonGBChannel> channelListForEvent = new ArrayList<>();
             if (!addGroup.isEmpty()) {
@@ -550,17 +543,16 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
 
     @Override
     public void checkRegionAdd(List<CommonGBChannel> channelList) {
-        List<Integer> channelIds = new ArrayList<>();
-        channelList.stream().forEach(commonGBChannel -> {
-            channelIds.add(commonGBChannel.getGbId());
-        });
+
+        List<Long> channelIds =     channelList.stream().map(CommonGBChannel::getGbId).toList();
+
         List<Platform> platformList = platformChannelMapper.queryPlatFormListByChannelList(channelIds);
         if (platformList.isEmpty()) {
             return;
         }
         for (Platform platform : platformList) {
 
-            Set<Region> addRegion =  getRegionNotShareByChannelList(channelList, platform.getId());
+            Set<Region> addRegion = getRegionNotShareByChannelList(channelList, platform.getId());
             List<CommonGBChannel> channelListForEvent = new ArrayList<>();
             if (!addRegion.isEmpty()) {
                 for (Region region : addRegion) {
@@ -579,12 +571,12 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
     }
 
     @Override
-    public List<Platform> queryPlatFormListByChannelDeviceId(Integer channelId, List<String> platforms) {
+    public List<Platform> queryPlatFormListByChannelDeviceId(Long channelId, List<String> platforms) {
         return platformChannelMapper.queryPlatFormListForGBWithGBId(channelId, platforms);
     }
 
     @Override
-    public CommonGBChannel queryChannelByPlatformIdAndChannelId(Integer platformId, Integer channelId) {
+    public CommonGBChannel queryChannelByPlatformIdAndChannelId(Long platformId, Long channelId) {
         return platformChannelMapper.queryShareChannel(platformId, channelId);
     }
 }

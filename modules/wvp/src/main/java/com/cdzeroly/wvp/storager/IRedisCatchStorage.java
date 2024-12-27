@@ -1,16 +1,14 @@
 package com.cdzeroly.wvp.storager;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.cdzeroly.wvp.domain.bean.*;
 import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.domian.bean.*;
-import com.cdzeroly.wvp.media.domian.bean.MediaInfo;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.zlm.dto.StreamAuthorityInfo;
-import com.cdzeroly.wvp.service.domian.bean.GPSMsgInfo;
-import com.cdzeroly.wvp.service.domian.bean.MessageForPushChannel;
 import com.cdzeroly.wvp.storager.dto.PlatformRegisterInfo;
 
 import java.util.List;

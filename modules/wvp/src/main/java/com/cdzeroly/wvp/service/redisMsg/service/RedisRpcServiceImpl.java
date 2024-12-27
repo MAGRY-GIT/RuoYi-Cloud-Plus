@@ -7,7 +7,7 @@ import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.conf.redis.RedisRpcConfig;
 import com.cdzeroly.wvp.conf.redis.bean.RedisRpcRequest;
 import com.cdzeroly.wvp.conf.redis.bean.RedisRpcResponse;
-import com.cdzeroly.wvp.gb28181.domian.bean.SendRtpInfo;
+import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
 import com.cdzeroly.wvp.gb28181.session.SSRCFactory;
 import com.cdzeroly.wvp.media.event.hook.Hook;
 import com.cdzeroly.wvp.media.event.hook.HookSubscribe;
@@ -15,8 +15,9 @@ import com.cdzeroly.wvp.media.event.hook.HookType;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.service.ISendRtpServerService;
 import com.cdzeroly.wvp.service.redisMsg.IRedisRpcService;
-import com.cdzeroly.wvp.vmanager.bean.ErrorCode;
-import com.cdzeroly.wvp.vmanager.bean.WVPResult;
+import com.cdzeroly.wvp.domain.ErrorCode;
+import com.cdzeroly.wvp.domain.WVPResult;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,29 +25,23 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class RedisRpcServiceImpl implements IRedisRpcService {
 
 
-    @Autowired
-    private RedisRpcConfig redisRpcConfig;
+    private final RedisRpcConfig redisRpcConfig;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private HookSubscribe hookSubscribe;
+    private final HookSubscribe hookSubscribe;
 
-    @Autowired
-    private SSRCFactory ssrcFactory;
+    private final SSRCFactory ssrcFactory;
 
-    @Autowired
-    private RedisTemplate<Object, Object> redisTemplate;
+    private final RedisTemplate<Object, Object> redisTemplate;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private ISendRtpServerService sendRtpServerService;
+    private final ISendRtpServerService sendRtpServerService;
 
     private RedisRpcRequest buildRequest(String uri, Object param) {
         RedisRpcRequest request = new RedisRpcRequest();
@@ -90,7 +85,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
     }
 
     @Override
-    public long waitePushStreamOnline(SendRtpInfo sendRtpItem, CommonCallback<Integer> callback) {
+    public long waitePushStreamOnline(SendRtpInfo sendRtpItem, CommonCallback<Long> callback) {
         log.info("[请求所有WVP监听流上线] {}/{}", sendRtpItem.getApp(), sendRtpItem.getStream());
         // 监听流上线。 流上线直接发送sendRtpItem消息给实际的信令处理者
         Hook hook = Hook.getInstance(HookType.on_media_arrival, sendRtpItem.getApp(), sendRtpItem.getStream(), null);
@@ -123,7 +118,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
             log.info("[请求所有WVP监听流上线] 流上线 {}/{}->{}", sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.toString());
 
             if (callback != null) {
-                callback.run(Integer.parseInt(response.getBody().toString()));
+                callback.run(Long.parseLong(response.getBody().toString()));
             }
             hookSubscribe.removeSubscribe(hook);
         });

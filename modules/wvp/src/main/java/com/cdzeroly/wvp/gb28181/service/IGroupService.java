@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.gb28181.service;
 
-import com.cdzeroly.wvp.gb28181.domian.bean.Group;
-import com.cdzeroly.wvp.gb28181.domian.bean.GroupTree;
+import com.cdzeroly.wvp.domain.Group;
+import com.cdzeroly.wvp.domain.bean.GroupTree;
 
 import java.util.List;
 
@@ -14,11 +14,11 @@ public interface IGroupService {
 
     Group queryGroupByDeviceId(String regionDeviceId);
 
-    List<GroupTree> queryForTree(String query, Integer parent, Boolean hasChannel);
+    List<GroupTree> queryForTree(String query, Long parent, Boolean hasChannel);
 
     void syncFromChannel();
 
-    boolean delete(int id);
+    boolean delete(Long id);
 
     boolean batchAdd(List<Group> groupList);
 

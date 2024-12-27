@@ -3,8 +3,8 @@ package com.cdzeroly.wvp.service.impl;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.exception.PlayException;
-import com.cdzeroly.wvp.gb28181.domian.bean.SendRtpInfo;
-import com.cdzeroly.wvp.media.domian.MediaServer;
+import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
+import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.service.ISendRtpServerService;
 import com.cdzeroly.wvp.utils.JsonUtil;
 import lombok.AllArgsConstructor;
@@ -34,7 +34,7 @@ public class SendRtpServerServiceImpl implements ISendRtpServerService {
 
     @Override
     public SendRtpInfo createSendRtpInfo(MediaServer mediaServer, String ip, Integer port, String ssrc, String requesterId,
-                                         String deviceId, Integer channelId, Boolean isTcp, Boolean rtcp) {
+                                         String deviceId, Long channelId, Boolean isTcp, Boolean rtcp) {
         int localPort = getNextPort(mediaServer);
         if (localPort <= 0) {
             return null;
@@ -45,7 +45,7 @@ public class SendRtpServerServiceImpl implements ISendRtpServerService {
 
     @Override
     public SendRtpInfo createSendRtpInfo(MediaServer mediaServer, String ip, Integer port, String ssrc, String platformId,
-                                         String app, String stream, Integer channelId, Boolean tcp, Boolean rtcp){
+                                         String app, String stream, Long channelId, Boolean tcp, Boolean rtcp){
 
         int localPort = getNextPort(mediaServer);
         if (localPort <= 0) {
@@ -69,7 +69,7 @@ public class SendRtpServerServiceImpl implements ISendRtpServerService {
     }
 
     @Override
-    public SendRtpInfo queryByChannelId(Integer channelId, String targetId) {
+    public SendRtpInfo queryByChannelId(Long channelId, String targetId) {
         String key = VideoManagerConstants.SEND_RTP_INFO_CHANNEL + channelId;
         return JsonUtil.redisHashJsonToObject(redisTemplate, key, targetId, SendRtpInfo.class);
     }
@@ -136,7 +136,7 @@ public class SendRtpServerServiceImpl implements ISendRtpServerService {
     }
 
     @Override
-    public void deleteByChannel(Integer channelId, String targetId) {
+    public void deleteByChannel(Long channelId, String targetId) {
         SendRtpInfo sendRtpInfo = queryByChannelId(channelId, targetId);
         if (sendRtpInfo == null) {
             return;

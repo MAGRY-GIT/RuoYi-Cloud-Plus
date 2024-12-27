@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cdzeroly.wvp.gb28181.mapper.RegionMapper">
+<mapper namespace="com.cdzeroly.wvp.mapper.RegionMapper">
     <update id="updateChild">
         update wvp_common_region
         set parent_device_id = #{parentDeviceId}
@@ -19,7 +19,7 @@
 
     </update>
 
-    <select id="query" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+    <select id="query" resultType="com.cdzeroly.wvp.domain.Region">
 
         SELECT * FROM wvp_common_region WHERE 1=1
         <if test='query != null'>
@@ -31,7 +31,7 @@
         </if>
         ORDER BY id
     </select>
-    <select id="getChildren" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+    <select id="getChildren" resultType="com.cdzeroly.wvp.domain.Region">
         SELECT *
         from wvp_common_region
         WHERE parent_id = #{parentId}
@@ -73,7 +73,7 @@
         </if>
 
     </select>
-    <select id="queryInRegionListByDeviceId" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+    <select id="queryInRegionListByDeviceId" resultType="com.cdzeroly.wvp.domain.Region">
         SELECT * FROM wvp_common_region
         WHERE device_id IN
         <foreach collection='regionList' item='item' open='(' separator=',' close=')'>
@@ -89,14 +89,14 @@
         WHERE wpr.platform_id = #{platformId}
 
     </select>
-    <select id="queryByDeviceId" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+    <select id="queryByDeviceId" resultType="com.cdzeroly.wvp.domain.Region">
         SELECT *
         FROM wvp_common_region
         WHERE device_id = #{deviceId}
 
 
     </select>
-    <select id="queryParentInChannelList" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+    <select id="queryParentInChannelList" resultType="com.cdzeroly.wvp.domain.Region">
         SELECT *
         FROM wvp_common_region
         WHERE id IN
@@ -105,7 +105,7 @@
         </foreach>
 
     </select>
-    <select id="queryByChannelList" resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+    <select id="queryByChannelList" resultType="com.cdzeroly.wvp.domain.Region">
         SELECT *
         FROM wvp_common_region
         WHERE device_id IN
@@ -116,7 +116,7 @@
 
     </select>
     <select id="queryNotShareRegionForPlatformByChannelList"
-            resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+            resultType="com.cdzeroly.wvp.domain.Region">
         SELECT *
         FROM wvp_common_region wcr
         LEFT JOIN wvp_platform_region wpr ON wpr.region_id = wcr.id AND wpr.platform_id = #{platformId}
@@ -128,7 +128,7 @@
 
     </select>
     <select id="queryNotShareRegionForPlatformByRegionList"
-            resultType="com.cdzeroly.wvp.gb28181.domian.Region">
+            resultType="com.cdzeroly.wvp.domain.Region">
         SELECT *
         FROM wvp_common_region wcr
         LEFT JOIN wvp_platform_region wpr ON wpr.region_id = wcr.id AND wpr.platform_id = #{platformId}
