@@ -4,6 +4,7 @@ package com.cdzeroly.wvp.gb28181.controller;
 import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
+import com.cdzeroly.wvp.gb28181.service.IPTZService;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
@@ -11,6 +12,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -36,6 +39,9 @@ public class PtzController {
 	@Resource
 	private IDeviceService deviceService;
 
+    @Resource
+    private IPTZService iptzService;
+
 	@Resource
 	private DeferredResultHolder resultHolder;
 
@@ -52,7 +58,6 @@ public class PtzController {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("设备云台控制 API调用，deviceId：%s ，channelId：%s ，cmdCode：%d parameter1：%d parameter2：%d",deviceId, channelId, cmdCode, parameter1, parameter2));
 		}
-		Device device = deviceService.getDeviceByDeviceId(deviceId);
 
 		if (parameter1 == null || parameter1 < 0 || parameter1 > 255) {
 			throw new ServiceException("parameter1 为 1-255的数字");
@@ -63,13 +68,10 @@ public class PtzController {
 		if (combindCode2 == null || combindCode2 < 0 || combindCode2 > 16) {
 			throw new ServiceException("parameter1 为 1-255的数字");
 		}
-		try {
-			cmder.frontEndCmd(device, channelId, cmdCode, parameter1, parameter2, combindCode2);
-		} catch (SipException | InvalidArgumentException | ParseException e) {
-			log.error("[命令发送失败] 前端控制: {}", e.getMessage());
-			throw new ServiceException("命令发送失败: " + e.getMessage());
-		}
-	}
+        Device device = deviceService.getDeviceByDeviceId(deviceId);
+        Assert.notNull(device, "设备[" + deviceId + "]不存在");
+        iptzService.frontEndCommand(device, channelId, cmdCode, parameter1, parameter2, combindCode2);
+    }
 
 	@Operation(summary = "云台控制")
 	@Parameter(name = "deviceId", description = "设备国标编号", required = true)

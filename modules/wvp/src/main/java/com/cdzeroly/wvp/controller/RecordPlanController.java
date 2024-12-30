@@ -143,7 +143,7 @@ public class RecordPlanController {
     @Parameter(name = "planId", description = "计划ID", required = true)
     public R<Void> delete(Integer planId) {
         if (planId == null) {
-            throw new ServiceException("计划IDID不可为NULL");
+            throw new ServiceException("计划ID不可为NULL");
         }
         recordPlanService.delete(planId);
         return R.ok();

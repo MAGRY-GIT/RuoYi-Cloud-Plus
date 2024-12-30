@@ -1,9 +1,12 @@
 package com.cdzeroly.wvp.service.impl;
 
 import com.cdzeroly.common.core.domain.R;
+import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
+import com.cdzeroly.wvp.domain.MediaServer;
+import com.cdzeroly.wvp.domain.StreamPush;
 import com.cdzeroly.wvp.domain.bean.MediaInfo;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.media.zlm.dto.StreamAuthorityInfo;
@@ -48,15 +51,22 @@ public class StreamPushPlayServiceImpl implements IStreamPushPlayService {
     public void start(Long id, ErrorCallback<StreamInfo> callback, String platformDeviceId, String platformName ) {
         StreamPushVo streamPushVo = streamPushMapper.queryOne(id);
         Assert.notNull(streamPushVo, "推流信息未找到");
-        MediaInfo mediaInfo = redisCatchStorage.getPushListItem(streamPushVo.getApp(), streamPushVo.getStream());
+        MediaServer mediaServer = mediaServerService.getOne(streamPushVo.getMediaServerId());
+        Assert.notNull(mediaServer, "节点" + streamPushVo.getMediaServerId() + "未找到");
+        MediaInfo mediaInfo = mediaServerService.getMediaInfo(mediaServer, streamPushVo.getApp(), streamPushVo.getStream());
         if (mediaInfo != null) {
             String callId = null;
             StreamAuthorityInfo streamAuthorityInfo = redisCatchStorage.getStreamAuthorityInfo(streamPushVo.getApp(), streamPushVo.getStream());
             if (streamAuthorityInfo != null) {
                 callId = streamAuthorityInfo.getCallId();
             }
-            callback.run(R.SUCCESS, "SUCCESS", mediaServerService.getStreamInfoByAppAndStream(mediaInfo.getMediaServer(),
+            callback.run(R.SUCCESS, "SUCCESS", mediaServerService.getStreamInfoByAppAndStream(mediaServer,
                     streamPushVo.getApp(), streamPushVo.getStream(), mediaInfo, callId));
+            if (!streamPushVo.isPushing()) {
+                streamPushVo.setPushing(true);
+                StreamPush streamPush = MapstructUtils.convert(streamPushVo, StreamPush.class);
+                streamPushMapper.insertOrUpdate(streamPush);
+            }
             return;
         }
         Assert.isTrue(streamPushVo.isStartOfflinePush(), "通道未推流");

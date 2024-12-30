@@ -303,7 +303,7 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
                     || streamInfo.getOriginType() == OriginType.FFMPEG_PULL.ordinal()) {
                 if (streamProxyVoMap.get(key) != null) {
                     redisCatchStorage.addStream(mediaServer, "pull", streamInfo.getApp(), streamInfo.getStream(), streamInfo.getMediaInfo());
-                    if ("OFF".equalsIgnoreCase(streamProxy.getGbStatus()) && streamProxy.getGbId() > 0) {
+                    if ("OFF".equalsIgnoreCase(streamProxy.getGbStatus()) && ObjUtil.isNotNull(streamProxy.getGbId())) {
                         streamProxy.setGbStatus("ON");
                         channelListForOnline.add(streamProxy.buildCommonGBChannel());
                     }
@@ -319,7 +319,7 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
         List<StreamProxyVo> streamProxiesForRemove = new ArrayList<>();
         if (!streamProxyVoMap.isEmpty()) {
             for (StreamProxyVo streamProxy : streamProxyVoMap.values()) {
-                if ("ON".equalsIgnoreCase(streamProxy.getGbStatus()) && streamProxy.getGbId() > 0) {
+                if ("ON".equalsIgnoreCase(streamProxy.getGbStatus()) && ObjUtil.isNotNull(streamProxy.getGbId())) {
                     streamProxy.setGbStatus("OFF");
                     channelListForOffline.add(streamProxy.buildCommonGBChannel());
                 }
@@ -360,7 +360,7 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
         List<CommonGBChannel> channelListForOffline = new ArrayList<>();
 
         for (StreamProxyVo streamProxy : streamProxyVos) {
-            if (streamProxy.getGbId() > 0 && "ON".equalsIgnoreCase(streamProxy.getGbStatus())) {
+            if (ObjUtil.isNotNull(streamProxy.getGbId()) && "ON".equalsIgnoreCase(streamProxy.getGbStatus())) {
                 channelListForOffline.add(streamProxy.buildCommonGBChannel());
             }
             if (streamProxy.getGbId() == 0 && streamProxy.isEnableRemoveNoneReader()) {

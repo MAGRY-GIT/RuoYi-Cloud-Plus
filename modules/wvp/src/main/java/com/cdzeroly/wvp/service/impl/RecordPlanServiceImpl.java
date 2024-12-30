@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.service.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.cdzeroly.common.core.exception.ServiceException;
@@ -182,7 +183,7 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
         RecordPlan recordPlan = MapstructUtils.convert(plan, RecordPlan.class);
         recordPlanMapper.insert(recordPlan);
 
-        if (plan.getId() > 0 && !plan.getPlanItemList().isEmpty()) {
+        if (ObjUtil.isNotNull(plan.getId()) && !plan.getPlanItemList().isEmpty()) {
             for (RecordPlanItem recordPlanItem : plan.getPlanItemList()) {
                 recordPlanItem.setPlanId(plan.getId());
             }

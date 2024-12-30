@@ -11,6 +11,7 @@ import com.cdzeroly.wvp.utils.MediaServerUtils;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
 
@@ -21,7 +22,7 @@ import java.util.Map;
 @Getter
 @Setter
 @TableName("wvp_cloud_record")
-public class CloudRecord extends BaseDateEntity {
+public class CloudRecord  implements Serializable {
     /**
      * 主键
      */

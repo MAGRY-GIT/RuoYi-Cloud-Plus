@@ -176,15 +176,17 @@ public class ZLMMediaNodeServerService implements IMediaNodeServerService {
         JSONObject mediaList = zlmresTfulUtils.getMediaList(mediaServer, app, stream);
         if (mediaList != null) {
             if (mediaList.getInteger("code") == 0) {
-                JSONArray data = mediaList.getJSONArray("data");
-                if (data == null) {
+                JSONArray dataArray = mediaList.getJSONArray("data");
+                if (dataArray == null) {
                     return streamInfoList;
                 }
-                JSONObject mediaJSON = data.getJSONObject(0);
-                MediaInfo mediaInfo = MediaInfo.getInstance(mediaJSON, mediaServer, userSetting.getServerId());
-                StreamInfo streamInfo = getStreamInfoByAppAndStream(mediaServer, app, stream, mediaInfo, callId, true);
-                if (streamInfo != null) {
-                    streamInfoList.add(streamInfo);
+                for (int i = 0; i < dataArray.size(); i++) {
+                    JSONObject mediaJSON = dataArray.getJSONObject(0);
+                    MediaInfo mediaInfo = MediaInfo.getInstance(mediaJSON, mediaServer, userSetting.getServerId());
+                    StreamInfo streamInfo = getStreamInfoByAppAndStream(mediaServer, mediaInfo.getApp(), mediaInfo.getStream(), mediaInfo, callId, true);
+                    if (streamInfo != null) {
+                        streamInfoList.add(streamInfo);
+                    }
                 }
             }
         }
@@ -314,7 +316,7 @@ public class ZLMMediaNodeServerService implements IMediaNodeServerService {
         Map<String, String> result = new HashMap<>();
         JSONObject mediaServerConfigResuly = zlmresTfulUtils.getMediaServerConfig(mediaServer);
         if (mediaServerConfigResuly != null && mediaServerConfigResuly.getInteger("code") == 0
-                && mediaServerConfigResuly.getJSONArray("data").size() > 0){
+                && !mediaServerConfigResuly.getJSONArray("data").isEmpty()){
             JSONObject mediaServerConfig = mediaServerConfigResuly.getJSONArray("data").getJSONObject(0);
 
             for (String key : mediaServerConfig.keySet()) {

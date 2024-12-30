@@ -36,8 +36,8 @@
         wdc.id as gb_id
         FROM
         wvp_stream_push st
-        LEFT JOIN wvp_device_channel wdc ON st.id = wdc.data_device_id
-        WHERE wdc.data_type = 2
+        LEFT JOIN wvp_device_channel wdc ON wdc.data_type = 2 and st.id = wdc.data_device_id
+        WHERE 1=1
         <if test="query != null">
             AND (
             st.app LIKE CONCAT('%', #{query}, '%') ESCAPE '/'

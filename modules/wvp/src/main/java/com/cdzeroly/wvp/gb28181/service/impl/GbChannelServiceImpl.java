@@ -136,7 +136,7 @@ public class GbChannelServiceImpl implements IGbChannelService {
 
             return 0;
         }
-        int result = commonGBChannelMapper.updateStatusById(commonGBChannel.getGbId(), 0);
+        int result = commonGBChannelMapper.updateStatusById(commonGBChannel.getGbId(), "OFF");
         if (result > 0) {
             try {
                 // 发送通知
@@ -190,7 +190,7 @@ public class GbChannelServiceImpl implements IGbChannelService {
             log.warn("[通道上线] 未找到数据库ID，更新失败， {}", commonGBChannel.getGbDeviceId());
             return 0;
         }
-        int result = commonGBChannelMapper.updateStatusById(commonGBChannel.getGbId(), 1);
+        int result = commonGBChannelMapper.updateStatusById(commonGBChannel.getGbId(), "ON");
         if (result > 0) {
             try {
                 // 发送通知

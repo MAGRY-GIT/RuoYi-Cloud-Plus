@@ -167,7 +167,7 @@ public class ZLMServerFactory {
         }
         return  (mediaInfo.getInteger("code") == 0
                 && mediaInfo.getJSONArray("data") != null
-                && mediaInfo.getJSONArray("data").size() > 0);
+                && !mediaInfo.getJSONArray("data").isEmpty());
     }
 
     /**

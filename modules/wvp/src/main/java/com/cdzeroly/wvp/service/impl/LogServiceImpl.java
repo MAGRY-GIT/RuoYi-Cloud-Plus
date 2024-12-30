@@ -21,7 +21,7 @@ public class LogServiceImpl implements ILogService {
     @Override
     public List<LogFileInfo> queryList(String query, String startTime, String endTime) {
         File logFile = getLogDir();
-        if (logFile == null && !logFile.exists()) {
+        if (logFile == null || !logFile.exists()) {
             throw new ServiceException( "获取日志文件目录失败");
         }
         File[] files = logFile.listFiles();

@@ -105,7 +105,7 @@ public class Jt808EncoderCmd extends MessageToByteEncoder<Cmd> {
             low += len;
         }
 
-        if (bufList.size() > 0) {
+        if (!bufList.isEmpty()) {
             bufList.add(source.slice(low, high - low));
         } else {
             bufList.add(source);

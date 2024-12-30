@@ -140,7 +140,7 @@ public class DynamicTask {
      */
     @Scheduled(cron="0 0/5 * * * ?")
     public void execute(){
-        if (futureMap.size() > 0) {
+        if (!futureMap.isEmpty()) {
             for (String key : futureMap.keySet()) {
                 ScheduledFuture<?> future = futureMap.get(key);
                 if (future.isDone() || future.isCancelled()) {

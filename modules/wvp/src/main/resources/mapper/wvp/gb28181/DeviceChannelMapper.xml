@@ -269,7 +269,7 @@
     <delete id="cleanChannelsByDeviceId">
         DELETE
         FROM wvp_device_channel
-        WHERE data_type =1 and data_device_id=#{deviceId}
+        WHERE data_type =1 and data_device_id=#{dataDeviceId}
     </delete>
     <delete id="del">
         DELETE

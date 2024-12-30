@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.notify.cmd;
 
+import cn.hutool.core.util.ObjUtil;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
@@ -111,7 +112,7 @@ public class KeepaliveNotifyMessageHandler extends SIPRequestProcessorParent imp
                 device.setIp(remoteAddressInfo.getIp());
                 device.setLocalIp(request.getLocalAddress().getHostAddress());
                 // 设备地址变化会引起目录订阅任务失效，需要重新添加
-                if (device.getSubscribeCycleForCatalog() > 0) {
+                if (ObjUtil.isNotNull(device.getSubscribeCycleForCatalog())) {
                     deviceService.removeCatalogSubscribe(device, result -> {
                         deviceService.addCatalogSubscribe(device);
                     });

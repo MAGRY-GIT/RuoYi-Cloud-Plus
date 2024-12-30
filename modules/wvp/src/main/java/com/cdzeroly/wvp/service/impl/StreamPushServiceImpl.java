@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.service.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdzeroly.common.core.exception.ServiceException;
@@ -229,7 +230,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
         if (streamPushVo.isPushing()) {
             stop(streamPushVo);
         }
-        if (streamPushVo.getGbId() > 0) {
+        if (ObjUtil.isNotNull(streamPushVo.getGbId())) {
             gbChannelService.delete(streamPushVo.getGbId());
         }
         streamPushMapper.deleteById(streamPushVo.getId());
@@ -238,7 +239,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
     @Transactional
     public boolean update(StreamPushVo streamPushVo) {
         Assert.notNull(streamPushVo, "推流信息不可为NULL");
-        Assert.isTrue(streamPushVo.getId() > 0, "推流信息ID必须存在");
+        Assert.notNull(streamPushVo.getId(), "推流信息ID必须存在");
         log.info("[更新推流]：id: {}, app: {}, stream: {}, ", streamPushVo.getId(), streamPushVo.getApp(), streamPushVo.getStream());
         StreamPushVo streamPushVoInDb = streamPushMapper.queryOne(streamPushVo.getId());
         if (!streamPushVoInDb.getApp().equals(streamPushVo.getApp()) || !streamPushVoInDb.getStream().equals(streamPushVo.getStream())) {
@@ -250,7 +251,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
         }
         StreamPush streamPush = MapstructUtils.convert(streamPushVo, StreamPush.class);
         streamPushMapper.insertOrUpdate(streamPush);
-        if (streamPushVo.getGbId() > 0) {
+        if (ObjUtil.isNotNull(streamPushVo.getGbId())) {
             gbChannelService.update(streamPushVo.buildCommonGBChannel());
         }
         return true;

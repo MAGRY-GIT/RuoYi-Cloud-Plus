@@ -35,7 +35,7 @@ public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGBChannel, C
     CommonGBChannel queryById(@Param("gbId") Long gbId);
 
 
-    int updateStatusById(@Param("gbId") Long gbId, @Param("status") int status);
+    int updateStatusById(@Param("gbId") Long gbId, @Param("status") String status);
 
 
     int updateStatusForListById(List<CommonGBChannel> commonGBChannels, @Param("status") String status);

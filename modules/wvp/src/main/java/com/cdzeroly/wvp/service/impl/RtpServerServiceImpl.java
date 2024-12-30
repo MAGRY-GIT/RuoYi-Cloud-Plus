@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.service.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.domian.bean.OpenRTPServerResult;
@@ -93,7 +94,7 @@ public class RtpServerServiceImpl implements IReceiveRtpServerService {
         }else {
             streamId = rtpServerParam.getStreamId();
         }
-        if (rtpServerParam.isSsrcCheck() && rtpServerParam.getTcpMode() > 0) {
+        if (rtpServerParam.isSsrcCheck() && ObjUtil.isNotNull(rtpServerParam.getTcpMode())) {
             // 目前zlm不支持 tcp模式更新ssrc，暂时关闭ssrc校验
             log.warn("[openRTPServer] 平台对接时下级可能自定义ssrc，但是tcp模式zlm收流目前无法更新ssrc，可能收流超时，此时请使用udp收流或者关闭ssrc校验");
         }
