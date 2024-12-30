@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.event.subscribe.catalog;
 
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
@@ -53,7 +53,7 @@ public class CatalogEvent  extends ApplicationEvent {
      */
     public static final String UPDATE = "UPDATE";
 
-    private List<CommonGBChannel> channels;
+    private List<CommonGbChannel> channels;
 
     private String type;
 

@@ -4,7 +4,7 @@ import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.CivilCodePo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.gb28181.domian.bean.RegionTree;
 import com.cdzeroly.wvp.mapper.CommonGBChannelMapper;
@@ -118,7 +118,7 @@ public class RegionServiceImpl implements IRegionService {
         // 发送变化通知
         try {
             // 发送catalog
-            eventPublisher.catalogEventPublish(null, CommonGBChannel.build(region), CatalogEvent.UPDATE);
+            eventPublisher.catalogEventPublish(null, CommonGbChannel.build(region), CatalogEvent.UPDATE);
         }catch (Exception e) {
             log.warn("[行政区划变化] 发送失败，{}", region.getDeviceId(), e);
         }

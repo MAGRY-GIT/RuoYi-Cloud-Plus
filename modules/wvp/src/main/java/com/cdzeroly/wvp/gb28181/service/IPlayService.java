@@ -5,7 +5,7 @@ import com.cdzeroly.wvp.common.InviteInfo;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -68,10 +68,10 @@ public interface IPlayService {
 
     void stop(InviteInfo inviteInfo);
 
-    void play(CommonGBChannel channel, ErrorCallback<StreamInfo> callback);
+    void play(CommonGbChannel channel, ErrorCallback<StreamInfo> callback);
 
-    void playBack(CommonGBChannel channel, Long startTime, Long stopTime, ErrorCallback<StreamInfo> callback);
+    void playBack(CommonGbChannel channel, Long startTime, Long stopTime, ErrorCallback<StreamInfo> callback);
 
-    void download(CommonGBChannel channel, Long startTime, Long stopTime, Integer downloadSpeed, ErrorCallback<StreamInfo> callback);
+    void download(CommonGbChannel channel, Long startTime, Long stopTime, Integer downloadSpeed, ErrorCallback<StreamInfo> callback);
 
 }

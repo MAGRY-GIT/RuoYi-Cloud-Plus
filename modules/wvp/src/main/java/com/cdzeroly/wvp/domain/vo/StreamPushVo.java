@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.cdzeroly.common.core.validate.EditGroup;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.media.event.media.MediaArrivalEvent;
 import com.cdzeroly.wvp.domain.StreamPush;
 import io.github.linpeilie.annotations.AutoMapper;
@@ -22,7 +22,7 @@ import org.springframework.util.ObjectUtils;
 @Schema(description = "推流信息")
 @EqualsAndHashCode(callSuper = true)
 @AutoMapper(target = StreamPush.class)
-public class StreamPushVo extends CommonGBChannel implements Comparable<StreamPushVo>{
+public class StreamPushVo extends CommonGbChannel implements Comparable<StreamPushVo>{
 
     /**
      * id
@@ -104,7 +104,7 @@ public class StreamPushVo extends CommonGBChannel implements Comparable<StreamPu
         return streamPushVoItem;
     }
 
-    public CommonGBChannel buildCommonGBChannel() {
+    public CommonGbChannel buildCommonGBChannel() {
         if (ObjectUtils.isEmpty(this.getGbDeviceId())) {
             return null;
         }

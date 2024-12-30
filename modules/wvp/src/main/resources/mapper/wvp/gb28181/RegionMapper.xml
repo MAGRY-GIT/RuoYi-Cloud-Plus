@@ -81,7 +81,7 @@
         </foreach>
 
     </select>
-    <select id="queryByPlatform" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGBChannel">
+    <select id="queryByPlatform" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGbChannel">
         SELECT wcr.device_id as gb_device_id,
                wcr.name      as gb_name
         FROM wvp_common_region wcr

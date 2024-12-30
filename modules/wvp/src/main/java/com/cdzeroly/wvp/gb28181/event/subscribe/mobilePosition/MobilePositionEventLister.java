@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.gb28181.event.subscribe.mobilePosition;
 
 import com.cdzeroly.wvp.domain.bean.SubscribeInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.domain.bean.SubscribeHolder;
 import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
@@ -54,7 +54,7 @@ public class MobilePositionEventLister implements ApplicationListener<MobilePosi
             try {
                 GPSMsgInfo gpsMsgInfo = GPSMsgInfo.getInstance(event.getMobilePosition());
                 // 获取通道编号
-                CommonGBChannel commonGBChannel = platformChannelService.queryChannelByPlatformIdAndChannelId(platform.getId(), event.getMobilePosition().getChannelId());
+                CommonGbChannel commonGBChannel = platformChannelService.queryChannelByPlatformIdAndChannelId(platform.getId(), event.getMobilePosition().getChannelId());
                 sipCommanderForPlatform.sendNotifyMobilePosition(platform, gpsMsgInfo, commonGBChannel,
                         subscribe);
             } catch (InvalidArgumentException | ParseException | NoSuchFieldException | SipException |

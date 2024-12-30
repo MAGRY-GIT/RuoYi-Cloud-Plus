@@ -4,7 +4,7 @@ import com.cdzeroly.common.core.domain.R;
 import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.service.IRecordPlanService;
 import com.cdzeroly.wvp.domain.RecordPlan;
@@ -83,7 +83,7 @@ public class RecordPlanController {
     @GetMapping("")
     @Operation(summary = "查询录制计划")
     @Parameter(name = "planId", description = "计划ID", required = true)
-    public R<RecordPlanVo> get(Integer planId) {
+    public R<RecordPlanVo> get(Long planId) {
         if (planId == null) {
             throw new ServiceException("计划ID不可为NULL");
         }
@@ -111,17 +111,14 @@ public class RecordPlanController {
     @Parameter(name = "online", description = "是否在线")
     @Parameter(name = "hasLink", description = "是否已经关联")
     @GetMapping("/channel/list")
-    public TableDataInfo<CommonGBChannel> queryChannelList( PageQuery pageQuery,
-                                                           @RequestParam(required = false) Integer planId,
+    public TableDataInfo<CommonGbChannel> queryChannelList(PageQuery pageQuery,
+                                                           @RequestParam(required = false) Long planId,
                                                            @RequestParam(required = false) String query,
                                                            @RequestParam(required = false) Integer channelType,
                                                            @RequestParam(required = false) Boolean online,
                                                            @RequestParam(required = false) Boolean hasLink) {
 
         Assert.notNull(planId, "录制计划ID不可为NULL");
-        if (ObjectUtils.isEmpty(query)) {
-            query = null;
-        }
         return recordPlanService.queryChannelList(pageQuery, query, channelType,  online, planId, hasLink);
     }
 
@@ -141,7 +138,7 @@ public class RecordPlanController {
     @DeleteMapping()
     @Operation(summary = "删除录制计划")
     @Parameter(name = "planId", description = "计划ID", required = true)
-    public R<Void> delete(Integer planId) {
+    public R<Void> delete(Long planId) {
         if (planId == null) {
             throw new ServiceException("计划ID不可为NULL");
         }

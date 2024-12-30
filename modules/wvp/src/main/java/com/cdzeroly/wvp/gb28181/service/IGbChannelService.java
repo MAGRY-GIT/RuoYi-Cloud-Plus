@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.gb28181.service;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.domain.Group;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.domain.vo.StreamPushVo;
 import com.cdzeroly.wvp.domain.bean.*;
@@ -22,14 +22,14 @@ public interface IGbChannelService {
      * @param gbDeviceId 获取国标设备ID
      * @return
      */
-    CommonGBChannel queryByDeviceId(String gbDeviceId);
+    CommonGbChannel queryByDeviceId(String gbDeviceId);
 
     /**
      * 添加国标离线
      * @param commonGbChannel
      * @return
      */
-    int add(CommonGBChannel commonGbChannel);
+    int add(CommonGbChannel commonGbChannel);
 
     /**
      * 删除国标设备
@@ -40,21 +40,21 @@ public interface IGbChannelService {
 
     void delete(Collection<Long> ids);
 
-    int update(CommonGBChannel commonGBChannel);
+    int update(CommonGbChannel commonGBChannel);
 
-    int offline(CommonGBChannel commonGBChannel);
+    int offline(CommonGbChannel commonGBChannel);
 
-    int offline(List<CommonGBChannel> commonGBChannelList);
+    int offline(List<CommonGbChannel> commonGBChannelList);
 
-    int online(CommonGBChannel commonGBChannel);
+    int online(CommonGbChannel commonGBChannel);
 
-    int online(List<CommonGBChannel> commonGBChannelList);
+    int online(List<CommonGbChannel> commonGBChannelList);
 
-    void batchAdd(List<CommonGBChannel> commonGBChannels);
+    void batchAdd(List<CommonGbChannel> commonGBChannels);
 
-    void updateStatus(List<CommonGBChannel> channelList);
+    void updateStatus(List<CommonGbChannel> channelList);
 
-    CommonGBChannel getOne(Long id);
+    CommonGbChannel getOne(Long id);
 
     List<IndustryCodeType> getIndustryCodeList();
 
@@ -64,9 +64,9 @@ public interface IGbChannelService {
 
     void reset(Long id);
 
-    TableDataInfo<CommonGBChannel> queryListByCivilCode(PageQuery pageQuery, String query, Boolean online, Integer channelType, String civilCode);
+    TableDataInfo<CommonGbChannel> queryListByCivilCode(PageQuery pageQuery, String query, Boolean online, Integer channelType, String civilCode);
 
-    TableDataInfo<CommonGBChannel> queryListByParentId(PageQuery pageQuery,  String query, Boolean online, Integer channelType, String groupDeviceId);
+    TableDataInfo<CommonGbChannel> queryListByParentId(PageQuery pageQuery, String query, Boolean online, Integer channelType, String groupDeviceId);
 
     void removeCivilCode(List<Region> allChildren);
 
@@ -98,16 +98,16 @@ public interface IGbChannelService {
 
     void deleteChannelToGroupByGbDevice(List<Integer> deviceIds);
 
-    void batchUpdate(List<CommonGBChannel> commonGBChannels);
+    void batchUpdate(List<CommonGbChannel> commonGBChannels);
 
-    CommonGBChannel queryOneWithPlatform(Long platformId, String channelDeviceId);
+    CommonGbChannel queryOneWithPlatform(Long platformId, String channelDeviceId);
 
     void updateCivilCode(String oldCivilCode, String newCivilCode);
 
-    List<CommonGBChannel> queryListByStreamPushList(List<StreamPushVo> streamPushVoList);
+    List<CommonGbChannel> queryListByStreamPushList(List<StreamPushVo> streamPushVoList);
 
-    void updateGpsByDeviceIdForStreamPush(List<CommonGBChannel> channels);
+    void updateGpsByDeviceIdForStreamPush(List<CommonGbChannel> channels);
 
-    TableDataInfo<CommonGBChannel> queryList(PageQuery pageQuery, String query, Boolean online, Boolean hasRecordPlan, Integer channelType);
+    TableDataInfo<CommonGbChannel> queryList(PageQuery pageQuery, String query, Boolean online, Boolean hasRecordPlan, Integer channelType);
 
 }

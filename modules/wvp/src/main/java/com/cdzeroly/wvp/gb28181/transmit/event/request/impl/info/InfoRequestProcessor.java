@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.info;
 
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -78,7 +78,7 @@ public class InfoRequestProcessor extends SIPRequestProcessorParent implements I
                 responseAck(request, Response.NOT_FOUND, "platform "+ sendRtpInfo.getTargetId() +" not found or offline");
                 return;
             }
-            CommonGBChannel channel = channelService.getOne(sendRtpInfo.getChannelId());
+            CommonGbChannel channel = channelService.getOne(sendRtpInfo.getChannelId());
             if (channel == null) {
                 // 不存在则回复404
                 log.warn("[INFO 消息] 通道不存在： 通道ID： {}", sendRtpInfo.getChannelId());

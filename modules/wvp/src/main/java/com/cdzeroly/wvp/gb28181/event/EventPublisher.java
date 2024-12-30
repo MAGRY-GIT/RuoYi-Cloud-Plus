@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.gb28181.event;
 
 import com.cdzeroly.common.core.utils.CollectionUtil;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
 import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
 import com.cdzeroly.wvp.gb28181.domian.bean.RecordInfo;
@@ -68,8 +68,8 @@ public class EventPublisher {
      * @param deviceChannel  设备通道
      * @param type  类型
      */
-	public void catalogEventPublish(Long platformId, CommonGBChannel deviceChannel, String type) {
-		List<CommonGBChannel> deviceChannelList = new ArrayList<>();
+	public void catalogEventPublish(Long platformId, CommonGbChannel deviceChannel, String type) {
+		List<CommonGbChannel> deviceChannelList = new ArrayList<>();
 		deviceChannelList.add(deviceChannel);
 		catalogEventPublish(platformId, deviceChannelList, type);
 	}
@@ -91,10 +91,10 @@ public class EventPublisher {
      * @param deviceChannels  设备通道集合
      * @param type  类型
      */
-	public void catalogEventPublish(Long platformId, List<CommonGBChannel> deviceChannels, String type) {
+	public void catalogEventPublish(Long platformId, List<CommonGbChannel> deviceChannels, String type) {
 		CatalogEvent outEvent = new CatalogEvent(this);
-        ArrayList<CommonGBChannel> channels = CollectionUtil.safeStream(deviceChannels).collect(Collectors.collectingAndThen(
-            Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(CommonGBChannel::getGbDeviceId))), ArrayList::new));
+        ArrayList<CommonGbChannel> channels = CollectionUtil.safeStream(deviceChannels).collect(Collectors.collectingAndThen(
+            Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(CommonGbChannel::getGbDeviceId))), ArrayList::new));
         outEvent.setChannels(channels);
 		outEvent.setType(type);
 		outEvent.setPlatformId(platformId);

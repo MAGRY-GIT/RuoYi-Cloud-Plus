@@ -8,7 +8,7 @@ import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.conf.exception.SsrcTransactionNotFoundException;
 import com.cdzeroly.wvp.domain.bean.*;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -1093,7 +1093,7 @@ public class PlayServiceImpl implements IPlayService {
             for (SendRtpInfo sendRtpInfo : sendRtpInfos) {
                 if (sendRtpInfo.getMediaServerId().equals(mediaServer.getId()) && sendRtpInfo.isSendToPlatform()) {
                     Platform platform = platformService.queryPlatformByServerGBId(sendRtpInfo.getTargetId());
-                    CommonGBChannel channel = channelService.getOne(sendRtpInfo.getChannelId());
+                    CommonGbChannel channel = channelService.getOne(sendRtpInfo.getChannelId());
                     try {
                         sipCommanderFroPlatform.streamByeCmd(platform, sendRtpInfo, channel);
                     } catch (SipException | InvalidArgumentException | ParseException e) {
@@ -1354,7 +1354,7 @@ public class PlayServiceImpl implements IPlayService {
         } else {
             if (platform != null) {
                 // 向上级平台
-                CommonGBChannel channel = channelService.getOne(sendRtpInfo.getChannelId());
+                CommonGbChannel channel = channelService.getOne(sendRtpInfo.getChannelId());
                 try {
                     commanderForPlatform.streamByeCmd(platform, sendRtpInfo, channel);
                 } catch (SipException | InvalidArgumentException | ParseException e) {
@@ -1559,7 +1559,7 @@ public class PlayServiceImpl implements IPlayService {
     }
 
     @Override
-    public void play(CommonGBChannel channel, ErrorCallback<StreamInfo> callback) {
+    public void play(CommonGbChannel channel, ErrorCallback<StreamInfo> callback) {
         Device device = deviceService.getDevice(channel.getDataDeviceId());
 
         if (device == null) {
@@ -1576,7 +1576,7 @@ public class PlayServiceImpl implements IPlayService {
     }
 
     @Override
-    public void playBack(CommonGBChannel channel, Long startTime, Long stopTime, ErrorCallback<StreamInfo> callback) {
+    public void playBack(CommonGbChannel channel, Long startTime, Long stopTime, ErrorCallback<StreamInfo> callback) {
         if (startTime == null || stopTime == null) {
             throw new PlayException(Response.BAD_REQUEST, "bad request");
         }
@@ -1598,7 +1598,7 @@ public class PlayServiceImpl implements IPlayService {
     }
 
     @Override
-    public void download(CommonGBChannel channel, Long startTime, Long stopTime, Integer downloadSpeed, ErrorCallback<StreamInfo> callback) {
+    public void download(CommonGbChannel channel, Long startTime, Long stopTime, Integer downloadSpeed, ErrorCallback<StreamInfo> callback) {
         if (startTime == null || stopTime == null || downloadSpeed == null) {
             throw new PlayException(Response.BAD_REQUEST, "bad request");
         }

@@ -9,7 +9,7 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
 import com.cdzeroly.wvp.domain.bean.MediaInfo;
 import com.cdzeroly.wvp.domain.MediaServer;
@@ -210,7 +210,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
         if (ObjectUtils.isEmpty(stream.getGbDeviceId())) {
             return true;
         }
-        CommonGBChannel channel = gbChannelService.queryByDeviceId(stream.getGbDeviceId());
+        CommonGbChannel channel = gbChannelService.queryByDeviceId(stream.getGbDeviceId());
         if (channel != null) {
             log.info("[添加推流]失败，国标编号已存在: {} app: {}, stream: {}, ", stream.getGbDeviceId(), stream.getApp(), stream.getStream());
         }
@@ -288,7 +288,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
         }
         streamPushVo.setPushing(false);
         if (userSetting.getUsePushingAsStatus()) {
-            CommonGBChannel commonGBChannel = streamPushVo.buildCommonGBChannel();
+            CommonGbChannel commonGBChannel = streamPushVo.buildCommonGBChannel();
             if (commonGBChannel != null) {
                 gbChannelService.offline(commonGBChannel);
             }
@@ -431,7 +431,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
             return MapstructUtils.convert(streamPushVo, StreamPush.class);
         }).toList();
         streamPushMapper.insert(streamPushes);
-        List<CommonGBChannel> commonGBChannels = new ArrayList<>();
+        List<CommonGbChannel> commonGBChannels = new ArrayList<>();
         for (StreamPushVo streamPushVo : streamPushVoItems) {
             if (!ObjectUtils.isEmpty(streamPushVo.getGbDeviceId())) {
                 commonGBChannels.add(streamPushVo.buildCommonGBChannel());
@@ -446,9 +446,9 @@ public class StreamPushServiceImpl implements IStreamPushService {
         if (streamPushVoList.isEmpty()) {
             return;
         }
-        List<CommonGBChannel> commonGBChannelList = new ArrayList<>();
+        List<CommonGbChannel> commonGBChannelList = new ArrayList<>();
         for (StreamPushVo streamPushVo : streamPushVoList) {
-            CommonGBChannel commonGBChannel = streamPushVo.buildCommonGBChannel();
+            CommonGbChannel commonGBChannel = streamPushVo.buildCommonGBChannel();
             if (commonGBChannel != null) {
                 commonGBChannelList.add(streamPushVo.buildCommonGBChannel());
             }
@@ -460,7 +460,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
     public void offline(List<StreamPushItemFromRedis> offlineStreams) {
         // 更新部分设备离线
         List<StreamPushVo> streamPushVoList = streamPushMapper.getListFromRedis(offlineStreams);
-        List<CommonGBChannel> commonGBChannelList = gbChannelService.queryListByStreamPushList(streamPushVoList);
+        List<CommonGbChannel> commonGBChannelList = gbChannelService.queryListByStreamPushList(streamPushVoList);
         gbChannelService.offline(commonGBChannelList);
     }
 
@@ -468,7 +468,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
     public void online(List<StreamPushItemFromRedis> onlineStreams) {
         // 更新部分设备上线streamPushService
         List<StreamPushVo> streamPushVoList = streamPushMapper.getListFromRedis(onlineStreams);
-        List<CommonGBChannel> commonGBChannelList = gbChannelService.queryListByStreamPushList(streamPushVoList);
+        List<CommonGbChannel> commonGBChannelList = gbChannelService.queryListByStreamPushList(streamPushVoList);
         gbChannelService.online(commonGBChannelList);
     }
 
@@ -547,7 +547,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
     @Override
     public void batchUpdate(List<StreamPushVo> streamPushVoItemForUpdate) {
         streamPushMapper.batchUpdate(streamPushVoItemForUpdate);
-        List<CommonGBChannel> commonGBChannels = new ArrayList<>();
+        List<CommonGbChannel> commonGBChannels = new ArrayList<>();
         for (StreamPushVo streamPushVo : streamPushVoItemForUpdate) {
             if (!ObjectUtils.isEmpty(streamPushVo.getGbDeviceId())) {
                 commonGBChannels.add(streamPushVo.buildCommonGBChannel());
@@ -580,7 +580,7 @@ public class StreamPushServiceImpl implements IStreamPushService {
         if (streamPushVoList.isEmpty()) {
             return;
         }
-        List<CommonGBChannel> commonGBChannelList = new ArrayList<>();
+        List<CommonGbChannel> commonGBChannelList = new ArrayList<>();
         streamPushVoList.stream().forEach(streamPush -> {
             if (streamPush.getGbDeviceId() != null) {
                 commonGBChannelList.add(streamPush.buildCommonGBChannel());
@@ -592,9 +592,9 @@ public class StreamPushServiceImpl implements IStreamPushService {
 
     @Override
     public void updateGPSFromGPSMsgInfo(List<GPSMsgInfo> gpsMsgInfoList) {
-        List<CommonGBChannel> channels = new ArrayList<>();
+        List<CommonGbChannel> channels = new ArrayList<>();
         for (GPSMsgInfo gpsMsgInfo : gpsMsgInfoList) {
-            CommonGBChannel channel = new CommonGBChannel();
+            CommonGbChannel channel = new CommonGbChannel();
             channel.setGbDeviceId(gpsMsgInfo.getId());
             channel.setGbLongitude(gpsMsgInfo.getLng());
             channel.setGbLatitude(gpsMsgInfo.getLat());

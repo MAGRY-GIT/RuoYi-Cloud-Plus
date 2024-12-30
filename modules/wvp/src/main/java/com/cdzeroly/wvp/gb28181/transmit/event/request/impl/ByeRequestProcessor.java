@@ -7,7 +7,7 @@ import com.cdzeroly.wvp.conf.exception.SsrcTransactionNotFoundException;
 import com.cdzeroly.wvp.domain.bean.AudioBroadcastCatch;
 import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
 import com.cdzeroly.wvp.domain.bean.SsrcTransaction;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -101,7 +101,7 @@ public class ByeRequestProcessor extends SIPRequestProcessorParent implements In
 
 		// 收流端发送的停止
 		if (sendRtpItem != null){
-			CommonGBChannel channel = channelService.getOne(sendRtpItem.getChannelId());
+			CommonGbChannel channel = channelService.getOne(sendRtpItem.getChannelId());
 			log.info("[收到bye] 来自{}，停止通道：{}, 类型： {}, callId: {}", sendRtpItem.getTargetId(), channel.getGbDeviceId(), sendRtpItem.getPlayType(), callIdHeader.getCallId());
 
 			String streamId = sendRtpItem.getStream();
@@ -183,7 +183,7 @@ public class ByeRequestProcessor extends SIPRequestProcessorParent implements In
 			Platform platform = platformService.queryPlatformByServerGBId(ssrcTransaction.getPlatformId());
 			if (ssrcTransaction.getType().equals(InviteSessionType.BROADCAST)) {
 				log.info("[收到bye] 上级停止语音对讲，来自：{}, 通道已停止推流: {}", ssrcTransaction.getPlatformId(), ssrcTransaction.getChannelId());
-				CommonGBChannel channel = channelService.getOne(ssrcTransaction.getChannelId());
+				CommonGbChannel channel = channelService.getOne(ssrcTransaction.getChannelId());
 				if (channel == null) {
 					log.info("[收到bye] 未找到通道，上级：{}， 通道：{}", ssrcTransaction.getPlatformId(), ssrcTransaction.getChannelId());
 					return;

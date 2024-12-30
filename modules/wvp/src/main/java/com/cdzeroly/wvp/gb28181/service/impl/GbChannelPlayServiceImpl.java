@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.gb28181.service.impl;
 
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.transmit.bean.InviteInfo;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.exception.PlayException;
@@ -34,7 +34,7 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
 
 
     @Override
-    public void start(CommonGBChannel channel, InviteInfo inviteInfo, Platform platform, ErrorCallback<StreamInfo> callback) {
+    public void start(CommonGbChannel channel, InviteInfo inviteInfo, Platform platform, ErrorCallback<StreamInfo> callback) {
         if (channel == null || inviteInfo == null || callback == null || channel.getDataType() == null) {
             log.warn("[通用通道点播] 参数异常, channel: {}, inviteInfo: {}, callback: {}", channel != null, inviteInfo != null, callback != null);
             throw new PlayException(Response.SERVER_INTERNAL_ERROR, "server internal error");
@@ -91,7 +91,7 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
     }
 
     @Override
-    public void play(CommonGBChannel channel, Platform platform, ErrorCallback<StreamInfo> callback) {
+    public void play(CommonGbChannel channel, Platform platform, ErrorCallback<StreamInfo> callback) {
         if (channel.getDataType() == ChannelDataType.GB28181.value) {
             // 国标通道
             playGbDeviceChannel(channel, callback);
@@ -114,7 +114,7 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
     }
 
     @Override
-    public void playGbDeviceChannel(CommonGBChannel channel, ErrorCallback<StreamInfo> callback){
+    public void playGbDeviceChannel(CommonGbChannel channel, ErrorCallback<StreamInfo> callback){
         // 国标通道
         try {
             deviceChannelPlayService.play(channel, callback);
@@ -127,7 +127,7 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
     }
 
     @Override
-    public void playProxy(CommonGBChannel channel, ErrorCallback<StreamInfo> callback){
+    public void playProxy(CommonGbChannel channel, ErrorCallback<StreamInfo> callback){
         // 拉流代理通道
         try {
             StreamInfo streamInfo = streamProxyPlayService.start(channel.getDataDeviceId());
@@ -142,7 +142,7 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
     }
 
     @Override
-    public void playPush(CommonGBChannel channel, String platformDeviceId, String platformName, ErrorCallback<StreamInfo> callback){
+    public void playPush(CommonGbChannel channel, String platformDeviceId, String platformName, ErrorCallback<StreamInfo> callback){
         // 推流
         try {
             streamPushPlayService.start(channel.getDataDeviceId(), callback, platformDeviceId, platformName);
@@ -154,7 +154,7 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
         }
     }
 
-    private void playbackGbDeviceChannel(CommonGBChannel channel, Long startTime, Long stopTime, ErrorCallback<StreamInfo> callback){
+    private void playbackGbDeviceChannel(CommonGbChannel channel, Long startTime, Long stopTime, ErrorCallback<StreamInfo> callback){
         try {
             deviceChannelPlayService.playBack(channel, startTime, stopTime, callback);
         } catch (PlayException e) {
@@ -164,7 +164,7 @@ public class GbChannelPlayServiceImpl implements IGbChannelPlayService {
         }
     }
 
-    private void downloadGbDeviceChannel(CommonGBChannel channel, Long startTime, Long stopTime, Integer downloadSpeed,
+    private void downloadGbDeviceChannel(CommonGbChannel channel, Long startTime, Long stopTime, Integer downloadSpeed,
                                          ErrorCallback<StreamInfo> callback){
         try {
             deviceChannelPlayService.download(channel, startTime, stopTime, downloadSpeed, callback);

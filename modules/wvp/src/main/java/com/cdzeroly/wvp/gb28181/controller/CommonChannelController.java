@@ -15,7 +15,7 @@ import com.cdzeroly.wvp.domain.bean.*;
 
 
 import com.cdzeroly.wvp.domain.bo.ChannelToRegionParam;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelPlayService;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
 import com.cdzeroly.wvp.domain.vo.StreamContentVo;
@@ -55,7 +55,7 @@ public class CommonChannelController extends BaseController {
     @Operation(summary = "查询通道信息")
     @Parameter(name = "id", description = "通道的数据库自增Id", required = true)
     @GetMapping(value = "/one")
-    public R<CommonGBChannel> getOne(Long id){
+    public R<CommonGbChannel> getOne(Long id){
         return R.ok(channelService.getOne(id));
     }
 
@@ -79,7 +79,7 @@ public class CommonChannelController extends BaseController {
 
     @Operation(summary = "更新通道")
     @PostMapping("/update")
-    public R<Void> update(@RequestBody CommonGBChannel channel){
+    public R<Void> update(@RequestBody CommonGbChannel channel){
         channelService.update(channel);
         return R.ok();
     }
@@ -93,7 +93,7 @@ public class CommonChannelController extends BaseController {
 
     @Operation(summary = "增加国标通道")
     @PostMapping("/add")
-    public CommonGBChannel add(@RequestBody CommonGBChannel channel){
+    public CommonGbChannel add(@RequestBody CommonGbChannel channel){
         channelService.add(channel);
         return channel;
     }
@@ -106,7 +106,7 @@ public class CommonChannelController extends BaseController {
     @Parameter(name = "hasRecordPlan", description = "是否已设置录制计划")
     @Parameter(name = "channelType", description = "通道类型， 0：国标设备，1：推流设备，2：拉流代理")
     @GetMapping("/list")
-    public TableDataInfo<CommonGBChannel> queryList(PageQuery pageQuery,
+    public TableDataInfo<CommonGbChannel> queryList(PageQuery pageQuery,
                                                     @RequestParam(required = false) String query,
                                                     @RequestParam(required = false) Boolean online,
                                                     @RequestParam(required = false) Boolean hasRecordPlan,
@@ -123,11 +123,11 @@ public class CommonChannelController extends BaseController {
     @Parameter(name = "channelType", description = "通道类型， 0：国标设备，1：推流设备，2：拉流代理")
     @Parameter(name = "civilCode", description = "行政区划")
     @GetMapping("/civilcode/list")
-    public TableDataInfo<CommonGBChannel> queryListByCivilCode(PageQuery pageQuery,
+    public TableDataInfo<CommonGbChannel> queryListByCivilCode(PageQuery pageQuery,
                                                                @RequestParam(required = false) String query,
-                                               @RequestParam(required = false) Boolean online,
-                                               @RequestParam(required = false) Integer channelType,
-                                               @RequestParam(required = false) String civilCode){
+                                                               @RequestParam(required = false) Boolean online,
+                                                               @RequestParam(required = false) Integer channelType,
+                                                               @RequestParam(required = false) String civilCode){
         return channelService.queryListByCivilCode(pageQuery, query, online, channelType, civilCode);
     }
 
@@ -139,7 +139,7 @@ public class CommonChannelController extends BaseController {
     @Parameter(name = "channelType", description = "通道类型， 0：国标设备，1：推流设备，2：拉流代理")
     @Parameter(name = "groupDeviceId", description = "业务分组下的父节点ID")
     @GetMapping("/parent/list")
-    public TableDataInfo<CommonGBChannel> queryListByParentId(PageQuery pageQuery,
+    public TableDataInfo<CommonGbChannel> queryListByParentId(PageQuery pageQuery,
                                                               @RequestParam(required = false) String query,
                                                               @RequestParam(required = false) Boolean online,
                                                               @RequestParam(required = false) Integer channelType,
@@ -226,7 +226,7 @@ public class CommonChannelController extends BaseController {
     @GetMapping("/play")
     public DeferredResult<WVPResult<StreamContentVo>> deleteChannelToGroupByGbDevice(Long channelId){
         Assert.notNull(channelId,"参数异常");
-        CommonGBChannel channel = channelService.getOne(channelId);
+        CommonGbChannel channel = channelService.getOne(channelId);
         Assert.notNull(channel, "通道不存在");
 
         DeferredResult<WVPResult<StreamContentVo>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());

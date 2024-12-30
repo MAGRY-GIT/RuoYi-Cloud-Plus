@@ -255,7 +255,7 @@
 
 
     </select>
-    <select id="queryForRecordPlanForWebList" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGBChannel">
+    <select id="queryForRecordPlanForWebList" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGbChannel">
 
         select
         wdc.id as gb_id,

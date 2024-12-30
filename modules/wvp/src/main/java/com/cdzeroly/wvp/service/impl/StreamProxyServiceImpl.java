@@ -9,7 +9,7 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
 import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.event.media.MediaArrivalEvent;
@@ -165,7 +165,7 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
             throw new ServiceException( "APP+STREAM已经存在");
         }
         if (proxyBo.getGbDeviceId() != null) {
-            gbChannelService.add(proxyBo.buildCommonGBChannel());
+            gbChannelService.add(proxyBo.buildCommonGbChannel());
         }
         StreamProxy streamProxy = MapstructUtils.convert(proxyBo, StreamProxy.class);
         streamProxyMapper.insert(streamProxy);
@@ -207,7 +207,7 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
      */
     @Override
     public boolean update(StreamProxyBo streamProxyBo) {
-        StreamProxyVo streamProxyVo = streamProxyMapper.select(streamProxyBo.getId());
+        StreamProxyVo streamProxyVo = streamProxyMapper.selectVoById(streamProxyBo.getId());
         if (streamProxyVo == null) {
             throw new ServiceException( "代理不存在");
         }
@@ -216,9 +216,9 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
 
         if (updateResult && !ObjectUtils.isEmpty(streamProxyBo.getGbDeviceId())) {
             if (ObjUtil.isNotNull(streamProxyBo.getGbId())) {
-                gbChannelService.update(streamProxyBo.buildCommonGBChannel());
+                gbChannelService.update(streamProxyBo.buildCommonGbChannel());
             } else {
-                gbChannelService.add(streamProxyBo.buildCommonGBChannel());
+                gbChannelService.add(streamProxyBo.buildCommonGbChannel());
             }
         }
         return true;
@@ -291,7 +291,7 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
 
         List<StreamInfo> streamInfoList = mediaServerService.getMediaList(mediaServer, null, null, null);
 
-        List<CommonGBChannel> channelListForOnline = new ArrayList<>();
+        List<CommonGbChannel> channelListForOnline = new ArrayList<>();
         for (StreamInfo streamInfo : streamInfoList) {
             String key = streamInfo.getApp() + streamInfo.getStream();
             StreamProxyVo streamProxy = streamProxyVoMap.get(key);
@@ -315,7 +315,7 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
         if (!channelListForOnline.isEmpty()) {
             gbChannelService.online(channelListForOnline);
         }
-        List<CommonGBChannel> channelListForOffline = new ArrayList<>();
+        List<CommonGbChannel> channelListForOffline = new ArrayList<>();
         List<StreamProxyVo> streamProxiesForRemove = new ArrayList<>();
         if (!streamProxyVoMap.isEmpty()) {
             for (StreamProxyVo streamProxy : streamProxyVoMap.values()) {
@@ -357,7 +357,7 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
         }
         List<StreamProxyVo> streamProxiesForRemove = new ArrayList<>();
         List<StreamProxyVo> streamProxiesForSendMessage = new ArrayList<>();
-        List<CommonGBChannel> channelListForOffline = new ArrayList<>();
+        List<CommonGbChannel> channelListForOffline = new ArrayList<>();
 
         for (StreamProxyVo streamProxy : streamProxyVos) {
             if (ObjUtil.isNotNull(streamProxy.getGbId()) && "ON".equalsIgnoreCase(streamProxy.getGbStatus())) {

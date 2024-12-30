@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.gb28181.service;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.CommonCallback;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.domain.bean.SipTransactionInfo;
 import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
@@ -76,14 +76,14 @@ public interface IPlatformService {
      * @param errorEvent 信令错误事件
      * @param timeoutCallback 超时事件
      */
-    void broadcastInvite(Platform platform, CommonGBChannel channelId,String sourceId, MediaServer mediaServerItem, HookSubscribe.Event hookEvent,
+    void broadcastInvite(Platform platform, CommonGbChannel channelId, String sourceId, MediaServer mediaServerItem, HookSubscribe.Event hookEvent,
                          SipSubscribe.Event errorEvent, InviteTimeOutCallback timeoutCallback) throws InvalidArgumentException, ParseException, SipException;
 
 
     /**
      * 语音喊话回复BYE
      */
-    void stopBroadcast(Platform platform, CommonGBChannel channel, String stream, boolean sendBye, MediaServer mediaServerItem);
+    void stopBroadcast(Platform platform, CommonGbChannel channel, String stream, boolean sendBye, MediaServer mediaServerItem);
 
     void addSimulatedSubscribeInfo(Platform parentPlatform);
 

@@ -273,7 +273,7 @@
         </if>
 
     </select>
-    <select id="queryOneWithPlatform" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGBChannel">
+    <select id="queryOneWithPlatform" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGbChannel">
         select
             wdc.id as gb_id,
             wdc.data_type,
@@ -320,7 +320,7 @@
         order by wdc.id
 
     </select>
-    <select id="queryNotShare" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGBChannel">
+    <select id="queryNotShare" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGbChannel">
 
         select
         wdc.id as gb_id,
@@ -372,7 +372,7 @@
             </foreach>
         </if>
     </select>
-    <select id="queryShare" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGBChannel">
+    <select id="queryShare" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGbChannel">
 
         select
         wdc.id as gb_id,
@@ -441,7 +441,7 @@
         WHERE wpg.platform_id = #{platformId}
         ORDER BY wcg.id DESC
     </select>
-    <select id="queryShareChannel" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGBChannel">
+    <select id="queryShareChannel" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGbChannel">
         select
             wdc.id as gb_id,
             wdc.data_type,

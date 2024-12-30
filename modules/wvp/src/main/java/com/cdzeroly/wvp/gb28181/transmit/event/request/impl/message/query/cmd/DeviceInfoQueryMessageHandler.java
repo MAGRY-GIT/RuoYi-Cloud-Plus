@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.query.cmd;
 
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
@@ -81,7 +81,7 @@ public class DeviceInfoQueryMessageHandler extends SIPRequestProcessorParent imp
             }
             return;
         }
-        CommonGBChannel channel = channelService.queryOneWithPlatform(platform.getId(), channelId);
+        CommonGbChannel channel = channelService.queryOneWithPlatform(platform.getId(), channelId);
         if (channel == null) {
             // 不存在则回复404
             log.warn("[DeviceInfo] 通道不存在： 通道编号： {}", channelId);

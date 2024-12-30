@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.control.cmd
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.common.enums.DeviceControlType;
 import com.cdzeroly.wvp.domain.bean.DragZoomRequest;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -85,7 +85,7 @@ public class DeviceControlQueryMessageHandler extends SIPRequestProcessorParent 
         }
         DeviceControlType deviceControlType = DeviceControlType.typeOf(rootElement);
 
-        CommonGBChannel channel = channelService.queryOneWithPlatform(platform.getId(), channelId);
+        CommonGbChannel channel = channelService.queryOneWithPlatform(platform.getId(), channelId);
         if (channel == null) {
             log.warn("[deviceControl] 未找到通道， 平台： {}（{}），通道编号：{}", platform.getName(),
                     platform.getServerGbId(), channelId);
@@ -137,7 +137,7 @@ public class DeviceControlQueryMessageHandler extends SIPRequestProcessorParent 
     /**
      * 处理云台指令
      */
-    private void handlePtzCmd(CommonGBChannel channel, Element rootElement, SIPRequest request, DeviceControlType type) {
+    private void handlePtzCmd(CommonGbChannel channel, Element rootElement, SIPRequest request, DeviceControlType type) {
         if (channel.getDataType() != ChannelDataType.GB28181.value) {
             // 只支持国标的云台控制
             log.warn("[INFO 消息] 只支持国标的云台控制， 通道ID： {}", channel.getGbId());
@@ -187,7 +187,7 @@ public class DeviceControlQueryMessageHandler extends SIPRequestProcessorParent 
     /**
      * 处理强制关键帧
      */
-    private void handleIFameCmd(CommonGBChannel channel, SIPRequest request) {
+    private void handleIFameCmd(CommonGbChannel channel, SIPRequest request) {
         if (channel.getDataType() != ChannelDataType.GB28181.value) {
             // 只支持国标的云台控制
             log.warn("[INFO 消息] 只支持国标的处理强制关键帧， 通道ID： {}", channel.getGbId());
@@ -235,7 +235,7 @@ public class DeviceControlQueryMessageHandler extends SIPRequestProcessorParent 
     /**
      * 处理重启命令
      */
-    private void handleTeleBootCmd(CommonGBChannel channel, SIPRequest request) {
+    private void handleTeleBootCmd(CommonGbChannel channel, SIPRequest request) {
         if (channel.getDataType() != ChannelDataType.GB28181.value) {
             // 只支持国标的云台控制
             log.warn("[INFO 消息] 只支持国标的重启命令， 通道ID： {}", channel.getGbId());
@@ -270,7 +270,7 @@ public class DeviceControlQueryMessageHandler extends SIPRequestProcessorParent 
     /**
      * 处理拉框控制
      */
-    private void handleDragZoom(CommonGBChannel channel, Element rootElement, SIPRequest request, DeviceControlType type) {
+    private void handleDragZoom(CommonGbChannel channel, Element rootElement, SIPRequest request, DeviceControlType type) {
         if (channel.getDataType() != ChannelDataType.GB28181.value) {
             // 只支持国标的云台控制
             log.warn("[INFO 消息] 只支持国标的拉框控制， 通道ID： {}", channel.getGbId());
@@ -333,7 +333,7 @@ public class DeviceControlQueryMessageHandler extends SIPRequestProcessorParent 
     /**
      * 处理看守位命令
      */
-    private void handleHomePositionCmd(CommonGBChannel channel, Element rootElement, SIPRequest request, DeviceControlType type) {
+    private void handleHomePositionCmd(CommonGbChannel channel, Element rootElement, SIPRequest request, DeviceControlType type) {
         if (channel.getDataType() != ChannelDataType.GB28181.value) {
             // 只支持国标的云台控制
             log.warn("[INFO 消息] 只支持国标的看守位命令， 通道ID： {}", channel.getGbId());
@@ -385,7 +385,7 @@ public class DeviceControlQueryMessageHandler extends SIPRequestProcessorParent 
     /**
      * 处理告警消息
      */
-    private void handleAlarmCmd(CommonGBChannel channel, Element rootElement, SIPRequest request) {
+    private void handleAlarmCmd(CommonGbChannel channel, Element rootElement, SIPRequest request) {
         if (channel.getDataType() != ChannelDataType.GB28181.value) {
             // 只支持国标的云台控制
             log.warn("[INFO 消息] 只支持国标的告警消息， 通道ID： {}", channel.getGbId());
@@ -431,7 +431,7 @@ public class DeviceControlQueryMessageHandler extends SIPRequestProcessorParent 
     /**
      * 处理录像控制
      */
-    private void handleRecordCmd(CommonGBChannel channel, Element rootElement, SIPRequest request, DeviceControlType type) {
+    private void handleRecordCmd(CommonGbChannel channel, Element rootElement, SIPRequest request, DeviceControlType type) {
         if (channel.getDataType() != ChannelDataType.GB28181.value) {
             // 只支持国标的云台控制
             log.warn("[INFO 消息] 只支持国标的息录像控制， 通道ID： {}", channel.getGbId());
@@ -483,7 +483,7 @@ public class DeviceControlQueryMessageHandler extends SIPRequestProcessorParent 
     /**
      * 处理报警布防/撤防命令
      */
-    private void handleGuardCmd(CommonGBChannel channel, Element rootElement, SIPRequest request, DeviceControlType type) {
+    private void handleGuardCmd(CommonGbChannel channel, Element rootElement, SIPRequest request, DeviceControlType type) {
         if (channel.getDataType() != ChannelDataType.GB28181.value) {
             // 只支持国标的云台控制
             log.warn("[INFO 消息] 只支持国标的报警布防/撤防命令， 通道ID： {}", channel.getGbId());

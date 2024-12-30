@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.mapper;
 
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.domain.bean.GroupTree;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -142,7 +142,7 @@ public interface GroupMapper {
             " where (device_id, business_group) in " +
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > (#{item.gbParentId}, #{item.gbBusinessGroupId})</foreach>" +
             " </script>")
-    Set<Group> queryInChannelList(List<CommonGBChannel> channelList);
+    Set<Group> queryInChannelList(List<CommonGbChannel> channelList);
 
     @Select(" <script>" +
             " SELECT " +
@@ -164,7 +164,7 @@ public interface GroupMapper {
             " left join wvp_platform_group wpg on wpg.group_id = wcg.id" +
             " where wpg.platform_id = #{platformId} " +
             " </script>")
-    List<CommonGBChannel> queryForPlatform(@Param("platformId") Long platformId);
+    List<CommonGbChannel> queryForPlatform(@Param("platformId") Long platformId);
 
     @Select(" <script>" +
             " SELECT * " +
@@ -173,7 +173,7 @@ public interface GroupMapper {
             " where wpg.platform_id is null and wcg.device_id in " +
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbParentId}</foreach>" +
             " </script>")
-    Set<Group> queryNotShareGroupForPlatformByChannelList(List<CommonGBChannel> channelList, @Param("platformId") Long platformId);
+    Set<Group> queryNotShareGroupForPlatformByChannelList(List<CommonGbChannel> channelList, @Param("platformId") Long platformId);
 
     @Select(" <script>" +
             " SELECT * " +
@@ -193,7 +193,7 @@ public interface GroupMapper {
             " <foreach collection='channelList'  item='item'  open='(' separator=',' close=')' > #{item.gbParentId}</foreach>" +
             " order by id " +
             "</script>")
-    Set<Group> queryByChannelList(List<CommonGBChannel> channelList);
+    Set<Group> queryByChannelList(List<CommonGbChannel> channelList);
 
     @Update(value = " <script>" +
             " update wvp_common_group w1 " +

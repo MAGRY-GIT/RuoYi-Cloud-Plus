@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.mapper;
 
 import com.cdzeroly.wvp.domain.Group;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.domain.Region;
@@ -22,7 +22,7 @@ public interface PlatformChannelMapper   {
 
 
 
-    int addChannels(@Param("platformId") Long platformId, @Param("channelList") List<CommonGBChannel> channelList);
+    int addChannels(@Param("platformId") Long platformId, @Param("channelList") List<CommonGbChannel> channelList);
 
 
     int delChannelForDeviceId(String deviceId);
@@ -44,20 +44,20 @@ public interface PlatformChannelMapper   {
 
 
 
-    List<CommonGBChannel> queryOneWithPlatform(@Param("platformId") Long platformId, @Param("channelDeviceId") String channelDeviceId);
+    List<CommonGbChannel> queryOneWithPlatform(@Param("platformId") Long platformId, @Param("channelDeviceId") String channelDeviceId);
 
 
 
-    List<CommonGBChannel> queryNotShare(@Param("platformId") Long platformId, List<Long> channelIds);
+    List<CommonGbChannel> queryNotShare(@Param("platformId") Long platformId, List<Long> channelIds);
 
 
-    List<CommonGBChannel> queryShare(@Param("platformId") Long platformId, List<Long> channelIds);
+    List<CommonGbChannel> queryShare(@Param("platformId") Long platformId, List<Long> channelIds);
 
 
-    int removeChannelsWithPlatform(@Param("platformId") Long platformId, List<CommonGBChannel> channelList);
+    int removeChannelsWithPlatform(@Param("platformId") Long platformId, List<CommonGbChannel> channelList);
 
 
-    int removeChannels(List<CommonGBChannel> channelList);
+    int removeChannels(List<CommonGbChannel> channelList);
 
 
     int addPlatformGroup(Collection<Group> groupListNotShare, @Param("platformId") Long platformId);
@@ -106,7 +106,7 @@ public interface PlatformChannelMapper   {
 
 
 
-    CommonGBChannel queryShareChannel(@Param("platformId") Long platformId, @Param("gbId") Long gbId);
+    CommonGbChannel queryShareChannel(@Param("platformId") Long platformId, @Param("gbId") Long gbId);
 
 
 

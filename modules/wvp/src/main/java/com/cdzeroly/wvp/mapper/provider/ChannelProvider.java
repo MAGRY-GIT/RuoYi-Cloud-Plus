@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.mapper.provider;
 
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.domain.vo.StreamPushVo;
 
@@ -197,9 +197,9 @@ public class ChannelProvider {
         sqlBuild.append(BASE_SQL);
         sqlBuild.append("where channel_type = 0 and gb_status=#{status} and id in ( ");
 
-        List<CommonGBChannel> commonGBChannelList = (List<CommonGBChannel>)params.get("commonGBChannelList");
+        List<CommonGbChannel> commonGBChannelList = (List<CommonGbChannel>)params.get("commonGBChannelList");
         boolean first = true;
-        for (CommonGBChannel channel : commonGBChannelList) {
+        for (CommonGbChannel channel : commonGBChannelList) {
             if (!first) {
                 sqlBuild.append(",");
             }

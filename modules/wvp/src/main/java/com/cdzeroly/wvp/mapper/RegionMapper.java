@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.mapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdzeroly.common.mybatis.core.mapper.BaseMapperPlus;
 import com.cdzeroly.wvp.domain.vo.RegionVo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.gb28181.domian.bean.RegionTree;
 import org.apache.ibatis.annotations.*;
@@ -35,7 +35,7 @@ public interface RegionMapper extends BaseMapperPlus<Region, RegionVo> {
 
     List<Region> queryInRegionListByDeviceId(List<Region> regionList);
 
-    List<CommonGBChannel> queryByPlatform(@Param("platformId") Long platformId);
+    List<CommonGbChannel> queryByPlatform(@Param("platformId") Long platformId);
 
 
 
@@ -47,9 +47,9 @@ public interface RegionMapper extends BaseMapperPlus<Region, RegionVo> {
 
     Set<Region> queryParentInChannelList(Set<Region> regionSet);
 
-    Set<Region> queryByChannelList(List<CommonGBChannel> channelList);
+    Set<Region> queryByChannelList(List<CommonGbChannel> channelList);
 
-    Set<Region> queryNotShareRegionForPlatformByChannelList(List<CommonGBChannel> channelList, @Param("platformId") Long platformId);
+    Set<Region> queryNotShareRegionForPlatformByChannelList(List<CommonGbChannel> channelList, @Param("platformId") Long platformId);
 
     Set<Region> queryNotShareRegionForPlatformByRegionList(Set<Region> allRegion, @Param("platformId") Long platformId);
 

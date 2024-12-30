@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.query.cmd;
 
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
@@ -62,7 +62,7 @@ public class DeviceStatusQueryMessageHandler extends SIPRequestProcessorParent i
         }
         String sn = rootElement.element("SN").getText();
         String channelId = getText(rootElement, "DeviceID");
-        CommonGBChannel channel= channelService.queryOneWithPlatform(parentPlatform.getId(), channelId);
+        CommonGbChannel channel= channelService.queryOneWithPlatform(parentPlatform.getId(), channelId);
         if (channel ==null){
             log.error("[平台没有该通道的使用权限]:platformId"+parentPlatform.getServerGbId()+"  deviceID:"+channelId);
             return;

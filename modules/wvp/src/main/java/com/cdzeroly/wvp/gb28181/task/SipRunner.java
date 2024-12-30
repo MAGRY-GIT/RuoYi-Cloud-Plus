@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.task;
 
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
@@ -92,7 +92,7 @@ public class SipRunner implements CommandLineRunner {
         if (!sendRtpItems.isEmpty()) {
             for (SendRtpInfo sendRtpItem : sendRtpItems) {
                 MediaServer mediaServerItem = mediaServerService.getOne(sendRtpItem.getMediaServerId());
-                CommonGBChannel channel = channelService.getOne(sendRtpItem.getChannelId());
+                CommonGbChannel channel = channelService.getOne(sendRtpItem.getChannelId());
                 if (channel == null){
                     continue;
                 }

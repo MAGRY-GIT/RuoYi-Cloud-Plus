@@ -4,7 +4,7 @@ import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.domain.bean.AudioBroadcastCatch;
 import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -106,7 +106,7 @@ public class BroadcastNotifyMessageHandler extends SIPRequestProcessorParent imp
             }
             log.info("[国标级联 语音喊话] platform: {}, channel: {}", platform.getServerGbId(), targetId);
 
-            CommonGBChannel channel = channelService.queryOneWithPlatform(platform.getId(), targetId);
+            CommonGbChannel channel = channelService.queryOneWithPlatform(platform.getId(), targetId);
             if (channel == null) {
                 log.warn("[国标级联 语音喊话] 未找到通道 platform: {}, channel: {}", platform.getServerGbId(), targetId);
                 responseAck(request, Response.NOT_FOUND, "TargetID not found");

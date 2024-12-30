@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.gb28181.service;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.domain.Group;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.gb28181.domian.bean.*;
@@ -31,7 +31,7 @@ public interface IPlatformChannelService {
 
     void removeChannel(Long gbId);
 
-    List<CommonGBChannel> queryByPlatform(Platform platform);
+    List<CommonGbChannel> queryByPlatform(Platform platform);
 
     void pushChannel(Long platformId);
 
@@ -41,15 +41,15 @@ public interface IPlatformChannelService {
 
     void updateCustomChannel(PlatformChannel channel);
 
-    void checkGroupRemove(List<CommonGBChannel> channelList, List<Group> groups);
+    void checkGroupRemove(List<CommonGbChannel> channelList, List<Group> groups);
 
-    void checkGroupAdd(List<CommonGBChannel> channelList);
+    void checkGroupAdd(List<CommonGbChannel> channelList);
 
     List<Platform> queryPlatFormListByChannelDeviceId(Long channelId, List<String> platforms);
 
-    CommonGBChannel queryChannelByPlatformIdAndChannelId(Long platformId, Long channelId);
+    CommonGbChannel queryChannelByPlatformIdAndChannelId(Long platformId, Long channelId);
 
-    void checkRegionAdd(List<CommonGBChannel> channelList);
+    void checkRegionAdd(List<CommonGbChannel> channelList);
 
-    void checkRegionRemove(List<CommonGBChannel> channelList, List<Region> regionList);
+    void checkRegionRemove(List<CommonGbChannel> channelList, List<Region> regionList);
 }

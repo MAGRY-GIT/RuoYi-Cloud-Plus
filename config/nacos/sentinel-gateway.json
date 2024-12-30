@@ -22,5 +22,13 @@
     "limitApp": "default",
     "strategy": 0,
     "controlBehavior": 0
+  },
+  {
+        "resource": "wvp",
+        "count": 500,
+        "grade": 1,
+        "limitApp": "default",
+        "strategy": 0,
+        "controlBehavior": 0
   }
 ]

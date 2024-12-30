@@ -4,7 +4,7 @@ import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.domain.bean.GbCode;
 import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.domain.bean.GroupTree;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.mapper.CommonGBChannelMapper;
 import com.cdzeroly.wvp.mapper.GroupMapper;
@@ -117,7 +117,7 @@ public class GroupServiceImpl implements IGroupService {
                        chjildGroup.setParentDeviceId(group.getDeviceId());
                        chjildGroup.setBusinessGroup(group.getBusinessGroup());
                        // 将变化信息发送通知
-                       CommonGBChannel channel = CommonGBChannel.build(chjildGroup);
+                       CommonGbChannel channel = CommonGbChannel.build(chjildGroup);
                        try {
                            // 发送catalog
                            eventPublisher.catalogEventPublish(null, channel, CatalogEvent.UPDATE);
@@ -129,7 +129,7 @@ public class GroupServiceImpl implements IGroupService {
             }
         }
         // 将变化信息发送通知
-        CommonGBChannel channel = CommonGBChannel.build(group);
+        CommonGbChannel channel = CommonGbChannel.build(group);
         try {
             // 发送catalog
             eventPublisher.catalogEventPublish(null, channel, CatalogEvent.UPDATE);
@@ -208,7 +208,7 @@ public class GroupServiceImpl implements IGroupService {
             if ( !platformList.isEmpty()) {
                 groupManager.deletePlatformGroup(groupForDelete.getId());
                 // 将变化信息发送通知
-                CommonGBChannel channel = CommonGBChannel.build(groupForDelete);
+                CommonGbChannel channel = CommonGbChannel.build(groupForDelete);
                 for (Platform platform : platformList) {
                     try {
                         // 发送catalog

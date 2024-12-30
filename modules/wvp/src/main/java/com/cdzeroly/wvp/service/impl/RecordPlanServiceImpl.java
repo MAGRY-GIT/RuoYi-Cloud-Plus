@@ -8,7 +8,7 @@ import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.StreamInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.mapper.CommonGBChannelMapper;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelPlayService;
 import com.cdzeroly.wvp.domain.bean.MediaInfo;
@@ -44,6 +44,8 @@ import java.util.concurrent.TimeUnit;
 public class RecordPlanServiceImpl implements IRecordPlanService {
 
     private final RecordPlanMapper recordPlanMapper;
+
+
     private final RecordPlanItemMapper recordPlanItemMapper;
 
     private final CommonGBChannelMapper channelMapper;
@@ -66,7 +68,7 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
             return;
         }
         // 重新拉起
-        CommonGBChannel channel = channelMapper.queryById(channelId);
+        CommonGbChannel channel = channelMapper.queryById(channelId);
         if (channel == null) {
             log.warn("[录制计划] 流离开时拉起需要录像的流时, 发现通道不存在, id: {}", channelId);
             return;
@@ -111,10 +113,10 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
             recordStreamMap.keySet().forEach(startChannelIdList::remove);
             if (!startChannelIdList.isEmpty()) {
                 // 获取所有的关联的通道
-                List<CommonGBChannel> channelList = channelMapper.queryByIds(startChannelIdList);
+                List<CommonGbChannel> channelList = channelMapper.queryByIds(startChannelIdList);
                 if (!channelList.isEmpty()) {
                     // 查找是否已经开启录像, 如果没有则开启录像
-                    for (CommonGBChannel channel : channelList) {
+                    for (CommonGbChannel channel : channelList) {
                         // 开启点播,
                         channelPlayService.play(channel, null, ((code, msg, streamInfo) -> {
                             if (code == InviteErrorCode.SUCCESS.getCode() && streamInfo != null) {
@@ -193,7 +195,7 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
     }
 
     @Override
-    public RecordPlanVo get(Integer planId) {
+    public RecordPlanVo get(Long planId) {
         RecordPlanVo recordPlan = recordPlanMapper.selectVoById(planId);
         if (recordPlan == null) {
             return null;
@@ -236,7 +238,7 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
 
     @Override
     @Transactional
-    public void delete(Integer planId) {
+    public void delete(Long planId) {
         RecordPlan recordPlan = recordPlanMapper.selectById(planId);
         if (recordPlan == null) {
             throw new ServiceException( "录制计划不存在");
@@ -279,13 +281,13 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
     }
 
     @Override
-    public TableDataInfo<CommonGBChannel> queryChannelList(PageQuery pageQuery, String query, Integer dataType, Boolean online, Integer planId, Boolean hasLink) {
+    public TableDataInfo<CommonGbChannel> queryChannelList(PageQuery pageQuery, String query, Integer dataType, Boolean online, Long planId, Boolean hasLink) {
         if (query != null) {
             query = query.replaceAll("/", "//")
                     .replaceAll("%", "/%")
                     .replaceAll("_", "/_");
         }
-        List<CommonGBChannel> all = channelMapper.queryForRecordPlanForWebList(pageQuery,planId, query, dataType, online, hasLink);
+        List<CommonGbChannel> all = channelMapper.queryForRecordPlanForWebList(pageQuery,planId, query, dataType, online, hasLink);
         return  TableDataInfo.build(all);
     }
 

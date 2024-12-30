@@ -10,7 +10,7 @@ import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.conf.exception.SsrcTransactionNotFoundException;
 import com.cdzeroly.wvp.domain.bean.*;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.mapper.PlatformChannelMapper;
 import com.cdzeroly.wvp.mapper.PlatformMapper;
@@ -115,7 +115,7 @@ public class PlatformServiceImpl implements IPlatformService {
                 if (sendRtpItem != null && sendRtpItem.getApp().equals(event.getApp()) && sendRtpItem.isSendToPlatform()) {
                     String platformId = sendRtpItem.getTargetId();
                     Platform platform = platformMapper.getByServerGBId(platformId);
-                    CommonGBChannel channel = channelService.getOne(sendRtpItem.getChannelId());
+                    CommonGbChannel channel = channelService.getOne(sendRtpItem.getChannelId());
                     try {
                         if (platform != null && channel != null) {
                             commanderForPlatform.streamByeCmd(platform, sendRtpItem, channel);
@@ -141,7 +141,7 @@ public class PlatformServiceImpl implements IPlatformService {
             for (SendRtpInfo sendRtpItem : sendRtpItems) {
                 if (sendRtpItem != null && sendRtpItem.getApp().equals(event.getApp()) && sendRtpItem.isSendToPlatform()) {
                     Platform platform = platformMapper.getByServerGBId(sendRtpItem.getTargetId());
-                    CommonGBChannel channel = channelService.getOne(sendRtpItem.getChannelId());
+                    CommonGbChannel channel = channelService.getOne(sendRtpItem.getChannelId());
                     ssrcFactory.releaseSsrc(sendRtpItem.getMediaServerId(), sendRtpItem.getSsrc());
                     try {
                         commanderForPlatform.streamByeCmd(platform, sendRtpItem, channel);
@@ -461,11 +461,11 @@ public class PlatformServiceImpl implements IPlatformService {
         SubscribeInfo subscribe = subscribeHolder.getMobilePositionSubscribe(platform.getServerGbId());
         if (subscribe != null) {
 
-            List<CommonGBChannel> channelList = platformChannelMapper.queryShare(platform.getId(), null);
+            List<CommonGbChannel> channelList = platformChannelMapper.queryShare(platform.getId(), null);
             if (channelList.isEmpty()) {
                 return;
             }
-            for (CommonGBChannel channel : channelList) {
+            for (CommonGbChannel channel : channelList) {
                 GPSMsgInfo gpsMsgInfo = redisCatchStorage.getGpsMsgInfo(channel.getGbDeviceId());
                 // 无最新位置不发送
                 if (gpsMsgInfo != null) {
@@ -486,7 +486,7 @@ public class PlatformServiceImpl implements IPlatformService {
     }
 
     @Override
-    public void broadcastInvite(Platform platform, CommonGBChannel channel,String sourceId, MediaServer mediaServerItem, HookSubscribe.Event hookEvent,
+    public void broadcastInvite(Platform platform, CommonGbChannel channel, String sourceId, MediaServer mediaServerItem, HookSubscribe.Event hookEvent,
                                 SipSubscribe.Event errorEvent, InviteTimeOutCallback timeoutCallback) throws InvalidArgumentException, ParseException, SipException {
 
         if (mediaServerItem == null) {
@@ -588,7 +588,7 @@ public class PlatformServiceImpl implements IPlatformService {
         });
     }
 
-    public void onPublishHandlerForBroadcast(MediaServer mediaServerItem, MediaInfo mediaInfo, Platform platform, CommonGBChannel channel) {
+    public void onPublishHandlerForBroadcast(MediaServer mediaServerItem, MediaInfo mediaInfo, Platform platform, CommonGbChannel channel) {
         StreamInfo streamInfo = mediaServerService.getStreamInfoByAppAndStream(mediaServerItem, mediaInfo.getApp(), mediaInfo.getStream(), mediaInfo, null);
         streamInfo.setChannelId(channel.getGbId());
 
@@ -601,7 +601,7 @@ public class PlatformServiceImpl implements IPlatformService {
     }
 
     private void inviteOKHandler(SipSubscribe.EventResult eventResult, SSRCInfo ssrcInfo, int tcpMode, boolean ssrcCheck, MediaServer mediaServer,
-                                 Platform platform, CommonGBChannel channel, String timeOutTaskKey, ErrorCallback<Object> callback,
+                                 Platform platform, CommonGbChannel channel, String timeOutTaskKey, ErrorCallback<Object> callback,
                                  InviteInfo inviteInfo, InviteSessionType inviteSessionType){
         inviteInfo.setStatus(InviteSessionStatus.OK);
         ResponseEvent responseEvent = (ResponseEvent) eventResult.event;
@@ -708,7 +708,7 @@ public class PlatformServiceImpl implements IPlatformService {
     }
 
 
-    private void tcpActiveHandler(Platform platform, CommonGBChannel channel, String contentString,
+    private void tcpActiveHandler(Platform platform, CommonGbChannel channel, String contentString,
                                   MediaServer mediaServerItem, int tcpMode, boolean ssrcCheck,
                                   String timeOutTaskKey, SSRCInfo ssrcInfo, ErrorCallback<Object> callback){
         if (tcpMode != 2) {
@@ -757,7 +757,7 @@ public class PlatformServiceImpl implements IPlatformService {
     }
 
     @Override
-    public void stopBroadcast(Platform platform, CommonGBChannel channel, String stream, boolean sendBye, MediaServer mediaServerItem) {
+    public void stopBroadcast(Platform platform, CommonGbChannel channel, String stream, boolean sendBye, MediaServer mediaServerItem) {
 
         try {
             if (sendBye) {

@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.gb28181.event.subscribe.catalog;
 
 import com.cdzeroly.wvp.domain.bean.SubscribeInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.domain.bean.SubscribeHolder;
 import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
@@ -43,7 +43,7 @@ public class CatalogEventLister implements ApplicationListener<CatalogEvent> {
         Platform parentPlatform = null;
 
         Map<String, List<Platform>> parentPlatformMap = new HashMap<>();
-        Map<String, CommonGBChannel> channelMap = new HashMap<>();
+        Map<String, CommonGbChannel> channelMap = new HashMap<>();
         if (event.getPlatformId() != null) {
             parentPlatform = platformService.queryOne(event.getPlatformId());
             if (parentPlatform == null) {
@@ -59,7 +59,7 @@ public class CatalogEventLister implements ApplicationListener<CatalogEvent> {
             List<String> platforms = subscribeHolder.getAllCatalogSubscribePlatform();
             if (event.getChannels() != null) {
                 if (!platforms.isEmpty()) {
-                    for (CommonGBChannel deviceChannel : event.getChannels()) {
+                    for (CommonGbChannel deviceChannel : event.getChannels()) {
                         List<Platform> parentPlatformsForGb = platformChannelService.queryPlatFormListByChannelDeviceId(
                                 deviceChannel.getGbId(), platforms);
                         parentPlatformMap.put(deviceChannel.getGbDeviceId(), parentPlatformsForGb);
@@ -74,7 +74,7 @@ public class CatalogEventLister implements ApplicationListener<CatalogEvent> {
             case CatalogEvent.DEL:
 
                 if (parentPlatform != null) {
-                    List<CommonGBChannel> deviceChannelList = new ArrayList<>();
+                    List<CommonGbChannel> deviceChannelList = new ArrayList<>();
                     if (event.getChannels() != null) {
                         deviceChannelList.addAll(event.getChannels());
                     }
@@ -97,8 +97,8 @@ public class CatalogEventLister implements ApplicationListener<CatalogEvent> {
                                     continue;
                                 }
                                 log.info("[Catalog事件: {}]平台：{}，影响通道{}", event.getType(), platform.getServerGbId(), gbId);
-                                List<CommonGBChannel> deviceChannelList = new ArrayList<>();
-                                CommonGBChannel deviceChannel = new CommonGBChannel();
+                                List<CommonGbChannel> deviceChannelList = new ArrayList<>();
+                                CommonGbChannel deviceChannel = new CommonGbChannel();
                                 deviceChannel.setGbDeviceId(gbId);
                                 deviceChannelList.add(deviceChannel);
                                 try {
@@ -119,7 +119,7 @@ public class CatalogEventLister implements ApplicationListener<CatalogEvent> {
             case CatalogEvent.ADD:
             case CatalogEvent.UPDATE:
                 if (parentPlatform != null) {
-                     List<CommonGBChannel> deviceChannelList = new ArrayList<>();
+                     List<CommonGbChannel> deviceChannelList = new ArrayList<>();
                      if (event.getChannels() != null) {
                          deviceChannelList.addAll(event.getChannels());
                      }
@@ -142,8 +142,8 @@ public class CatalogEventLister implements ApplicationListener<CatalogEvent> {
                                     continue;
                                 }
                                 log.info("[Catalog事件: {}]平台：{}，影响通道{}", event.getType(), platform.getServerGbId(), gbId);
-                                List<CommonGBChannel> channelList = new ArrayList<>();
-                                CommonGBChannel deviceChannel = channelMap.get(gbId);
+                                List<CommonGbChannel> channelList = new ArrayList<>();
+                                CommonGbChannel deviceChannel = channelMap.get(gbId);
                                 channelList.add(deviceChannel);
                                 try {
                                     sipCommanderFroPlatform.sendNotifyForCatalogAddOrUpdate(event.getType(), platform, channelList, subscribeInfo, null);

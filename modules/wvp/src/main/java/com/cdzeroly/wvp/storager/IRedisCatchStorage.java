@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.storager;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.cdzeroly.wvp.domain.bean.*;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -179,7 +179,7 @@ public interface IRedisCatchStorage {
 
     void sendPlatformStartPlayMsg(SendRtpInfo sendRtpItem, DeviceChannel channel, Platform platform);
 
-    void sendPlatformStopPlayMsg(SendRtpInfo sendRtpItem, Platform platform, CommonGBChannel channel);
+    void sendPlatformStopPlayMsg(SendRtpInfo sendRtpItem, Platform platform, CommonGbChannel channel);
 
     void addPushListItem(String app, String stream, MediaInfo param);
 

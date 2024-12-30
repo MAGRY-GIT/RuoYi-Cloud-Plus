@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.service;
 
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.domain.RecordPlan;
 import com.cdzeroly.wvp.domain.bo.RecordPlanBo;
 import com.cdzeroly.wvp.domain.vo.RecordPlanVo;
@@ -16,11 +16,11 @@ import java.util.List;
 public interface IRecordPlanService {
 
 
-    RecordPlanVo get(Integer planId);
+    RecordPlanVo get(Long planId);
 
     void update(RecordPlanBo plan);
 
-    void delete(Integer planId);
+    void delete(Long planId);
 
     TableDataInfo<RecordPlan> query(PageQuery pageQuery, String query);
 
@@ -28,7 +28,7 @@ public interface IRecordPlanService {
 
     void link(List<Long> channelIds, Long planId);
 
-    TableDataInfo<CommonGBChannel> queryChannelList(PageQuery pageQuery, String query, Integer channelType, Boolean online, Integer planId, Boolean hasLink);
+    TableDataInfo<CommonGbChannel> queryChannelList(PageQuery pageQuery, String query, Integer channelType, Boolean online, Long planId, Boolean hasLink);
 
     void linkAll(Long planId);
 

@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.notify.cmd;
 
 import com.cdzeroly.wvp.common.InviteInfo;
 import com.cdzeroly.wvp.common.InviteSessionType;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
@@ -98,7 +98,7 @@ public class MediaStatusNotifyMessageHandler extends SIPRequestProcessorParent i
                         log.warn("[级联消息发送]：发送MediaStatus发现上级平台{}不存在", sendRtpInfo.getTargetId());
                         return;
                     }
-                    CommonGBChannel channel = platformChannelService.queryChannelByPlatformIdAndChannelId(parentPlatform.getId(), sendRtpInfo.getChannelId());
+                    CommonGbChannel channel = platformChannelService.queryChannelByPlatformIdAndChannelId(parentPlatform.getId(), sendRtpInfo.getChannelId());
                     if (channel == null) {
                         log.warn("[级联消息发送]：发送MediaStatus发现通道{}不存在", sendRtpInfo.getChannelId());
                         return;

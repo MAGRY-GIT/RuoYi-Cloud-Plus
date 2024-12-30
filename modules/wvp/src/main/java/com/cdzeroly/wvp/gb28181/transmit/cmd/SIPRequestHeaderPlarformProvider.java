@@ -5,7 +5,7 @@ import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
 import com.cdzeroly.wvp.domain.bean.SipTransactionInfo;
 import com.cdzeroly.wvp.domain.bean.SubscribeInfo;
 import com.cdzeroly.wvp.gb28181.SipLayer;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
@@ -270,7 +270,7 @@ public class SIPRequestHeaderPlarformProvider {
 		return request;
     }
 
-	public SIPRequest createByeRequest(Platform platform, SendRtpInfo sendRtpItem, CommonGBChannel channel) throws PeerUnavailableException, ParseException, InvalidArgumentException {
+	public SIPRequest createByeRequest(Platform platform, SendRtpInfo sendRtpItem, CommonGbChannel channel) throws PeerUnavailableException, ParseException, InvalidArgumentException {
 
 		if (sendRtpItem == null ) {
 			return null;

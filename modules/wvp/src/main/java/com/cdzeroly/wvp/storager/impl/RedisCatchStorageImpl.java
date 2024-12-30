@@ -6,7 +6,7 @@ import com.cdzeroly.common.redis.utils.RedisUtils;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.domain.bean.*;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -392,7 +392,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
     }
 
     @Override
-    public void sendPlatformStopPlayMsg(SendRtpInfo sendRtpItem, Platform platform, CommonGBChannel channel) {
+    public void sendPlatformStopPlayMsg(SendRtpInfo sendRtpItem, Platform platform, CommonGbChannel channel) {
 
         MessageForPushChannel msg = MessageForPushChannel.getInstance(0,
                 sendRtpItem.getApp(), sendRtpItem.getStream(), channel.getGbDeviceId(),

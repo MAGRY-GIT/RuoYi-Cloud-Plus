@@ -1,13 +1,13 @@
 package com.cdzeroly.wvp.gb28181.domian.bean;
 
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PlatformChannel extends CommonGBChannel {
+public class PlatformChannel extends CommonGbChannel {
 
     @Schema(description = "Id")
     private Integer id;

@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.query.cmd;
 
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -95,7 +95,7 @@ public class RecordInfoQueryMessageHandler extends SIPRequestProcessorParent imp
         }
 
         // 向国标设备请求录像数据
-        CommonGBChannel channel = channelService.queryOneWithPlatform(platform.getId(), channelId);
+        CommonGbChannel channel = channelService.queryOneWithPlatform(platform.getId(), channelId);
         if (channel == null) {
             log.info("[平台查询录像记录] 未找到通道 {}/{}", platform.getName(), channelId );
             try {

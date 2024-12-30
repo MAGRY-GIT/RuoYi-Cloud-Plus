@@ -1,13 +1,12 @@
-package com.cdzeroly.wvp.domain.bean;
+package com.cdzeroly.wvp.gb28181.domian;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.cdzeroly.common.tenant.core.TenantEntity;
-import com.cdzeroly.wvp.domain.Group;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.domain.Region;
+import com.cdzeroly.wvp.domain.bean.GbCode;
+import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
-import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,9 +17,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Schema(description = "国标通道")
-@AutoMapper(target = CommonGBChannel.class)
-public class CommonGBChannelBean extends TenantEntity {
-
+@TableName("wvp_device_channel")
+public class CommonGbChannel extends TenantEntity {
 
     @Schema(description = "国标-数据库自增ID")
     @TableId("gb_id")
@@ -109,7 +107,7 @@ public class CommonGBChannelBean extends TenantEntity {
 
     // 2016
     @Schema(description = "-摄像机位置类型扩展。1-省际检查站、2-党政机关、3-车站码头、4-中心广场、5-体育场馆、6-商业中心、7-宗教场所、" +
-        "8-校园周边、9-治安复杂区域、10-交通干线。当目录项为摄像机时可选。")
+            "8-校园周边、9-治安复杂区域、10-交通干线。当目录项为摄像机时可选。")
     private Integer gbPositionType;
 
     @Schema(description = "国标-摄像机安装位置室外、室内属性。1-室外、2-室内。")
@@ -123,7 +121,7 @@ public class CommonGBChannelBean extends TenantEntity {
     private Integer gbSupplyLightType;
 
     @Schema(description = "国标-摄像机监视方位(光轴方向)属性。1-东(西向东)、2-西(东向西)、3-南(北向南)、4-北(南向北)、" +
-        "5-东南(西北到东南)、6-东北(西南到东北)、7-西南(东北到西南)、8-西北(东南到西北)")
+            "5-东南(西北到东南)、6-东北(西南到东北)、7-西南(东北到西南)、8-西北(东南到西北)")
     private Integer gbDirectionType;
 
     @Schema(description = "国标-摄像机支持的分辨率,可多值")
@@ -164,16 +162,16 @@ public class CommonGBChannelBean extends TenantEntity {
             case CatalogEvent.DEFECT:
             case CatalogEvent.VLOST:
                 content = "<Item>\n" +
-                    "<DeviceID>" + this.getGbDeviceId() + "</DeviceID>\n" +
-                    "<Event>" + event + "</Event>\n" +
-                    "</Item>\n";
+                        "<DeviceID>" + this.getGbDeviceId() + "</DeviceID>\n" +
+                        "<Event>" + event + "</Event>\n" +
+                        "</Item>\n";
                 break;
             case CatalogEvent.ON:
             case CatalogEvent.OFF:
                 content = "<Item>\n" +
-                    "<DeviceID>" + this.getGbDeviceId() + "</DeviceID>\n" +
-                    "<Event>" + event + "</Event>\r\n" +
-                    "</Item>\n";
+                        "<DeviceID>" + this.getGbDeviceId() + "</DeviceID>\n" +
+                        "<Event>" + event + "</Event>\r\n" +
+                        "</Item>\n";
                 break;
             case CatalogEvent.ADD:
             case CatalogEvent.UPDATE:
@@ -190,8 +188,8 @@ public class CommonGBChannelBean extends TenantEntity {
         StringBuilder content = new StringBuilder();
         // 行政区划目录项
         content.append("<Item>\n")
-            .append("<DeviceID>" + this.getGbDeviceId() + "</DeviceID>\n")
-            .append("<Name>" + this.getGbName() + "</Name>\n");
+                .append("<DeviceID>" + this.getGbDeviceId() + "</DeviceID>\n")
+                .append("<Name>" + this.getGbName() + "</Name>\n");
 
 
         if (this.getGbDeviceId().length() > 8) {
@@ -347,9 +345,9 @@ public class CommonGBChannelBean extends TenantEntity {
         return content.toString();
     }
 
-    public static CommonGBChannel build(Group group) {
+    public static CommonGbChannel build(Group group) {
         GbCode gbCode = GbCode.decode(group.getDeviceId());
-        CommonGBChannel channel = new CommonGBChannel();
+        CommonGbChannel channel = new CommonGbChannel();
         if ("215".equals(gbCode.getTypeCode())) {
             // 业务分组
             channel.setGbName(group.getName());
@@ -366,8 +364,8 @@ public class CommonGBChannelBean extends TenantEntity {
         return channel;
     }
 
-    public static CommonGBChannel build(Platform platform) {
-        CommonGBChannel commonGBChannel = new CommonGBChannel();
+    public static CommonGbChannel build(Platform platform) {
+        CommonGbChannel commonGBChannel = new CommonGbChannel();
         commonGBChannel.setGbDeviceId(platform.getDeviceGbId());
         commonGBChannel.setGbName(platform.getName());
         commonGBChannel.setGbManufacturer(platform.getManufacturer());
@@ -380,10 +378,11 @@ public class CommonGBChannelBean extends TenantEntity {
         return commonGBChannel;
     }
 
-    public static CommonGBChannel build(Region region) {
-        CommonGBChannel commonGBChannel = new CommonGBChannel();
+    public static CommonGbChannel build(Region region) {
+        CommonGbChannel commonGBChannel = new CommonGbChannel();
         commonGBChannel.setGbDeviceId(region.getDeviceId());
         commonGBChannel.setGbName(region.getName());
         return commonGBChannel;
     }
+
 }

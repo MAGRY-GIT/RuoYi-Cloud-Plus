@@ -3,8 +3,8 @@ package com.cdzeroly.wvp.domain.bo;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
-import com.cdzeroly.wvp.domain.bean.CommonGBChannelBean;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
+import com.cdzeroly.wvp.domain.bean.CommonGbChannelBean;
 import com.cdzeroly.wvp.domain.StreamProxy;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,7 +19,7 @@ import org.springframework.util.ObjectUtils;
 @Schema(description = "拉流代理的信息")
 @EqualsAndHashCode(callSuper = true)
 @AutoMapper(target = StreamProxy.class)
-public class StreamProxyBo extends CommonGBChannelBean {
+public class StreamProxyBo extends CommonGbChannelBean {
 
     /**
      * 数据库自增ID
@@ -77,7 +77,7 @@ public class StreamProxyBo extends CommonGBChannelBean {
      * 转换传输对象
      * @return  CommonGBChannel
      */
-    public CommonGBChannel buildCommonGBChannel() {
+    public CommonGbChannel buildCommonGbChannel() {
 
 
         if (ObjectUtils.isEmpty(this.getGbDeviceId())) {
@@ -89,6 +89,6 @@ public class StreamProxyBo extends CommonGBChannelBean {
         this.setDataType(ChannelDataType.STREAM_PROXY.value);
         this.setDataDeviceId(this.getId());
 
-        return MapstructUtils.convert(this, CommonGBChannel.class);
+        return MapstructUtils.convert(this, CommonGbChannel.class);
     }
 }

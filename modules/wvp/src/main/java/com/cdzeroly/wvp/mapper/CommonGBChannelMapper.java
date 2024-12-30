@@ -6,7 +6,7 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.domain.bean.GroupTree;
 import com.cdzeroly.wvp.domain.vo.CommonGBChannelVo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.mapper.provider.ChannelProvider;
 import com.cdzeroly.wvp.gb28181.domian.bean.*;
@@ -23,48 +23,48 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGBChannel, CommonGBChannelVo> {
+public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGbChannel, CommonGBChannelVo> {
 
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByDeviceId")
-    CommonGBChannel queryByDeviceId(@Param("gbDeviceId") String gbDeviceId);
+    CommonGbChannel queryByDeviceId(@Param("gbDeviceId") String gbDeviceId);
 
 
 
     @SelectProvider(type = ChannelProvider.class, method = "queryById")
-    CommonGBChannel queryById(@Param("gbId") Long gbId);
+    CommonGbChannel queryById(@Param("gbId") Long gbId);
 
 
     int updateStatusById(@Param("gbId") Long gbId, @Param("status") String status);
 
 
-    int updateStatusForListById(List<CommonGBChannel> commonGBChannels, @Param("status") String status);
+    int updateStatusForListById(List<CommonGbChannel> commonGbChannels, @Param("status") String status);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryInListByStatus")
-    List<CommonGBChannel> queryInListByStatus(List<CommonGBChannel> commonGBChannelList, @Param("status") String status);
+    List<CommonGbChannel> queryInListByStatus(List<CommonGbChannel> commonGbChannels, @Param("status") String status);
 
 
 
 
-    int updateStatus(List<CommonGBChannel> commonGBChannels);
+    int updateStatus(List<CommonGbChannel> commonGbChannels);
 
 
     void reset(@Param("id") Long id, @Param("dataType") Integer dataType, @Param("dataDeviceId") Long dataDeviceId, @Param("updateTime") String updateTime);
 
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByIds")
-    List<CommonGBChannel> queryByIds(Collection<Long> ids);
+    List<CommonGbChannel> queryByIds(Collection<Long> ids);
 
 
     @SelectProvider(type = ChannelProvider.class, method = "queryListByCivilCode")
-    List<CommonGBChannel> queryListByCivilCode(PageQuery pageQuery,@Param("query") String query, @Param("online") Boolean online,
+    List<CommonGbChannel> queryListByCivilCode(PageQuery pageQuery, @Param("query") String query, @Param("online") Boolean online,
                                                @Param("dataType") Integer dataType, @Param("civilCode") String civilCode);
 
 
 
 
     @SelectProvider(type = ChannelProvider.class, method = "queryListByParentId")
-    List<CommonGBChannel> queryListByParentId(PageQuery pageQuery,@Param("query") String query, @Param("online") Boolean online,
+    List<CommonGbChannel> queryListByParentId(PageQuery pageQuery, @Param("query") String query, @Param("online") Boolean online,
                                               @Param("dataType") Integer dataType, @Param("groupDeviceId") String groupDeviceId);
 
 
@@ -77,69 +77,69 @@ public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGBChannel, C
 
 
 
-    int updateRegion(@Param("civilCode") String civilCode, @Param("channelList") List<CommonGBChannel> channelList);
+    int updateRegion(@Param("civilCode") String civilCode, @Param("channelList") List<CommonGbChannel> channelList);
 
 
 
-    int removeCivilCodeByChannels(List<CommonGBChannel> channelList);
+    int removeCivilCodeByChannels(List<CommonGbChannel> channelList);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByCivilCode")
-    List<CommonGBChannel> queryByCivilCode(@Param("civilCode") String civilCode);
+    List<CommonGbChannel> queryByCivilCode(@Param("civilCode") String civilCode);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByGbDeviceIds")
-    List<CommonGBChannel> queryByGbDeviceIds(@Param("dataType") Integer dataType, List<Integer> deviceIds);
+    List<CommonGbChannel> queryByGbDeviceIds(@Param("dataType") Integer dataType, List<Integer> deviceIds);
 
     List<Long> queryByGbDeviceIdsForIds(@Param("dataType") Integer dataType, List<Long> deviceIds);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByGroupList")
-    List<CommonGBChannel> queryByGroupList(List<Group> groupList);
+    List<CommonGbChannel> queryByGroupList(List<Group> groupList);
 
 
-    int removeParentIdByChannels(List<CommonGBChannel> channelList);
+    int removeParentIdByChannels(List<CommonGbChannel> channelList);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByBusinessGroup")
-    List<CommonGBChannel> queryByBusinessGroup(@Param("businessGroup") String businessGroup);
+    List<CommonGbChannel> queryByBusinessGroup(@Param("businessGroup") String businessGroup);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByParentId")
-    List<CommonGBChannel> queryByParentId(@Param("parentId") String parentId);
+    List<CommonGbChannel> queryByParentId(@Param("parentId") String parentId);
 
 
-    int updateBusinessGroupByChannelList(@Param("businessGroup") String businessGroup, List<CommonGBChannel> channelList);
+    int updateBusinessGroupByChannelList(@Param("businessGroup") String businessGroup, List<CommonGbChannel> channelList);
 
 
-    int updateParentIdByChannelList(@Param("parentId") String parentId, List<CommonGBChannel> channelList);
+    int updateParentIdByChannelList(@Param("parentId") String parentId, List<CommonGbChannel> channelList);
 
 
     List<GroupTree> queryForGroupTreeByParentId(@Param("query") String query, @Param("parent") String parent);
 
 
     int updateGroup(@Param("parentId") String parentId, @Param("businessGroup") String businessGroup,
-                    List<CommonGBChannel> channelList);
+                    List<CommonGbChannel> channelList);
 
 
-    int batchUpdate(List<CommonGBChannel> commonGBChannels);
+    int batchUpdate(List<CommonGbChannel> commonGbChannels);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryWithPlatform")
-    List<CommonGBChannel> queryWithPlatform(@Param("platformId") Long platformId);
+    List<CommonGbChannel> queryWithPlatform(@Param("platformId") Long platformId);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryShareChannelByParentId")
-    List<CommonGBChannel> queryShareChannelByParentId(@Param("parentId") String parentId, @Param("platformId") Long platformId);
+    List<CommonGbChannel> queryShareChannelByParentId(@Param("parentId") String parentId, @Param("platformId") Long platformId);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryShareChannelByCivilCode")
-    List<CommonGBChannel> queryShareChannelByCivilCode(@Param("civilCode") String civilCode, @Param("platformId") Long platformId);
+    List<CommonGbChannel> queryShareChannelByCivilCode(@Param("civilCode") String civilCode, @Param("platformId") Long platformId);
 
 
-    int updateCivilCodeByChannelList(@Param("civilCode") String civilCode, List<CommonGBChannel> channelList);
+    int updateCivilCodeByChannelList(@Param("civilCode") String civilCode, List<CommonGbChannel> channelList);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryListByStreamPushList")
-    List<CommonGBChannel> queryListByStreamPushList(@Param("dataType") Integer dataType, List<StreamPushVo> streamPushVoList);
+    List<CommonGbChannel> queryListByStreamPushList(@Param("dataType") Integer dataType, List<StreamPushVo> streamPushVoList);
 
 
 
-    void updateGpsByDeviceIdForStreamPush(@Param("dataType") Integer dataType,  List<CommonGBChannel> channels);
+    void updateGpsByDeviceIdForStreamPush(@Param("dataType") Integer dataType,  List<CommonGbChannel> channels);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryList")
-    List<CommonGBChannel> queryList(@Param("page") Page<CommonGBChannel> page, @Param("query") String query, @Param("online") Boolean online,
+    List<CommonGbChannel> queryList(@Param("page") Page<CommonGbChannel> page, @Param("query") String query, @Param("online") Boolean online,
                                     @Param("hasRecordPlan") Boolean hasRecordPlan, @Param("dataType") Integer dataType);
 
 
@@ -156,13 +156,13 @@ public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGBChannel, C
 
 
 
-    List<CommonGBChannel> queryForRecordPlanForWebList(PageQuery pageQuery, @Param("planId") Integer planId, @Param("query") String query,
+    List<CommonGbChannel> queryForRecordPlanForWebList(PageQuery pageQuery, @Param("planId") Long planId, @Param("query") String query,
                                                        @Param("dataType") Integer dataType, @Param("online") Boolean online,
                                                        @Param("hasLink") Boolean hasLink);
 
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByDataId")
-    CommonGBChannel queryByDataId(@Param("dataType") Integer dataType, @Param("dataDeviceId") Long dataDeviceId);
+    CommonGbChannel queryByDataId(@Param("dataType") Integer dataType, @Param("dataDeviceId") Long dataDeviceId);
 
 
 }

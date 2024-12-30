@@ -8,7 +8,7 @@ import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.SipConfig;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.domain.bean.*;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -121,7 +121,7 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
                 inviteFromDeviceHandle(request, inviteInfo);
             } else {
                 // 查询平台下是否有该通道
-                CommonGBChannel channel= channelService.queryOneWithPlatform(platform.getId(), inviteInfo.getTargetChannelId());
+                CommonGbChannel channel= channelService.queryOneWithPlatform(platform.getId(), inviteInfo.getTargetChannelId());
                 if (channel == null) {
                     log.info("[上级INVITE] 通道不存在，返回404: {}", inviteInfo.getTargetChannelId());
                     try {
@@ -375,7 +375,7 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
             if (sendRtpItem == null) {
                 return;
             }
-            CommonGBChannel channel = channelService.getOne(sendRtpItem.getChannelId());
+            CommonGbChannel channel = channelService.getOne(sendRtpItem.getChannelId());
             if (channel == null) {
                 return;
             }

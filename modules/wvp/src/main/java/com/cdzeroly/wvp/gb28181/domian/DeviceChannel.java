@@ -22,7 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 @Schema(description = "通道信息")
 @EqualsAndHashCode(callSuper = true)
 @TableName("wvp_device_channel")
-public class DeviceChannel  extends CommonGBChannel {
+public class DeviceChannel  extends CommonGbChannel {
 
 	@Schema(description = "数据库自增ID")
 	private Long id;

@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.query.cmd;
 
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
@@ -67,7 +67,7 @@ public class CatalogQueryMessageHandler extends SIPRequestProcessorParent implem
         }
         Element snElement = rootElement.element("SN");
         String sn = snElement.getText();
-        List<CommonGBChannel> channelList = platformChannelService.queryByPlatform(platform);
+        List<CommonGbChannel> channelList = platformChannelService.queryByPlatform(platform);
 
         try {
             if (!channelList.isEmpty()) {

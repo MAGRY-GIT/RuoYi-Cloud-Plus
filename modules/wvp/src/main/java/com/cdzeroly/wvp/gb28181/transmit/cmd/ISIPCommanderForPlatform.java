@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.gb28181.transmit.cmd;
 
 import com.cdzeroly.wvp.conf.exception.SsrcTransactionNotFoundException;
 import com.cdzeroly.wvp.domain.bean.*;
-import com.cdzeroly.wvp.gb28181.domian.CommonGBChannel;
+import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
@@ -61,10 +61,10 @@ public interface ISIPCommanderForPlatform {
      * @param size
      * @return
      */
-    void catalogQuery(CommonGBChannel channel, Platform parentPlatform, String sn, String fromTag, int size)
+    void catalogQuery(CommonGbChannel channel, Platform parentPlatform, String sn, String fromTag, int size)
             throws SipException, InvalidArgumentException, ParseException;
 
-    void catalogQuery(List<CommonGBChannel> channels, Platform parentPlatform, String sn, String fromTag)
+    void catalogQuery(List<CommonGbChannel> channels, Platform parentPlatform, String sn, String fromTag)
             throws InvalidArgumentException, ParseException, SipException;
 
     /**
@@ -95,7 +95,7 @@ public interface ISIPCommanderForPlatform {
      * @param subscribeInfo  订阅相关的信息
      * @return
      */
-    void sendNotifyMobilePosition(Platform parentPlatform, GPSMsgInfo gpsMsgInfo, CommonGBChannel channel, SubscribeInfo subscribeInfo)
+    void sendNotifyMobilePosition(Platform parentPlatform, GPSMsgInfo gpsMsgInfo, CommonGbChannel channel, SubscribeInfo subscribeInfo)
             throws InvalidArgumentException, ParseException, NoSuchFieldException, SipException, IllegalAccessException;
 
     /**
@@ -113,7 +113,7 @@ public interface ISIPCommanderForPlatform {
      * @param parentPlatform
      * @param deviceChannels
      */
-    void sendNotifyForCatalogAddOrUpdate(String type, Platform parentPlatform, List<CommonGBChannel> deviceChannels, SubscribeInfo subscribeInfo, Integer index) throws InvalidArgumentException, ParseException, NoSuchFieldException, SipException, IllegalAccessException;
+    void sendNotifyForCatalogAddOrUpdate(String type, Platform parentPlatform, List<CommonGbChannel> deviceChannels, SubscribeInfo subscribeInfo, Integer index) throws InvalidArgumentException, ParseException, NoSuchFieldException, SipException, IllegalAccessException;
 
     /**
      * 回复catalog事件-删除
@@ -121,7 +121,7 @@ public interface ISIPCommanderForPlatform {
      * @param parentPlatform
      * @param deviceChannels
      */
-    void sendNotifyForCatalogOther(String type, Platform parentPlatform, List<CommonGBChannel> deviceChannels,
+    void sendNotifyForCatalogOther(String type, Platform parentPlatform, List<CommonGbChannel> deviceChannels,
                                    SubscribeInfo subscribeInfo, Integer index) throws InvalidArgumentException,
             ParseException, NoSuchFieldException, SipException, IllegalAccessException;
 
@@ -133,7 +133,7 @@ public interface ISIPCommanderForPlatform {
      * @param fromTag        fromTag
      * @param recordInfo     录像信息
      */
-    void recordInfo(CommonGBChannel deviceChannel, Platform parentPlatform, String fromTag, RecordInfo recordInfo)
+    void recordInfo(CommonGbChannel deviceChannel, Platform parentPlatform, String fromTag, RecordInfo recordInfo)
             throws SipException, InvalidArgumentException, ParseException;
 
     /**
@@ -143,16 +143,16 @@ public interface ISIPCommanderForPlatform {
      * @param sendRtpItem
      * @return
      */
-    void sendMediaStatusNotify(Platform platform, SendRtpInfo sendRtpItem, CommonGBChannel channel) throws SipException, InvalidArgumentException, ParseException;
+    void sendMediaStatusNotify(Platform platform, SendRtpInfo sendRtpItem, CommonGbChannel channel) throws SipException, InvalidArgumentException, ParseException;
 
-    void streamByeCmd(Platform platform, SendRtpInfo sendRtpItem, CommonGBChannel channel) throws SipException, InvalidArgumentException, ParseException;
+    void streamByeCmd(Platform platform, SendRtpInfo sendRtpItem, CommonGbChannel channel) throws SipException, InvalidArgumentException, ParseException;
 
-    void streamByeCmd(Platform platform, CommonGBChannel channel, String stream, String callId, SipSubscribe.Event okEvent) throws InvalidArgumentException, SipException, ParseException, SsrcTransactionNotFoundException;
+    void streamByeCmd(Platform platform, CommonGbChannel channel, String stream, String callId, SipSubscribe.Event okEvent) throws InvalidArgumentException, SipException, ParseException, SsrcTransactionNotFoundException;
 
-    void broadcastInviteCmd(Platform platform, CommonGBChannel channel, String sourceId,  MediaServer mediaServerItem,
+    void broadcastInviteCmd(Platform platform, CommonGbChannel channel, String sourceId, MediaServer mediaServerItem,
                             SSRCInfo ssrcInfo, HookSubscribe.Event event, SipSubscribe.Event okEvent,
                             SipSubscribe.Event errorEvent) throws ParseException, SipException, InvalidArgumentException;
 
 
-    void broadcastResultCmd(Platform platform, CommonGBChannel deviceChannel, String sn, boolean result, SipSubscribe.Event errorEvent, SipSubscribe.Event okEvent) throws InvalidArgumentException, SipException, ParseException;
+    void broadcastResultCmd(Platform platform, CommonGbChannel deviceChannel, String sn, boolean result, SipSubscribe.Event errorEvent, SipSubscribe.Event okEvent) throws InvalidArgumentException, SipException, ParseException;
 }
