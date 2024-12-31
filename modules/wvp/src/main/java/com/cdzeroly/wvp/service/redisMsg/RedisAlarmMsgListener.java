@@ -14,6 +14,7 @@ import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommanderForPlatform;
 import com.cdzeroly.wvp.service.IMobilePositionService;
 import com.cdzeroly.wvp.utils.DateUtil;
 import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
@@ -22,6 +23,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+import javax.annotation.Resource;
 import javax.sip.InvalidArgumentException;
 import javax.sip.SipException;
 import java.text.ParseException;
@@ -32,32 +34,33 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * 监听 SUBSCRIBE alarm_receive
  * 发布 PUBLISH alarm_receive '{ "gbId": "", "alarmSn": 1, "alarmType": "111", "alarmDescription": "222", }'
+ * @author MGARY
  */
 @Slf4j
 @Component
 public class RedisAlarmMsgListener implements MessageListener {
 
-    @Autowired
+    @Resource
     private ISIPCommander commander;
 
-    @Autowired
+    @Resource
     private ISIPCommanderForPlatform commanderForPlatform;
 
-    @Autowired
+    @Resource
     private IDeviceService deviceService;
 
-    @Autowired
+    @Resource
     private IDeviceChannelService channelService;
 
-    @Autowired
+    @Resource
     private IMobilePositionService mobilePositionService;
 
-    @Autowired
+    @Resource
     private IPlatformService platformService;
 
     private final ConcurrentLinkedQueue<Message> taskQueue = new ConcurrentLinkedQueue<>();
 
-    @Autowired
+    @Resource
     private UserSetting userSetting;
 
     @Override

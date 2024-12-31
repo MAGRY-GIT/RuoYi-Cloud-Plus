@@ -9,6 +9,7 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHandler;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.query.QueryMessageHandler;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,21 +27,20 @@ import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class DeviceStatusQueryMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "DeviceStatus";
 
-    @Autowired
-    private QueryMessageHandler queryMessageHandler;
+    private final QueryMessageHandler queryMessageHandler;
 
-    @Autowired
-    private IGbChannelService channelService;
+    private final IGbChannelService channelService;
 
-    @Autowired
-    private ISIPCommanderForPlatform cmderFroPlatform;
+    private final ISIPCommanderForPlatform cmderFroPlatform;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        String cmdType = "DeviceStatus";
+
         queryMessageHandler.addHandler(cmdType, this);
     }
 

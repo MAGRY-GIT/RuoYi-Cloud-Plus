@@ -21,6 +21,7 @@ import com.cdzeroly.wvp.service.ISendRtpServerService;
 import com.cdzeroly.wvp.service.redisMsg.IRedisRpcService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.domain.WVPResult;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,49 +40,36 @@ import javax.sip.header.ToHeader;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class AckRequestProcessor extends SIPRequestProcessorParent implements InitializingBean, ISIPRequestProcessor {
 
-	private final String method = "ACK";
+    private final SIPProcessorObserver sipProcessorObserver;
 
-	@Autowired
-	private SIPProcessorObserver sipProcessorObserver;
+    private final IRedisCatchStorage redisCatchStorage;
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		// 添加消息处理的订阅
-		sipProcessorObserver.addRequestProcessor(method, this);
-	}
+    private final IRedisRpcService redisRpcService;
 
-	@Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final UserSetting userSetting;
 
-	@Autowired
-    private IRedisRpcService redisRpcService;
+	private final IPlatformService platformService;
 
-	@Autowired
-    private UserSetting userSetting;
+	private final IDeviceService deviceService;
 
-	@Autowired
-	private IPlatformService platformService;
+	private final IDeviceChannelService deviceChannelService;
 
-	@Autowired
-	private IDeviceService deviceService;
+	private final IMediaServerService mediaServerService;
 
-	@Autowired
-	private IDeviceChannelService deviceChannelService;
+	private final DynamicTask dynamicTask;
 
-	@Autowired
-	private IMediaServerService mediaServerService;
+	private final IPlayService playService;
 
-	@Autowired
-	private DynamicTask dynamicTask;
-
-	@Autowired
-	private IPlayService playService;
-
-	@Autowired
-	private ISendRtpServerService sendRtpServerService;
-
+	private final ISendRtpServerService sendRtpServerService;
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        // 添加消息处理的订阅
+        String method = "ACK";
+        sipProcessorObserver.addRequestProcessor(method, this);
+    }
 
 	/**
 	 * 处理  ACK请求

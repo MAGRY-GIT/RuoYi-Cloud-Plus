@@ -6,13 +6,14 @@ import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.domain.bean.GroupTree;
 import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.mapper.CommonGBChannelMapper;
+import com.cdzeroly.wvp.mapper.CommonGbChannelMapper;
 import com.cdzeroly.wvp.mapper.GroupMapper;
 import com.cdzeroly.wvp.gb28181.event.EventPublisher;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
 import com.cdzeroly.wvp.gb28181.service.IGroupService;
 import com.cdzeroly.wvp.utils.DateUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,19 +28,16 @@ import java.util.*;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class GroupServiceImpl implements IGroupService {
 
-    @Autowired
-    private GroupMapper groupManager;
+    private final GroupMapper groupManager;
 
-    @Autowired
-    private CommonGBChannelMapper commonGBChannelMapper;
+    private final CommonGbChannelMapper commonGBChannelMapper;
 
-    @Autowired
-    private IGbChannelService gbChannelService;
+    private final IGbChannelService gbChannelService;
 
-    @Autowired
-    private EventPublisher eventPublisher;
+    private final EventPublisher eventPublisher;
 
     @Override
     public void add(Group group) {

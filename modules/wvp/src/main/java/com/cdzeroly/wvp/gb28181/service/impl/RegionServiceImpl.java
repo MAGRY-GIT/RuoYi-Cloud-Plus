@@ -7,7 +7,7 @@ import com.cdzeroly.wvp.common.CivilCodePo;
 import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.gb28181.domian.bean.RegionTree;
-import com.cdzeroly.wvp.mapper.CommonGBChannelMapper;
+import com.cdzeroly.wvp.mapper.CommonGbChannelMapper;
 import com.cdzeroly.wvp.mapper.RegionMapper;
 import com.cdzeroly.wvp.gb28181.event.EventPublisher;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
@@ -37,7 +37,7 @@ public class RegionServiceImpl implements IRegionService {
 
     private final RegionMapper regionMapper;
 
-    private final CommonGBChannelMapper commonGBChannelMapper;
+    private final CommonGbChannelMapper commonGBChannelMapper;
 
     private final IGbChannelService gbChannelService;
 

@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.gb28181.transmit.event.response.impl;
 
 import com.cdzeroly.wvp.gb28181.transmit.SIPProcessorObserver;
 import com.cdzeroly.wvp.gb28181.transmit.event.response.SIPResponseProcessorAbstract;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,16 +14,17 @@ import javax.sip.ResponseEvent;
  * @date:   2021年11月5日 16:35
  */
 @Component
+@RequiredArgsConstructor
 public class CancelResponseProcessor extends SIPResponseProcessorAbstract {
 
-	private final String method = "CANCEL";
 
-	@Autowired
-	private SIPProcessorObserver sipProcessorObserver;
+	private final SIPProcessorObserver sipProcessorObserver;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		// 添加消息处理的订阅
+  String method = "CANCEL";
+
+        // 添加消息处理的订阅
 		sipProcessorObserver.addResponseProcessor(method, this);
 	}
 	/**

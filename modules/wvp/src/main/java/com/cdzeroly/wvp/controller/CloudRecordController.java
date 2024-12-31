@@ -19,6 +19,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,15 +41,14 @@ import java.util.zip.ZipOutputStream;
 @Tag(name = "云端录像接口")
 @Slf4j
 @RestController
+@RequiredArgsConstructor()
 @RequestMapping("/cloudRecord")
 public class CloudRecordController extends BaseController {
 
 
-    @Autowired
-    private ICloudRecordService cloudRecordService;
+    private final ICloudRecordService cloudRecordService;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
 
     @GetMapping("/date/list")

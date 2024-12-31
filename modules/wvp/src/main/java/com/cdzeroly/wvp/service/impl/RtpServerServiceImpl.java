@@ -18,6 +18,7 @@ import com.cdzeroly.wvp.domain.bean.ErrorCallback;
 import com.cdzeroly.wvp.domain.bean.InviteErrorCode;
 import com.cdzeroly.wvp.domain.bean.RTPServerParam;
 import com.cdzeroly.wvp.domain.bean.SSRCInfo;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -28,25 +29,20 @@ import java.util.UUID;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class RtpServerServiceImpl implements IReceiveRtpServerService {
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private DynamicTask dynamicTask;
+    private final DynamicTask dynamicTask;
 
-    @Autowired
-    private SSRCFactory ssrcFactory;
+    private final SSRCFactory ssrcFactory;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private HookSubscribe subscribe;
+    private final HookSubscribe subscribe;
 
-    @Autowired
-    private SipInviteSessionManager sessionManager;
+    private final SipInviteSessionManager sessionManager;
 
     /**
      * 流到来的处理

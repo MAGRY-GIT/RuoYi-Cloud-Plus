@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.cdzeroly.wvp.mapper.CommonGBChannelMapper">
+<mapper namespace="com.cdzeroly.wvp.mapper.CommonGbChannelMapper">
     <insert id="addRecordPlan">
         UPDATE wvp_device_channel
         SET record_plan_id = #{planId}

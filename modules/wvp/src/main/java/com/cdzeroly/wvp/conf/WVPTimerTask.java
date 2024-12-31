@@ -3,6 +3,7 @@ package com.cdzeroly.wvp.conf;
 import com.alibaba.fastjson2.JSONObject;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -12,16 +13,15 @@ import org.springframework.stereotype.Component;
  * @author MGARY
  */
 @Component
+@RequiredArgsConstructor
 public class WVPTimerTask {
 
-    @Autowired
-    private  IRedisCatchStorage redisCatchStorage;
+    private final   IRedisCatchStorage redisCatchStorage;
 
     @Value("${server.port}")
     private Integer serverPort;
 
-    @Autowired
-    private  SipConfig sipConfig;
+    private final   SipConfig sipConfig;
 
 
 

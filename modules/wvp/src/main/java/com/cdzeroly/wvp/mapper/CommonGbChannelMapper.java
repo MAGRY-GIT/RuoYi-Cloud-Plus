@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Mapper
 @Repository
-public interface CommonGBChannelMapper extends BaseMapperPlus<CommonGbChannel, CommonGBChannelVo> {
+public interface CommonGbChannelMapper extends BaseMapperPlus<CommonGbChannel, CommonGBChannelVo> {
 
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByDeviceId")

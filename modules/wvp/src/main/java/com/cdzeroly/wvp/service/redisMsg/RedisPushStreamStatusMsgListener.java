@@ -7,6 +7,7 @@ import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.domain.bean.PushStreamStatusChangeFromRedisDto;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.service.IStreamPushService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -30,19 +31,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class RedisPushStreamStatusMsgListener implements MessageListener, ApplicationRunner {
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private IStreamPushService streamPushService;
+    private final IStreamPushService streamPushService;
 
-    @Autowired
-    private DynamicTask dynamicTask;
+    private final DynamicTask dynamicTask;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
     private final ConcurrentLinkedQueue<Message> taskQueue = new ConcurrentLinkedQueue<>();
 

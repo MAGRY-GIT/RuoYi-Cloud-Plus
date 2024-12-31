@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.gb28181.transmit.event.response.impl;
 
 import com.cdzeroly.wvp.gb28181.transmit.SIPProcessorObserver;
 import com.cdzeroly.wvp.gb28181.transmit.event.response.SIPResponseProcessorAbstract;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,15 +14,16 @@ import javax.sip.ResponseEvent;
  * @date:   2020年5月3日 下午5:32:05
  */
 @Component
+@RequiredArgsConstructor
 public class ByeResponseProcessor extends SIPResponseProcessorAbstract {
 
-	private final String method = "BYE";
 
-	@Autowired
-	private SIPProcessorObserver sipProcessorObserver;
+
+	private final  SIPProcessorObserver sipProcessorObserver;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+        String method = "BYE";
 		// 添加消息处理的订阅
 		sipProcessorObserver.addResponseProcessor(method, this);
 	}

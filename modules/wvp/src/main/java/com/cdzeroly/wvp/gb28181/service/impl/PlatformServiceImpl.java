@@ -1,6 +1,5 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
@@ -34,8 +33,8 @@ import com.cdzeroly.wvp.service.ISendRtpServerService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 
 import gov.nist.javax.sip.message.SIPResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -56,7 +55,7 @@ import java.util.Vector;
  */
 @Slf4j
 @Service
-@DS("master")
+@RequiredArgsConstructor
 public class PlatformServiceImpl implements IPlatformService {
 
     private final static String REGISTER_KEY_PREFIX = "platform_register_";
@@ -64,44 +63,31 @@ public class PlatformServiceImpl implements IPlatformService {
     private final static String REGISTER_FAIL_AGAIN_KEY_PREFIX = "platform_register_fail_again_";
     private final static String KEEPALIVE_KEY_PREFIX = "platform_keepalive_";
 
-    @Autowired
-    private PlatformMapper platformMapper;
+    private final PlatformMapper platformMapper;
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private SSRCFactory ssrcFactory;
+    private final SSRCFactory ssrcFactory;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private ISIPCommanderForPlatform commanderForPlatform;
+    private final ISIPCommanderForPlatform commanderForPlatform;
 
-    @Autowired
-    private DynamicTask dynamicTask;
+    private final DynamicTask dynamicTask;
 
-    @Autowired
-    private SubscribeHolder subscribeHolder;
+    private final SubscribeHolder subscribeHolder;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private SipInviteSessionManager sessionManager;
+    private final SipInviteSessionManager sessionManager;
 
-    @Autowired
-    private IInviteStreamService inviteStreamService;
+    private final IInviteStreamService inviteStreamService;
 
-    @Autowired
-    private PlatformChannelMapper platformChannelMapper;
+    private final PlatformChannelMapper platformChannelMapper;
 
-    @Autowired
-    private IGbChannelService channelService;
+    private final IGbChannelService channelService;
 
-    @Autowired
-    private ISendRtpServerService sendRtpServerService;
+    private final ISendRtpServerService sendRtpServerService;
 
     /**
      * 流离开的处理

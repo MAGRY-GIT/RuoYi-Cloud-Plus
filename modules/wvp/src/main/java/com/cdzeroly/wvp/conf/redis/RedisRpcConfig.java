@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.conf.redis;
 
+import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson2.JSON;
 import com.cdzeroly.wvp.common.CommonCallback;
 import com.cdzeroly.wvp.conf.UserSetting;
@@ -37,7 +38,6 @@ public class RedisRpcConfig implements MessageListener {
 
     public final static String REDIS_REQUEST_CHANNEL_KEY = "WVP_REDIS_REQUEST_CHANNEL_KEY";
 
-    private final Random random = new Random();
 
     private final UserSetting userSetting;
 
@@ -176,7 +176,7 @@ public class RedisRpcConfig implements MessageListener {
      * @return
      */
     public RedisRpcResponse request(RedisRpcRequest request, int timeOut) {
-        request.setSn((long) random.nextInt(1000) + 1);
+        request.setSn((long) RandomUtil.getRandom(true).nextInt(1000) + 1);
         SynchronousQueue<RedisRpcResponse> subscribe = subscribe(request.getSn());
 
         try {
@@ -191,7 +191,7 @@ public class RedisRpcConfig implements MessageListener {
     }
 
     public void request(RedisRpcRequest request, CommonCallback<RedisRpcResponse> callback) {
-        request.setSn((long) random.nextInt(1000) + 1);
+        request.setSn((long) RandomUtil.getRandom(true).nextInt(1000) + 1);
         setCallback(request.getSn(), callback);
         sendRequest(request);
     }

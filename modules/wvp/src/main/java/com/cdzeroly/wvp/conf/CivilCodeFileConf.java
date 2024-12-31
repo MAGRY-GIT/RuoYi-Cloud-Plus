@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.conf;
 
 import com.cdzeroly.wvp.common.CivilCodePo;
 import com.cdzeroly.wvp.utils.CivilCodeUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -25,11 +26,11 @@ import java.nio.file.Files;
 @Slf4j
 @Configuration
 @Order(value=14)
+@RequiredArgsConstructor
 public class CivilCodeFileConf implements CommandLineRunner {
 
-    @Autowired
     @Lazy
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
     @Override
     public void run(String... args) throws Exception {

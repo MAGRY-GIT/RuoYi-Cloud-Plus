@@ -12,6 +12,7 @@ import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.media.zlm.dto.ZLMServerConfig;
 import com.cdzeroly.wvp.media.zlm.event.HookZlmServerKeepaliveEvent;
 import com.cdzeroly.wvp.media.zlm.event.HookZlmServerStartEvent;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class ZLMMediaServerStatusManager {
 
     /**
@@ -49,14 +51,11 @@ public class ZLMMediaServerStatusManager {
      */
     private final Map<Object, Long> offlineZlmTimeMap = new ConcurrentHashMap<>();
 
-    @Autowired
-    private ZLMRESTFullUtils zlmresTfulUtils;
+    private final ZLMRESTFullUtils zlmresTfulUtils;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private DynamicTask dynamicTask;
+    private final DynamicTask dynamicTask;
 
     @Value("${server.ssl.enabled:false}")
     private boolean sslEnabled;

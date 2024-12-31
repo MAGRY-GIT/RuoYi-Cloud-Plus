@@ -18,6 +18,7 @@ import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
@@ -33,16 +34,14 @@ import java.util.UUID;
 @Tag(name = "国标设备配置")
 @RestController
 @RequestMapping("/deviceConfig")
+@RequiredArgsConstructor
 public class DeviceConfig {
 
-    @Autowired
-    private IDeviceService deviceService;
+    private final IDeviceService deviceService;
 
-    @Autowired
-    private SIPCommander cmder;
+    private final SIPCommander cmder;
 
-    @Autowired
-    private DeferredResultHolder resultHolder;
+    private final DeferredResultHolder resultHolder;
 
 	/**
 	 * 看守位控制命令API接口

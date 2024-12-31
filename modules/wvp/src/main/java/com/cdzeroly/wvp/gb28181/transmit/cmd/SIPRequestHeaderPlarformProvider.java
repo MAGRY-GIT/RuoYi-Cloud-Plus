@@ -13,6 +13,7 @@ import com.cdzeroly.wvp.utils.GitUtil;
 import gov.nist.javax.sip.message.MessageFactoryImpl;
 import gov.nist.javax.sip.message.SIPRequest;
 import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
@@ -34,19 +35,16 @@ import java.util.UUID;
  * @date: 2020年5月6日 上午9:29:02
  */
 @Component
+@RequiredArgsConstructor
 public class SIPRequestHeaderPlarformProvider {
 
-	@Autowired
-	private SipConfig sipConfig;
+	private final SipConfig sipConfig;
 
-	@Autowired
-	private SipLayer sipLayer;
+	private final SipLayer sipLayer;
 
-	@Autowired
-	private GitUtil gitUtil;
+	private final GitUtil gitUtil;
 
-	@Autowired
-	private IRedisCatchStorage redisCatchStorage;
+	private final IRedisCatchStorage redisCatchStorage;
 
 	public Request createRegisterRequest(@NotNull Platform parentPlatform, long CSeq, String fromTag, String toTag, CallIdHeader callIdHeader, int expires) throws ParseException, InvalidArgumentException, PeerUnavailableException {
 		Request request = null;

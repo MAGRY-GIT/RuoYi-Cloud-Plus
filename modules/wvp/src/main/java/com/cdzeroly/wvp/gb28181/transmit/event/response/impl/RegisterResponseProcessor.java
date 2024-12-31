@@ -10,6 +10,7 @@ import com.cdzeroly.wvp.gb28181.service.IPlatformService;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.storager.dto.PlatformRegisterInfo;
 import gov.nist.javax.sip.message.SIPResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,24 +29,22 @@ import java.text.ParseException;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class RegisterResponseProcessor extends SIPResponseProcessorAbstract {
 
-	private final String method = "REGISTER";
 
-	@Autowired
-	private ISIPCommanderForPlatform sipCommanderForPlatform;
 
-	@Autowired
-	private IRedisCatchStorage redisCatchStorage;
+	private final ISIPCommanderForPlatform sipCommanderForPlatform;
 
-	@Autowired
-	private SIPProcessorObserver sipProcessorObserver;
+	private final IRedisCatchStorage redisCatchStorage;
 
-	@Autowired
-	private IPlatformService platformService;
+	private final SIPProcessorObserver sipProcessorObserver;
+
+	private final IPlatformService platformService;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+        String method = "REGISTER";
 		// 添加消息处理的订阅
 		sipProcessorObserver.addResponseProcessor(method, this);
 	}

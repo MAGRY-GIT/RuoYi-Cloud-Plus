@@ -18,6 +18,7 @@ import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.service.ISendRtpServerService;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
@@ -32,42 +33,33 @@ import java.text.ParseException;
 
 /**
  * 语音喊话请求
+ * @author MGARY
  */
 @Slf4j
-@Component
+@RequiredArgsConstructor
 public class BroadcastNotifyMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
     private final static String cmdType = "Broadcast";
 
-    @Autowired
-    private NotifyMessageHandler notifyMessageHandler;
+    private final NotifyMessageHandler notifyMessageHandler;
 
-    @Autowired
-    private IGbChannelService channelService;
+    private final IGbChannelService channelService;
 
-    @Autowired
-    private ISIPCommanderForPlatform commanderForPlatform;
+    private final ISIPCommanderForPlatform commanderForPlatform;
 
-    @Autowired
-    private IMediaServerService mediaServerService;
+    private final IMediaServerService mediaServerService;
 
-    @Autowired
-    private IPlayService playService;
+    private final IPlayService playService;
 
-    @Autowired
-    private IDeviceService deviceService;
+    private final IDeviceService deviceService;
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
+    private final IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private IPlatformService platformService;
+    private final IPlatformService platformService;
 
-    @Autowired
-    private AudioBroadcastManager audioBroadcastManager;
+    private final AudioBroadcastManager audioBroadcastManager;
 
-    @Autowired
-    private ISendRtpServerService sendRtpServerService;
+    private final ISendRtpServerService sendRtpServerService;
 
     @Override
     public void afterPropertiesSet() throws Exception {

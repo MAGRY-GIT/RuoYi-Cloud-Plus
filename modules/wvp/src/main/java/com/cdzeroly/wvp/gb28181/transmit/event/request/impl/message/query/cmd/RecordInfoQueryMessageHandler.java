@@ -16,6 +16,7 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHand
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.query.QueryMessageHandler;
 import com.cdzeroly.wvp.utils.DateUtil;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
@@ -28,35 +29,31 @@ import javax.sip.SipException;
 import javax.sip.message.Response;
 import java.text.ParseException;
 
+/**
+ * @author Administrator
+ */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class RecordInfoQueryMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "RecordInfo";
+    private final QueryMessageHandler queryMessageHandler;
 
-    @Autowired
-    private QueryMessageHandler queryMessageHandler;
+    private final IGbChannelService channelService;
 
-    @Autowired
-    private IGbChannelService channelService;
+    private final IDeviceService deviceService;
 
-    @Autowired
-    private IDeviceService deviceService;
+    private final IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
+    private final SIPCommanderForPlatform cmderFroPlatform;
 
-    @Autowired
-    private SIPCommanderForPlatform cmderFroPlatform;
+    private final SIPCommander commander;
 
-    @Autowired
-    private SIPCommander commander;
-
-    @Autowired
-    private RecordEndEventListener recordEndEventListener;
+    private final RecordEndEventListener recordEndEventListener;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+         String cmdType = "RecordInfo";
         queryMessageHandler.addHandler(cmdType, this);
     }
 

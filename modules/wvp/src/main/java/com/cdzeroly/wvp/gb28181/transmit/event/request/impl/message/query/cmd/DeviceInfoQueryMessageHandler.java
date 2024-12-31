@@ -12,6 +12,7 @@ import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHandler;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.query.QueryMessageHandler;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
@@ -27,29 +28,29 @@ import java.text.ParseException;
 
 import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
 
+/**
+ * @author MGARY
+ */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class DeviceInfoQueryMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
-    private final String cmdType = "DeviceInfo";
 
-    @Autowired
-    private QueryMessageHandler queryMessageHandler;
 
-    @Autowired
-    private SIPCommanderForPlatform cmderFroPlatform;
+    private final QueryMessageHandler queryMessageHandler;
 
-    @Autowired
-    private IDeviceService deviceService;
+    private final SIPCommanderForPlatform cmderFroPlatform;
 
-    @Autowired
-    private IGbChannelService channelService;
+    private final IDeviceService deviceService;
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
+    private final IGbChannelService channelService;
+
+    private final IDeviceChannelService deviceChannelService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
+         String cmdType = "DeviceInfo";
         queryMessageHandler.addHandler(cmdType, this);
     }
 

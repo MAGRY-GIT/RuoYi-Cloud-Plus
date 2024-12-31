@@ -10,7 +10,7 @@ import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
 import com.cdzeroly.wvp.domain.bean.*;
 import com.cdzeroly.wvp.domain.Region;
-import com.cdzeroly.wvp.mapper.CommonGBChannelMapper;
+import com.cdzeroly.wvp.mapper.CommonGbChannelMapper;
 import com.cdzeroly.wvp.mapper.GroupMapper;
 import com.cdzeroly.wvp.mapper.PlatformChannelMapper;
 import com.cdzeroly.wvp.mapper.RegionMapper;
@@ -43,7 +43,7 @@ public class GbChannelServiceImpl implements IGbChannelService {
 
     private  final EventPublisher eventPublisher;
 
-    private  final CommonGBChannelMapper commonGBChannelMapper;
+    private  final CommonGbChannelMapper commonGBChannelMapper;
 
     private  final PlatformChannelMapper platformChannelMapper;
 

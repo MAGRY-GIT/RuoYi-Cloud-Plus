@@ -9,7 +9,7 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
-import com.cdzeroly.wvp.mapper.CommonGBChannelMapper;
+import com.cdzeroly.wvp.mapper.CommonGbChannelMapper;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelPlayService;
 import com.cdzeroly.wvp.domain.bean.MediaInfo;
 import com.cdzeroly.wvp.media.event.media.MediaDepartureEvent;
@@ -48,7 +48,7 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
 
     private final RecordPlanItemMapper recordPlanItemMapper;
 
-    private final CommonGBChannelMapper channelMapper;
+    private final CommonGbChannelMapper channelMapper;
 
     private final IGbChannelPlayService channelPlayService;
 

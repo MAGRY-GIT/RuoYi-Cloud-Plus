@@ -9,6 +9,7 @@ import com.cdzeroly.wvp.service.IMobilePositionService;
 import com.cdzeroly.wvp.mapper.DeviceChannelMapper;
 import com.cdzeroly.wvp.mapper.DeviceMobilePositionMapper;
 import com.cdzeroly.wvp.domain.bean.GPSMsgInfo;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,25 +22,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author MGARY
+ */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MobilePositionServiceImpl implements IMobilePositionService {
 
-    @Autowired
-    private DeviceChannelMapper channelMapper;
+    private final DeviceChannelMapper channelMapper;
 
-    @Autowired
-    private DeviceMobilePositionMapper mobilePositionMapper;
+    private final DeviceMobilePositionMapper mobilePositionMapper;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
 
-    @Autowired
-    private PlatformMapper platformMapper;
+    private final PlatformMapper platformMapper;
 
-    @Autowired
-    private RedisTemplate<String, MobilePosition> redisTemplate;
+    private final RedisTemplate<String, MobilePosition> redisTemplate;
 
     private final String REDIS_MOBILE_POSITION_LIST = "redis_mobile_position_list";
 

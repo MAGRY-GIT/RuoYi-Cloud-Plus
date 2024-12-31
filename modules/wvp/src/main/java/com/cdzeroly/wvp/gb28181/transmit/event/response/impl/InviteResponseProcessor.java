@@ -8,6 +8,7 @@ import com.cdzeroly.wvp.gb28181.transmit.event.response.SIPResponseProcessorAbst
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import gov.nist.javax.sip.ResponseEventExt;
 import gov.nist.javax.sip.message.SIPResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,21 +32,20 @@ import java.text.ParseException;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class InviteResponseProcessor extends SIPResponseProcessorAbstract {
 
-	private final String method = "INVITE";
 
-	@Autowired
-	private SIPProcessorObserver sipProcessorObserver;
 
-	@Autowired
-	private SIPSender sipSender;
+	private final SIPProcessorObserver sipProcessorObserver;
 
-	@Autowired
-	private SIPRequestHeaderProvider headerProvider;
+	private final SIPSender sipSender;
+
+	private final SIPRequestHeaderProvider headerProvider;
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+      String method = "INVITE";
 		// 添加消息处理的订阅
 		sipProcessorObserver.addResponseProcessor(method, this);
 	}

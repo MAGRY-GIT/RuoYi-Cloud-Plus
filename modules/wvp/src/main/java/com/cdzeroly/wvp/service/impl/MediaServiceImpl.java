@@ -24,6 +24,7 @@ import com.cdzeroly.wvp.utils.DateUtil;
 import com.cdzeroly.wvp.utils.MediaServerUtils;
 import com.cdzeroly.wvp.domain.OtherPsSendInfo;
 import com.cdzeroly.wvp.domain.OtherRtpSendInfo;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,28 +38,22 @@ import java.util.Map;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MediaServiceImpl implements IMediaService {
 
-    @Autowired
-    private IRedisCatchStorage redisCatchStorage;
+    private final IRedisCatchStorage redisCatchStorage;
 
-    @Autowired
-    private IStreamProxyService streamProxyService;
+    private final IStreamProxyService streamProxyService;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private RedisTemplate<Object, Object> redisTemplate;
+    private final RedisTemplate<Object, Object> redisTemplate;
 
-    @Autowired
-    private IInviteStreamService inviteStreamService;
+    private final IInviteStreamService inviteStreamService;
 
-    @Autowired
-    private IDeviceChannelService deviceChannelService;
+    private final IDeviceChannelService deviceChannelService;
 
-    @Autowired
-    private SipInviteSessionManager sessionManager;
+    private final SipInviteSessionManager sessionManager;
 
     @Autowired
     private IRecordPlanService recordPlanService;

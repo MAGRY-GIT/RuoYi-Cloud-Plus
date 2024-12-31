@@ -16,6 +16,7 @@ import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommanderForPlatform;
 
 import com.cdzeroly.wvp.mapper.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,30 +33,23 @@ import java.util.*;
  */
 @Slf4j
 @Service
-@DS("master")
+@RequiredArgsConstructor
 public class PlatformChannelServiceImpl implements IPlatformChannelService {
 
-    @Autowired
-    private PlatformChannelMapper platformChannelMapper;
+    private final PlatformChannelMapper platformChannelMapper;
 
-    @Autowired
-    private EventPublisher eventPublisher;
+    private final EventPublisher eventPublisher;
 
-    @Autowired
-    private GroupMapper groupMapper;
+    private final GroupMapper groupMapper;
 
 
-    @Autowired
-    private RegionMapper regionMapper;
+    private final RegionMapper regionMapper;
 
-    @Autowired
-    private CommonGBChannelMapper commonGBChannelMapper;
+    private final CommonGbChannelMapper commonGBChannelMapper;
 
-    @Autowired
-    private PlatformMapper platformMapper;
+    private final PlatformMapper platformMapper;
 
-    @Autowired
-    private ISIPCommanderForPlatform sipCommanderFroPlatform;
+    private final ISIPCommanderForPlatform sipCommanderFroPlatform;
 
 
     @Override

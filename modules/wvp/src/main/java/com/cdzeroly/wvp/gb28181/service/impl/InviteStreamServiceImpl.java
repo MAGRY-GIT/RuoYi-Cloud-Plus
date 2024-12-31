@@ -10,6 +10,7 @@ import com.cdzeroly.wvp.mapper.DeviceMapper;
 import com.cdzeroly.wvp.gb28181.service.IInviteStreamService;
 import com.cdzeroly.wvp.media.event.media.MediaDepartureEvent;
 import com.cdzeroly.wvp.domain.bean.ErrorCallback;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
@@ -26,24 +27,23 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * @author Administrator
+ */
 @Slf4j
 @Service
-@DS("master")
+@RequiredArgsConstructor
 public class InviteStreamServiceImpl implements IInviteStreamService {
 
     private final Map<String, List<ErrorCallback<StreamInfo>>> inviteErrorCallbackMap = new ConcurrentHashMap<>();
 
-    @Autowired
-    private RedisTemplate<Object, Object> redisTemplate;
+    private final RedisTemplate<Object, Object> redisTemplate;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private DeviceMapper deviceMapper;
+    private final DeviceMapper deviceMapper;
 
-    @Autowired
-    private DeviceChannelMapper deviceChannelMapper;
+    private final DeviceChannelMapper deviceChannelMapper;
 
     /**
      * 流离开的处理

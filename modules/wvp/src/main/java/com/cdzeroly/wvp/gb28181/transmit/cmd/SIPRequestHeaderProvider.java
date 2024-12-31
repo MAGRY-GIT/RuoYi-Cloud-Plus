@@ -9,6 +9,7 @@ import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.utils.GitUtil;
 import gov.nist.javax.sip.message.SIPRequest;
 import gov.nist.javax.sip.message.SIPResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,19 +30,16 @@ import java.util.ArrayList;
  * @date: 2020年5月6日 上午9:29:02
  */
 @Component
+@RequiredArgsConstructor
 public class SIPRequestHeaderProvider {
 
-	@Autowired
-	private SipConfig sipConfig;
+	private final SipConfig sipConfig;
 
-	@Autowired
-	private SipLayer sipLayer;
+	private final SipLayer sipLayer;
 
-	@Autowired
-	private GitUtil gitUtil;
+	private final GitUtil gitUtil;
 
-	@Autowired
-	private IRedisCatchStorage redisCatchStorage;
+	private final IRedisCatchStorage redisCatchStorage;
 
 
 	public Request createMessageRequest(Device device, String content, String viaTag, String fromTag, String toTag, CallIdHeader callIdHeader) throws ParseException, InvalidArgumentException, PeerUnavailableException {

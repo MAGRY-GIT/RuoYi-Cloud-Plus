@@ -15,6 +15,7 @@ import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
 import com.cdzeroly.wvp.utils.DateUtil;
 import gov.nist.javax.sip.message.SIPRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.dom4j.Element;
@@ -37,6 +38,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class KeepaliveNotifyMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
 
@@ -44,17 +46,13 @@ public class KeepaliveNotifyMessageHandler extends SIPRequestProcessorParent imp
 
     private final ConcurrentLinkedQueue<SipMsgInfo> taskQueue = new ConcurrentLinkedQueue<>();
 
-    @Autowired
-    private NotifyMessageHandler notifyMessageHandler;
+    private final NotifyMessageHandler notifyMessageHandler;
 
-    @Autowired
-    private IDeviceService deviceService;
+    private final IDeviceService deviceService;
 
-    @Autowired
-    private UserSetting userSetting;
+    private final UserSetting userSetting;
 
-    @Autowired
-    private DynamicTask dynamicTask;
+    private final DynamicTask dynamicTask;
 
     @Override
     public void afterPropertiesSet() throws Exception {
