@@ -33,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @Component
-@RequiredArgsConstructor
+@RequiredArgsConstructor()
 public class RedisRpcConfig implements MessageListener {
 
     public final static String REDIS_REQUEST_CHANNEL_KEY = "WVP_REDIS_REQUEST_CHANNEL_KEY";
@@ -52,7 +52,7 @@ public class RedisRpcConfig implements MessageListener {
 
     @Qualifier("taskExecutor")
     @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
+    private  ThreadPoolTaskExecutor taskExecutor;
 
     @Override
     public void onMessage(@NotNull Message message, byte[] pattern) {

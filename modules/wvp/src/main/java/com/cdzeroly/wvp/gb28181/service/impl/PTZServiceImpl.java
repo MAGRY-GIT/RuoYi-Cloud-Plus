@@ -5,6 +5,7 @@ import com.cdzeroly.wvp.gb28181.domian.Device;
 import com.cdzeroly.wvp.gb28181.domian.bean.Preset;
 import com.cdzeroly.wvp.gb28181.service.IPTZService;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,11 @@ import java.util.List;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class PTZServiceImpl implements IPTZService {
 
 
-    @Autowired
-    private SIPCommander cmder;
+    private final SIPCommander cmder;
 
 
     @Override

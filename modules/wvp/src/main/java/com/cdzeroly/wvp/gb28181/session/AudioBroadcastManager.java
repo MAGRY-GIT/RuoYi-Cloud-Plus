@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.gb28181.session;
 
 import com.cdzeroly.wvp.conf.SipConfig;
 import com.cdzeroly.wvp.domain.bean.AudioBroadcastCatch;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,10 +19,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class AudioBroadcastManager {
 
-    @Autowired
-    private SipConfig config;
+    private final SipConfig config;
 
     public static Map<Long, AudioBroadcastCatch> data = new ConcurrentHashMap<>();
 

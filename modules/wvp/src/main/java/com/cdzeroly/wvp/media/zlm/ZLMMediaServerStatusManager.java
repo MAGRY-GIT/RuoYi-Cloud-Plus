@@ -66,10 +66,9 @@ public class ZLMMediaServerStatusManager {
     @Value("${server.servlet.context-path:}")
     private String serverServletContextPath;
 
-    @Autowired
-    private EventPublisher eventPublisher;
+    private final EventPublisher eventPublisher;
 
-    private final String type = "zlm";
+    private static final String type = "zlm";
 
     @Async("taskExecutor")
     @EventListener

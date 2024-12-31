@@ -55,8 +55,7 @@ public class MediaServiceImpl implements IMediaService {
 
     private final SipInviteSessionManager sessionManager;
 
-    @Autowired
-    private IRecordPlanService recordPlanService;
+    private final IRecordPlanService recordPlanService;
 
     @DubboReference
     private RemoteUserService remoteUserService;

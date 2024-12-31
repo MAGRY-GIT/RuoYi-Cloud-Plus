@@ -26,7 +26,7 @@ import java.nio.file.Files;
 @Slf4j
 @Configuration
 @Order(value=14)
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Lazy})
 public class CivilCodeFileConf implements CommandLineRunner {
 
     @Lazy
