@@ -20,6 +20,9 @@
         SET pulling = true
         WHERE id = #{id}
     </update>
+    <update id="removeStream">
+        UPDATE wvp_stream_proxy  SET pulling=false, media_server_id = null, stream_key = null  WHERE id=#{id}
+    </update>
 
     <select id="getOnline" resultType="java.lang.Integer">
         select count(1) from wvp_stream_proxy where pulling = true

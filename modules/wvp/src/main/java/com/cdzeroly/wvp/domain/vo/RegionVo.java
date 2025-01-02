@@ -10,6 +10,7 @@ import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 区域
@@ -94,11 +95,10 @@ public class RegionVo implements Comparable<RegionVo> , Serializable {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof RegionVo) {
-            RegionVo region = (RegionVo) obj;
+        if (obj instanceof RegionVo region) {
 
             // 比较每个属性的值一致时才返回true
-            if (region.getId() == this.id) {
+            if (Objects.equals(region.getId(), this.id)) {
                 return true;
             }
         }

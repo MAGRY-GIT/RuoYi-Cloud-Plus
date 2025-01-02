@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * 区域
  * @author MGARY
@@ -97,7 +99,7 @@ public class Region  extends BaseEntity implements Comparable<Region>{
             Region region = (Region) obj;
 
             // 比较每个属性的值一致时才返回true
-            if (region.getId() == this.id) {
+            if (Objects.equals(region.getId(), this.id)) {
                 return true;
             }
         }

@@ -19,10 +19,7 @@ import java.util.List;
 public interface StreamProxyMapper extends BaseMapperPlus<StreamProxy, StreamProxyVo> {
 
 
-
-
     int update(StreamProxy streamProxyDto);
-
 
 
     @SelectProvider(type = StreamProxyProvider.class, method = "selectAll")
@@ -32,12 +29,10 @@ public interface StreamProxyMapper extends BaseMapperPlus<StreamProxy, StreamPro
     StreamProxyVo selectOneByAppAndStream(@Param("app") String app, @Param("stream") String stream);
 
     @SelectProvider(type = StreamProxyProvider.class, method = "selectForPushingInMediaServer")
-    List<StreamProxyVo> selectForPushingInMediaServer(@Param("mediaServerId")  String mediaServerId, @Param("enable") boolean enable);
-
+    List<StreamProxyVo> selectForPushingInMediaServer(@Param("mediaServerId") String mediaServerId, @Param("enable") boolean enable);
 
 
     int getOnline();
-
 
 
     int online(@Param("id") Long id);
@@ -47,5 +42,6 @@ public interface StreamProxyMapper extends BaseMapperPlus<StreamProxy, StreamPro
     @SelectProvider(type = StreamProxyProvider.class, method = "select")
     StreamProxyVo select(@Param("id") Long id);
 
+    void removeStream(@Param("id") int id);
 
 }

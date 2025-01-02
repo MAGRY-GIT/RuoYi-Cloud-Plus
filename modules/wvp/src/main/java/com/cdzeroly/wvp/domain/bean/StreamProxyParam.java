@@ -23,7 +23,7 @@ public class StreamProxyParam {
     @Schema(description = "流ID")
     private String stream;
 
-    @Schema(description = "流媒体服务ID")
+    @Schema(description = "当前拉流使用的流媒体服务ID")
     private String mediaServerId;
 
     @Schema(description = "拉流地址")
@@ -58,7 +58,7 @@ public class StreamProxyParam {
         StreamProxyBo streamProxyBo = new StreamProxyBo();
         streamProxyBo.setApp(app);
         streamProxyBo.setStream(stream);
-        streamProxyBo.setMediaServerId(mediaServerId);
+        streamProxyBo.setRelatesMediaServerId(mediaServerId);
         streamProxyBo.setSrcUrl(url);
         streamProxyBo.setTimeout(timeoutMs/1000);
         streamProxyBo.setRtspType(rtpType);

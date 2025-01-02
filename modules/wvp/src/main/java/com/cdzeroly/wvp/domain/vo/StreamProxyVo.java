@@ -39,7 +39,7 @@ public class StreamProxyVo extends CommonGbChannelBean {
     @Schema(description = "流ID")
     private String stream;
 
-    @Schema(description = "流媒体服务ID")
+    @Schema(description = "当前拉流使用的流媒体服务ID")
     private String mediaServerId;
 
     @Schema(description = "拉流地址")

@@ -31,6 +31,7 @@ import javax.sip.message.Response;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -103,7 +104,7 @@ public class KeepaliveNotifyMessageHandler extends SIPRequestProcessorParent imp
             }
 
             RemoteAddressInfo remoteAddressInfo = SipUtils.getRemoteAddressFromRequest(request, userSetting.getSipUseSourceIpAsRemoteAddress());
-            if (!device.getIp().equalsIgnoreCase(remoteAddressInfo.getIp()) || device.getPort() != remoteAddressInfo.getPort()) {
+            if (!device.getIp().equalsIgnoreCase(remoteAddressInfo.getIp()) || !Objects.equals(device.getPort(), remoteAddressInfo.getPort())) {
                 log.info("[收到心跳] 地址变化, {}({}), {}:{}->{}", device.getName(), device.getDeviceId(), remoteAddressInfo.getIp(), remoteAddressInfo.getPort(), request.getLocalAddress().getHostAddress());
                 device.setPort(remoteAddressInfo.getPort());
                 device.setHostAddress(remoteAddressInfo.getIp().concat(":").concat(String.valueOf(remoteAddressInfo.getPort())));

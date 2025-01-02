@@ -44,17 +44,14 @@ public class StreamProxyPlayServiceImpl implements IStreamProxyPlayService {
             return null;
         }
         MediaServer mediaServer;
-        String mediaServerId = streamProxy.getMediaServerId();
+        String mediaServerId = streamProxy.getRelatesMediaServerId();
         if (mediaServerId == null) {
             mediaServer = mediaServerService.getMediaServerForMinimumLoad(null);
         }else {
             mediaServer = mediaServerService.getOne(mediaServerId);
-            if (mediaServer == null) {
-                mediaServer = mediaServerService.getMediaServerForMinimumLoad(null);
-            }
         }
         if (mediaServer == null) {
-            throw new ServiceException("未找到可用的媒体节点");
+            throw new ServiceException(mediaServerId == null?"未找到可用的媒体节点":"未找到节点" + mediaServerId);
         }
         StreamInfo streamInfo = mediaServerService.startProxy(mediaServer, streamProxy);
         if (mediaServerId == null || !mediaServerId.equals(mediaServer.getId())) {
@@ -89,9 +86,6 @@ public class StreamProxyPlayServiceImpl implements IStreamProxyPlayService {
         }else {
             mediaServerService.stopProxy(mediaServer, streamProxy.getStreamKey());
         }
-        streamProxy.setMediaServerId(mediaServer.getId());
-        streamProxy.setStreamKey(null);
-        streamProxy.setPulling(false);
         streamProxyMapper.deleteById(streamProxy.getId());
     }
 
