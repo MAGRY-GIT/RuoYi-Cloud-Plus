@@ -10,7 +10,7 @@ package com.cdzeroly.wvp.gb28181.controller;
 import com.alibaba.fastjson2.JSONObject;
 
 import com.cdzeroly.common.core.exception.ServiceException;
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
@@ -20,7 +20,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;

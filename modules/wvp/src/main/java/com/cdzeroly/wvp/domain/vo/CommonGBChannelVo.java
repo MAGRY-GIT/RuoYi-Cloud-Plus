@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.domain.vo;
 
 import com.cdzeroly.wvp.domain.bean.GbCode;
 import com.cdzeroly.wvp.domain.Group;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import io.swagger.v3.oas.annotations.media.Schema;

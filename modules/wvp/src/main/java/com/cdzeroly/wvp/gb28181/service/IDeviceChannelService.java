@@ -6,9 +6,9 @@ import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.domain.bo.ChannelReduce;
 
 import com.cdzeroly.wvp.domain.vo.DeviceChannelExtendVo;
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
-import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.DeviceChannel;
+import com.cdzeroly.wvp.domain.MobilePosition;
 
 import com.cdzeroly.wvp.domain.ResourceBaseInfo;
 

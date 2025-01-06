@@ -1,11 +1,9 @@
-package com.cdzeroly.wvp.gb28181.domian;
+package com.cdzeroly.wvp.domain;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cdzeroly.common.tenant.core.TenantEntity;
-import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.domain.bean.GbCode;
-import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

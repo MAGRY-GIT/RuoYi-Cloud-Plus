@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.domain.bo;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
 import com.cdzeroly.wvp.domain.bean.CommonGbChannelBean;
 import com.cdzeroly.wvp.domain.StreamProxy;
 import io.github.linpeilie.annotations.AutoMapper;

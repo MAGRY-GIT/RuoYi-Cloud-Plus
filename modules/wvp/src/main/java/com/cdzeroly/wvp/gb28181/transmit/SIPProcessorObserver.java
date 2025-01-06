@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.sip.*;
+import javax.sip.header.CSeqHeader;
 import javax.sip.header.CallIdHeader;
 import javax.sip.message.Response;
 import java.util.Map;
@@ -56,13 +57,7 @@ public class SIPProcessorObserver implements ISIPProcessorObserver {
         RESPONSE_PROCESSOR_MAP.put(method, processor);
     }
 
-    /**
-     * 添加 超时事件订阅
-     * @param processor 处理程序
-     */
-    public void addTimeoutProcessor(ITimeoutProcessor processor) {
-        timeoutProcessor = processor;
-    }
+
 
     /**
      * 分发RequestEvent事件
@@ -97,7 +92,8 @@ public class SIPProcessorObserver implements ISIPProcessorObserver {
             if (status != Response.UNAUTHORIZED && responseEvent.getResponse() != null && !sipSubscribe.isEmpty() ) {
                 CallIdHeader callIdHeader = response.getCallIdHeader();
                 if (callIdHeader != null) {
-                    SipEvent sipEvent = sipSubscribe.getSubscribe(callIdHeader.getCallId());
+                    CSeqHeader cSeqHeader = response.getCSeqHeader();
+                    SipEvent sipEvent = sipSubscribe.getSubscribe(callIdHeader.getCallId() + cSeqHeader.getSeqNumber());
                     if (sipEvent != null) {
                         if (sipEvent.getOkEvent() != null) {
                             SipSubscribe.EventResult<ResponseEvent> eventResult = new SipSubscribe.EventResult<>(responseEvent);
@@ -118,9 +114,10 @@ public class SIPProcessorObserver implements ISIPProcessorObserver {
         } else {
             log.warn("接收到失败的response响应！status：" + status + ",message:" + response.getReasonPhrase());
             if (responseEvent.getResponse() != null && !sipSubscribe.isEmpty() ) {
-                CallIdHeader callIdHeader = (CallIdHeader)responseEvent.getResponse().getHeader(CallIdHeader.NAME);
+                CallIdHeader callIdHeader = response.getCallIdHeader();
+                CSeqHeader cSeqHeader = response.getCSeqHeader();
                 if (callIdHeader != null) {
-                    SipEvent sipEvent = sipSubscribe.getSubscribe(callIdHeader.getCallId());
+                    SipEvent sipEvent = sipSubscribe.getSubscribe(callIdHeader.getCallId() + cSeqHeader.getSeqNumber());
                     if (sipEvent != null ) {
                         if (sipEvent.getErrorEvent() != null) {
                             SipSubscribe.EventResult<ResponseEvent> eventResult = new SipSubscribe.EventResult<>(responseEvent);

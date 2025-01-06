@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.domain.bean;
 
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import lombok.Data;
 
 import java.time.Instant;

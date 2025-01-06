@@ -1,6 +1,6 @@
-package com.cdzeroly.wvp.gb28181.domian.bean;
+package com.cdzeroly.wvp.gb28181.bean;
 
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

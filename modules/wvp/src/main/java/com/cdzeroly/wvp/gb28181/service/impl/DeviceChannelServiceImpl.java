@@ -13,10 +13,8 @@ import com.cdzeroly.wvp.common.InviteInfo;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
+import com.cdzeroly.wvp.domain.*;
 import com.cdzeroly.wvp.domain.bean.GbCode;
-import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
 import com.cdzeroly.wvp.domain.bo.ChannelReduce;
 import com.cdzeroly.wvp.mapper.DeviceChannelMapper;
 import com.cdzeroly.wvp.mapper.DeviceMapper;
@@ -30,7 +28,6 @@ import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
 import com.cdzeroly.wvp.utils.DateUtil;
-import com.cdzeroly.wvp.domain.ResourceBaseInfo;
 import com.cdzeroly.wvp.domain.vo.DeviceChannelExtendVo;
 
 import lombok.AllArgsConstructor;
@@ -472,11 +469,10 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
                 deviceChannel.setHasAudio(channelInDb.isHasAudio());
                 deviceChannel.setId(channelInDb.getId());
                 if (channelInDb.getStatus() != null && channelInDb.getStatus().equalsIgnoreCase(deviceChannel.getStatus())){
-                    List<Long> ids = platformChannelMapper.queryParentPlatformByChannelId(deviceChannel.getDeviceId());
-                    if (!CollectionUtils.isEmpty(ids)){
-                        ids.forEach(platformId->{
-                            eventPublisher.catalogEventPublish(platformId, deviceChannel, "ON".equals(deviceChannel.getStatus())? CatalogEvent.ON:CatalogEvent.OFF);
-                        });
+                    List<Platform> platformList = platformChannelMapper.queryParentPlatformByChannelId(deviceChannel.getDeviceId());
+                    if (!CollectionUtils.isEmpty(platformList)){
+                        platformList.forEach(platform->{
+                            eventPublisher.catalogEventPublish(platform, deviceChannel, "ON".equals(deviceChannel.getStatus())? CatalogEvent.ON:CatalogEvent.OFF); });
                     }
                 }
                 updateChannels.add(deviceChannel);

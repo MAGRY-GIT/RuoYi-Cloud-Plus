@@ -9,11 +9,11 @@ import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.conf.exception.SsrcTransactionNotFoundException;
 import com.cdzeroly.wvp.domain.bean.*;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
+import com.cdzeroly.wvp.domain.Platform;
+import com.cdzeroly.wvp.gb28181.bean.PlatformCatch;
 import com.cdzeroly.wvp.mapper.PlatformChannelMapper;
 import com.cdzeroly.wvp.mapper.PlatformMapper;
-import com.cdzeroly.wvp.gb28181.domian.bean.*;
 import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
 import com.cdzeroly.wvp.gb28181.service.IInviteStreamService;
@@ -578,7 +578,7 @@ public class PlatformServiceImpl implements IPlatformService {
         StreamInfo streamInfo = mediaServerService.getStreamInfoByAppAndStream(mediaServerItem, mediaInfo.getApp(), mediaInfo.getStream(), mediaInfo, null);
         streamInfo.setChannelId(channel.getGbId());
 
-        InviteInfo inviteInfo = inviteStreamService.getInviteInfoByDeviceAndChannel(InviteSessionType.PLAY, channel.getGbId());
+        InviteInfo inviteInfo = inviteStreamService.getInviteInfoByDeviceAndChannel(InviteSessionType.PLAYBACK, channel.getGbId());
         if (inviteInfo != null) {
             inviteInfo.setStatus(InviteSessionStatus.OK);
             inviteInfo.setStreamInfo(streamInfo);

@@ -1,7 +1,8 @@
-package com.cdzeroly.wvp.gb28181.domian;
+package com.cdzeroly.wvp.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 
+import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.domain.bean.GbCode;
 import com.cdzeroly.wvp.gb28181.utils.MessageElementForCatalog;
 import com.cdzeroly.wvp.gb28181.utils.XmlUtil;
@@ -194,7 +195,10 @@ public class DeviceChannel  extends CommonGbChannel {
 	private String streamIdentification;
 
 	@Schema(description = "通道类型， 默认0, 0： 普通通道，1 行政区划 2 业务分组/虚拟组织")
-	private Integer channelType;
+	private Integer channelType = 0;
+
+    @Schema(description = "数据类型")
+    private Integer dataType = ChannelDataType.GB28181.value;
 
 	public void setPtzType(int ptzType) {
 		this.ptzType = ptzType;

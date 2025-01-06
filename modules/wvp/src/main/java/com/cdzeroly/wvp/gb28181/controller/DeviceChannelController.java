@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.gb28181.controller;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.web.core.BaseController;
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
+import com.cdzeroly.wvp.domain.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

@@ -5,9 +5,9 @@ import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.domain.bean.SipMsgInfo;
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.bean.RemoteAddressInfo;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.Platform;
+import com.cdzeroly.wvp.gb28181.bean.RemoteAddressInfo;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.IMessageHandler;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.notify.NotifyMessageHandler;
@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.dom4j.Element;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -36,6 +35,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * 状态信息(心跳)报送
+ * @author MGARY
  */
 @Slf4j
 @Component
@@ -43,7 +43,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class KeepaliveNotifyMessageHandler extends SIPRequestProcessorParent implements InitializingBean, IMessageHandler {
 
 
-    private final static String cmdType = "Keepalive";
+
 
     private final ConcurrentLinkedQueue<SipMsgInfo> taskQueue = new ConcurrentLinkedQueue<>();
 
@@ -57,6 +57,7 @@ public class KeepaliveNotifyMessageHandler extends SIPRequestProcessorParent imp
 
     @Override
     public void afterPropertiesSet() throws Exception {
+         final  String cmdType = "Keepalive";
         notifyMessageHandler.addHandler(cmdType, this);
     }
 

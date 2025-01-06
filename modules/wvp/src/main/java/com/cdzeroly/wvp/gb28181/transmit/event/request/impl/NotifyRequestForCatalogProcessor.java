@@ -1,8 +1,8 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl;
 
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.event.EventPublisher;
 import com.cdzeroly.wvp.gb28181.event.catalog.CatalogChannelEvent;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;

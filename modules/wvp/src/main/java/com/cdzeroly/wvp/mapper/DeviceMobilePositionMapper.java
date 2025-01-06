@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
+import com.cdzeroly.wvp.domain.MobilePosition;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

@@ -33,7 +33,7 @@
         WHERE device_id = #{deviceId}
     </delete>
 
-    <select id="getDeviceByDeviceId" resultType="com.cdzeroly.wvp.gb28181.domian.Device">
+    <select id="getDeviceByDeviceId" resultType="com.cdzeroly.wvp.domain.Device">
         SELECT id,
                device_id,
                coalesce(custom_name, name)     as name,
@@ -68,7 +68,7 @@
         FROM wvp_device de
         WHERE de.device_id = #{deviceId}
     </select>
-    <select id="getDevices" resultType="com.cdzeroly.wvp.gb28181.domian.Device">
+    <select id="getDevices" resultType="com.cdzeroly.wvp.domain.Device">
 
         SELECT
         id,
@@ -112,7 +112,7 @@
         ORDER BY de.create_time DESC
     </select>
 
-    <select id="selectOnlineDevices" resultType="com.cdzeroly.wvp.gb28181.domian.Device">
+    <select id="selectOnlineDevices" resultType="com.cdzeroly.wvp.domain.Device">
         SELECT id,
                device_id,
                coalesce(custom_name, name) as name,
@@ -145,7 +145,7 @@
         FROM wvp_device
         WHERE on_line = true
     </select>
-    <select id="getDeviceByHostAndPort" resultType="com.cdzeroly.wvp.gb28181.domian.Device">
+    <select id="getDeviceByHostAndPort" resultType="com.cdzeroly.wvp.domain.Device">
         SELECT id,
                device_id,
                coalesce(custom_name, name) as name,
@@ -181,7 +181,7 @@
 
 
     </select>
-    <select id="getDeviceList" resultType="com.cdzeroly.wvp.gb28181.domian.Device">
+    <select id="getDeviceList" resultType="com.cdzeroly.wvp.domain.Device">
         SELECT
         id,
         device_id,
@@ -237,7 +237,7 @@
 
 
     </select>
-    <select id="queryByChannelId" resultType="com.cdzeroly.wvp.gb28181.domian.Device" parameterType="String">
+    <select id="queryByChannelId" resultType="com.cdzeroly.wvp.domain.Device" parameterType="String">
         select wd.*
         from wvp_device wd
                  left join wvp_device_channel wdc on  wdc.data_type = #{dataType} and wd.id = wdc.data_device_id
@@ -245,7 +245,7 @@
 
     </select>
     <select id="getDeviceBySourceChannelDeviceId" parameterType="String"
-            resultType="com.cdzeroly.wvp.gb28181.domian.Device">
+            resultType="com.cdzeroly.wvp.domain.Device">
         select wd.*
         from wvp_device wd
                  left join wvp_device_channel wdc on  wdc.data_type = #{dataType} and wd.id = wdc.data_device_id

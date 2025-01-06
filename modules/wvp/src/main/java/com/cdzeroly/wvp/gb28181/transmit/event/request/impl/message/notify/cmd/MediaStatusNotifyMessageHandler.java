@@ -2,9 +2,9 @@ package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.notify.cmd;
 
 import com.cdzeroly.wvp.common.InviteInfo;
 import com.cdzeroly.wvp.common.InviteSessionType;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
 import com.cdzeroly.wvp.domain.bean.SsrcTransaction;
 import com.cdzeroly.wvp.gb28181.service.*;

@@ -52,7 +52,7 @@
         </foreach>
 
     </select>
-    <select id="queryForTree" resultType="com.cdzeroly.wvp.gb28181.domian.bean.RegionTree">
+    <select id="queryForTree" resultType="com.cdzeroly.wvp.gb28181.bean.RegionTree">
         SELECT
         *,
         concat('region', id) as tree_id,
@@ -81,7 +81,7 @@
         </foreach>
 
     </select>
-    <select id="queryByPlatform" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGbChannel">
+    <select id="queryByPlatform" resultType="com.cdzeroly.wvp.domain.CommonGbChannel">
         SELECT wcr.device_id as gb_device_id,
                wcr.name      as gb_name
         FROM wvp_common_region wcr

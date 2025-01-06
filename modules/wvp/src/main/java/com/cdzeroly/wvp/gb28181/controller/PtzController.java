@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.gb28181.controller;
 
 
 import com.cdzeroly.common.core.exception.ServiceException;
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
 import com.cdzeroly.wvp.gb28181.service.IPTZService;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +50,7 @@ public class PtzController {
 	@Parameter(name = "cmdCode", description = "指令码(对应国标文档指令格式中的字节4)", required = true)
 	@Parameter(name = "parameter1", description = "数据一(对应国标文档指令格式中的字节5, 范围0-255)", required = true)
 	@Parameter(name = "parameter2", description = "数据二(对应国标文档指令格式中的字节6, 范围0-255)", required = true)
-	@Parameter(name = "combindCode2", description = "组合码二(对应国标文档指令格式中的字节7, 范围0-16)", required = true)
+	@Parameter(name = "combindCode2", description = "组合码二(对应国标文档指令格式中的字节7, 范围0-15)", required = true)
 	@GetMapping("/common/{deviceId}/{channelId}")
 	public void frontEndCommand(@PathVariable String deviceId,@PathVariable String channelId,Integer cmdCode, Integer parameter1, Integer parameter2, Integer combindCode2){
 
@@ -60,13 +59,13 @@ public class PtzController {
 		}
 
 		if (parameter1 == null || parameter1 < 0 || parameter1 > 255) {
-			throw new ServiceException("parameter1 为 1-255的数字");
+			throw new ServiceException("parameter1 为 0-255的数字");
 		}
 		if (parameter2 == null || parameter2 < 0 || parameter2 > 255) {
-			throw new ServiceException("parameter1 为 1-255的数字");
+			throw new ServiceException("parameter1 为 0-255的数字");
 		}
 		if (combindCode2 == null || combindCode2 < 0 || combindCode2 > 16) {
-			throw new ServiceException("parameter1 为 1-255的数字");
+			throw new ServiceException("parameter1 为 0-255的数字");
 		}
         Device device = deviceService.getDeviceByDeviceId(deviceId);
         Assert.notNull(device, "设备[" + deviceId + "]不存在");
@@ -79,7 +78,7 @@ public class PtzController {
 	@Parameter(name = "command", description = "控制指令,允许值: left, right, up, down, upleft, upright, downleft, downright, zoomin, zoomout, stop", required = true)
 	@Parameter(name = "horizonSpeed", description = "水平速度(0-255)", required = true)
 	@Parameter(name = "verticalSpeed", description = "垂直速度(0-255)", required = true)
-	@Parameter(name = "zoomSpeed", description = "缩放速度(0-16)", required = true)
+	@Parameter(name = "zoomSpeed", description = "缩放速度(0-15)", required = true)
 	@GetMapping("/ptz/{deviceId}/{channelId}")
 	public void ptz(@PathVariable String deviceId,@PathVariable String channelId, String command, Integer horizonSpeed, Integer verticalSpeed, Integer zoomSpeed){
 
@@ -89,17 +88,17 @@ public class PtzController {
 		if (horizonSpeed == null) {
 			horizonSpeed = 100;
 		}else if (horizonSpeed < 0 || horizonSpeed > 255) {
-			throw new ServiceException("horizonSpeed 为 1-255的数字");
+			throw new ServiceException("horizonSpeed 为 0-255的数字");
 		}
 		if (verticalSpeed == null) {
 			verticalSpeed = 100;
 		}else if (verticalSpeed < 0 || verticalSpeed > 255) {
-			throw new ServiceException("verticalSpeed 为 1-255的数字");
+			throw new ServiceException("verticalSpeed 为 0-255的数字");
 		}
 		if (zoomSpeed == null) {
 			zoomSpeed = 16;
 		}else if (zoomSpeed < 0 || zoomSpeed > 16) {
-			throw new ServiceException("zoomSpeed 为 1-255的数字");
+			throw new ServiceException("zoomSpeed 为 0-255的数字");
 		}
 
 		int cmdCode = 0;
@@ -157,7 +156,11 @@ public class PtzController {
 		if (log.isDebugEnabled()) {
 			log.debug("设备光圈控制 API调用，deviceId：{} ，channelId：{} ，command：{} ，speed：{} ",deviceId, channelId, command, speed);
 		}
-
+        if (speed == null) {
+            speed = 100;
+        }else if (speed < 0 || speed > 255) {
+            throw new ServiceException( "speed 为 0-255的数字");
+        }
 		int cmdCode = 0x40;
 		switch (command){
 			case "in":
@@ -190,7 +193,7 @@ public class PtzController {
 		if (speed == null) {
 			speed = 100;
 		}else if (speed < 0 || speed > 255) {
-			throw new ServiceException("verticalSpeed 为 1-255的数字");
+			throw new ServiceException("speed  为 0-255的数字");
 		}
 
 		int cmdCode = 0x40;

@@ -2,10 +2,10 @@ package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.info;
 
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.domain.bean.SendRtpInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.DeviceChannel;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.gb28181.service.*;
 import com.cdzeroly.wvp.gb28181.transmit.SIPProcessorObserver;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;

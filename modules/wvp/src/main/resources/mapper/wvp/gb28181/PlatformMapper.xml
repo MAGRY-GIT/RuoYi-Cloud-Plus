@@ -9,7 +9,7 @@
         WHERE server_gb_id = #{platformGbId}
     </update>
 
-    <select id="queryList" resultType="com.cdzeroly.wvp.gb28181.domian.Platform">
+    <select id="queryList" resultType="com.cdzeroly.wvp.domain.Platform">
 
 
         SELECT pp.*,
@@ -27,15 +27,15 @@
         ORDER BY pp.id DESC
 
     </select>
-    <select id="getByEnable" resultType="com.cdzeroly.wvp.gb28181.domian.Platform">
+    <select id="getByEnable" resultType="com.cdzeroly.wvp.domain.Platform">
 
         SELECT * FROM wvp_platform WHERE enable = #{enable}
     </select>
-    <select id="queryByEnableAndAsMessageChannel" resultType="com.cdzeroly.wvp.gb28181.domian.Platform">
+    <select id="queryByEnableAndAsMessageChannel" resultType="com.cdzeroly.wvp.domain.Platform">
 
         SELECT * FROM wvp_platform WHERE enable = #{enable} AND  as_message_channel= #{asMessageChannel}
     </select>
-    <select id="getByServerGBId" resultType="com.cdzeroly.wvp.gb28181.domian.Platform">
+    <select id="getByServerGBId" resultType="com.cdzeroly.wvp.domain.Platform">
         SELECT * FROM wvp_platform WHERE server_gb_id = #{platformGbId}
     </select>
 </mapper>

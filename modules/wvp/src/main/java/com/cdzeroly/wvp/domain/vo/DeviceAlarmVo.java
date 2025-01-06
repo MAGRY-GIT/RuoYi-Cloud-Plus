@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.domain.vo;
 
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
+import com.cdzeroly.wvp.domain.DeviceAlarm;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

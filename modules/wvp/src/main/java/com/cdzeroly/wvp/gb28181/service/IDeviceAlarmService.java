@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.gb28181.service;
 
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
-import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
+import com.cdzeroly.wvp.domain.DeviceAlarm;
 import com.cdzeroly.wvp.domain.bo.AlarmBo;
 import com.cdzeroly.wvp.domain.bo.DeviceAlarmBo;
 import com.cdzeroly.wvp.domain.vo.DeviceAlarmVo;

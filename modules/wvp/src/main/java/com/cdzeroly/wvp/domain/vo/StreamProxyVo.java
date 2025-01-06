@@ -6,7 +6,7 @@ import com.cdzeroly.wvp.common.enums.ChannelDataType;
 
 import com.cdzeroly.wvp.domain.bean.CommonGbChannelBean;
 
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
 import com.cdzeroly.wvp.domain.StreamProxy;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;

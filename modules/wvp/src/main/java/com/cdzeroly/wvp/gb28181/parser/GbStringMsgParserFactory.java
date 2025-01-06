@@ -1,4 +1,4 @@
-package com.cdzeroly.wvp.gb28181.domian.parser;
+package com.cdzeroly.wvp.gb28181.parser;
 
 import com.cdzeroly.wvp.domain.parser.GBStringMsgParser;
 import gov.nist.javax.sip.parser.MessageParser;

@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.event.subscribe.mobilePosition;
 
-import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
+import com.cdzeroly.wvp.domain.MobilePosition;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;

@@ -209,7 +209,7 @@
         SET record_plan_id = null
         WHERE record_plan_id = #{planId}
     </update>
-    <select id="queryForRegionTreeByCivilCode" resultType="com.cdzeroly.wvp.gb28181.domian.bean.RegionTree">
+    <select id="queryForRegionTreeByCivilCode" resultType="com.cdzeroly.wvp.gb28181.bean.RegionTree">
         select
         id,
         concat('channel', id) as tree_id,
@@ -255,7 +255,7 @@
 
 
     </select>
-    <select id="queryForRecordPlanForWebList" resultType="com.cdzeroly.wvp.gb28181.domian.CommonGbChannel">
+    <select id="queryForRecordPlanForWebList" resultType="com.cdzeroly.wvp.domain.CommonGbChannel">
 
         select
         wdc.id as gb_id,

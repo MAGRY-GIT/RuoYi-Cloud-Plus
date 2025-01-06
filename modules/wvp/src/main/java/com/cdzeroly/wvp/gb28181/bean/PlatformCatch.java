@@ -1,7 +1,7 @@
-package com.cdzeroly.wvp.gb28181.domian.bean;
+package com.cdzeroly.wvp.gb28181.bean;
 
 import com.cdzeroly.wvp.domain.bean.SipTransactionInfo;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.Platform;
 import lombok.Data;
 
 /**

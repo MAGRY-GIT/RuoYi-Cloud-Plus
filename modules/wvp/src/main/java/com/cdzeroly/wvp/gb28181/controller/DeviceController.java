@@ -10,7 +10,7 @@ package com.cdzeroly.wvp.gb28181.controller;
 import com.alibaba.fastjson2.JSONObject;
 
 import com.cdzeroly.common.core.exception.ServiceException;
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommander;

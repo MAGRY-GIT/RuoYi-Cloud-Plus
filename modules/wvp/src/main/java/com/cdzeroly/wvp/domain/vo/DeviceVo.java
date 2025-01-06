@@ -1,15 +1,16 @@
 package com.cdzeroly.wvp.domain.vo;
 
 
-import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import com.cdzeroly.wvp.domain.bean.SipTransactionInfo;
 import io.github.linpeilie.annotations.AutoMapper;
+import io.github.linpeilie.annotations.AutoMapping;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 国标设备/平台
@@ -17,8 +18,7 @@ import java.io.Serializable;
  */
 @Data
 @Schema(description = "国标设备/平台")
-@ExcelIgnoreUnannotated
-@AutoMapper(target = Device.class)
+@AutoMapper(target = Device.class,convertGenerate = false)
 public class DeviceVo  implements Serializable{
 
 	@Schema(description = "数据库自增ID")
@@ -132,13 +132,13 @@ public class DeviceVo  implements Serializable{
 	 * 创建时间
 	 */
 	@Schema(description = "创建时间")
-	private String createTime;
+	private Date createTime;
 
 	/**
 	 * 更新时间
 	 */
 	@Schema(description = "更新时间")
-	private String updateTime;
+    private Date updateTime;
 
 	/**
 	 * 设备使用的媒体id, 默认为null
@@ -155,7 +155,7 @@ public class DeviceVo  implements Serializable{
 	/**
 	 * 目录订阅周期，0为不订阅
 	 */
-	@Schema(description = "目录订阅周期，o为不订阅")
+	@Schema(description = "目录订阅周期0为不订阅")
 	private Integer subscribeCycleForCatalog;
 
 	/**

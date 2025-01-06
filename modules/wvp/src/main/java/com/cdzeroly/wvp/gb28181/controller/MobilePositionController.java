@@ -3,8 +3,8 @@ package com.cdzeroly.wvp.gb28181.controller;
 import cn.hutool.core.util.StrUtil;
 
 import com.cdzeroly.common.core.exception.ServiceException;
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.MobilePosition;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;

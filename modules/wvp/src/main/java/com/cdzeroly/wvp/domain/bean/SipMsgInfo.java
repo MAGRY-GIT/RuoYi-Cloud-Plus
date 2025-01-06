@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.domain.bean;
 
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.Platform;
 import lombok.Getter;
 import lombok.Setter;
 import org.dom4j.Element;

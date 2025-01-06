@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
 
 
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.domain.bean.GbCode;
 import com.cdzeroly.wvp.domain.Group;

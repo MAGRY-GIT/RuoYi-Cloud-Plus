@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.cdzeroly.common.core.validate.EditGroup;
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
 import com.cdzeroly.wvp.media.event.media.MediaArrivalEvent;
 import com.cdzeroly.wvp.domain.StreamPush;
 import io.github.linpeilie.annotations.AutoMapper;

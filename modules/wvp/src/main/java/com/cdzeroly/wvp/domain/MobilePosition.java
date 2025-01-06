@@ -1,4 +1,4 @@
-package com.cdzeroly.wvp.gb28181.domian;
+package com.cdzeroly.wvp.domain;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;

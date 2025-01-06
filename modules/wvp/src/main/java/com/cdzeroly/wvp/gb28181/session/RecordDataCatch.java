@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.gb28181.session;
 
 import com.cdzeroly.wvp.domain.bean.RecordItem;
-import com.cdzeroly.wvp.gb28181.domian.bean.RecordInfo;
+import com.cdzeroly.wvp.gb28181.bean.RecordInfo;
 import com.cdzeroly.wvp.gb28181.event.record.RecordEndEventListener;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;

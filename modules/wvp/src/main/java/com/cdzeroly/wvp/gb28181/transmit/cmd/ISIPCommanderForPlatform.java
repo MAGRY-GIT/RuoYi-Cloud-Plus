@@ -2,11 +2,11 @@ package com.cdzeroly.wvp.gb28181.transmit.cmd;
 
 import com.cdzeroly.wvp.conf.exception.SsrcTransactionNotFoundException;
 import com.cdzeroly.wvp.domain.bean.*;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.bean.RecordInfo;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.DeviceAlarm;
+import com.cdzeroly.wvp.domain.Platform;
+import com.cdzeroly.wvp.gb28181.bean.RecordInfo;
 import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
 import com.cdzeroly.wvp.media.event.hook.HookSubscribe;
 import com.cdzeroly.wvp.domain.MediaServer;

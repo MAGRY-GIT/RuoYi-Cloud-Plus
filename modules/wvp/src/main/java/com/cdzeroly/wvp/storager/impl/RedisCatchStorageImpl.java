@@ -6,12 +6,12 @@ import com.cdzeroly.common.redis.utils.RedisUtils;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.domain.bean.*;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.DeviceChannel;
+import com.cdzeroly.wvp.domain.Platform;
+import com.cdzeroly.wvp.gb28181.bean.PlatformCatch;
 import com.cdzeroly.wvp.mapper.DeviceMapper;
-import com.cdzeroly.wvp.gb28181.domian.bean.*;
 import com.cdzeroly.wvp.gb28181.enums.InviteStreamType;
 import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.zlm.dto.StreamAuthorityInfo;
@@ -156,27 +156,23 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
 
     @Override
     public void updateDevice(Device device) {
-        String key = VideoManagerConstants.DEVICE_PREFIX;
-        redisTemplate.opsForHash().put(key, device.getDeviceId(), device);
+        redisTemplate.opsForHash().put(VideoManagerConstants.DEVICE_PREFIX, device.getDeviceId(), device);
     }
 
     @Override
     public void removeDevice(String deviceId) {
-        String key = VideoManagerConstants.DEVICE_PREFIX;
-        redisTemplate.opsForHash().delete(key, deviceId);
+        redisTemplate.opsForHash().delete(VideoManagerConstants.DEVICE_PREFIX, deviceId);
     }
 
     @Override
     public void removeAllDevice() {
-        String key = VideoManagerConstants.DEVICE_PREFIX;
-        redisTemplate.delete(key);
+        redisTemplate.delete(VideoManagerConstants.DEVICE_PREFIX);
     }
 
     @Override
     public List<Device> getAllDevices() {
-        String key = VideoManagerConstants.DEVICE_PREFIX;
         List<Device> result = new ArrayList<>();
-        List<Object> values = redisTemplate.opsForHash().values(key);
+        List<Object> values = redisTemplate.opsForHash().values(VideoManagerConstants.DEVICE_PREFIX);
         for (Object value : values) {
             if (Objects.nonNull(value)) {
                 result.add((Device)value);
@@ -187,9 +183,8 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
 
     @Override
     public Device getDevice(String deviceId) {
-        String key = VideoManagerConstants.DEVICE_PREFIX;
         Device device;
-        Object object = redisTemplate.opsForHash().get(key, deviceId);
+        Object object = redisTemplate.opsForHash().get(VideoManagerConstants.DEVICE_PREFIX, deviceId);
         if (object == null){
             device = deviceMapper.getDeviceByDeviceId(deviceId);
             if (device != null) {

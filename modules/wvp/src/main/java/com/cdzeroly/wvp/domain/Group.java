@@ -1,7 +1,6 @@
 package com.cdzeroly.wvp.domain;
 
 import com.cdzeroly.wvp.domain.bean.GbCode;
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.utils.DateUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

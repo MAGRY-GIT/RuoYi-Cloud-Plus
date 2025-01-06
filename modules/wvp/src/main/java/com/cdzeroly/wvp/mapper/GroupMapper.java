@@ -1,9 +1,9 @@
 package com.cdzeroly.wvp.mapper;
 
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
 import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.domain.bean.GroupTree;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.Platform;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.domain.vo;
 
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.cdzeroly.wvp.common.CivilCodePo;
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
+import com.cdzeroly.wvp.domain.DeviceChannel;
 import com.cdzeroly.wvp.utils.CivilCodeUtil;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.swagger.v3.oas.annotations.media.Schema;

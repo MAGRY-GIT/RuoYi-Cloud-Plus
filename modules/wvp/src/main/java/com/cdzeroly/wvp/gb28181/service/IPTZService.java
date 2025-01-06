@@ -1,8 +1,8 @@
 package com.cdzeroly.wvp.gb28181.service;
 
 
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.bean.Preset;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.gb28181.bean.Preset;
 
 import java.util.List;
 

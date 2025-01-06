@@ -3,9 +3,9 @@ package com.cdzeroly.wvp.mapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdzeroly.common.mybatis.core.mapper.BaseMapperPlus;
 import com.cdzeroly.wvp.domain.vo.RegionVo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
 import com.cdzeroly.wvp.domain.Region;
-import com.cdzeroly.wvp.gb28181.domian.bean.RegionTree;
+import com.cdzeroly.wvp.gb28181.bean.RegionTree;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

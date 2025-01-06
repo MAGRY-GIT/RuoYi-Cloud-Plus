@@ -3,9 +3,9 @@ package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.response.cm
 import com.cdzeroly.wvp.conf.SipConfig;
 import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.domain.bean.SyncStatus;
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.DeviceChannel;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.domain.Region;
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
 import com.cdzeroly.wvp.gb28181.service.IGroupService;
@@ -37,6 +37,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * 目录查询的回复
+ * @author MGARY
  */
 @Slf4j
 @Component

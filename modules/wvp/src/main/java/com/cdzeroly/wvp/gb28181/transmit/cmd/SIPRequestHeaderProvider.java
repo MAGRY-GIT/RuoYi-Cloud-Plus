@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.gb28181.transmit.cmd;
 
 import com.cdzeroly.wvp.conf.SipConfig;
 import com.cdzeroly.wvp.gb28181.SipLayer;
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import com.cdzeroly.wvp.domain.bean.SipTransactionInfo;
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;
@@ -10,7 +10,6 @@ import com.cdzeroly.wvp.utils.GitUtil;
 import gov.nist.javax.sip.message.SIPRequest;
 import gov.nist.javax.sip.message.SIPResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sip.InvalidArgumentException;

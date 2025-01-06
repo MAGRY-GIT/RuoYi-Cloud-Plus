@@ -4,8 +4,8 @@ import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.domain.bean.GbCode;
 import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.domain.bean.GroupTree;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.mapper.CommonGbChannelMapper;
 import com.cdzeroly.wvp.mapper.GroupMapper;
 import com.cdzeroly.wvp.gb28181.event.EventPublisher;
@@ -15,7 +15,6 @@ import com.cdzeroly.wvp.gb28181.service.IGroupService;
 import com.cdzeroly.wvp.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -210,7 +209,7 @@ public class GroupServiceImpl implements IGroupService {
                 for (Platform platform : platformList) {
                     try {
                         // 发送catalog
-                        eventPublisher.catalogEventPublish(platform.getId(), channel, CatalogEvent.DEL);
+                        eventPublisher.catalogEventPublish(platform, channel, CatalogEvent.DEL);
                     }catch (Exception e) {
                         log.warn("[业务分组/虚拟组织删除] 发送失败，{}", groupForDelete.getDeviceId(), e);
                     }

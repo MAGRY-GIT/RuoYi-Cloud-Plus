@@ -15,7 +15,7 @@ import com.cdzeroly.wvp.domain.bean.*;
 
 
 import com.cdzeroly.wvp.domain.bo.ChannelToRegionParam;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelPlayService;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelService;
 import com.cdzeroly.wvp.domain.vo.StreamContentVo;

@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.gb28181.event.subscribe.catalog;
 
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
+import com.cdzeroly.wvp.domain.Platform;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
@@ -57,6 +58,7 @@ public class CatalogEvent  extends ApplicationEvent {
 
     private String type;
 
-    private Long platformId;
+
+    private Platform platform;
 
 }

@@ -1,8 +1,8 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.response.cmd;
 
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.bean.Preset;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.Platform;
+import com.cdzeroly.wvp.gb28181.bean.Preset;
 import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.SIPRequestProcessorParent;

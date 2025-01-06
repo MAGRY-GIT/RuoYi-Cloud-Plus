@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.conf.redis;
 
 import com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer;
-import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
+import com.cdzeroly.wvp.domain.MobilePosition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;

@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.domain.bo;
 
 import com.cdzeroly.wvp.common.StreamInfo;
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import com.cdzeroly.wvp.domain.WVPResult;
 import org.springframework.web.context.request.async.DeferredResult;
 

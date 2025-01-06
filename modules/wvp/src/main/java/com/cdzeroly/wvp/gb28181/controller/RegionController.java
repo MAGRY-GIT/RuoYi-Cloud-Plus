@@ -6,7 +6,7 @@ import com.cdzeroly.common.core.utils.AssertUtils;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.domain.Region;
-import com.cdzeroly.wvp.gb28181.domian.bean.RegionTree;
+import com.cdzeroly.wvp.gb28181.bean.RegionTree;
 import com.cdzeroly.wvp.gb28181.service.IRegionService;
 
 import io.swagger.v3.oas.annotations.Operation;

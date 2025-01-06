@@ -57,7 +57,7 @@
             (
             #{item.deviceId},
             #{item.dataType},
-             #{item.dataDeviceId}
+            #{item.dataDeviceId},
             #{item.name},
             #{item.manufacturer},
             #{item.model},
@@ -216,35 +216,37 @@
             gps_time=#{item.gpsTime},
             stream_identification=#{item.streamIdentification},
             channel_type=#{item.channelType}
-            WHERE data_type = #{item.dataType} and data_device_id = #{item.dataDeviceId} AND device_id = #{item.deviceId}
+            WHERE data_type = #{item.dataType} and data_device_id = #{item.dataDeviceId} AND device_id =
+            #{item.deviceId}
         </foreach>
 
     </update>
     <update id="updateChannelSubCount">
 
         update wvp_device_channel
-        set sub_count = (
-            select count(0)
-            from wvp_device_channel
-            where data_type = 1 and data_device_id = #{dataDeviceId} and parent_id = #{channelId}
-        )
-        where data_type = 1 and data_device_id = #{dataDeviceId} and device_id = #{channelId}
+        set sub_count = (select count(0)
+                         from wvp_device_channel
+                         where data_type = 1
+                           and data_device_id = #{dataDeviceId}
+                           and parent_id = #{channelId})
+        where data_type = 1
+          and data_device_id = #{dataDeviceId}
+          and device_id = #{channelId}
 
     </update>
     <update id="updatePosition">
 
         UPDATE wvp_device_channel
-        SET
-            latitude = #{latitude},
+        SET latitude  = #{latitude},
             longitude = #{longitude},
-            gps_time = #{gpsTime}
+            gps_time  = #{gpsTime}
         WHERE id = #{id}
     </update>
     <update id="batchUpdateStatus">
         <foreach collection="channels" item="item" separator=";">
             UPDATE wvp_device_channel
             SET status = #{item.status}
-            WHERE  data_type = #{item.dataType} and device_id = #{item.deviceId}
+            WHERE data_type = #{item.dataType} and device_id = #{item.deviceId}
         </foreach>
 
     </update>
@@ -262,14 +264,17 @@
             <if test="item.latitude != null">, latitude = #{item.latitude}</if>
             <if test="item.gpsTime != null">, gps_time = #{item.gpsTime}</if>
             <if test="item.id > 0">WHERE id = #{item.id}</if>
-            <if test="item.id == 0">WHERE data_type = #{item.dataType} and data_device_id=#{item.dataDeviceId} AND device_id = #{item.deviceId}</if>
+            <if test="item.id == 0">WHERE data_type = #{item.dataType} and data_device_id=#{item.dataDeviceId} AND
+                device_id = #{item.deviceId}
+            </if>
         </foreach>
 
     </update>
     <delete id="cleanChannelsByDeviceId">
         DELETE
         FROM wvp_device_channel
-        WHERE data_type =1 and data_device_id=#{dataDeviceId}
+        WHERE data_type = 1
+          and data_device_id = #{dataDeviceId}
     </delete>
     <delete id="del">
         DELETE
@@ -335,7 +340,7 @@
         coalesce(dc.gb_business_group_id, dc.business_group_id) as business_group_id
         FROM
         wvp_device_channel dc
-        LEFT JOIN wvp_device de ON  dc.data_device_id = de.id
+        LEFT JOIN wvp_device de ON dc.data_device_id = de.id
         WHERE dc.data_type = 1
         <if test="deviceId != null">
             AND de.device_id = #{deviceId}
@@ -415,216 +420,218 @@
         ORDER BY COALESCE(dc.gb_device_id, dc.device_id) ASC
 
     </select>
-    <select id="queryAllChannelsForRefresh" resultType="com.cdzeroly.wvp.gb28181.domian.DeviceChannel">
-        select
-            id,
-            data_device_id,
-            create_time,
-            update_time,
-            sub_count,
-            stream_id,
-            has_audio,
-            gps_time,
-            stream_identification,
-            channel_type,
-            device_id,
-            name,
-            manufacturer,
-            model,
-            owner,
-            civil_code,
-            block,
-            address,
-            parental,
-            parent_id,
-            safety_way,
-            register_way,
-            cert_num,
-            certifiable,
-            err_code,
-            end_time,
-            secrecy,
-            ip_address,
-            port,
-            password,
-            status,
-            longitude,
-            latitude,
-            ptz_type,
-            position_type,
-            room_type,
-            use_type,
-            supply_light_type,
-            direction_type,
-            resolution,
-            business_group_id,
-            download_speed,
-            svc_space_support_mod,
-            svc_time_support_mode
+    <select id="queryAllChannelsForRefresh" resultType="com.cdzeroly.wvp.domain.DeviceChannel">
+        select id,
+               data_device_id,
+               create_time,
+               update_time,
+               sub_count,
+               stream_id,
+               has_audio,
+               gps_time,
+               stream_identification,
+               channel_type,
+               device_id,
+               name,
+               manufacturer,
+               model,
+               owner,
+               civil_code,
+               block,
+               address,
+               parental,
+               parent_id,
+               safety_way,
+               register_way,
+               cert_num,
+               certifiable,
+               err_code,
+               end_time,
+               secrecy,
+               ip_address,
+               port,
+               password,
+               status,
+               longitude,
+               latitude,
+               ptz_type,
+               position_type,
+               room_type,
+               use_type,
+               supply_light_type,
+               direction_type,
+               resolution,
+               business_group_id,
+               download_speed,
+               svc_space_support_mod,
+               svc_time_support_mode
         from wvp_device_channel
-        where data_type = 1 and data_device_id = #{dataDeviceId}
+        where data_type = 1
+          and data_device_id = #{dataDeviceId}
 
     </select>
-    <select id="getDeviceByChannelDeviceId" resultType="com.cdzeroly.wvp.gb28181.domian.Device">
+    <select id="getDeviceByChannelDeviceId" resultType="com.cdzeroly.wvp.domain.Device">
         select de.*
         from wvp_device de
                  left join wvp_device_channel dc on de.device_id = dc.device_id
-        where dc.data_type = 1 and dc.device_id = #{channelId}
+        where dc.data_type = 1
+          and dc.device_id = #{channelId}
     </select>
     <select id="getOnlineCount" resultType="java.lang.Integer">
-        select count(1) from wvp_device_channel where status = 'ON'
+        select count(1)
+        from wvp_device_channel
+        where status = 'ON'
 
     </select>
 
-    <select id="getOneForSource" resultType="com.cdzeroly.wvp.gb28181.domian.DeviceChannel">
-        SELECT
-            id,
-            data_device_id,
-            create_time,
-            update_time,
-            sub_count,
-            stream_id,
-            has_audio,
-            gps_time,
-            stream_identification,
-            channel_type,
-            device_id,
-            name,
-            manufacturer,
-            model,
-            owner,
-            civil_code,
-            block,
-            address,
-            parental,
-            parent_id,
-            safety_way,
-            register_way,
-            cert_num,
-            certifiable,
-            err_code,
-            end_time,
-            secrecy,
-            ip_address,
-            port,
-            password,
-            status,
-            longitude,
-            latitude,
-            ptz_type,
-            position_type,
-            room_type,
-            use_type,
-            supply_light_type,
-            direction_type,
-            resolution,
-            business_group_id,
-            download_speed,
-            svc_space_support_mod,
-            svc_time_support_mode
+    <select id="getOneForSource" resultType="com.cdzeroly.wvp.domain.DeviceChannel">
+        SELECT id,
+               data_device_id,
+               create_time,
+               update_time,
+               sub_count,
+               stream_id,
+               has_audio,
+               gps_time,
+               stream_identification,
+               channel_type,
+               device_id,
+               name,
+               manufacturer,
+               model,
+               owner,
+               civil_code,
+               block,
+               address,
+               parental,
+               parent_id,
+               safety_way,
+               register_way,
+               cert_num,
+               certifiable,
+               err_code,
+               end_time,
+               secrecy,
+               ip_address,
+               port,
+               password,
+               status,
+               longitude,
+               latitude,
+               ptz_type,
+               position_type,
+               room_type,
+               use_type,
+               supply_light_type,
+               direction_type,
+               resolution,
+               business_group_id,
+               download_speed,
+               svc_space_support_mod,
+               svc_time_support_mode
         FROM wvp_device_channel
         WHERE id = #{id}
 
     </select>
-    <select id="getOneByDeviceIdForSource" resultType="com.cdzeroly.wvp.gb28181.domian.DeviceChannel">
-        SELECT
-            id,
-            data_device_id,
-            create_time,
-            update_time,
-            sub_count,
-            stream_id,
-            has_audio,
-            gps_time,
-            stream_identification,
-            channel_type,
-            device_id,
-            name,
-            manufacturer,
-            model,
-            owner,
-            civil_code,
-            block,
-            address,
-            parental,
-            parent_id,
-            safety_way,
-            register_way,
-            cert_num,
-            certifiable,
-            err_code,
-            end_time,
-            secrecy,
-            ip_address,
-            port,
-            password,
-            status,
-            longitude,
-            latitude,
-            ptz_type,
-            position_type,
-            room_type,
-            use_type,
-            supply_light_type,
-            direction_type,
-            resolution,
-            business_group_id,
-            download_speed,
-            svc_space_support_mod,
-            svc_time_support_mode
+    <select id="getOneByDeviceIdForSource" resultType="com.cdzeroly.wvp.domain.DeviceChannel">
+        SELECT id,
+               data_device_id,
+               create_time,
+               update_time,
+               sub_count,
+               stream_id,
+               has_audio,
+               gps_time,
+               stream_identification,
+               channel_type,
+               device_id,
+               name,
+               manufacturer,
+               model,
+               owner,
+               civil_code,
+               block,
+               address,
+               parental,
+               parent_id,
+               safety_way,
+               register_way,
+               cert_num,
+               certifiable,
+               err_code,
+               end_time,
+               secrecy,
+               ip_address,
+               port,
+               password,
+               status,
+               longitude,
+               latitude,
+               ptz_type,
+               position_type,
+               room_type,
+               use_type,
+               supply_light_type,
+               direction_type,
+               resolution,
+               business_group_id,
+               download_speed,
+               svc_space_support_mod,
+               svc_time_support_mode
         FROM wvp_device_channel
-        WHERE data_type = 1 and data_device_id=#{dataDeviceId}
+        WHERE data_type = 1
+          and data_device_id = #{dataDeviceId}
           AND COALESCE(gb_device_id, device_id) = #{channelId}
 
     </select>
-    <select id="getOneBySourceChannelId" resultType="com.cdzeroly.wvp.gb28181.domian.DeviceChannel">
-        SELECT
-            id,
-            data_device_id,
-            create_time,
-            update_time,
-            sub_count,
-            stream_id,
-            has_audio,
-            gps_time,
-            stream_identification,
-            channel_type,
-            device_id,
-            name,
-            manufacturer,
-            model,
-            owner,
-            civil_code,
-            block,
-            address,
-            parental,
-            parent_id,
-            safety_way,
-            register_way,
-            cert_num,
-            certifiable,
-            err_code,
-            end_time,
-            secrecy,
-            ip_address,
-            port,
-            password,
-            status,
-            longitude,
-            latitude,
-            ptz_type,
-            position_type,
-            room_type,
-            use_type,
-            supply_light_type,
-            direction_type,
-            resolution,
-            business_group_id,
-            download_speed,
-            svc_space_support_mod,
-            svc_time_support_mode
+    <select id="getOneBySourceChannelId" resultType="com.cdzeroly.wvp.domain.DeviceChannel">
+        SELECT id,
+               data_device_id,
+               create_time,
+               update_time,
+               sub_count,
+               stream_id,
+               has_audio,
+               gps_time,
+               stream_identification,
+               channel_type,
+               device_id,
+               name,
+               manufacturer,
+               model,
+               owner,
+               civil_code,
+               block,
+               address,
+               parental,
+               parent_id,
+               safety_way,
+               register_way,
+               cert_num,
+               certifiable,
+               err_code,
+               end_time,
+               secrecy,
+               ip_address,
+               port,
+               password,
+               status,
+               longitude,
+               latitude,
+               ptz_type,
+               position_type,
+               room_type,
+               use_type,
+               supply_light_type,
+               direction_type,
+               resolution,
+               business_group_id,
+               download_speed,
+               svc_space_support_mod,
+               svc_time_support_mode
         FROM wvp_device_channel
-        WHERE data_type = 1 AND data_device_id=#{dataDeviceId}
+        WHERE data_type = 1
+          AND data_device_id = #{dataDeviceId}
           AND device_id = #{channelId}
 
     </select>
@@ -653,60 +660,61 @@
     <update id="updateStatus">
         UPDATE wvp_device_channel
         SET status = #{status}
-        WHERE data_type=#{dataType} AND data_device_id=#{dataDeviceId}
+        WHERE data_type = #{dataType}
+          AND data_device_id = #{dataDeviceId}
           AND device_id = #{deviceId}
 
     </update>
     <update id="updateChannelForNotify">
         UPDATE wvp_device_channel
-        SET
-            update_time = #{updateTime},
-            device_id = #{deviceId},
+        SET update_time           = #{updateTime},
+            device_id             = #{deviceId},
             data_device_id=#{dataDeviceId},
-            name = #{name},
-            manufacturer = #{manufacturer},
-            model = #{model},
-            owner = #{owner},
-            civil_code = #{civilCode},
-            block = #{block},
-            address = #{address},
-            parental = #{parental},
-            parent_id = #{parentId},
-            safety_way = #{safetyWay},
-            register_way = #{registerWay},
-            cert_num = #{certNum},
-            certifiable = #{certifiable},
-            err_code = #{errCode},
-            end_time = #{endTime},
-            secrecy = #{secrecy},
-            ip_address = #{ipAddress},
-            port = #{port},
-            password = #{password},
-            status = #{status},
-            longitude = #{longitude},
-            latitude = #{latitude},
-            ptz_type = #{ptzType},
-            position_type = #{positionType},
-            room_type = #{roomType},
-            use_type = #{useType},
-            supply_light_type = #{supplyLightType},
-            direction_type = #{directionType},
-            resolution = #{resolution},
-            business_group_id = #{businessGroupId},
-            download_speed = #{downloadSpeed},
+            name                  = #{name},
+            manufacturer          = #{manufacturer},
+            model                 = #{model},
+            owner                 = #{owner},
+            civil_code            = #{civilCode},
+            block                 = #{block},
+            address               = #{address},
+            parental              = #{parental},
+            parent_id             = #{parentId},
+            safety_way            = #{safetyWay},
+            register_way          = #{registerWay},
+            cert_num              = #{certNum},
+            certifiable           = #{certifiable},
+            err_code              = #{errCode},
+            end_time              = #{endTime},
+            secrecy               = #{secrecy},
+            ip_address            = #{ipAddress},
+            port                  = #{port},
+            password              = #{password},
+            status                = #{status},
+            longitude             = #{longitude},
+            latitude              = #{latitude},
+            ptz_type              = #{ptzType},
+            position_type         = #{positionType},
+            room_type             = #{roomType},
+            use_type              = #{useType},
+            supply_light_type     = #{supplyLightType},
+            direction_type        = #{directionType},
+            resolution            = #{resolution},
+            business_group_id     = #{businessGroupId},
+            download_speed        = #{downloadSpeed},
             svc_space_support_mod = #{svcSpaceSupportMod},
             svc_time_support_mode = #{svcTimeSupportMode},
-            sub_count = #{subCount},
-            stream_id = #{streamId},
-            has_audio = #{hasAudio},
-            gps_time = #{gpsTime},
+            sub_count             = #{subCount},
+            stream_id             = #{streamId},
+            has_audio             = #{hasAudio},
+            gps_time              = #{gpsTime},
             stream_identification = #{streamIdentification},
-            channel_type = #{channelType}
+            channel_type          = #{channelType}
         WHERE id = #{id}
 
     </update>
     <update id="updateAllChannelStreamIdentification">
 
-        UPDATE wvp_device_channel SET stream_identification=#{streamIdentification}
+        UPDATE wvp_device_channel
+        SET stream_identification=#{streamIdentification}
     </update>
 </mapper>

@@ -1,9 +1,9 @@
 package com.cdzeroly.wvp.service.impl;
 
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
-import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.DeviceChannel;
+import com.cdzeroly.wvp.domain.MobilePosition;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.mapper.PlatformMapper;
 import com.cdzeroly.wvp.service.IMobilePositionService;
 import com.cdzeroly.wvp.mapper.DeviceChannelMapper;
@@ -11,7 +11,6 @@ import com.cdzeroly.wvp.mapper.DeviceMobilePositionMapper;
 import com.cdzeroly.wvp.domain.bean.GPSMsgInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;

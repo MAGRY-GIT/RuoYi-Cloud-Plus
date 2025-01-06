@@ -1,8 +1,8 @@
 package com.cdzeroly.wvp.gb28181.event.subscribe.mobilePosition;
 
 import com.cdzeroly.wvp.domain.bean.SubscribeInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.domain.bean.SubscribeHolder;
 import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommanderForPlatform;

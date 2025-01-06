@@ -18,8 +18,8 @@ import com.cdzeroly.wvp.conf.task.DynamicTask;
 
 import com.cdzeroly.wvp.domain.bo.DeviceBo;
 import com.cdzeroly.wvp.domain.vo.DeviceVo;
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.DeviceChannel;
 import com.cdzeroly.wvp.domain.bean.SyncStatus;
 
 import com.cdzeroly.wvp.gb28181.service.IDeviceChannelService;
@@ -42,7 +42,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;

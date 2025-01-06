@@ -9,9 +9,9 @@ import com.cdzeroly.wvp.domain.vo.DeviceAlarmVo;
 
 
 
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.DeviceAlarm;
+import com.cdzeroly.wvp.domain.Platform;
 
 import com.cdzeroly.wvp.gb28181.service.IDeviceAlarmService;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;

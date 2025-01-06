@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.gb28181;
 import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.conf.SipConfig;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.gb28181.domian.parser.GbStringMsgParserFactory;
+import com.cdzeroly.wvp.gb28181.parser.GbStringMsgParserFactory;
 import com.cdzeroly.wvp.gb28181.conf.DefaultProperties;
 import com.cdzeroly.wvp.gb28181.transmit.ISIPProcessorObserver;
 import gov.nist.javax.sip.SipProviderImpl;

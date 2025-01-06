@@ -1,10 +1,9 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
 import com.alibaba.fastjson2.JSON;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.cdzeroly.wvp.common.*;
 import com.cdzeroly.wvp.conf.UserSetting;
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import com.cdzeroly.wvp.mapper.DeviceChannelMapper;
 import com.cdzeroly.wvp.mapper.DeviceMapper;
 import com.cdzeroly.wvp.gb28181.service.IInviteStreamService;
@@ -12,7 +11,6 @@ import com.cdzeroly.wvp.media.event.media.MediaDepartureEvent;
 import com.cdzeroly.wvp.domain.bean.ErrorCallback;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;

@@ -3,7 +3,7 @@ package com.cdzeroly.wvp.gb28181.service;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.domain.Region;
-import com.cdzeroly.wvp.gb28181.domian.bean.RegionTree;
+import com.cdzeroly.wvp.gb28181.bean.RegionTree;
 
 
 import java.util.List;

@@ -2,9 +2,9 @@ package com.cdzeroly.wvp.gb28181.service.impl;
 
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.transmit.bean.InviteInfo;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.gb28181.exception.PlayException;
 import com.cdzeroly.wvp.gb28181.service.IGbChannelPlayService;
 import com.cdzeroly.wvp.gb28181.service.IPlayService;

@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message;
 
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.Platform;
 import org.dom4j.Element;
 
 import javax.sip.RequestEvent;

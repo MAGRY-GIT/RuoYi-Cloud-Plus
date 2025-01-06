@@ -5,9 +5,8 @@ import com.cdzeroly.common.mybatis.core.mapper.BaseMapperPlus;
 
 import com.cdzeroly.wvp.domain.vo.DeviceVo;
 
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 

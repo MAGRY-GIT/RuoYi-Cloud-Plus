@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.mapper.provider;
 
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
 import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.domain.vo.StreamPushVo;
 

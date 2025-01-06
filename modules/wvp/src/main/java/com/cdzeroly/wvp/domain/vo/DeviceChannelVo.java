@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.domain.vo;
 
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
+import com.cdzeroly.wvp.domain.DeviceChannel;
 import com.cdzeroly.wvp.domain.bean.GbCode;
 import com.cdzeroly.wvp.gb28181.utils.MessageElementForCatalog;
 import com.cdzeroly.wvp.gb28181.utils.XmlUtil;

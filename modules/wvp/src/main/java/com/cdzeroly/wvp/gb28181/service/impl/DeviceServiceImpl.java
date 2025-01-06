@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdzeroly.common.core.exception.ServiceException;
@@ -12,7 +13,7 @@ import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.domain.bean.*;
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import com.cdzeroly.wvp.mapper.DeviceChannelMapper;
 import com.cdzeroly.wvp.mapper.DeviceMapper;
 import com.cdzeroly.wvp.mapper.PlatformChannelMapper;
@@ -43,11 +44,11 @@ import javax.sip.SipException;
 import java.text.ParseException;
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
  * 设备业务（目录订阅）
+ * @author MAGRY
  */
 @Slf4j
 @Service
@@ -99,7 +100,7 @@ public class DeviceServiceImpl implements IDeviceService {
             inviteStreamService.clearInviteInfo(device.getDeviceId());
         }
         device.setKeepaliveTime(now);
-        if (device.getKeepaliveIntervalTime() == 0) {
+        if (ObjUtil.isEmpty(device.getKeepaliveIntervalTime())) {
             // 默认心跳间隔60
             device.setKeepaliveIntervalTime(60);
         }
@@ -184,8 +185,11 @@ public class DeviceServiceImpl implements IDeviceService {
         log.warn("[设备离线]，{}, device：{}", reason, deviceId);
         Device device = getDeviceByDeviceIdFromDb(deviceId);
         if (device == null) {
+            log.warn("[设备不存在] device：{}", deviceId);
             return;
         }
+        log.info("[设备离线] device：{}， 当前心跳间隔： {}， 上次心跳时间：{}， 上次注册时间： {}", deviceId,
+            device.getKeepaliveIntervalTime(), device.getKeepaliveTime(), device.getRegisterTime());
         String registerExpireTaskKey = VideoManagerConstants.REGISTER_EXPIRE_TASK_KEY_PREFIX + deviceId;
         dynamicTask.stop(registerExpireTaskKey);
         if (device.isOnLine()) {
@@ -520,14 +524,14 @@ public class DeviceServiceImpl implements IDeviceService {
                     addCatalogSubscribe(device);
                 }
                 // 因为是异步执行，需要在这里更新下数据
-                deviceMapper.updateSubscribeCatalog(device);
+                deviceMapper.insertOrUpdate(device);
                 redisCatchStorage.updateDevice(device);
             });
         }else {
             // 开启订阅
             device.setSubscribeCycleForCatalog(cycle);
             addCatalogSubscribe(device);
-            deviceMapper.updateSubscribeCatalog(device);
+            deviceMapper.insertOrUpdate(device);
             redisCatchStorage.updateDevice(device);
         }
     }

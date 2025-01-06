@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.gb28181.task.impl;
 
 import com.cdzeroly.wvp.common.CommonCallback;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import com.cdzeroly.wvp.gb28181.task.ISubscribeTask;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommander;
 import gov.nist.javax.sip.message.SIPRequest;

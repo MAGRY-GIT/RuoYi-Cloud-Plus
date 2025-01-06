@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.gb28181.transmit.bean;
 
 
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
+import com.cdzeroly.wvp.domain.DeviceChannel;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.domain.bean;
 
-import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
+import com.cdzeroly.wvp.domain.MobilePosition;
 import com.cdzeroly.wvp.utils.DateUtil;
 import lombok.Data;
 

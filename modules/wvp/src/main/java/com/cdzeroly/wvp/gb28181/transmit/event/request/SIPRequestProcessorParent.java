@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request;
 
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.gb28181.transmit.SIPSender;
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.google.common.primitives.Bytes;
@@ -59,10 +59,13 @@ public abstract class SIPRequestProcessorParent {
         return null;
     }
 
-    class ResponseAckExtraParam {
+    /**
+     * 响应 ACK Extra Param
+     */
+   private static class ResponseAckExtraParam {
         String content;
         ContentTypeHeader contentTypeHeader;
-        SipURI sipURI;
+        SipURI sipUrl;
         int expires = -1;
     }
 
@@ -93,9 +96,9 @@ public abstract class SIPRequestProcessorParent {
         }
 
         if (responseAckExtraParam != null) {
-            if (responseAckExtraParam.sipURI != null && sipRequest.getMethod().equals(Request.INVITE)) {
-                log.debug("responseSdpAck SipURI: {}:{}", responseAckExtraParam.sipURI.getHost(), responseAckExtraParam.sipURI.getPort());
-                Address concatAddress = SipFactory.getInstance().createAddressFactory().createAddress(SipFactory.getInstance().createAddressFactory().createSipURI(responseAckExtraParam.sipURI.getUser(), responseAckExtraParam.sipURI.getHost() + ":" + responseAckExtraParam.sipURI.getPort()));
+            if (responseAckExtraParam.sipUrl != null && sipRequest.getMethod().equals(Request.INVITE)) {
+                log.debug("responseSdpAck SipURI: {}:{}", responseAckExtraParam.sipUrl.getHost(), responseAckExtraParam.sipUrl.getPort());
+                Address concatAddress = SipFactory.getInstance().createAddressFactory().createAddress(SipFactory.getInstance().createAddressFactory().createSipURI(responseAckExtraParam.sipUrl.getUser(), responseAckExtraParam.sipUrl.getHost() + ":" + responseAckExtraParam.sipUrl.getPort()));
                 response.addHeader(SipFactory.getInstance().createHeaderFactory().createContactHeader(concatAddress));
             }
             if (responseAckExtraParam.contentTypeHeader != null) {
@@ -131,19 +134,20 @@ public abstract class SIPRequestProcessorParent {
         ContentTypeHeader contentTypeHeader = SipFactory.getInstance().createHeaderFactory().createContentTypeHeader("APPLICATION", "SDP");
 
         // 兼容国标中的使用编码@域名作为RequestURI的情况
-        SipURI sipURI = (SipURI) request.getRequestURI();
-        if (sipURI.getPort() == -1) {
-            sipURI = SipFactory.getInstance().createAddressFactory().createSipURI(platform.getServerGbId(), platform.getServerIp() + ":" + platform.getServerPort());
+        ResponseAckExtraParam responseAckExtraParam = getResponseAckExtraParam(request, sdp, platform, contentTypeHeader);
+        return responseAck(request, Response.OK, null, responseAckExtraParam);
+    }
+
+    private ResponseAckExtraParam getResponseAckExtraParam(SIPRequest request, String sdp, Platform platform, ContentTypeHeader contentTypeHeader) throws ParseException, PeerUnavailableException {
+        SipURI sipUrl = (SipURI) request.getRequestURI();
+        if (sipUrl.getPort() == -1) {
+            sipUrl = SipFactory.getInstance().createAddressFactory().createSipURI(platform.getServerGbId(), platform.getServerIp() + ":" + platform.getServerPort());
         }
         ResponseAckExtraParam responseAckExtraParam = new ResponseAckExtraParam();
         responseAckExtraParam.contentTypeHeader = contentTypeHeader;
         responseAckExtraParam.content = sdp;
-        responseAckExtraParam.sipURI = sipURI;
-
-        SIPResponse sipResponse = responseAck(request, Response.OK, null, responseAckExtraParam);
-
-
-        return sipResponse;
+        responseAckExtraParam.sipUrl = sipUrl;
+        return   responseAckExtraParam;
     }
 
     /**
@@ -152,14 +156,7 @@ public abstract class SIPRequestProcessorParent {
     public SIPResponse responseXmlAck(SIPRequest request, String xml, Platform platform, Integer expires) throws SipException, InvalidArgumentException, ParseException {
         ContentTypeHeader contentTypeHeader = SipFactory.getInstance().createHeaderFactory().createContentTypeHeader("Application", "MANSCDP+xml");
 
-        SipURI sipURI = (SipURI) request.getRequestURI();
-        if (sipURI.getPort() == -1) {
-            sipURI = SipFactory.getInstance().createAddressFactory().createSipURI(platform.getServerGbId(), platform.getServerIp() + ":" + platform.getServerPort());
-        }
-        ResponseAckExtraParam responseAckExtraParam = new ResponseAckExtraParam();
-        responseAckExtraParam.contentTypeHeader = contentTypeHeader;
-        responseAckExtraParam.content = xml;
-        responseAckExtraParam.sipURI = sipURI;
+        ResponseAckExtraParam responseAckExtraParam =  getResponseAckExtraParam(request, xml, platform, contentTypeHeader);
         responseAckExtraParam.expires = expires;
         return responseAck(request, Response.OK, null, responseAckExtraParam);
     }

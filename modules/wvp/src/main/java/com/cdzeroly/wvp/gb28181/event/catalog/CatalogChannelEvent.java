@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.event.catalog;
 
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
+import com.cdzeroly.wvp.domain.DeviceChannel;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

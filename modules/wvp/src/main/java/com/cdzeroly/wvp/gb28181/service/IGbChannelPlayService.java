@@ -1,9 +1,9 @@
 package com.cdzeroly.wvp.gb28181.service;
 
 import com.cdzeroly.wvp.common.StreamInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
 import com.cdzeroly.wvp.gb28181.transmit.bean.InviteInfo;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.domain.bean.ErrorCallback;
 
 public interface IGbChannelPlayService {

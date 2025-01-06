@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.gb28181.transmit.event.request.impl;
 
 import com.cdzeroly.wvp.domain.bean.CmdType;
 import com.cdzeroly.wvp.domain.bean.SubscribeInfo;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.domain.bean.SubscribeHolder;
 import com.cdzeroly.wvp.gb28181.service.IPlatformService;
 import com.cdzeroly.wvp.gb28181.transmit.SIPProcessorObserver;

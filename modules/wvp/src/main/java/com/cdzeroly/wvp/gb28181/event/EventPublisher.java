@@ -1,16 +1,13 @@
 package com.cdzeroly.wvp.gb28181.event;
 
 import com.cdzeroly.common.core.utils.CollectionUtil;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
-import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
-import com.cdzeroly.wvp.gb28181.domian.MobilePosition;
-import com.cdzeroly.wvp.gb28181.domian.bean.RecordInfo;
+import com.cdzeroly.wvp.domain.*;
+import com.cdzeroly.wvp.gb28181.bean.RecordInfo;
 import com.cdzeroly.wvp.gb28181.event.alarm.AlarmEvent;
 import com.cdzeroly.wvp.gb28181.event.device.RequestTimeoutEvent;
 import com.cdzeroly.wvp.gb28181.event.record.RecordEndEvent;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import com.cdzeroly.wvp.gb28181.event.subscribe.mobilePosition.MobilePositionEvent;
-import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.event.mediaServer.MediaServerOfflineEvent;
 import com.cdzeroly.wvp.media.event.mediaServer.MediaServerOnlineEvent;
 import lombok.AllArgsConstructor;
@@ -64,16 +61,15 @@ public class EventPublisher {
 
     /**
      * 目录事件发布
-     * @param platformId  平台ID
+     * @param platform  平台ID
      * @param deviceChannel  设备通道
      * @param type  类型
      */
-	public void catalogEventPublish(Long platformId, CommonGbChannel deviceChannel, String type) {
-		List<CommonGbChannel> deviceChannelList = new ArrayList<>();
-		deviceChannelList.add(deviceChannel);
-		catalogEventPublish(platformId, deviceChannelList, type);
-	}
-
+    public void catalogEventPublish(Platform platform, CommonGbChannel deviceChannel, String type) {
+        List<CommonGbChannel> deviceChannelList = new ArrayList<>();
+        deviceChannelList.add(deviceChannel);
+        catalogEventPublish(platform, deviceChannelList, type);
+    }
     /**
      * 请求超时
      * @param timeoutEvent  超时事件
@@ -87,17 +83,17 @@ public class EventPublisher {
 
     /**
      * 目录事件发布
-     * @param platformId  平台ID
+     * @param platform  平台ID
      * @param deviceChannels  设备通道集合
      * @param type  类型
      */
-	public void catalogEventPublish(Long platformId, List<CommonGbChannel> deviceChannels, String type) {
+	public void catalogEventPublish(Platform  platform, List<CommonGbChannel> deviceChannels, String type) {
 		CatalogEvent outEvent = new CatalogEvent(this);
         ArrayList<CommonGbChannel> channels = CollectionUtil.safeStream(deviceChannels).collect(Collectors.collectingAndThen(
             Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(CommonGbChannel::getGbDeviceId))), ArrayList::new));
         outEvent.setChannels(channels);
 		outEvent.setType(type);
-		outEvent.setPlatformId(platformId);
+		outEvent.setPlatform(platform);
 		applicationEventPublisher.publishEvent(outEvent);
 	}
 

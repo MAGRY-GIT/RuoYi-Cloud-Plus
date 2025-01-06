@@ -1,15 +1,14 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.domain.Group;
 import com.cdzeroly.wvp.domain.bean.SubscribeInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.domain.Region;
-import com.cdzeroly.wvp.gb28181.domian.bean.*;
+import com.cdzeroly.wvp.gb28181.bean.PlatformChannel;
 import com.cdzeroly.wvp.gb28181.event.EventPublisher;
 import com.cdzeroly.wvp.gb28181.event.subscribe.catalog.CatalogEvent;
 import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
@@ -18,7 +17,6 @@ import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommanderForPlatform;
 import com.cdzeroly.wvp.mapper.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -212,7 +210,12 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
 
     @Transactional
     public int addChannelList(Long platformId, List<CommonGbChannel> channelList) {
+        Platform platform = platformMapper.selectById(platformId);
+        if (platform == null) {
+            return 0;
+        }
         int result = platformChannelMapper.addChannels(platformId, channelList);
+
         if (result > 0) {
             // 查询通道相关的行政区划信息是否共享，如果没共享就添加
             Set<Region> regionListNotShare = getRegionNotShareByChannelList(channelList, platformId);
@@ -241,7 +244,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
             // 发送消息
             try {
                 // 发送catalog
-                eventPublisher.catalogEventPublish(platformId, channelList, CatalogEvent.ADD);
+                eventPublisher.catalogEventPublish(platform, channelList, CatalogEvent.ADD);
             } catch (Exception e) {
                 log.warn("[关联通道] 发送失败，数量：{}", channelList.size(), e);
             }
@@ -251,6 +254,10 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
 
     @Override
     public int removeAllChannel(Long platformId) {
+        Platform platform = platformMapper.selectById(platformId);
+        if (platform == null) {
+            return 0;
+        }
         List<CommonGbChannel> channelListShare = platformChannelMapper.queryShare(platformId, null);
         Assert.notEmpty(channelListShare, "未共享任何通道");
         int result = platformChannelMapper.removeChannelsWithPlatform(platformId, channelListShare);
@@ -275,7 +282,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
             // 发送消息
             try {
                 // 发送catalog
-                eventPublisher.catalogEventPublish(platformId, channelListShare, CatalogEvent.DEL);
+                eventPublisher.catalogEventPublish(platform, channelListShare, CatalogEvent.DEL);
             } catch (Exception e) {
                 log.warn("[移除全部关联通道] 发送失败，数量：{}", channelListShare.size(), e);
             }
@@ -299,6 +306,10 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
 
     @Transactional
     public int removeChannelList(Long platformId, List<CommonGbChannel> channelList) {
+        Platform platform = platformMapper.selectById(platformId);
+        if (platform == null) {
+            return 0;
+        }
         int result = platformChannelMapper.removeChannelsWithPlatform(platformId, channelList);
         if (result > 0) {
             // 查询通道相关的分组信息
@@ -321,7 +332,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
             // 发送消息
             try {
                 // 发送catalog
-                eventPublisher.catalogEventPublish(platformId, channelList, CatalogEvent.DEL);
+                eventPublisher.catalogEventPublish(platform, channelList, CatalogEvent.DEL);
             } catch (Exception e) {
                 log.warn("[移除关联通道] 发送失败，数量：{}", channelList.size(), e);
             }
@@ -421,12 +432,16 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
 
     @Override
     public void updateCustomChannel(PlatformChannel channel) {
+        Platform platform = platformMapper.selectById(channel.getPlatformId());
+        if (platform == null) {
+            return ;
+        }
         platformChannelMapper.updateCustomChannel(channel);
         CommonGbChannel commonGBChannel = platformChannelMapper.queryShareChannel(channel.getPlatformId(), channel.getGbId());
         // 发送消息
         try {
             // 发送catalog
-            eventPublisher.catalogEventPublish(channel.getPlatformId(), commonGBChannel, CatalogEvent.UPDATE);
+            eventPublisher.catalogEventPublish(platform, commonGBChannel, CatalogEvent.UPDATE);
         } catch (Exception e) {
             log.warn("[自定义通道信息] 发送失败， 平台ID： {}， 通道： {}（{}）", channel.getPlatformId(), channel.getGbName(), channel.getId(), e);
         }
@@ -462,7 +477,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
             // 发送消息
             try {
                 // 发送catalog
-                eventPublisher.catalogEventPublish(platform.getId(), channelListForEvent, CatalogEvent.DEL);
+                eventPublisher.catalogEventPublish(platform, channelListForEvent, CatalogEvent.DEL);
             } catch (Exception e) {
                 log.warn("[移除关联通道] 发送失败，数量：{}", channelList.size(), e);
             }
@@ -498,7 +513,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
             // 发送消息
             try {
                 // 发送catalog
-                eventPublisher.catalogEventPublish(platform.getId(), channelListForEvent, CatalogEvent.DEL);
+                eventPublisher.catalogEventPublish(platform, channelListForEvent, CatalogEvent.DEL);
             } catch (Exception e) {
                 log.warn("[移除关联通道] 发送失败，数量：{}", channelList.size(), e);
             }
@@ -527,7 +542,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
                 // 发送消息
                 try {
                     // 发送catalog
-                    eventPublisher.catalogEventPublish(platform.getId(), channelListForEvent, CatalogEvent.ADD);
+                    eventPublisher.catalogEventPublish(platform, channelListForEvent, CatalogEvent.ADD);
                 } catch (Exception e) {
                     log.warn("[移除关联通道] 发送失败，数量：{}", channelList.size(), e);
                 }
@@ -556,7 +571,7 @@ public class PlatformChannelServiceImpl implements IPlatformChannelService {
                 // 发送消息
                 try {
                     // 发送catalog
-                    eventPublisher.catalogEventPublish(platform.getId(), channelListForEvent, CatalogEvent.ADD);
+                    eventPublisher.catalogEventPublish(platform, channelListForEvent, CatalogEvent.ADD);
                 } catch (Exception e) {
                     log.warn("[移除关联通道] 发送失败，数量：{}", channelList.size(), e);
                 }

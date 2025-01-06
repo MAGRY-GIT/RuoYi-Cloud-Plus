@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.event.alarm;
 
-import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
+import com.cdzeroly.wvp.domain.DeviceAlarm;
 import org.springframework.context.ApplicationEvent;
 
 import java.io.Serial;

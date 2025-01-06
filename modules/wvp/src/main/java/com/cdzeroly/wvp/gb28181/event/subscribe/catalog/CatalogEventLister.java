@@ -1,8 +1,8 @@
 package com.cdzeroly.wvp.gb28181.event.subscribe.catalog;
 
 import com.cdzeroly.wvp.domain.bean.SubscribeInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.domain.bean.SubscribeHolder;
 import com.cdzeroly.wvp.gb28181.service.IPlatformChannelService;
 import com.cdzeroly.wvp.gb28181.service.IPlatformService;
@@ -44,11 +44,8 @@ public class CatalogEventLister implements ApplicationListener<CatalogEvent> {
 
         Map<String, List<Platform>> parentPlatformMap = new HashMap<>();
         Map<String, CommonGbChannel> channelMap = new HashMap<>();
-        if (event.getPlatformId() != null) {
-            parentPlatform = platformService.queryOne(event.getPlatformId());
-            if (parentPlatform == null) {
-                return;
-            }
+        if (event.getPlatform() != null) {
+            parentPlatform = event.getPlatform();
             subscribe = subscribeHolder.getCatalogSubscribe(parentPlatform.getServerGbId());
             if (subscribe == null) {
                 return;

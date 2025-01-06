@@ -5,7 +5,7 @@ import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.CommonCallback;
 
 import com.cdzeroly.wvp.domain.bean.SyncStatus;
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import com.cdzeroly.wvp.domain.bean.SipTransactionInfo;
 
 

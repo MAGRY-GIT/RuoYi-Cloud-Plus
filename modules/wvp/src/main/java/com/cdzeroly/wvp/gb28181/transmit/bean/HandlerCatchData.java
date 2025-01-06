@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.bean;
 
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import lombok.Getter;
 import lombok.Setter;
 import org.dom4j.Element;

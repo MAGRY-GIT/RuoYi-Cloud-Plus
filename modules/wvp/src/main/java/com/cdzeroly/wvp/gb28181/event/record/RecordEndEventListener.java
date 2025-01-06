@@ -1,6 +1,6 @@
 package com.cdzeroly.wvp.gb28181.event.record;
 
-import com.cdzeroly.wvp.gb28181.domian.bean.RecordInfo;
+import com.cdzeroly.wvp.gb28181.bean.RecordInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;

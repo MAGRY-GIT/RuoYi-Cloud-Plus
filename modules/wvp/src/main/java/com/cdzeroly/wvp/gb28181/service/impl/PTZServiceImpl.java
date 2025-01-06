@@ -1,13 +1,12 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
 import com.cdzeroly.common.core.exception.ServiceException;
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.bean.Preset;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.gb28181.bean.Preset;
 import com.cdzeroly.wvp.gb28181.service.IPTZService;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.sip.InvalidArgumentException;

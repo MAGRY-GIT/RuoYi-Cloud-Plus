@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.mapper;
 
 import com.cdzeroly.common.mybatis.core.mapper.BaseMapperPlus;
-import com.cdzeroly.wvp.gb28181.domian.DeviceAlarm;
+import com.cdzeroly.wvp.domain.DeviceAlarm;
 import com.cdzeroly.wvp.domain.vo.DeviceAlarmVo;
 import org.apache.ibatis.annotations.Mapper;
 

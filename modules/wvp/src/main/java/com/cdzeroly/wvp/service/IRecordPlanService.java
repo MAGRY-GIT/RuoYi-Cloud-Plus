@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.service;
 
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
 import com.cdzeroly.wvp.domain.RecordPlan;
 import com.cdzeroly.wvp.domain.bo.RecordPlanBo;
 import com.cdzeroly.wvp.domain.vo.RecordPlanVo;

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
 import com.cdzeroly.wvp.common.CivilCodePo;
-import com.cdzeroly.wvp.gb28181.domian.DeviceChannel;
 import com.cdzeroly.wvp.utils.CivilCodeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

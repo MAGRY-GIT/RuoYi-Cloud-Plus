@@ -1,11 +1,11 @@
 package com.cdzeroly.wvp.mapper;
 
 import com.cdzeroly.wvp.domain.Group;
-import com.cdzeroly.wvp.gb28181.domian.CommonGbChannel;
-import com.cdzeroly.wvp.gb28181.domian.Device;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.CommonGbChannel;
+import com.cdzeroly.wvp.domain.Device;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.domain.Region;
-import com.cdzeroly.wvp.gb28181.domian.bean.*;
+import com.cdzeroly.wvp.gb28181.bean.PlatformChannel;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -35,7 +35,7 @@ public interface PlatformChannelMapper   {
 
     List<Device> queryDeviceInfoByPlatformIdAndChannelId(@Param("platformId") String platformId, @Param("channelId") String channelId);
 
-    List<Long> queryParentPlatformByChannelId(@Param("channelId") String channelId);
+    List<Platform> queryParentPlatformByChannelId(@Param("channelId") String channelId);
 
 
     List<PlatformChannel> queryForPlatformForWebList(@Param("platformId") Long platformId, @Param("query") String query,

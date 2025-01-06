@@ -1,4 +1,4 @@
-package com.cdzeroly.wvp.gb28181.domian.bean;
+package com.cdzeroly.wvp.gb28181.bean;
 
 
 import lombok.Data;

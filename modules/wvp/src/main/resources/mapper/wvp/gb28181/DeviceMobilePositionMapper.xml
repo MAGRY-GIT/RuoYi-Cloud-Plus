@@ -9,7 +9,7 @@
     </delete>
 
     <select id="queryPositionByDeviceIdAndTime"
-            resultType="com.cdzeroly.wvp.gb28181.domian.MobilePosition">
+            resultType="com.cdzeroly.wvp.domain.MobilePosition">
         SELECT * FROM wvp_device_mobile_position
         WHERE device_id = #{deviceId}
         <if test="channelId != null">
@@ -25,7 +25,7 @@
 
 
     </select>
-    <select id="queryLatestPositionByDevice" resultType="com.cdzeroly.wvp.gb28181.domian.MobilePosition">
+    <select id="queryLatestPositionByDevice" resultType="com.cdzeroly.wvp.domain.MobilePosition">
         SELECT * FROM wvp_device_mobile_position WHERE device_id = #{deviceId} ORDER BY time DESC LIMIT 1
 
     </select>

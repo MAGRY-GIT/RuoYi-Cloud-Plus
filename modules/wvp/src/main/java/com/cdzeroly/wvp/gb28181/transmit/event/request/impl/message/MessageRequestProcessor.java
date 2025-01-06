@@ -1,8 +1,8 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message;
 
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import com.cdzeroly.wvp.gb28181.event.device.DeviceNotFoundEvent;
-import com.cdzeroly.wvp.gb28181.domian.Platform;
+import com.cdzeroly.wvp.domain.Platform;
 import com.cdzeroly.wvp.domain.bean.SsrcTransaction;
 import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
 import com.cdzeroly.wvp.gb28181.event.sip.SipEvent;
@@ -24,6 +24,7 @@ import org.springframework.stereotype.Component;
 import javax.sip.InvalidArgumentException;
 import javax.sip.RequestEvent;
 import javax.sip.SipException;
+import javax.sip.header.CSeqHeader;
 import javax.sip.header.CallIdHeader;
 import javax.sip.message.Response;
 import java.text.ParseException;
@@ -66,6 +67,7 @@ public class MessageRequestProcessor extends SIPRequestProcessorParent implement
     public void process(RequestEvent evt) {
         SIPRequest sipRequest = (SIPRequest)evt.getRequest();
 //        logger.info("接收到消息：" + evt.getRequest());
+        CSeqHeader cSeqHeader = sipRequest.getCSeqHeader();
         String deviceId = SipUtils.getUserIdFromFromHeader(evt.getRequest());
         CallIdHeader callIdHeader = sipRequest.getCallIdHeader();
         // 先从会话内查找
@@ -93,7 +95,7 @@ public class MessageRequestProcessor extends SIPRequestProcessorParent implement
                 // 不存在则回复404
                 responseAck(request, Response.NOT_FOUND, "device "+ deviceId +" not found");
                 log.warn("[设备未找到 ]deviceId: {}, callId: {}", deviceId, callIdHeader.getCallId());
-                SipEvent sipEvent = sipSubscribe.getSubscribe(callIdHeader.getCallId());
+                SipEvent sipEvent = sipSubscribe.getSubscribe(callIdHeader.getCallId() + cSeqHeader.getSeqNumber());
                 if (sipEvent != null && sipEvent.getErrorEvent() != null){
                     DeviceNotFoundEvent deviceNotFoundEvent = new DeviceNotFoundEvent(evt.getDialog());
                     deviceNotFoundEvent.setCallId(callIdHeader.getCallId());

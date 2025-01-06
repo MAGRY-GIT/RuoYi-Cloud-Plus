@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.conf;
 
-import com.cdzeroly.wvp.gb28181.domian.Platform;
-import com.cdzeroly.wvp.gb28181.domian.bean.PlatformCatch;
+import com.cdzeroly.wvp.domain.Platform;
+import com.cdzeroly.wvp.gb28181.bean.PlatformCatch;
 import com.cdzeroly.wvp.gb28181.service.IPlatformService;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommanderForPlatform;
 import com.cdzeroly.wvp.storager.IRedisCatchStorage;

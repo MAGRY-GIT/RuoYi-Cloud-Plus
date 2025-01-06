@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.gb28181;
 
 import com.cdzeroly.common.core.exception.ServiceException;
-import com.cdzeroly.wvp.gb28181.domian.Device;
+import com.cdzeroly.wvp.domain.Device;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
 import com.cdzeroly.wvp.gb28181.service.IDeviceService;
 import lombok.RequiredArgsConstructor;
