@@ -5,7 +5,6 @@ import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
 import com.cdzeroly.wvp.gb28181.event.sip.SipEvent;
 import com.cdzeroly.wvp.gb28181.transmit.event.request.ISIPRequestProcessor;
 import com.cdzeroly.wvp.gb28181.transmit.event.response.ISIPResponseProcessor;
-import com.cdzeroly.wvp.gb28181.transmit.event.timeout.ITimeoutProcessor;
 import gov.nist.javax.sip.message.SIPResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +32,6 @@ public class SIPProcessorObserver implements ISIPProcessorObserver {
     private static final Map<String, ISIPResponseProcessor> RESPONSE_PROCESSOR_MAP = new ConcurrentHashMap<>();
 
 
-    private static ITimeoutProcessor timeoutProcessor;
 
     private final SipSubscribe sipSubscribe;
 

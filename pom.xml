@@ -83,6 +83,7 @@
                 <nacos.config.group>DEFAULT_GROUP</nacos.config.group>
                 <nacos.username>nacos</nacos.username>
                 <nacos.password>nacos</nacos.password>
+                <nacos.ip>127.0.0.1</nacos.ip>
                 <logstash.address>127.0.0.1:4560</logstash.address>
             </properties>
             <activation>
@@ -94,12 +95,13 @@
             <id>prod</id>
             <properties>
                 <profiles.active>prod</profiles.active>
-                <nacos.server>127.0.0.1:8848</nacos.server>
+                <nacos.server>192.168.1.19:8848</nacos.server>
                 <nacos.discovery.group>DEFAULT_GROUP</nacos.discovery.group>
                 <nacos.config.group>DEFAULT_GROUP</nacos.config.group>
                 <nacos.username>nacos</nacos.username>
                 <nacos.password>nacos</nacos.password>
-                <logstash.address>127.0.0.1:4560</logstash.address>
+                <nacos.ip>192.168.1.19</nacos.ip>
+                <logstash.address>192.168.1.19:4560</logstash.address>
             </properties>
         </profile>
     </profiles>

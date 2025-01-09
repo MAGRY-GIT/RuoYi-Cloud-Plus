@@ -15,7 +15,7 @@ ENV SERVER_PORT=8080 LANG=C.UTF-8 LC_ALL=C.UTF-8 JAVA_OPTS=""
 
 EXPOSE ${SERVER_PORT}
 
-ADD ./target/cdzeroly-gateway.jar ./app.jar
+ADD ./target/gateway.jar ./app.jar
 
 ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom -Dserver.port=${SERVER_PORT} \
            #-Dskywalking.agent.service_name=gateway \

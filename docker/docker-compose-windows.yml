@@ -1,0 +1,392 @@
+services:
+  mysql:
+    image: mysql:8.0.33
+    container_name: base_platform_mysql
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+      # root 密码
+      MYSQL_ROOT_PASSWORD: root
+      # 初始化数据库
+      MYSQL_DATABASE: ry-cloud
+    ports:
+      - "3306:3306"
+    volumes:
+      # 数据挂载
+      - ./mysql/data/:/var/lib/mysql/
+      # 配置挂载
+      - ./mysql/conf/:/etc/mysql/conf.d/
+    command:
+      # 将mysql8.0默认密码策略 修改为 原先 策略 (mysql8.0对其默认策略做了更改 会导致密码无法匹配)
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
+      --lower_case_table_names=1
+    privileged: true
+    network_mode: "host"
+
+  nacos:
+    build:
+      context: ../visual/nacos
+      dockerfile: Dockerfile
+    container_name: base_platform_nacos
+    environment:
+      TZ: Asia/Shanghai
+      JAVA_OPTS: "-Xms256m -Xmx512m"
+    volumes:
+      # 日志目录 注意集群模式下 日志目录不能一致 需要区分例如 nacos1 nacos2
+      - ./nacos/logs/:/root/nacos/logs
+      # 集群配置文件 集群所有nacos都必须使用此文件
+      - ./nacos/conf/cluster.conf:/root/nacos/conf/cluster.conf
+    network_mode: "host"
+
+  redis:
+    image: redis:6.2.12
+    container_name: base_platform_redis
+    ports:
+      - "6379:6379"
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    volumes:
+      # 配置文件
+      - ./redis/conf:/redis/config
+      # 数据文件
+      - ./redis/data/:/redis/data/
+    command: "redis-server /redis/config/redis.conf"
+    privileged: true
+    network_mode: "host"
+
+  minio:
+    image: minio/minio:RELEASE.2023-03-24T21-41-23Z
+    container_name: base_platform_minio
+    ports:
+      # api 端口
+      - "9000:9000"
+      # 控制台端口
+      - "9001:9001"
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+      # 管理后台用户名
+      MINIO_ROOT_USER: admin
+      # 管理后台密码，最小8个字符
+      MINIO_ROOT_PASSWORD: admin123
+      # https需要指定域名
+      #MINIO_SERVER_URL: "https://xxx.com:9000"
+      #MINIO_BROWSER_REDIRECT_URL: "https://xxx.com:9001"
+      # 开启压缩 on 开启 off 关闭
+      MINIO_COMPRESS: "off"
+      # 扩展名 .pdf,.doc 为空 所有类型均压缩
+      MINIO_COMPRESS_EXTENSIONS: ""
+      # mime 类型 application/pdf 为空 所有类型均压缩
+      MINIO_COMPRESS_MIME_TYPES: ""
+    volumes:
+      # 映射当前目录下的data目录至容器内/data目录
+      - ./minio/data:/data
+      # 映射配置目录
+      - ./minio/config:/root/.minio/
+    command: server --address ':9000' --console-address ':9001' /data  # 指定容器中的目录 /data
+    privileged: true
+    network_mode: "host"
+
+  seata-server:
+    build:
+      context: ../visual/seata-server
+      dockerfile: Dockerfile
+    container_name: base_platform_seata_server
+    ports:
+      - "7091:7091"
+      - "8091:8091"
+    environment:
+      TZ: Asia/Shanghai
+      # 注意 此处ip如果是外网使用 要改为外网ip
+      SEATA_IP: 192.168.1.19
+      SEATA_PORT: 8091
+    volumes:
+      - ./seata-server/logs/:/cdzeroly/seata-server/logs
+      # skywalking 探针
+      - ./skywalking/agent/:/cdzeroly/skywalking/agent
+    privileged: true
+    network_mode: "host"
+
+  nginx-web:
+    image: nginx:1.22.1
+    container_name: base_platform_nginx-web
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # 证书映射
+      - ./nginx/cert:/etc/nginx/cert
+      # 配置文件映射
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      # 页面目录
+      - ./nginx/html:/usr/share/nginx/html
+      # 日志目录
+      - ./nginx/log:/var/log/nginx
+    privileged: true
+    network_mode: "host"
+
+  sentinel:
+    container_name: base_platform_sentinel
+    build:
+      context: ../visual/sentinel-dashboard
+      dockerfile: Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - "8718:8718"
+    volumes:
+      # 配置文件
+      - ./sentinel-dashboard/logs/:/cdzeroly/sentinel-dashboard/logs
+      # skywalking 探针
+      - ./skywalking/agent/:/cdzeroly/skywalking/agent
+    restart: always
+    network_mode: "host"
+
+  monitor:
+    build:
+      context: ../visual/monitor
+      dockerfile: Dockerfile
+    container_name: base_platform_monitor
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    ports:
+      - "9100:9100"
+    volumes:
+      # 配置文件
+      - ./monitor/logs/:/cdzeroly/monitor/logs
+      # skywalking 探针
+      - ./skywalking/agent/:/cdzeroly/skywalking/agent
+    privileged: true
+    network_mode: "host"
+
+  snailjob-server:
+    build:
+      context: ../visual/snailjob-server
+      dockerfile: Dockerfile
+    container_name: base_platform_snailjob_server
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    ports:
+      - "8800:8800"
+      - "17888:17888"
+    volumes:
+      - ./snailjob/logs/:/cdzeroly/snailjob/logs
+    privileged: true
+    network_mode: "host"
+
+  gateway:
+    build:
+      context: ../gateway
+      dockerfile: Dockerfile
+    container_name: base_platform_gateway
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    ports:
+      - "8080:8080"
+    volumes:
+      # 配置文件
+      - ./gateway/logs/:/cdzeroly/gateway/logs
+      # skywalking 探针
+      - ./skywalking/agent/:/cdzeroly/skywalking/agent
+    privileged: true
+    network_mode: "host"
+
+  auth:
+    build:
+      context: ../auth
+      dockerfile: Dockerfile
+    container_name: base_platform_auth
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    ports:
+      - "9210:9210"
+    volumes:
+      # 配置文件
+      - ./auth/logs/:/cdzeroly/auth/logs
+      # skywalking 探针
+      - ./skywalking/agent/:/cdzeroly/skywalking/agent
+    privileged: true
+    network_mode: "host"
+
+  system:
+    build:
+      context: ../modules/system
+      dockerfile: Dockerfile
+    container_name: base_platform_system
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    ports:
+      - "9201:9201"
+    volumes:
+      # 配置文件
+      - ./system/logs/:/cdzeroly/system/logs
+      # skywalking 探针
+      - ./skywalking/agent/:/cdzeroly/skywalking/agent
+    privileged: true
+    network_mode: "host"
+
+  gen:
+    build:
+      context: ../modules/gen
+      dockerfile: Dockerfile
+    container_name: base_platform_gen
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    ports:
+      - "9202:9202"
+    volumes:
+      # 配置文件
+      - ./gen/logs/:/cdzeroly/gen/logs
+      # skywalking 探针
+      - ./skywalking/agent/:/cdzeroly/skywalking/agent
+    privileged: true
+    network_mode: "host"
+
+  job:
+    build:
+      context: ../modules/job
+      dockerfile: Dockerfile
+    container_name: base_platform_job
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    ports:
+      - "9203:9203"
+    volumes:
+      # 配置文件
+      - ./job/logs/:/cdzeroly/job/logs
+      # skywalking 探针
+      - ./skywalking/agent/:/cdzeroly/skywalking/agent
+    privileged: true
+    network_mode: "host"
+
+  resource:
+    build:
+      context: ../modules/resource
+      dockerfile: Dockerfile
+    container_name: base_platform_resource
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    ports:
+      - "9204:9204"
+    volumes:
+      # 配置文件
+      - ./resource/logs/:/cdzeroly/resource/logs
+      # skywalking 探针
+      - ./skywalking/agent/:/cdzeroly/skywalking/agent
+    privileged: true
+    network_mode: "host"
+
+  workflow:
+    build:
+      context: ../modules/workflow
+      dockerfile: Dockerfile
+    container_name: base_platform_workflow
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    ports:
+      - "9205:9205"
+    volumes:
+      # 配置文件
+      - ./workflow/logs/:/cdzeroly/workflow/logs
+      # skywalking 探针
+      - ./skywalking/agent/:/cdzeroly/skywalking/agent
+    privileged: true
+    network_mode: "host"
+  #################################################################################################
+  #################################### 以下为扩展根据需求搭建 #########################################
+  #################################################################################################
+
+  rabbitmq:
+    image: rabbitmq:3.13.3
+    container_name: base_platform_rabbitmq
+    build:
+      context: ./rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: 123456
+    ports:
+      - "15672:15672" # 管理界面端口
+      - "5672:5672"   # api 端口
+    volumes:
+      - ./rabbitmq/log:/var/log/rabbitmq
+      - ./rabbitmq/data:/var/lib/rabbitmq
+    network_mode: "host"
+
+  ZLMediaKit:
+    image: zlmediakit/zlmediakit:master
+    container_name: base_platform_zlmediakit
+    ports:
+      - "1935:1935" # rtmp
+      - "8554:554"   # rtsp
+      - "9520:80"   # 服务的端口
+      - "443:443"   # https
+      - "9000:9000/udp"   # srt
+      - "8000:8000/udp"   # rtc
+      - "10000:10000"  #  rtp_proxy
+      - "10000:10000/udp"  #  rtp_proxy
+      - "30000-30500:30000-30500"   #rtsp服务器端口范围
+    network_mode: "host"
+    volumes:
+      - ./zlmediakit/logs/:/opt/media/bin/logs
+      - ./zlmediakit/conf/config.ini:/opt/media/conf/config.ini
+      - ./zlmediakit/conf/default.pem:/opt/media/bin/default.pem
+
+#  #此镜像为github action 持续集成自动编译推送，跟代码(master分支)保持最新状态
+#  sky-oap:
+#    image: apache/skywalking-oap-server:9.7.0
+#    container_name: sky-oap
+#    ports:
+#      - "11800:11800"
+#      - "12800:12800"
+#    environment:
+#      JAVA_OPTS: -Xms1G -Xmx2G
+#      #记录数据的有效期，单位天
+#      SW_CORE_RECORD_DATA_TTL: 7
+#      #分析指标数据的有效期，单位天
+#      SW_CORE_METRICS_DATA_TTL: 7
+#      SW_STORAGE: elasticsearch
+#      SW_STORAGE_ES_CLUSTER_NODES: 127.0.0.1:9200
+#      TZ: Asia/Shanghai
+#
+#
+#  sky-ui:
+#    image: apache/skywalking-ui:9.7.0
+#    container_name: sky-ui
+#    ports:
+#      - "18080:18080"
+#    environment:
+#      SW_SERVER_PORT: 18080
+#      SW_OAP_ADDRESS: http://127.0.0.1:12800
+#      TZ: Asia/Shanghai
+#    depends_on:
+#      - sky-oap
+
+
+  shardingproxy:
+    image: apache/shardingsphere-proxy:5.4.0
+    container_name: shardingsphere-proxy
+    command: server /data
+    ports:
+      - "3307:3307"
+    volumes:
+      - ./shardingproxy/conf:/opt/shardingsphere-proxy/conf
+      - ./shardingproxy/ext-lib:/opt/shardingsphere-proxy/ext-lib
+    environment:
+      - JVM_OPTS="-Djava.awt.headless=true"
+    network_mode: "host"
