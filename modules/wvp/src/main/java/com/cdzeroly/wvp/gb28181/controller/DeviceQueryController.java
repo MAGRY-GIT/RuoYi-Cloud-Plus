@@ -168,34 +168,6 @@ public class DeviceQueryController extends BaseController {
         return R.ok();
     }
 
-    /**
-     * 分页查询子目录通道
-     *
-     * @param deviceId    通道id
-     * @param channelId   通道id
-     * @param query       查询内容
-     * @param online      是否在线
-     * @param channelType 通道类型
-     * @return 子通道列表
-     */
-    @Operation(summary = "分页查询子目录通道")
-    @Parameter(name = "deviceId", description = "设备国标编号", required = true)
-    @Parameter(name = "channelId", description = "通道国标编号", required = true)
-    @Parameter(name = "page", description = "当前页", required = true)
-    @Parameter(name = "count", description = "每页查询数量", required = true)
-    @Parameter(name = "query", description = "查询内容")
-    @Parameter(name = "online", description = "是否在线")
-    @Parameter(name = "channelType", description = "设备/子目录-> false/true")
-    @GetMapping("/sub_channels/{deviceId}/{channelId}/channels")
-    public TableDataInfo<DeviceChannel> subChannels(PageQuery pageQuery, @PathVariable String deviceId, @PathVariable String channelId, @RequestParam(required = false) String query, @RequestParam(required = false) Boolean online, @RequestParam(required = false) Boolean channelType) {
-
-        DeviceChannel deviceChannel = deviceChannelService.getOne(deviceId, channelId);
-        if (deviceChannel == null) {
-            return new TableDataInfo<>();
-        }
-
-        return deviceChannelService.getSubChannels(deviceChannel.getDataDeviceId(), channelId, query, channelType, online, pageQuery);
-    }
 
 
 

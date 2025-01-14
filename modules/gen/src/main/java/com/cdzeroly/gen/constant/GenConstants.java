@@ -40,6 +40,10 @@ public interface GenConstants {
      * 上级菜单名称字段
      */
     String PARENT_MENU_NAME = "parentMenuName";
+    /**
+     * 坐标
+     */
+    String COLUMNTYPE_POINT = "point";
 
     /**
      * 数据库字符串类型
@@ -153,6 +157,10 @@ public interface GenConstants {
      * 长整型
      */
     String TYPE_LONG = "Long";
+    /**
+     * 坐标类型
+     */
+    String TYPE_POINT = "GeoPoint";
 
     /**
      * 浮点型

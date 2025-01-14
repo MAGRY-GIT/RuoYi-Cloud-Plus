@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 public enum NetProtocol {
 
-    TCP("TCP"), UDP("UDP");
+    TCP("TCP"), TCP_PASSIVE("TCP-PASSIVE"), UDP("UDP");
     /**
      * 协议类型
      */

@@ -425,7 +425,7 @@ public class DeviceServiceImpl implements IDeviceService {
     public void addDevice(Device device) {
         device.setOnLine(false);
         if(device.getStreamMode() == null) {
-            device.setStreamMode(NetProtocol.UDP.name());
+            device.setStreamMode(NetProtocol.TCP_PASSIVE.name());
         }
         deviceMapper.insert(device);
     }

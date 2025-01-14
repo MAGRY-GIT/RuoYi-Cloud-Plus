@@ -36,7 +36,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping("/deviceControl")
+@RequestMapping("/device")
 public class DeviceController {
 
     private final IDeviceService deviceService;
@@ -88,7 +88,7 @@ public class DeviceController {
 		String key = DeferredResultHolder.CALLBACK_CMD_DEVICECONTROL +  deviceId + channelId;
 		DeferredResult<ResponseEntity<WVPResult<String>>> result = new DeferredResult<>(3 * 1000L);
 		result.onTimeout(() -> {
-			log.warn(String.format("开始/停止录像操作超时, 设备未返回应答指令"));
+			log.warn("开始/停止录像操作超时, 设备未返回应答指令");
 			// 释放rtpserver
 			RequestMessage msg = new RequestMessage();
 			msg.setKey(key);

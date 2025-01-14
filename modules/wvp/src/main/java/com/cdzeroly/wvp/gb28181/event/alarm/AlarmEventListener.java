@@ -19,14 +19,15 @@ import javax.annotation.Resource;
 @Component
 public class AlarmEventListener implements ApplicationListener<AlarmEvent> {
 
-    @Resource
-    private SseSessionManager sseSessionManager;
+    // @Resource
+    // private SseSessionManager sseSessionManager;
 
     @Override
     public void onApplicationEvent(@NotNull AlarmEvent event) {
         if (log.isDebugEnabled()) {
             log.debug("设备报警事件触发, deviceId: {}, {}", event.getAlarmInfo().getDeviceId(), event.getAlarmInfo().getAlarmDescription());
         }
-        sseSessionManager.sendForAll("message", event.getAlarmInfo());
+        //TODO SSE 通知
+        // sseSessionManager.sendForAll("message", event.getAlarmInfo());
     }
 }

@@ -17,6 +17,7 @@ import gov.nist.javax.sip.message.SIPRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Element;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -159,12 +160,12 @@ public class RecordInfoResponseMessageHandler extends SIPRequestProcessorParent 
 
     }
 
-    public void releaseRequest(String deviceId, String sn,RecordInfo recordInfo){
+    public void releaseRequest(String deviceId, String sn,@NotNull RecordInfo recordInfo){
         String key = DeferredResultHolder.CALLBACK_CMD_RECORDINFO + deviceId + sn;
         // 对数据进行排序
-        if(recordInfo!=null && recordInfo.getRecordList()!=null) {
+        if(recordInfo.getRecordList() != null) {
             Collections.sort(recordInfo.getRecordList());
-        }else{
+        }else {
             recordInfo.setRecordList(new ArrayList<>());
         }
 

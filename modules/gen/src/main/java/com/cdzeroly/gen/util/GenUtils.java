@@ -70,6 +70,10 @@ public class GenUtils {
             else {
                 column.setJavaType(GenConstants.TYPE_LONG);
             }
+
+        }else if (GenConstants.COLUMNTYPE_POINT.equals(dataType)) {
+            column.setHtmlType(GenConstants.HTML_INPUT);
+            column.setJavaType(GenConstants.TYPE_POINT);
         }
 
         // BO对象 默认插入勾选

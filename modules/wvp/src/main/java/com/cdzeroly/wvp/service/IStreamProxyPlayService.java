@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.service;
 
 import com.cdzeroly.wvp.common.StreamInfo;
 import com.cdzeroly.wvp.domain.StreamProxy;
+import com.cdzeroly.wvp.domain.bean.ErrorCallback;
 
 /**
  * 流代理播放服务
@@ -15,6 +16,8 @@ public interface IStreamProxyPlayService {
      * @return
      */
     StreamInfo start(Long id);
+
+    void start(Long id, ErrorCallback<StreamInfo> callback);
 
     /**
      * 开启代理
