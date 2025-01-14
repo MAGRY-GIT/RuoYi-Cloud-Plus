@@ -1,7 +1,7 @@
 services:
   mysql:
     image: mysql:8.0.33
-    container_name: base_platform_mysql
+    container_name: platform_mysql
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -24,13 +24,17 @@ services:
       --explicit_defaults_for_timestamp=true
       --lower_case_table_names=1
     privileged: true
-    network_mode: "host"
+
 
   nacos:
     build:
       context: ../visual/nacos
       dockerfile: Dockerfile
-    container_name: base_platform_nacos
+    container_name: platform_nacos
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+      - "9849:9849"
     environment:
       TZ: Asia/Shanghai
       JAVA_OPTS: "-Xms256m -Xmx512m"
@@ -39,11 +43,11 @@ services:
       - ./nacos/logs/:/root/nacos/logs
       # 集群配置文件 集群所有nacos都必须使用此文件
       - ./nacos/conf/cluster.conf:/root/nacos/conf/cluster.conf
-    network_mode: "host"
+
 
   redis:
     image: redis:6.2.12
-    container_name: base_platform_redis
+    container_name: platform_redis
     ports:
       - "6379:6379"
     environment:
@@ -56,11 +60,11 @@ services:
       - ./redis/data/:/redis/data/
     command: "redis-server /redis/config/redis.conf"
     privileged: true
-    network_mode: "host"
+
 
   minio:
     image: minio/minio:RELEASE.2023-03-24T21-41-23Z
-    container_name: base_platform_minio
+    container_name: platform_minio
     ports:
       # api 端口
       - "9000:9000"
@@ -89,13 +93,13 @@ services:
       - ./minio/config:/root/.minio/
     command: server --address ':9000' --console-address ':9001' /data  # 指定容器中的目录 /data
     privileged: true
-    network_mode: "host"
+
 
   seata-server:
     build:
       context: ../visual/seata-server
       dockerfile: Dockerfile
-    container_name: base_platform_seata_server
+    container_name: platform_seata_server
     ports:
       - "7091:7091"
       - "8091:8091"
@@ -109,11 +113,10 @@ services:
       # skywalking 探针
       - ./skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-    network_mode: "host"
 
   nginx-web:
     image: nginx:1.22.1
-    container_name: base_platform_nginx-web
+    container_name: platform_nginx-web
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -130,10 +133,10 @@ services:
       # 日志目录
       - ./nginx/log:/var/log/nginx
     privileged: true
-    network_mode: "host"
+
 
   sentinel:
-    container_name: base_platform_sentinel
+    container_name: platform_sentinel
     build:
       context: ../visual/sentinel-dashboard
       dockerfile: Dockerfile
@@ -147,13 +150,13 @@ services:
       # skywalking 探针
       - ./skywalking/agent/:/cdzeroly/skywalking/agent
     restart: always
-    network_mode: "host"
+
 
   monitor:
     build:
       context: ../visual/monitor
       dockerfile: Dockerfile
-    container_name: base_platform_monitor
+    container_name: platform_monitor
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -165,13 +168,13 @@ services:
       # skywalking 探针
       - ./skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-    network_mode: "host"
+
 
   snailjob-server:
     build:
       context: ../visual/snailjob-server
       dockerfile: Dockerfile
-    container_name: base_platform_snailjob_server
+    container_name: platform_snailjob_server
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -181,13 +184,13 @@ services:
     volumes:
       - ./snailjob/logs/:/cdzeroly/snailjob/logs
     privileged: true
-    network_mode: "host"
+
 
   gateway:
     build:
       context: ../gateway
       dockerfile: Dockerfile
-    container_name: base_platform_gateway
+    container_name: platform_gateway
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -199,13 +202,13 @@ services:
       # skywalking 探针
       - ./skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-    network_mode: "host"
+
 
   auth:
     build:
       context: ../auth
       dockerfile: Dockerfile
-    container_name: base_platform_auth
+    container_name: platform_auth
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -217,13 +220,13 @@ services:
       # skywalking 探针
       - ./skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-    network_mode: "host"
+
 
   system:
     build:
       context: ../modules/system
       dockerfile: Dockerfile
-    container_name: base_platform_system
+    container_name: platform_system
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -235,13 +238,13 @@ services:
       # skywalking 探针
       - ./skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-    network_mode: "host"
+
 
   gen:
     build:
       context: ../modules/gen
       dockerfile: Dockerfile
-    container_name: base_platform_gen
+    container_name: platform_gen
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -253,13 +256,13 @@ services:
       # skywalking 探针
       - ./skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-    network_mode: "host"
+
 
   job:
     build:
       context: ../modules/job
       dockerfile: Dockerfile
-    container_name: base_platform_job
+    container_name: platform_job
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -271,13 +274,13 @@ services:
       # skywalking 探针
       - ./skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-    network_mode: "host"
+
 
   resource:
     build:
       context: ../modules/resource
       dockerfile: Dockerfile
-    container_name: base_platform_resource
+    container_name: platform_resource
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -289,13 +292,13 @@ services:
       # skywalking 探针
       - ./skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-    network_mode: "host"
+
 
   workflow:
     build:
       context: ../modules/workflow
       dockerfile: Dockerfile
-    container_name: base_platform_workflow
+    container_name: platform_workflow
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -307,14 +310,14 @@ services:
       # skywalking 探针
       - ./skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-    network_mode: "host"
+
   #################################################################################################
   #################################### 以下为扩展根据需求搭建 #########################################
   #################################################################################################
 
   rabbitmq:
     image: rabbitmq:3.13.3
-    container_name: base_platform_rabbitmq
+    container_name: platform_rabbitmq
     build:
       context: ./rabbitmq
     environment:
@@ -326,11 +329,11 @@ services:
     volumes:
       - ./rabbitmq/log:/var/log/rabbitmq
       - ./rabbitmq/data:/var/lib/rabbitmq
-    network_mode: "host"
+
 
   ZLMediaKit:
     image: zlmediakit/zlmediakit:master
-    container_name: base_platform_zlmediakit
+    container_name: platform_zlmediakit
     ports:
       - "1935:1935" # rtmp
       - "8554:554"   # rtsp
@@ -346,6 +349,20 @@ services:
       - ./zlmediakit/logs/:/opt/media/bin/logs
       - ./zlmediakit/conf/config.ini:/opt/media/conf/config.ini
       - ./zlmediakit/conf/default.pem:/opt/media/bin/default.pem
+
+  ZLMediaKit1:
+    image: zlmediakit/zlmediakit:master
+    container_name: platform_zlmediakit1
+    ports:
+      - "1936:1935" # rtmp
+      - "8555:554"   # rtsp
+      - "9530:80"   # 服务的端口
+      - "444:443"   # https
+      - "9001:9000/udp"   # srt
+      - "8001:8000/udp"   # rtc
+      - "10001:10000"  #  rtp_proxy
+      - "10001:10000/udp"  #  rtp_proxy
+
 
 #  #此镜像为github action 持续集成自动编译推送，跟代码(master分支)保持最新状态
 #  sky-oap:
@@ -389,4 +406,4 @@ services:
       - ./shardingproxy/ext-lib:/opt/shardingsphere-proxy/ext-lib
     environment:
       - JVM_OPTS="-Djava.awt.headless=true"
-    network_mode: "host"
+
