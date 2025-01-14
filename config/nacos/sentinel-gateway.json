@@ -30,5 +30,13 @@
         "limitApp": "default",
         "strategy": 0,
         "controlBehavior": 0
+  },
+  {
+        "resource": "wweather",
+        "count": 500,
+        "grade": 1,
+        "limitApp": "default",
+        "strategy": 0,
+        "controlBehavior": 0
   }
 ]

@@ -15,6 +15,7 @@
         <module>resource</module>
         <module>workflow</module>
         <module>wvp</module>
+        <module>weather</module>
     </modules>
 
     <artifactId>modules</artifactId>
