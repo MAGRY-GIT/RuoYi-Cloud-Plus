@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.gb28181.controller;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.cdzeroly.common.core.domain.R;
 import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.web.core.BaseController;
 import com.cdzeroly.wvp.common.InviteSessionType;
@@ -23,7 +24,6 @@ import com.cdzeroly.wvp.media.service.IMediaServerService;
 import com.cdzeroly.wvp.domain.bean.InviteErrorCode;
 import com.cdzeroly.wvp.utils.DateUtil;
 import com.cdzeroly.wvp.domain.vo.AudioBroadcastVo;
-import com.cdzeroly.wvp.domain.ErrorCode;
 import com.cdzeroly.wvp.domain.vo.StreamContentVo;
 import com.cdzeroly.wvp.domain.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,8 +36,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,7 +70,7 @@ public class PlayController extends BaseController {
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @Parameter(name = "channelId", description = "通道国标编号", required = true)
     @GetMapping("/start/{deviceId}/{channelId}")
-    public DeferredResult<WVPResult<StreamContentVo>> play(@PathVariable String deviceId, @PathVariable String channelId) {
+    public DeferredResult<R<StreamContentVo>> play(@PathVariable String deviceId, @PathVariable String channelId) {
 
         log.info("[开始点播] deviceId：{}, channelId：{}, ", deviceId, channelId);
         Assert.notNull(deviceId, "设备国标编号不可为NULL");
@@ -89,14 +87,12 @@ public class PlayController extends BaseController {
         requestMessage.setKey(key);
         String uuid = UUID.randomUUID().toString();
         requestMessage.setId(uuid);
-        DeferredResult<WVPResult<StreamContentVo>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
+        DeferredResult<R<StreamContentVo>> result = new DeferredResult<>(userSetting.getPlayTimeout().longValue());
 
         result.onTimeout(() -> {
             log.info("[点播等待超时] deviceId：{}, channelId：{}, ", deviceId, channelId);
             // 释放rtpserver
-            WVPResult<StreamInfo> wvpResult = new WVPResult<>();
-            wvpResult.setCode(ErrorCode.ERROR100.getCode());
-            wvpResult.setMsg("点播超时");
+            R<StreamInfo> wvpResult = R.fail("点播超时");
             requestMessage.setData(wvpResult);
             resultHolder.invokeAllResult(requestMessage);
             inviteStreamService.removeInviteInfoByDeviceAndChannel(InviteSessionType.PLAY, channel.getId());
@@ -107,34 +103,19 @@ public class PlayController extends BaseController {
         resultHolder.put(key, uuid, result);
 
         playService.play(newMediaServerItem, deviceId, channelId, null, (code, msg, streamInfo) -> {
-            WVPResult<StreamContentVo> wvpResult = new WVPResult<>();
+            R<StreamContentVo> wvpResult;
             if (code == InviteErrorCode.SUCCESS.getCode()) {
-                wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-                wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
-
                 if (streamInfo != null) {
-                    if (userSetting.getUseSourceIpAsStreamIp()) {
-                        streamInfo = streamInfo.clone();// 深拷贝
-                        String host;
-                        try {
-                            URL url = new URL(request.getRequestURL().toString());
-                            host = url.getHost();
-                        } catch (MalformedURLException e) {
-                            host = request.getLocalAddr();
-                        }
-                        streamInfo.channgeStreamIp(host);
-                    }
+                    streamInfo = StreamInfo.getStreamInfoClone(streamInfo, userSetting, request.getRequestURL(), request.getLocalAddr());
                     if (!ObjectUtils.isEmpty(newMediaServerItem.getTranscodeSuffix()) && !"null".equalsIgnoreCase(newMediaServerItem.getTranscodeSuffix())) {
                         streamInfo.setStream(streamInfo.getStream() + "_" + newMediaServerItem.getTranscodeSuffix());
                     }
-                    wvpResult.setData(new StreamContentVo(streamInfo));
+                    wvpResult = R.ok(new StreamContentVo(streamInfo));
                 } else {
-                    wvpResult.setCode(code);
-                    wvpResult.setMsg(msg);
+                    wvpResult = R.fail(code, msg);
                 }
             } else {
-                wvpResult.setCode(code);
-                wvpResult.setMsg(msg);
+                wvpResult = R.fail(code, msg);
             }
             requestMessage.setData(wvpResult);
             // 此处必须释放所有请求
@@ -142,6 +123,8 @@ public class PlayController extends BaseController {
         });
         return result;
     }
+
+
 
     @Operation(summary = "停止点播")
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
@@ -176,7 +159,7 @@ public class PlayController extends BaseController {
     @PostMapping("/convertStop/{key}")
     public void playConvertStop(@PathVariable String key, String mediaServerId) {
         if (mediaServerId == null) {
-            throw new ServiceException( "流媒体：" + mediaServerId + "不存在");
+            throw new ServiceException("流媒体：" + mediaServerId + "不存在");
         }
         MediaServer mediaInfo = mediaServerService.getOne(mediaServerId);
         if (mediaInfo == null) {
@@ -201,11 +184,11 @@ public class PlayController extends BaseController {
         }
         Device device = deviceService.getDeviceByDeviceId(deviceId);
         if (device == null) {
-            throw new ServiceException( "未找到设备： " + deviceId);
+            throw new ServiceException("未找到设备： " + deviceId);
         }
         DeviceChannel channel = deviceChannelService.getOne(deviceId, channelId);
         if (channel == null) {
-            throw new ServiceException( "未找到通道： " + channelId);
+            throw new ServiceException("未找到通道： " + channelId);
         }
 
         return playService.audioBroadcast(device, channel, broadcastMode);

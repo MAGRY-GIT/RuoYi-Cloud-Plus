@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * 记录国标点播的状态，包括实时预览，下载，录像回放
+ * @author MGARY
  */
 public interface IInviteStreamService {
 

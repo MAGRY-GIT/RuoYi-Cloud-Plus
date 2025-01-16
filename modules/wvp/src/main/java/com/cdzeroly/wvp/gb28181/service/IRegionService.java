@@ -29,7 +29,7 @@ public interface IRegionService {
 
     Region queryRegionByDeviceId(String regionDeviceId);
 
-    List<RegionTree> queryForTree(String query, Integer parent, Boolean hasChannel);
+    List<RegionTree> queryForTree(String query, Long parent, Boolean hasChannel);
 
     void syncFromChannel();
 

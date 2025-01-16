@@ -158,11 +158,11 @@ public interface DeviceChannelMapper extends BaseMapperPlus<DeviceChannel, Devic
 
     /**
      * 按源的设备 ID 获取一个
-     * @param deviceDbId
+     * @param dataDeviceId
      * @param channelId
      * @return
      */
-    DeviceChannel getOneByDeviceIdForSource(@Param("deviceDbId") Long deviceDbId, @Param("channelId") String channelId);
+    DeviceChannel getOneByDeviceIdForSource(@Param("dataDeviceId") Long dataDeviceId, @Param("channelId") String channelId);
 
     /**
      * 按 ID 停止播放

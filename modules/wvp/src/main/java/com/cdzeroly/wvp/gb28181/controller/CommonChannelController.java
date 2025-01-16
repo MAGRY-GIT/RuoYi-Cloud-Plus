@@ -29,8 +29,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 
@@ -235,17 +233,7 @@ public class CommonChannelController extends BaseController {
             if (code == InviteErrorCode.SUCCESS.getCode()) {
                 WVPResult<StreamContentVo> wvpResult = WVPResult.success();
                 if (streamInfo != null) {
-                    if (userSetting.getUseSourceIpAsStreamIp()) {
-                        streamInfo=streamInfo.clone();//深拷贝
-                        String host;
-                        try {
-                            URL url=new URL(request.getRequestURL().toString());
-                            host=url.getHost();
-                        } catch (MalformedURLException e) {
-                            host=request.getLocalAddr();
-                        }
-                        streamInfo.channgeStreamIp(host);
-                    }
+                    streamInfo = StreamInfo.getStreamInfoClone(streamInfo, userSetting, request.getRequestURL(), request.getLocalAddr());
                     if (!ObjectUtils.isEmpty(streamInfo.getMediaServer().getTranscodeSuffix())
                             && !"null".equalsIgnoreCase(streamInfo.getMediaServer().getTranscodeSuffix())) {
                         streamInfo.setStream(streamInfo.getStream() + "_" + streamInfo.getMediaServer().getTranscodeSuffix());

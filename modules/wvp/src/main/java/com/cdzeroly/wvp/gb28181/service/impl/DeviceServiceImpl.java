@@ -507,7 +507,7 @@ public class DeviceServiceImpl implements IDeviceService {
     }
 
     @Override
-    public void subscribeCatalog(int id, int cycle) {
+    public void subscribeCatalog(Long id, int cycle) {
         Device device = deviceMapper.selectById(id);
         Assert.notNull(device, "未找到设备");
         if (device.getSubscribeCycleForCatalog() == cycle) {
@@ -537,7 +537,7 @@ public class DeviceServiceImpl implements IDeviceService {
     }
 
     @Override
-    public void subscribeMobilePosition(int id, int cycle, int interval) {
+    public void subscribeMobilePosition(Long id, int cycle, int interval) {
         Device device = deviceMapper.selectById(id);
         Assert.notNull(device, "未找到设备");
         if (device.getSubscribeCycleForMobilePosition() == cycle) {

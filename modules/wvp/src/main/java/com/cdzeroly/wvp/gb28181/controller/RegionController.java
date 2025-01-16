@@ -55,7 +55,7 @@ public class RegionController {
     @Parameter(name = "query", description = "要搜索的内容", required = true)
     @Parameter(name = "parent", description = "所属行政区划编号", required = true)
     @GetMapping("/tree/list")
-    public R<List<RegionTree>> queryForTree(@RequestParam(required = false) String query, @RequestParam(required = false) Integer parent, @RequestParam(required = false) Boolean hasChannel) {
+    public R<List<RegionTree>> queryForTree(@RequestParam(required = false) String query, @RequestParam(required = false) Long parent, @RequestParam(required = false) Boolean hasChannel) {
         if (ObjectUtils.isEmpty(query)) {
             query = null;
         }
@@ -72,7 +72,7 @@ public class RegionController {
 
     @Operation(summary = "删除区域")
     @Parameter(name = "id", description = "区域ID", required = true)
-    @DeleteMapping("")
+    @DeleteMapping()
     public R<Void> delete(Long id) {
         Assert.notNull(id, "区域ID需要存在");
         boolean result = regionService.deleteByDeviceId(id);

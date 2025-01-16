@@ -30,7 +30,7 @@ public interface RegionMapper extends BaseMapperPlus<Region, RegionVo> {
 
 
 
-    List<RegionTree> queryForTree(@Param("query") String query, @Param("parentId") Integer parentId);
+    List<RegionTree> queryForTree(@Param("query") String query, @Param("parentId") Long parentId);
 
 
     List<Region> queryInRegionListByDeviceId(List<Region> regionList);

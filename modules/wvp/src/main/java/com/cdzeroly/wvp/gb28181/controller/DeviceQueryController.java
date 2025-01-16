@@ -386,7 +386,7 @@ public class DeviceQueryController extends BaseController {
     @Operation(summary = "开启/关闭目录订阅")
     @Parameter(name = "id", description = "通道的Id", required = true)
     @Parameter(name = "cycle", description = "订阅周期", required = true)
-    public void subscribeCatalog(int id, int cycle) {
+    public void subscribeCatalog(Long id, int cycle) {
         deviceService.subscribeCatalog(id, cycle);
     }
 
@@ -395,7 +395,7 @@ public class DeviceQueryController extends BaseController {
     @Parameter(name = "id", description = "通道的Id", required = true)
     @Parameter(name = "cycle", description = "订阅周期", required = true)
     @Parameter(name = "interval", description = "报送间隔", required = true)
-    public void subscribeMobilePosition(int id, int cycle, int interval) {
+    public void subscribeMobilePosition(Long id, int cycle, int interval) {
         deviceService.subscribeMobilePosition(id, cycle, interval);
     }
 }

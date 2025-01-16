@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
+import com.cdzeroly.common.core.domain.R;
 import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.web.core.BaseController;
 import com.cdzeroly.wvp.common.StreamInfo;
@@ -63,12 +64,12 @@ public class GBRecordController extends BaseController {
 	@Parameter(name = "startTime", description = "开始时间", required = true)
 	@Parameter(name = "endTime", description = "结束时间", required = true)
 	@GetMapping("/query/{deviceId}/{channelId}")
-	public DeferredResult<WVPResult<RecordInfo>> recordinfo(@PathVariable String deviceId, @PathVariable String channelId, String startTime, String endTime){
+	public DeferredResult<R<RecordInfo>> recordInfo(@PathVariable String deviceId, @PathVariable String channelId, String startTime, String endTime){
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("录像信息查询 API调用，deviceId：%s ，startTime：%s， endTime：%s",deviceId, startTime, endTime));
+			log.debug("录像信息查询 API调用，deviceId：{} ，startTime：{}， endTime：{}", deviceId, startTime, endTime);
 		}
-		DeferredResult<WVPResult<RecordInfo>> result = new DeferredResult<>();
+		DeferredResult<R<RecordInfo>> result = new DeferredResult<>();
 
 
 		Device device = deviceService.getDeviceByDeviceId(deviceId);
@@ -81,24 +82,18 @@ public class GBRecordController extends BaseController {
 		msg.setKey(key);
 		try {
 			cmder.recordInfoQuery(device, channelId, startTime, endTime, sn, null, null, null, (eventResult -> {
-				WVPResult<RecordInfo> wvpResult = new WVPResult<>();
-				wvpResult.setCode(ErrorCode.ERROR100.getCode());
-				wvpResult.setMsg("查询录像失败, status: " +  eventResult.statusCode + ", message: " + eventResult.msg);
-				msg.setData(wvpResult);
+
+				msg.setData(R.fail("查询录像失败, status: " +  eventResult.statusCode + ", message: " + eventResult.msg));
 				resultHolder.invokeResult(msg);
 			}));
 		} catch (InvalidArgumentException | SipException | ParseException e) {
 			log.error("[命令发送失败] 查询录像: {}", e.getMessage());
 			throw new ServiceException( "命令发送失败: " +  e.getMessage());
 		}
-
 		// 录像查询以channelId作为deviceId查询
 		resultHolder.put(key, uuid, result);
 		result.onTimeout(()->{
-			msg.setData("timeout");
-			WVPResult<RecordInfo> wvpResult = new WVPResult<>();
-			wvpResult.setCode(ErrorCode.ERROR100.getCode());
-			wvpResult.setMsg("timeout");
+            R<Object> wvpResult = R.fail("timeout");
 			msg.setData(wvpResult);
 			resultHolder.invokeResult(msg);
 		});
@@ -113,7 +108,7 @@ public class GBRecordController extends BaseController {
 	@Parameter(name = "endTime", description = "结束时间", required = true)
 	@Parameter(name = "downloadSpeed", description = "下载倍速", required = true)
 	@GetMapping("/download/start/{deviceId}/{channelId}")
-	public DeferredResult<WVPResult<StreamContentVo>> download(@PathVariable String deviceId, @PathVariable String channelId,
+	public DeferredResult<R<StreamContentVo>> download(@PathVariable String deviceId, @PathVariable String channelId,
                                                                String startTime, String endTime, String downloadSpeed) {
 
 		if (log.isDebugEnabled()) {
@@ -122,7 +117,7 @@ public class GBRecordController extends BaseController {
 
 		String uuid = UUID.randomUUID().toString();
 		String key = DeferredResultHolder.CALLBACK_CMD_DOWNLOAD + deviceId + channelId;
-		DeferredResult<WVPResult<StreamContentVo>> result = new DeferredResult<>(30000L);
+		DeferredResult<R<StreamContentVo>> result = new DeferredResult<>(30000L);
 		resultHolder.put(key, uuid, result);
 		RequestMessage requestMessage = new RequestMessage();
 		requestMessage.setId(uuid);
@@ -140,23 +135,18 @@ public class GBRecordController extends BaseController {
 			throw new ServiceException( "未找到通道：" + channelId);
 		}
 		playService.download(device, channel, startTime, endTime, Integer.parseInt(downloadSpeed),
-		(code, msg, data)->{
+		(code, msg, streamInfo)->{
 
-			WVPResult<StreamContentVo> wvpResult = new WVPResult<>();
+			R<StreamContentVo> wvpResult = null;
 			if (code == InviteErrorCode.SUCCESS.getCode()) {
-				wvpResult.setCode(ErrorCode.SUCCESS.getCode());
-				wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
-
-				if (data != null) {
-					StreamInfo streamInfo = (StreamInfo)data;
+				if (streamInfo != null) {
 					if (userSetting.getUseSourceIpAsStreamIp()) {
 						streamInfo.channgeStreamIp(request.getLocalAddr());
 					}
-					wvpResult.setData(new StreamContentVo(streamInfo));
+                    wvpResult = R.ok(new StreamContentVo(streamInfo));
 				}
 			}else {
-				wvpResult.setCode(code);
-				wvpResult.setMsg(msg);
+                wvpResult = R.fail(code,msg);
 			}
 			requestMessage.setData(wvpResult);
 			resultHolder.invokeResult(requestMessage);

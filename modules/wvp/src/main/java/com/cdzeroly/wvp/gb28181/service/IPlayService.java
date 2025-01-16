@@ -24,6 +24,7 @@ import java.text.ParseException;
 
 /**
  * 点播处理
+ * @author MAGRY
  */
 public interface IPlayService {
 

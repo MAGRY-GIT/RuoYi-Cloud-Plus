@@ -1,6 +1,9 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ArrayUtil;
 import com.alibaba.fastjson2.JSON;
+import com.cdzeroly.common.redis.utils.RedisUtils;
 import com.cdzeroly.wvp.common.*;
 import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.domain.Device;
@@ -11,6 +14,10 @@ import com.cdzeroly.wvp.media.event.media.MediaDepartureEvent;
 import com.cdzeroly.wvp.domain.bean.ErrorCallback;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RMap;
+import org.redisson.api.RMapCache;
+import org.redisson.api.RMapReactive;
+import org.redisson.api.options.MapCacheOptions;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,8 +25,10 @@ import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -79,17 +88,14 @@ public class InviteStreamServiceImpl implements IInviteStreamService {
         InviteInfo inviteInfoForUpdate;
 
         if (InviteSessionStatus.READY == inviteInfo.getStatus()) {
-            if (inviteInfo.getDeviceId() == null || inviteInfo.getChannelId() == null
-                    || inviteInfo.getType() == null || inviteInfo.getStream() == null
-            ) {
+            if (inviteInfo.getDeviceId() == null || inviteInfo.getChannelId() == null || inviteInfo.getType() == null || inviteInfo.getStream() == null) {
                 return;
             }
             inviteInfoForUpdate = inviteInfo;
         } else {
             InviteInfo inviteInfoInRedis = getInviteInfo(inviteInfo.getType(), inviteInfo.getChannelId(), inviteInfo.getStream());
             if (inviteInfoInRedis == null) {
-                log.warn("[更新Invite信息]，未从缓存中读取到Invite信息： deviceId: {}, channel: {}, stream: {}",
-                        inviteInfo.getDeviceId(), inviteInfo.getChannelId(), inviteInfo.getStream());
+                log.warn("[更新Invite信息]，未从缓存中读取到Invite信息： deviceId: {}, channel: {}, stream: {}", inviteInfo.getDeviceId(), inviteInfo.getChannelId(), inviteInfo.getStream());
                 return;
             }
             if (inviteInfo.getStreamInfo() != null) {
@@ -117,14 +123,11 @@ public class InviteStreamServiceImpl implements IInviteStreamService {
         if (inviteInfoForUpdate.getCreateTime() == null) {
             inviteInfoForUpdate.setCreateTime(System.currentTimeMillis());
         }
-        String key = VideoManagerConstants.INVITE_PREFIX;
-        String objectKey = inviteInfoForUpdate.getType() +
-                ":" + inviteInfoForUpdate.getChannelId() +
-                ":" + inviteInfoForUpdate.getStream();
+        String objectKey = inviteInfoForUpdate.getType() + ":" + inviteInfoForUpdate.getChannelId() + ":" + inviteInfoForUpdate.getStream();
         if (time != null && time > 0) {
             inviteInfoForUpdate.setExpirationTime(time);
         }
-        redisTemplate.opsForHash().put(key, objectKey, inviteInfoForUpdate);
+        RedisUtils.setCacheMapValue(VideoManagerConstants.INVITE_PREFIX, objectKey, inviteInfoForUpdate);
     }
 
     @Override
@@ -135,10 +138,7 @@ public class InviteStreamServiceImpl implements IInviteStreamService {
             return null;
         }
         removeInviteInfo(inviteInfoInDb);
-        String key = VideoManagerConstants.INVITE_PREFIX;
-        String objectKey = inviteInfo.getType() +
-                ":" + inviteInfo.getChannelId() +
-                ":" + stream;
+        String objectKey = inviteInfo.getType() + ":" + inviteInfo.getChannelId() + ":" + stream;
         inviteInfoInDb.setStream(stream);
         if (inviteInfoInDb.getSsrcInfo() != null) {
             inviteInfoInDb.getSsrcInfo().setString(stream);
@@ -149,40 +149,37 @@ public class InviteStreamServiceImpl implements IInviteStreamService {
         if (inviteInfoInDb.getCreateTime() == null) {
             inviteInfoInDb.setCreateTime(System.currentTimeMillis());
         }
-        redisTemplate.opsForHash().put(key, objectKey, inviteInfoInDb);
+        RedisUtils.setCacheMapValue(VideoManagerConstants.INVITE_PREFIX, objectKey, inviteInfoInDb);
+
         return inviteInfoInDb;
     }
 
     @Override
     public InviteInfo getInviteInfo(InviteSessionType type, Long channelId, String stream) {
-        String key = VideoManagerConstants.INVITE_PREFIX;
-        String keyPattern = (type != null ? type : "*") +
-                ":" + (channelId != null ? channelId : "*") +
-                ":" + (stream != null ? stream : "*");
-        ScanOptions options = ScanOptions.scanOptions().match(keyPattern).count(20).build();
-        try (Cursor<Map.Entry<Object, Object>> cursor = redisTemplate.opsForHash().scan(key, options)) {
-            if (cursor.hasNext()) {
-                InviteInfo inviteInfo = (InviteInfo) cursor.next().getValue();
-                cursor.close();
-                return inviteInfo;
+        String keyPattern = "^"+ (type != null ? type : "(\\w+)") + ":" + (channelId != null ? channelId : "(\\w+)") + ":" + (stream != null ? stream : "(\\w+)")+"$";
 
-            }
-        } catch (Exception e) {
-            log.error("[Redis-InviteInfo] 查询异常: ", e);
+        Map<String, InviteInfo> map = RedisUtils.getCacheMap(VideoManagerConstants.INVITE_PREFIX);
+
+        if (map == null) {
+            return null;
         }
-        return null;
+        Map<String, InviteInfo> filter = MapUtil.filter(map, entry -> entry.getKey().matches(keyPattern));
+        if (filter.isEmpty()) {
+            return null;
+        }
+        return filter.get(0);
     }
 
     @Override
     public List<InviteInfo> getAllInviteInfo() {
         List<InviteInfo> result = new ArrayList<>();
-        String key = VideoManagerConstants.INVITE_PREFIX;
-        List<Object> values = redisTemplate.opsForHash().values(key);
-        if(values.isEmpty()) {
+        Collection<Object> values = RedisUtils.getCacheMapValue(VideoManagerConstants.INVITE_PREFIX);
+
+        if (values.isEmpty()) {
             return result;
         }
         for (Object value : values) {
-            result.add((InviteInfo)value);
+            result.add((InviteInfo) value);
         }
         return result;
     }
@@ -201,15 +198,13 @@ public class InviteStreamServiceImpl implements IInviteStreamService {
     public void removeInviteInfo(InviteSessionType type, Long channelId, String stream) {
         String key = VideoManagerConstants.INVITE_PREFIX;
         if (type == null && channelId == null && stream == null) {
-            redisTemplate.opsForHash().delete(key);
+            RedisUtils.deleteObject(key);
             return;
         }
         InviteInfo inviteInfo = getInviteInfo(type, channelId, stream);
         if (inviteInfo != null) {
-            String objectKey = inviteInfo.getType() +
-                    ":" + inviteInfo.getChannelId() +
-                    ":" + inviteInfo.getStream();
-            redisTemplate.opsForHash().delete(key, objectKey);
+            String objectKey = inviteInfo.getType() + ":" + inviteInfo.getChannelId() + ":" + inviteInfo.getStream();
+            RedisUtils.delCacheMapValue(key, objectKey);
         }
     }
 
@@ -254,17 +249,13 @@ public class InviteStreamServiceImpl implements IInviteStreamService {
     @Override
     public int getStreamInfoCount(String mediaServerId) {
         int count = 0;
-        String key = VideoManagerConstants.INVITE_PREFIX;
-        List<Object> values = redisTemplate.opsForHash().values(key);
+        Collection<Object> values = RedisUtils.getCacheMapValue(VideoManagerConstants.INVITE_PREFIX);
         if (values.isEmpty()) {
             return count;
         }
         for (Object value : values) {
-            InviteInfo inviteInfo = (InviteInfo)value;
-            if (inviteInfo != null
-                    && inviteInfo.getStreamInfo() != null
-                    && inviteInfo.getStreamInfo().getMediaServer() != null
-                    && inviteInfo.getStreamInfo().getMediaServer().getId().equals(mediaServerId)) {
+            InviteInfo inviteInfo = (InviteInfo) value;
+            if (inviteInfo != null && inviteInfo.getStreamInfo() != null && inviteInfo.getStreamInfo().getMediaServer() != null && inviteInfo.getStreamInfo().getMediaServer().getId().equals(mediaServerId)) {
                 if (inviteInfo.getType().equals(InviteSessionType.DOWNLOAD) && inviteInfo.getStreamInfo().getProgress() == 1) {
                     continue;
                 }
@@ -319,26 +310,23 @@ public class InviteStreamServiceImpl implements IInviteStreamService {
             return null;
         }
         removeInviteInfo(inviteInfoInDb);
-        String key = VideoManagerConstants.INVITE_PREFIX;
-        String objectKey = inviteInfo.getType() +
-                ":" + inviteInfo.getChannelId() +
-                ":" + inviteInfo.getStream();
+        String objectKey = inviteInfo.getType() + ":" + inviteInfo.getChannelId() + ":" + inviteInfo.getStream();
         if (inviteInfoInDb.getSsrcInfo() != null) {
             inviteInfoInDb.getSsrcInfo().setSsrc(ssrc);
         }
-        redisTemplate.opsForHash().put(key, objectKey, inviteInfoInDb);
+        RedisUtils.setCacheMapValue(VideoManagerConstants.INVITE_PREFIX, objectKey, inviteInfoInDb);
         return inviteInfoInDb;
     }
 
-    @Scheduled(fixedRate = 10000)   //定时检测,清理错误的redis数据,防止因为错误数据导致的点播不可用
-    public void execute(){
+    @Scheduled(fixedRate = 10000)   // 定时检测,清理错误的redis数据,防止因为错误数据导致的点播不可用
+    public void execute() {
         String key = VideoManagerConstants.INVITE_PREFIX;
-        if(redisTemplate.opsForHash().size(key) == 0) {
+        if ( !RedisUtils.isExistsObject(key)) {
             return;
         }
-        List<Object> values = redisTemplate.opsForHash().values(key);
+        Collection<Object> values =RedisUtils.getCacheMapValue( key);
         for (Object value : values) {
-            InviteInfo inviteInfo = (InviteInfo)value;
+            InviteInfo inviteInfo = (InviteInfo) value;
             if (inviteInfo.getStreamInfo() != null) {
                 continue;
             }

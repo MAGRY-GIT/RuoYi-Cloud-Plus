@@ -34,8 +34,6 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.sip.InvalidArgumentException;
 import javax.sip.SipException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.ParseException;
 import java.util.UUID;
 
@@ -104,19 +102,9 @@ public class PlaybackController extends BaseController {
 						wvpResult.setMsg(ErrorCode.SUCCESS.getMsg());
 
 						if (data != null) {
-							StreamInfo streamInfo = (StreamInfo)data;
-							if (userSetting.getUseSourceIpAsStreamIp()) {
-								streamInfo=streamInfo.clone();//深拷贝
-								String host;
-								try {
-									URL url=new URL(request.getRequestURL().toString());
-									host=url.getHost();
-								} catch (MalformedURLException e) {
-									host=request.getLocalAddr();
-								}
-								streamInfo.channgeStreamIp(host);
-							}
-							wvpResult.setData(new StreamContentVo(streamInfo));
+							StreamInfo streamInfo = data;
+                            streamInfo = StreamInfo.getStreamInfoClone(streamInfo, userSetting, request.getRequestURL(), request.getLocalAddr());
+                            wvpResult.setData(new StreamContentVo(streamInfo));
 						}
 					}else {
 						wvpResult.setCode(code);

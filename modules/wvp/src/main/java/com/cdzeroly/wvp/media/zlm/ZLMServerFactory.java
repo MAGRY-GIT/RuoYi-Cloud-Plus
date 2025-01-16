@@ -16,7 +16,10 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class ZLMServerFactory {
-    private ZLMRESTFullUtils zlmresTfulUtils;
+
+
+
+    private final ZLMRESTFullUtils zlmresTfulUtils;
 
 
     /**

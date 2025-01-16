@@ -11,9 +11,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @description: 异步请求处理
+ *  异步请求处理
  * @author swwheihei
- * @date:   2020年5月8日 下午7:59:05
  */
 @SuppressWarnings(value = {"rawtypes", "unchecked"})
 @Component
@@ -55,21 +54,21 @@ public class DeferredResultHolder {
 
 	public static final String CALLBACK_CMD_SNAP= "CALLBACK_SNAP";
 
-	private Map<String, Map<String, DeferredResultEx>> map = new ConcurrentHashMap<>();
+	private final Map<String, Map<String, DeferredResultEx>> MAP = new ConcurrentHashMap<>();
 
 
 	public void put(String key, String id, DeferredResultEx result) {
-        Map<String, DeferredResultEx> deferredResultMap = map.computeIfAbsent(key, k -> new ConcurrentHashMap<>());
+        Map<String, DeferredResultEx> deferredResultMap = MAP.computeIfAbsent(key, k -> new ConcurrentHashMap<>());
         deferredResultMap.put(id, result);
 	}
 
 	public void put(String key, String id, DeferredResult result) {
-        Map<String, DeferredResultEx> deferredResultMap = map.computeIfAbsent(key, k -> new ConcurrentHashMap<>());
+        Map<String, DeferredResultEx> deferredResultMap = MAP.computeIfAbsent(key, k -> new ConcurrentHashMap<>());
         deferredResultMap.put(id, new DeferredResultEx(result));
 	}
 
 	public DeferredResultEx get(String key, String id) {
-		Map<String, DeferredResultEx> deferredResultMap = map.get(key);
+		Map<String, DeferredResultEx> deferredResultMap = MAP.get(key);
 		if (deferredResultMap == null || ObjectUtils.isEmpty(id)) {
 			return null;
 		}
@@ -77,7 +76,7 @@ public class DeferredResultHolder {
 	}
 
 	public Collection<DeferredResultEx> getAllByKey(String key) {
-		Map<String, DeferredResultEx> deferredResultMap = map.get(key);
+		Map<String, DeferredResultEx> deferredResultMap = MAP.get(key);
 		if (deferredResultMap == null) {
 			return null;
 		}
@@ -88,7 +87,7 @@ public class DeferredResultHolder {
 		if (key == null) {
 			return false;
 		}
-		Map<String, DeferredResultEx> deferredResultMap = map.get(key);
+		Map<String, DeferredResultEx> deferredResultMap = MAP.get(key);
 		if (id == null) {
 			return deferredResultMap != null;
 		}else {
@@ -101,7 +100,7 @@ public class DeferredResultHolder {
 	 * @param msg
 	 */
 	public void invokeResult(RequestMessage msg) {
-		Map<String, DeferredResultEx> deferredResultMap = map.get(msg.getKey());
+		Map<String, DeferredResultEx> deferredResultMap = MAP.get(msg.getKey());
 		if (deferredResultMap == null) {
 			return;
 		}
@@ -112,7 +111,7 @@ public class DeferredResultHolder {
 		result.getDeferredResult().setResult(msg.getData());
 		deferredResultMap.remove(msg.getId());
 		if (deferredResultMap.isEmpty()) {
-			map.remove(msg.getKey());
+			MAP.remove(msg.getKey());
 		}
 	}
 
@@ -121,12 +120,12 @@ public class DeferredResultHolder {
 	 * @param msg
 	 */
 	public void invokeAllResult(RequestMessage msg) {
-		Map<String, DeferredResultEx> deferredResultMap = map.get(msg.getKey());
+		Map<String, DeferredResultEx> deferredResultMap = MAP.get(msg.getKey());
 		if (deferredResultMap == null) {
 			return;
 		}
 		synchronized (this) {
-			deferredResultMap = map.get(msg.getKey());
+			deferredResultMap = MAP.get(msg.getKey());
 			if (deferredResultMap == null) {
 				return;
 			}
@@ -144,7 +143,7 @@ public class DeferredResultHolder {
 				}
 
 			}
-			map.remove(msg.getKey());
+			MAP.remove(msg.getKey());
 		}
 	}
 

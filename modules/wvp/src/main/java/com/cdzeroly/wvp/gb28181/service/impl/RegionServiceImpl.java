@@ -137,7 +137,7 @@ public class RegionServiceImpl implements IRegionService {
     }
 
     @Override
-    public List<RegionTree> queryForTree(String query, Integer parent, Boolean hasChannel) {
+    public List<RegionTree> queryForTree(String query, Long parent, Boolean hasChannel) {
         if (query != null) {
             query = query.replaceAll("/", "//")
                     .replaceAll("%", "/%")

@@ -1,11 +1,13 @@
 package com.cdzeroly.wvp.domain.bean;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author MGARY
  */
 @Data
+@NoArgsConstructor
 public class SSRCInfo {
 
     private int port;

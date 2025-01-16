@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.common;
 
+import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.domain.bean.MediaInfo;
 import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.domain.bean.DownloadFileInfo;
@@ -8,9 +9,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Objects;
 
 
+/**
+ * @author MAGRY
+ */
 @Setter
 @Getter
 @Schema(description = "流信息")
@@ -346,5 +352,22 @@ public class StreamInfo implements Serializable, Cloneable{
     /*=========================设备主子码流逻辑START====================*/
     @Schema(description = "是否为子码流(true-是，false-主码流)")
     private boolean subStream;
+
+
+   public static StreamInfo getStreamInfoClone(StreamInfo streamInfo, UserSetting userSetting, StringBuffer requestUrl, String localAddr) {
+        if (userSetting.getUseSourceIpAsStreamIp()) {
+            // 深拷贝
+            streamInfo = streamInfo.clone();
+            String host;
+            try {
+                URL url = new URL(requestUrl.toString());
+                host = url.getHost();
+            } catch (MalformedURLException e) {
+                host = localAddr;
+            }
+            streamInfo.channgeStreamIp(host);
+        }
+        return streamInfo;
+    }
 
 }
