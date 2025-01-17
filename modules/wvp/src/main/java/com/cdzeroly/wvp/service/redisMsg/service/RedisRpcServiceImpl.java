@@ -19,7 +19,6 @@ import com.cdzeroly.wvp.domain.ErrorCode;
 import com.cdzeroly.wvp.domain.WVPResult;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -88,7 +87,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
     public long waitePushStreamOnline(SendRtpInfo sendRtpItem, CommonCallback<Long> callback) {
         log.info("[请求所有WVP监听流上线] {}/{}", sendRtpItem.getApp(), sendRtpItem.getStream());
         // 监听流上线。 流上线直接发送sendRtpItem消息给实际的信令处理者
-        Hook hook = Hook.getInstance(HookType.on_media_arrival, sendRtpItem.getApp(), sendRtpItem.getStream(), null);
+        Hook hook = Hook.getInstance(HookType.ON_MEDIA_ARRIVAL, sendRtpItem.getApp(), sendRtpItem.getStream(), null);
         RedisRpcRequest request = buildRequest("waitePushStreamOnline", sendRtpItem);
         request.setToId(sendRtpItem.getServerId());
         hookSubscribe.addSubscribe(hook, (hookData) -> {
@@ -128,7 +127,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
     @Override
     public void stopWaitePushStreamOnline(SendRtpInfo sendRtpItem) {
         log.info("[停止WVP监听流上线] {}/{}", sendRtpItem.getApp(), sendRtpItem.getStream());
-        Hook hook = Hook.getInstance(HookType.on_media_arrival, sendRtpItem.getApp(), sendRtpItem.getStream(), null);
+        Hook hook = Hook.getInstance(HookType.ON_MEDIA_ARRIVAL, sendRtpItem.getApp(), sendRtpItem.getStream(), null);
         hookSubscribe.removeSubscribe(hook);
         RedisRpcRequest request = buildRequest("stopWaitePushStreamOnline", sendRtpItem);
         request.setToId(sendRtpItem.getServerId());
@@ -157,7 +156,7 @@ public class RedisRpcServiceImpl implements IRedisRpcService {
 
         log.info("[请求所有WVP监听流上线] {}/{}", app, stream);
         // 监听流上线。 流上线直接发送sendRtpItem消息给实际的信令处理者
-        Hook hook = Hook.getInstance(HookType.on_media_arrival, app, stream);
+        Hook hook = Hook.getInstance(HookType.ON_MEDIA_ARRIVAL, app, stream);
         StreamInfo streamInfoParam = new StreamInfo();
         streamInfoParam.setApp(app);
         streamInfoParam.setStream(stream);

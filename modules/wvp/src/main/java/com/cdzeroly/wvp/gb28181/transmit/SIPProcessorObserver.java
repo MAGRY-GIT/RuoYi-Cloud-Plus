@@ -27,8 +27,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @AllArgsConstructor
 public class SIPProcessorObserver implements ISIPProcessorObserver {
 
+    /**
+     * 请求对象
+     */
     private static final Map<String,  ISIPRequestProcessor> REQUEST_PROCESSOR_MAP = new ConcurrentHashMap<>();
 
+    /**
+     * 接收对象
+     */
     private static final Map<String, ISIPResponseProcessor> RESPONSE_PROCESSOR_MAP = new ConcurrentHashMap<>();
 
 

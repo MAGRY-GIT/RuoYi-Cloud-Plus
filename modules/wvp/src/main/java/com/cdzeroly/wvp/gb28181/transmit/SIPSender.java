@@ -42,21 +42,44 @@ public class SIPSender {
 
     private final SipConfig sipConfig;
 
+    /**
+     * 发送请求
+     * @param ip IP
+     * @param message  消息
+     * @throws SipException  SIP异常
+     * @throws ParseException 解析异常
+     */
     public void transmitRequest(String ip, Message message) throws SipException, ParseException {
         transmitRequest(ip, message, null, null, null);
     }
 
+    /**
+     *  发送请求
+     * @param ip IP
+     * @param message 消息
+     * @param errorEvent  错误事件
+     * @throws SipException SIP异常
+     * @throws ParseException  解析异常
+     */
     public void transmitRequest(String ip, Message message, SipSubscribe.Event errorEvent) throws SipException, ParseException {
         transmitRequest(ip, message, errorEvent, null, null);
     }
 
+    /**
+     *  发送请求
+     * @param ip IP
+     * @param message 消息
+     * @param errorEvent 错误事件
+     * @param okEvent 正确事件
+     * @throws SipException 异常
+     */
     public void transmitRequest(String ip, Message message, SipSubscribe.Event errorEvent, SipSubscribe.Event okEvent) throws SipException {
         transmitRequest(ip, message, errorEvent, okEvent, null);
     }
 
     /**
      * 传输请求
-     * @param ip  ID
+     * @param ip  IP
      * @param message 消息
      * @param errorEvent 错误事件
      * @param okEvent  正确事件

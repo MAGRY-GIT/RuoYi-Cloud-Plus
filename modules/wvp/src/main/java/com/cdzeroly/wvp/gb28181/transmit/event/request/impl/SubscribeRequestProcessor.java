@@ -24,6 +24,7 @@ import javax.sip.InvalidArgumentException;
 import javax.sip.RequestEvent;
 import javax.sip.SipException;
 import javax.sip.header.ExpiresHeader;
+import javax.sip.message.Request;
 import javax.sip.message.Response;
 import java.text.ParseException;
 
@@ -48,8 +49,7 @@ public class SubscribeRequestProcessor extends SIPRequestProcessorParent impleme
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// 添加消息处理的订阅
-        String method = "SUBSCRIBE";
-        sipProcessorObserver.addRequestProcessor(method, this);
+        sipProcessorObserver.addRequestProcessor(Request.SUBSCRIBE, this);
 	}
 
 	/**

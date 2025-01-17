@@ -26,8 +26,8 @@ import java.text.ParseException;
 
 
 /**
- * @description: 处理INVITE响应
  * @author panlinlin
+ * @description: 处理INVITE响应
  * @date: 2021年11月5日 16：40
  */
 @Slf4j
@@ -36,54 +36,52 @@ import java.text.ParseException;
 public class InviteResponseProcessor extends SIPResponseProcessorAbstract {
 
 
+    private final SIPProcessorObserver sipProcessorObserver;
 
-	private final SIPProcessorObserver sipProcessorObserver;
+    private final SIPSender sipSender;
 
-	private final SIPSender sipSender;
+    private final SIPRequestHeaderProvider headerProvider;
 
-	private final SIPRequestHeaderProvider headerProvider;
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-      String method = "INVITE";
-		// 添加消息处理的订阅
-		sipProcessorObserver.addResponseProcessor(method, this);
-	}
-
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        String method = "INVITE";
+        // 添加消息处理的订阅
+        sipProcessorObserver.addResponseProcessor(method, this);
+    }
 
 
-	/**
-	 * 处理invite响应
-	 *
-	 * @param evt 响应消息
-	 * @throws ParseException
-	 */
-	@Override
-	public void process(ResponseEvent evt ){
-		log.debug("接收到消息：" + evt.getResponse());
-		try {
-			SIPResponse response = (SIPResponse)evt.getResponse();
-			int statusCode = response.getStatusCode();
-			// trying不会回复
-			if (statusCode == Response.TRYING) {
-			}
-			// 成功响应
-			// 下发ack
-			if (statusCode == Response.OK) {
-				ResponseEventExt event = (ResponseEventExt)evt;
+    /**
+     * 处理invite响应
+     *
+     * @param evt 响应消息
+     * @throws ParseException
+     */
+    @Override
+    public void process(ResponseEvent evt) {
+        log.debug("接收到消息：" + evt.getResponse());
+        try {
+            SIPResponse response = (SIPResponse) evt.getResponse();
+            int statusCode = response.getStatusCode();
+            // trying不会回复
+            if (statusCode == Response.TRYING) {
+            }
+            // 成功响应
+            // 下发ack
+            if (statusCode == Response.OK) {
+                ResponseEventExt event = (ResponseEventExt) evt;
 
-				String contentString = new String(response.getRawContent());
-				Gb28181Sdp gb28181Sdp = SipUtils.parseSDP(contentString);
-				SessionDescription sdp = gb28181Sdp.getBaseSdb();
-				SipURI requestUri = SipFactory.getInstance().createAddressFactory().createSipURI(sdp.getOrigin().getUsername(), event.getRemoteIpAddress() + ":" + event.getRemotePort());
-				Request reqAck = headerProvider.createAckRequest(response.getLocalAddress().getHostAddress(), requestUri, response);
+                String contentString = new String(response.getRawContent());
+                Gb28181Sdp gb28181Sdp = SipUtils.parseSDP(contentString);
+                SessionDescription sdp = gb28181Sdp.getBaseSdb();
+                SipURI requestUri = SipFactory.getInstance().createAddressFactory().createSipURI(sdp.getOrigin().getUsername(), event.getRemoteIpAddress() + ":" + event.getRemotePort());
+                Request reqAck = headerProvider.createAckRequest(response.getLocalAddress().getHostAddress(), requestUri, response);
 
-				log.info("[回复ack] {}-> {}:{} ", sdp.getOrigin().getUsername(), event.getRemoteIpAddress(), event.getRemotePort());
-				sipSender.transmitRequest( response.getLocalAddress().getHostAddress(), reqAck);
-			}
-		} catch (InvalidArgumentException | ParseException | SipException | SdpParseException e) {
-			log.info("[点播回复ACK]，异常：", e );
-		}
-	}
+                log.info("[回复ack] {}-> {}:{} ", sdp.getOrigin().getUsername(), event.getRemoteIpAddress(), event.getRemotePort());
+                sipSender.transmitRequest(response.getLocalAddress().getHostAddress(), reqAck);
+            }
+        } catch (InvalidArgumentException | ParseException | SipException | SdpParseException e) {
+            log.info("[点播回复ACK]，异常：", e);
+        }
+    }
 
 }

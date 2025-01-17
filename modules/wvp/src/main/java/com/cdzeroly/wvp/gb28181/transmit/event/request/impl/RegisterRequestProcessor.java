@@ -59,9 +59,8 @@ public class RegisterRequestProcessor extends SIPRequestProcessorParent implemen
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        String method = "REGISTER";
         // 添加消息处理的订阅
-        sipProcessorObserver.addRequestProcessor(method, this);
+        sipProcessorObserver.addRequestProcessor(Request.REGISTER, this);
     }
 
     /**

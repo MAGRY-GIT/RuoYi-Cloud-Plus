@@ -40,6 +40,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @AllArgsConstructor
 public class MessageRequestProcessor extends SIPRequestProcessorParent implements InitializingBean, ISIPRequestProcessor {
 
+    /**
+     * 消息处理集合
+     */
     private static final Map<String, IMessageHandler> MESSAGE_HANDLER_MAP = new ConcurrentHashMap<>();
 
     private final SIPProcessorObserver sipProcessorObserver;
@@ -105,7 +108,7 @@ public class MessageRequestProcessor extends SIPRequestProcessorParent implement
             }else {
                 Element rootElement;
                 try {
-                    rootElement = getRootElement(evt);
+                      rootElement = getRootElement(evt);
                     if (rootElement == null) {
                         log.error("处理MESSAGE请求  未获取到消息体{}", evt.getRequest());
                         responseAck(request, Response.BAD_REQUEST, "content is null");

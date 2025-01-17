@@ -9,33 +9,34 @@ import org.springframework.stereotype.Component;
 import javax.sip.ResponseEvent;
 
 /**
- * @description: CANCEL响应处理器
  * @author panlinlin
- * @date:   2021年11月5日 16:35
+ * @description: CANCEL响应处理器
+ * @date 2021年11月5日 16:35
  */
 @Component
 @RequiredArgsConstructor
 public class CancelResponseProcessor extends SIPResponseProcessorAbstract {
 
 
-	private final SIPProcessorObserver sipProcessorObserver;
+    private final SIPProcessorObserver sipProcessorObserver;
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-  String method = "CANCEL";
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        String method = "CANCEL";
 
         // 添加消息处理的订阅
-		sipProcessorObserver.addResponseProcessor(method, this);
-	}
-	/**
-	 * 处理CANCEL响应
-	 *
-	 * @param evt
-	 */
-	@Override
-	public void process(ResponseEvent evt) {
-		// TODO Auto-generated method stub
+        sipProcessorObserver.addResponseProcessor(method, this);
+    }
 
-	}
+    /**
+     * 处理CANCEL响应
+     *
+     * @param evt
+     */
+    @Override
+    public void process(ResponseEvent evt) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

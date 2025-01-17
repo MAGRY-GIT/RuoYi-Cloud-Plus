@@ -17,6 +17,9 @@ import javax.sip.header.WWWAuthenticateHeader;
 import java.text.ParseException;
 import java.util.List;
 
+/**
+ * @author MGARY
+ */
 public interface ISIPCommanderForPlatform {
 
     /**

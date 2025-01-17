@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
+ * 通知目录频道
+ *
  * @author MGARY
  */
 @Setter
@@ -18,7 +20,22 @@ public class NotifyCatalogChannel {
 
 
     public enum Type {
-        ADD, DELETE, UPDATE, STATUS_CHANGED
+        /**
+         * 添加
+         */
+        ADD,
+        /**
+         * 删除
+         */
+        DELETE,
+        /**
+         * 更新
+         */
+        UPDATE,
+        /**
+         * 状态改变
+         */
+        STATUS_CHANGED
     }
 
 

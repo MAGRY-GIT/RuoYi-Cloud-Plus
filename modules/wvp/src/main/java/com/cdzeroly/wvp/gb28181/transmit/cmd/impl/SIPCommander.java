@@ -45,6 +45,7 @@ import java.text.ParseException;
 
 /**
  * 设备能力接口，用于定义设备的控制、查询能力
+ *
  * @author swwheihei
  */
 @Component
@@ -79,7 +80,7 @@ public class SIPCommander implements ISIPCommander {
      * @param upDown    镜头上移下移 0:停止 1:上移 2:下移
      */
     @Override
-    public void ptzdirectCmd(Device device, String channelId, int leftRight, int upDown) throws InvalidArgumentException, ParseException, SipException {
+    public void ptzDirectCmd(Device device, String channelId, int leftRight, int upDown) throws InvalidArgumentException, ParseException, SipException {
         ptzCmd(device, channelId, leftRight, upDown, 0, sipConfig.getPtzSpeed(), 0);
     }
 
@@ -93,7 +94,7 @@ public class SIPCommander implements ISIPCommander {
      * @param moveSpeed 镜头移动速度
      */
     @Override
-    public void ptzdirectCmd(Device device, String channelId, int leftRight, int upDown, int moveSpeed) throws InvalidArgumentException, ParseException, SipException {
+    public void ptzDirectCmd(Device device, String channelId, int leftRight, int upDown, int moveSpeed) throws InvalidArgumentException, ParseException, SipException {
         ptzCmd(device, channelId, leftRight, upDown, 0, moveSpeed, 0);
     }
 
@@ -324,10 +325,10 @@ public class SIPCommander implements ISIPCommander {
         if (!ObjectUtils.isEmpty(channel.getStreamIdentification())) {
             content.append("a=").append(channel.getStreamIdentification()).append("\r\n");
         }
-// ssrc
+        // ssrc
         content.append("y=").append(ssrcInfo.getSsrc()).append("\r\n");
         // f字段:f= v/编码格式/分辨率/帧率/码率类型/码率大小a/编码格式/码率大小/采样率
-//			content.append("f=v/2/5/25/1/4000a/1/8/1" + "\r\n"); // 未发现支持此特性的设备
+        // content.append("f=v/2/5/25/1/4000a/1/8/1" + "\r\n"); // 未发现支持此特性的设备
 
         Request request = headerProvider.createInviteRequest(device, channel.getDeviceId(), content.toString(), SipUtils.getNewViaTag(), SipUtils.getNewFromTag(), null, ssrcInfo.getSsrc(), sipSender.getNewCallIdHeader(sipLayer.getLocalIp(device.getLocalIp()), device.getTransport()));
         sipSender.transmitRequest(sipLayer.getLocalIp(device.getLocalIp()), request, (e -> {
@@ -545,7 +546,7 @@ public class SIPCommander implements ISIPCommander {
         }
 
         log.info("[语音喊话] {} 分配的ZLM为: {} [{}:{}]", stream, mediaServerItem.getId(), mediaServerItem.getIp(), sendRtpItem.getPort());
-        Hook hook = Hook.getInstance(HookType.on_media_arrival, "rtp", stream, mediaServerItem.getId());
+        Hook hook = Hook.getInstance(HookType.ON_MEDIA_ARRIVAL, "rtp", stream, mediaServerItem.getId());
         subscribe.addSubscribe(hook, (hookData) -> {
             if (event != null) {
                 event.response(hookData);
@@ -555,7 +556,7 @@ public class SIPCommander implements ISIPCommander {
 
         CallIdHeader callIdHeader = sipSender.getNewCallIdHeader(sipLayer.getLocalIp(device.getLocalIp()), device.getTransport());
         callIdHeader.setCallId(callId);
-        Hook publishHook = Hook.getInstance(HookType.on_publish, "rtp", stream, mediaServerItem.getId());
+        Hook publishHook = Hook.getInstance(HookType.ON_PUBLISH, "rtp", stream, mediaServerItem.getId());
         subscribe.addSubscribe(publishHook, (hookData) -> {
             if (eventForPush != null) {
                 eventForPush.response(hookData);
@@ -1088,10 +1089,11 @@ public class SIPCommander implements ISIPCommander {
 
     /**
      * 获取随机数
-     * @return   随机数
+     *
+     * @return 随机数
      */
-    public int getRandom(){
-       return  (int) ((Math.random() * 9 + 1) * 100000);
+    public int getRandom() {
+        return (int) ((Math.random() * 9 + 1) * 100000);
     }
 
     /**
@@ -1249,6 +1251,7 @@ public class SIPCommander implements ISIPCommander {
 
         // 有效时间默认为60秒以上
         SIPRequest request = (SIPRequest) headerProvider.createSubscribeRequest(device, cmdXml.toString(), requestOld, device.getSubscribeCycleForCatalog(), "Catalog", callIdHeader);
+        //发送请求
         sipSender.transmitRequest(sipLayer.getLocalIp(device.getLocalIp()), request, errorEvent, okEvent);
         return request;
     }

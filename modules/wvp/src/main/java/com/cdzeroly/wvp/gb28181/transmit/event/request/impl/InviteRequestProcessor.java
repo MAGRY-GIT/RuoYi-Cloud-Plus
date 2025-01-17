@@ -47,6 +47,7 @@ import javax.sip.InvalidArgumentException;
 import javax.sip.RequestEvent;
 import javax.sip.SipException;
 import javax.sip.header.CallIdHeader;
+import javax.sip.message.Request;
 import javax.sip.message.Response;
 import java.text.ParseException;
 import java.util.List;
@@ -99,8 +100,7 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
     @Override
     public void afterPropertiesSet() throws Exception {
         // 添加消息处理的订阅
-        String method = "INVITE";
-        sipProcessorObserver.addRequestProcessor(method, this);
+        sipProcessorObserver.addRequestProcessor(Request.INVITE, this);
     }
 
     /**

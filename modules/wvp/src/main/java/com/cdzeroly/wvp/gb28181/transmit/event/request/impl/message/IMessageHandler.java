@@ -7,6 +7,7 @@ import org.dom4j.Element;
 import javax.sip.RequestEvent;
 
 /**
+ * 消息处理程序
  * @author MGARY
  */
 public interface IMessageHandler {

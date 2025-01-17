@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.media.event.hook;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class Hook {
 
     private HookType hookType;

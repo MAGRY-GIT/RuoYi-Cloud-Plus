@@ -32,7 +32,7 @@ public interface ISIPCommander {
 	 * @param leftRight  镜头左移右移 0:停止 1:左移 2:右移
      * @param upDown     镜头上移下移 0:停止 1:上移 2:下移
 	 */
-	void ptzdirectCmd(Device device, String channelId, int leftRight, int upDown) throws InvalidArgumentException, ParseException, SipException;
+	void ptzDirectCmd(Device device, String channelId, int leftRight, int upDown) throws InvalidArgumentException, ParseException, SipException;
 
 	/**
 	 * 云台方向放控制
@@ -43,7 +43,7 @@ public interface ISIPCommander {
      * @param upDown     镜头上移下移 0:停止 1:上移 2:下移
      * @param moveSpeed  镜头移动速度
 	 */
-	void ptzdirectCmd(Device device,String channelId,int leftRight, int upDown, int moveSpeed) throws InvalidArgumentException, ParseException, SipException;
+	void ptzDirectCmd(Device device, String channelId, int leftRight, int upDown, int moveSpeed) throws InvalidArgumentException, ParseException, SipException;
 
 	/**
 	 * 云台缩放控制，使用配置文件中的默认镜头缩放速度

@@ -28,6 +28,7 @@ import javax.sip.InvalidArgumentException;
 import javax.sip.RequestEvent;
 import javax.sip.SipException;
 import javax.sip.header.FromHeader;
+import javax.sip.message.Request;
 import javax.sip.message.Response;
 import java.text.ParseException;
 
@@ -57,8 +58,7 @@ public class NotifyRequestProcessor extends SIPRequestProcessorParent implements
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// 添加消息处理的订阅
-        String method = "NOTIFY";
-        sipProcessorObserver.addRequestProcessor(method, this);
+        sipProcessorObserver.addRequestProcessor(Request.NOTIFY, this);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class NotifyRequestProcessor extends SIPRequestProcessorParent implements
 			} else if (CmdType.MOBILE_POSITION.equals(cmd)) {
 				notifyRequestForMobilePositionProcessor.process(evt);
 			} else {
-				log.info("接收到消息：" + cmd);
+                log.info("接收到消息：{}", cmd);
 			}
 		} catch (SipException | InvalidArgumentException | ParseException e) {
 			log.error("未处理的异常 ", e);

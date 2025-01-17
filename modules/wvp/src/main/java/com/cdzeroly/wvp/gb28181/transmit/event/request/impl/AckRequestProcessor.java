@@ -32,6 +32,7 @@ import javax.sip.header.CallIdHeader;
 import javax.sip.header.FromHeader;
 import javax.sip.header.HeaderAddress;
 import javax.sip.header.ToHeader;
+import javax.sip.message.Request;
 
 /**
  * SIP命令类型： ACK请求
@@ -66,8 +67,7 @@ public class AckRequestProcessor extends SIPRequestProcessorParent implements In
     @Override
     public void afterPropertiesSet() throws Exception {
         // 添加消息处理的订阅
-        String method = "ACK";
-        sipProcessorObserver.addRequestProcessor(method, this);
+        sipProcessorObserver.addRequestProcessor(Request.ACK, this);
     }
 
 	/**

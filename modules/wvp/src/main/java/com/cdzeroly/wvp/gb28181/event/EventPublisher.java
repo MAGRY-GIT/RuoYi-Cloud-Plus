@@ -31,7 +31,7 @@ public class EventPublisher {
 
 	/**
 	 * 设备报警事件
-	 * @param deviceAlarm
+	 * @param deviceAlarm 报警信息
 	 */
 	public void deviceAlarmEventPublish(DeviceAlarm deviceAlarm) {
 		AlarmEvent alarmEvent = new AlarmEvent(this);

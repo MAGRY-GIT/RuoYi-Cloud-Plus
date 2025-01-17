@@ -17,7 +17,7 @@ import com.cdzeroly.wvp.gb28181.event.SipSubscribe;
 import com.cdzeroly.wvp.gb28181.session.SipInviteSessionManager;
 import com.cdzeroly.wvp.gb28181.transmit.SIPSender;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.ISIPCommanderForPlatform;
-import com.cdzeroly.wvp.gb28181.transmit.cmd.SIPRequestHeaderPlarformProvider;
+import com.cdzeroly.wvp.gb28181.transmit.cmd.SIPRequestHeaderPlatformProvider;
 import com.cdzeroly.wvp.gb28181.utils.SipUtils;
 import com.cdzeroly.wvp.domain.MediaServer;
 import com.cdzeroly.wvp.media.event.hook.Hook;
@@ -55,7 +55,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
 
-    private final SIPRequestHeaderPlarformProvider headerProviderPlatformProvider;
+    private final SIPRequestHeaderPlatformProvider headerProviderPlatformProvider;
 
     private final IRedisCatchStorage redisCatchStorage;
 
@@ -244,7 +244,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
         if (sendAfterResponse) {
             // 默认按照收到200回复后发送下一条， 如果超时收不到回复，就以30毫秒的间隔直接发送。
             sipSender.transmitRequest(parentPlatform.getDeviceIp(), request, eventResult -> {
-                if (eventResult.type.equals(SipSubscribe.EventResultType.timeout)) {
+                if (eventResult.type.equals(SipSubscribe.EventResultType.TIMEOUT)) {
                     // 消息发送超时, 以30毫秒的间隔直接发送
                     int indexNext = index + parentPlatform.getCatalogGroup();
                     try {
@@ -694,7 +694,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
         }
 
         log.info("{} 分配的ZLM为: {} [{}:{}]", stream, mediaServerItem.getId(), mediaServerItem.getIp(), ssrcInfo.getPort());
-        Hook hook = Hook.getInstance(HookType.on_media_arrival, "rtp", stream, mediaServerItem.getId());
+        Hook hook = Hook.getInstance(HookType.ON_MEDIA_ARRIVAL, "rtp", stream, mediaServerItem.getId());
         subscribe.addSubscribe(hook, (hookData) -> {
             if (event != null) {
                 event.response(hookData);

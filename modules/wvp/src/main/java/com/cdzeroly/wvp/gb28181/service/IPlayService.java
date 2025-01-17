@@ -28,7 +28,16 @@ import java.text.ParseException;
  */
 public interface IPlayService {
 
-    SSRCInfo play(MediaServer mediaServerItem, String deviceId, String channelId, String ssrc, ErrorCallback<StreamInfo> callback);
+    /**
+     * 播放视频
+     * @param mediaServer  视频数据
+     * @param deviceId  设备ID
+     * @param channelId 通道ID
+     * @param ssrc  校验和
+     * @param callback  错误返回
+     * @return 校验信息
+     */
+    SSRCInfo play(MediaServer mediaServer, String deviceId, String channelId, String ssrc, ErrorCallback<StreamInfo> callback);
 
     StreamInfo onPublishHandlerForPlay(MediaServer mediaServerItem, MediaInfo mediaInfo, Device device, DeviceChannel channel);
 

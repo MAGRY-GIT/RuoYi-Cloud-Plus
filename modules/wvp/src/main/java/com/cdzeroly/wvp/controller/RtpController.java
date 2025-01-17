@@ -89,7 +89,7 @@ public class RtpController {
         }
         // 注册回调如果rtp收流超时则通过回调发送通知
         if (callBack != null) {
-            Hook hook = Hook.getInstance(HookType.on_rtp_server_timeout, "rtp", stream, mediaServer.getId());
+            Hook hook = Hook.getInstance(HookType.ON_RTP_SERVER_TIMEOUT, "rtp", stream, mediaServer.getId());
             // 订阅 zlm启动事件, 新的zlm也会从这里进入系统
             hookSubscribe.addSubscribe(hook, (hookData) -> {
                 if (stream.equals(hookData.getStream())) {
@@ -206,7 +206,7 @@ public class RtpController {
         } else {
             log.info("[第三方服务对接->发送流] 流不存在，等待流上线，callId->{}", callId);
             String uuid = UUID.randomUUID().toString();
-            Hook hook = Hook.getInstance(HookType.on_media_arrival, app, stream, mediaServer.getId());
+            Hook hook = Hook.getInstance(HookType.ON_MEDIA_ARRIVAL, app, stream, mediaServer.getId());
             dynamicTask.startDelay(uuid, () -> {
                 log.info("[第三方服务对接->发送流] 等待流上线超时 callId->{}", callId);
                 redisTemplate.delete(key);

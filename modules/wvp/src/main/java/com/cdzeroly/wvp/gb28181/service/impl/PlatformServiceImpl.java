@@ -279,7 +279,7 @@ public class PlatformServiceImpl implements IPlatformService {
                         try {
                             commanderForPlatform.keepalive(platform, eventResult -> {
                                 // 心跳失败
-                                if (eventResult.type != SipSubscribe.EventResultType.timeout) {
+                                if (eventResult.type != SipSubscribe.EventResultType.TIMEOUT) {
                                     log.warn("[国标级联]发送心跳收到错误，code： {}, msg: {}", eventResult.statusCode, eventResult.msg);
                                 }
                                 // 心跳失败
@@ -521,7 +521,7 @@ public class PlatformServiceImpl implements IPlatformService {
             SipSubscribe.EventResult<Object> eventResult = new SipSubscribe.EventResult<>();
             eventResult.statusCode = -1;
             eventResult.msg = "端口监听失败";
-            eventResult.type = SipSubscribe.EventResultType.failedToGetPort;
+            eventResult.type = SipSubscribe.EventResultType.FAILED_TO_GET_PORT;
             errorEvent.response(eventResult);
             return;
         }

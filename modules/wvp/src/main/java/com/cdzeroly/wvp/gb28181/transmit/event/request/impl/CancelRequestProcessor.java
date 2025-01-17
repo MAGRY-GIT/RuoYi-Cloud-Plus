@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sip.RequestEvent;
+import javax.sip.message.Request;
 
 /**
  * SIP命令类型： CANCEL请求
@@ -23,8 +24,7 @@ public class CancelRequestProcessor extends SIPRequestProcessorParent implements
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// 添加消息处理的订阅
-        String method = "CANCEL";
-        sipProcessorObserver.addRequestProcessor(method, this);
+        sipProcessorObserver.addRequestProcessor(Request.CANCEL, this);
 	}
 
 	/**

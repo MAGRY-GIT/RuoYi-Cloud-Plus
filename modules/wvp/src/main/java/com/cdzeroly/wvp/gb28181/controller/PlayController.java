@@ -91,7 +91,7 @@ public class PlayController extends BaseController {
 
         result.onTimeout(() -> {
             log.info("[点播等待超时] deviceId：{}, channelId：{}, ", deviceId, channelId);
-            // 释放rtpserver
+            // 释放 rtpServer
             R<StreamInfo> wvpResult = R.fail("点播超时");
             requestMessage.setData(wvpResult);
             resultHolder.invokeAllResult(requestMessage);

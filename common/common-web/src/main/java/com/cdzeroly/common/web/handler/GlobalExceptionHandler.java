@@ -43,6 +43,7 @@ public class GlobalExceptionHandler {
                                                                 HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}',不支持'{}'请求", requestURI, e.getMethod());
+        log.error("请求方式不支持",e);
         return R.fail(HttpStatus.HTTP_BAD_METHOD, e.getMessage());
     }
 
@@ -51,7 +52,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ServiceException.class)
     public R<Void> handleServiceException(ServiceException e, HttpServletRequest request) {
-        log.error(e.getMessage());
+        log.error("业务异常",e);
         Integer code = e.getCode();
         return ObjectUtil.isNotNull(code) ? R.fail(code, e.getMessage()) : R.fail(e.getMessage());
     }
@@ -64,6 +65,7 @@ public class GlobalExceptionHandler {
     public String handleNotLoginException(SseException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}',认证失败'{}',无法访问系统资源", requestURI, e.getMessage());
+        log.error("认证失败",e);
         return JsonUtils.toJsonString(R.fail(HttpStatus.HTTP_UNAUTHORIZED, "认证失败，无法访问系统资源"));
     }
 
@@ -74,6 +76,7 @@ public class GlobalExceptionHandler {
     public R<Void> handleServletException(ServletException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}',发生未知异常.", requestURI, e);
+        log.error("servlet异常",e);
         return R.fail(e.getMessage());
     }
 
@@ -82,7 +85,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BaseException.class)
     public R<Void> handleBaseException(BaseException e, HttpServletRequest request) {
-        log.error(e.getMessage());
+        log.error("业务异常",e);
         return R.fail(e.getMessage());
     }
 
@@ -92,6 +95,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingPathVariableException.class)
     public R<Void> handleMissingPathVariableException(MissingPathVariableException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
+        log.error("请求路径中缺少必需的路径变量",e);
         log.error("请求路径中缺少必需的路径变量'{}',发生系统异常.", requestURI);
         return R.fail(String.format("请求路径中缺少必需的路径变量[%s]", e.getVariableName()));
     }
@@ -102,6 +106,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public R<Void> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
+        log.error("请求参数类型不匹配",e);
         log.error("请求参数类型不匹配'{}',发生系统异常.", requestURI);
         return R.fail(String.format("请求参数类型不匹配，参数[%s]要求类型为：'%s'，但输入值为：'%s'", e.getName(), e.getRequiredType().getName(), e.getValue()));
     }
@@ -113,6 +118,8 @@ public class GlobalExceptionHandler {
     public R<Void> handleNoHandlerFoundException(NoHandlerFoundException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}'不存在.", requestURI);
+        log.error("找不到路由",e);
+
         return R.fail(HttpStatus.HTTP_NOT_FOUND, e.getMessage());
     }
 
@@ -123,6 +130,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IOException.class)
     public void handleRuntimeException(IOException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
+        log.error("拦截未知的运行时异常",e);
+
         if (requestURI.contains("sse")) {
             // sse 经常性连接中断 例如关闭浏览器 直接屏蔽
             return;
@@ -136,6 +145,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public R<Void> handleRuntimeException(RuntimeException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
+        log.error("拦截未知的运行时异常",e);
         log.error("请求地址'{}',发生未知异常.", requestURI, e);
         return R.fail(e.getMessage());
     }
@@ -146,6 +156,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public R<Void> handleException(Exception e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
+        log.error("系统异常",e);
         log.error("请求地址'{}',发生系统异常.", requestURI, e);
         return R.fail(e.getMessage());
     }
@@ -155,7 +166,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BindException.class)
     public R<Void> handleBindException(BindException e) {
-        log.error(e.getMessage());
+        log.error("自定义验证异常",e);
         String message = StreamUtils.join(e.getAllErrors(), DefaultMessageSourceResolvable::getDefaultMessage, ", ");
         return R.fail(message);
     }
@@ -165,7 +176,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public R<Void> constraintViolationException(ConstraintViolationException e) {
-        log.error(e.getMessage());
+        log.error("自定义验证异常",e);
         String message = StreamUtils.join(e.getConstraintViolations(), ConstraintViolation::getMessage, ", ");
         return R.fail(message);
     }
@@ -175,7 +186,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public R<Void> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
-        log.error(e.getMessage());
+        log.error("自定义验证异常",e);
         String message = StreamUtils.join(e.getBindingResult().getAllErrors(), DefaultMessageSourceResolvable::getDefaultMessage, ", ");
         return R.fail(message);
     }

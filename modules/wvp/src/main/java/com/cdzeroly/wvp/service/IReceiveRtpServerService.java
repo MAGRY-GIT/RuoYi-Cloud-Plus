@@ -7,21 +7,22 @@ import com.cdzeroly.wvp.domain.bean.RTPServerParam;
 import com.cdzeroly.wvp.domain.bean.SSRCInfo;
 
 /**
+ * 收到rtp服务器服务
  * @author MAGRY
  */
 public interface IReceiveRtpServerService {
     /**
      * 打开 RTP 服务器
-     * @param rtpServerParam
-     * @param callback
-     * @return
+     * @param rtpServerParam  rtpServerParam
+     * @param callback  错误回调
+     * @return SSRCInfo
      */
-    SSRCInfo openRTPServer(RTPServerParam rtpServerParam, ErrorCallback<OpenRTPServerResult> callback);
+    SSRCInfo openRtpServer(RTPServerParam rtpServerParam, ErrorCallback<OpenRTPServerResult> callback);
 
     /**
      * 关闭 RTP 服务器
-     * @param mediaServer
-     * @param ssrcInfo
+     * @param mediaServer  流媒体服务器
+     * @param ssrcInfo   校验信息
      */
-    void closeRTPServer(MediaServer mediaServer, SSRCInfo ssrcInfo);
+    void closeRtpServer(MediaServer mediaServer, SSRCInfo ssrcInfo);
 }

@@ -47,12 +47,12 @@ public interface ICloudRecordService {
     /**
      * 添加指定录像收藏
      */
-    int changeCollectById(Integer recordId, boolean result);
+    int changeCollectById(Long recordId, boolean result);
 
     /**
      * 获取播放地址
      */
-    DownloadFileInfo getPlayUrlPath(Integer recordId);
+    DownloadFileInfo getPlayUrlPath(Long recordId);
 
     List<CloudRecord> getAllList(CloudRecordItemBo bo);
 

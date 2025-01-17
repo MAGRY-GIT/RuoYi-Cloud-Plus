@@ -35,6 +35,7 @@ import javax.sip.InvalidArgumentException;
 import javax.sip.RequestEvent;
 import javax.sip.SipException;
 import javax.sip.header.CallIdHeader;
+import javax.sip.message.Request;
 import javax.sip.message.Response;
 import java.text.ParseException;
 
@@ -81,8 +82,7 @@ public class ByeRequestProcessor extends SIPRequestProcessorParent implements In
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		// 添加消息处理的订阅
-        String method = "BYE";
-        sipProcessorObserver.addRequestProcessor(method, this);
+        sipProcessorObserver.addRequestProcessor(Request.BYE, this);
 	}
 
 	/**

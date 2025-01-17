@@ -216,7 +216,7 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
     }
 
     @Override
-    public int changeCollectById(Integer recordId, boolean result) {
+    public int changeCollectById(Long recordId, boolean result) {
         QueryWrapper<CloudRecord> wrapper = Wrappers.query();
         wrapper.eq("collect", result);
         wrapper.eq("id", recordId);
@@ -224,7 +224,7 @@ public class CloudRecordServiceImpl implements ICloudRecordService {
     }
 
     @Override
-    public DownloadFileInfo getPlayUrlPath(Integer recordId) {
+    public DownloadFileInfo getPlayUrlPath(Long recordId) {
         CloudRecord recordItem = cloudRecordServiceMapper.selectById(recordId);
         if (recordItem == null) {
             throw new ServiceException( "资源不存在");

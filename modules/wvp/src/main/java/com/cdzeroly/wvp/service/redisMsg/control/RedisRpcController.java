@@ -114,7 +114,7 @@ public class RedisRpcController {
             response.setStatusCode(200);
         }
         // 监听流上线。 流上线直接发送sendRtpItem消息给实际的信令处理者
-        Hook hook = Hook.getInstance(HookType.on_media_arrival, sendRtpItem.getApp(), sendRtpItem.getStream(), null);
+        Hook hook = Hook.getInstance(HookType.ON_MEDIA_ARRIVAL, sendRtpItem.getApp(), sendRtpItem.getStream(), null);
         hookSubscribe.addSubscribe(hook, (hookData) -> {
             log.info("[redis-rpc] 监听流上线，流已上线： {}/{}, 目标地址： {}：{}", sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getIp(), sendRtpItem.getPort());
             // 读取redis中的上级点播信息，生成sendRtpItm发送出去
@@ -155,7 +155,7 @@ public class RedisRpcController {
             return response;
         }
         // 监听流上线。 流上线直接发送sendRtpItem消息给实际的信令处理者
-        Hook hook = Hook.getInstance(HookType.on_media_arrival, streamInfo.getApp(), streamInfo.getStream());
+        Hook hook = Hook.getInstance(HookType.ON_MEDIA_ARRIVAL, streamInfo.getApp(), streamInfo.getStream());
         hookSubscribe.addSubscribe(hook, (hookData) -> {
             log.info("[redis-rpc] 监听流上线，流已上线： {}/{}", streamInfo.getApp(), streamInfo.getStream());
             // 读取redis中的上级点播信息，生成sendRtpItm发送出去
@@ -179,7 +179,7 @@ public class RedisRpcController {
         SendRtpInfo sendRtpItem = JSONObject.parseObject(request.getParam().toString(), SendRtpInfo.class);
         log.info("[redis-rpc] 停止监听流上线： {}/{}, 目标地址： {}：{}", sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getIp(), sendRtpItem.getPort() );
         // 监听流上线。 流上线直接发送sendRtpItem消息给实际的信令处理者
-        Hook hook = Hook.getInstance(HookType.on_media_arrival, sendRtpItem.getApp(), sendRtpItem.getStream(), null);
+        Hook hook = Hook.getInstance(HookType.ON_MEDIA_ARRIVAL, sendRtpItem.getApp(), sendRtpItem.getStream(), null);
         hookSubscribe.removeSubscribe(hook);
         RedisRpcResponse response = request.getResponse();
         response.setStatusCode(200);
@@ -193,7 +193,7 @@ public class RedisRpcController {
         StreamInfo streamInfo = JSONObject.parseObject(request.getParam().toString(), StreamInfo.class);
         log.info("[redis-rpc] 停止监听流上线： {}/{}", streamInfo.getApp(), streamInfo.getStream());
         // 监听流上线。 流上线直接发送sendRtpItem消息给实际的信令处理者
-        Hook hook = Hook.getInstance(HookType.on_media_arrival, streamInfo.getApp(), streamInfo.getStream(), null);
+        Hook hook = Hook.getInstance(HookType.ON_MEDIA_ARRIVAL, streamInfo.getApp(), streamInfo.getStream(), null);
         hookSubscribe.removeSubscribe(hook);
         RedisRpcResponse response = request.getResponse();
         response.setStatusCode(200);

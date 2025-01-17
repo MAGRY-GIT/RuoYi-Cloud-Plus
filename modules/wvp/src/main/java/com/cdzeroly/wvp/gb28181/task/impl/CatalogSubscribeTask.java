@@ -22,7 +22,9 @@ import java.text.ParseException;
 @Slf4j
 public class CatalogSubscribeTask implements ISubscribeTask {
     private final Device device;
+
     private final ISIPCommander sipCommander;
+
     private SIPRequest request;
 
     private final DynamicTask dynamicTask;

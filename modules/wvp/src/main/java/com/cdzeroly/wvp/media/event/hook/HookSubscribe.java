@@ -36,7 +36,7 @@ public class HookSubscribe {
     @EventListener
     public void onApplicationEvent(MediaArrivalEvent event) {
         if (event.getSchema() == null || "rtsp".equals(event.getSchema())) {
-            sendNotify(HookType.on_media_arrival, event);
+            sendNotify(HookType.ON_MEDIA_ARRIVAL, event);
         }
 
     }
@@ -48,7 +48,7 @@ public class HookSubscribe {
     @EventListener
     public void onApplicationEvent(MediaDepartureEvent event) {
         if (event.getSchema() == null || "rtsp".equals(event.getSchema())) {
-            sendNotify(HookType.on_media_departure, event);
+            sendNotify(HookType.ON_MEDIA_DEPARTURE, event);
         }
 
     }
@@ -58,7 +58,7 @@ public class HookSubscribe {
     @Async("taskExecutor")
     @EventListener
     public void onApplicationEvent(MediaPublishEvent event) {
-        sendNotify(HookType.on_publish, event);
+        sendNotify(HookType.ON_PUBLISH, event);
     }
     /**
      * 生成录像文件事件
@@ -66,7 +66,7 @@ public class HookSubscribe {
     @Async("taskExecutor")
     @EventListener
     public void onApplicationEvent(MediaRecordMp4Event event) {
-        sendNotify(HookType.on_record_mp4, event);
+        sendNotify(HookType.ON_RECORD_MP4, event);
     }
 
     /**
