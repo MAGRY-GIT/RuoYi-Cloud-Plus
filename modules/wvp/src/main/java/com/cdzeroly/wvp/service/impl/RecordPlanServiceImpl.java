@@ -87,8 +87,9 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
 
     private Map<Long, StreamInfo> recordStreamMap;
 
-//    @Scheduled(cron = "0 */30 * * * *")
-    @Scheduled(fixedRate = 10, timeUnit = TimeUnit.MINUTES)
+   @Scheduled(cron = "*/30 * * * * *")
+   // @Scheduled(cron = "0 */30 * * * *")
+    // @Scheduled(fixedRate = 10, timeUnit = TimeUnit.MINUTES)
     public void execution() {
         log.info("[录制计划] 执行");
         // 查询现在需要录像的通道Id
@@ -147,6 +148,12 @@ public class RecordPlanServiceImpl implements IRecordPlanService {
         return recordPlanMapper.queryRecordIng(week, index);
     }
 
+    /**
+     *
+     * 停止流
+     * @param channelIds 通道集合
+     * @param recordStreamMap  记录流图
+     */
     private void stopStreams(Collection<Long> channelIds, Map<Long, StreamInfo> recordStreamMap) {
         for (Long channelId : channelIds) {
             try {

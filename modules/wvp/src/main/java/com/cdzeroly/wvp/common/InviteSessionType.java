@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.common;
 
 /**
+ * 邀请会话类型
  * @author MGARY
  */
 

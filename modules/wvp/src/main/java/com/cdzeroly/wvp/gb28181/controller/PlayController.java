@@ -29,6 +29,7 @@ import com.cdzeroly.wvp.domain.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
@@ -48,7 +49,7 @@ import java.util.UUID;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/play")
-public class PlayController extends BaseController {
+public class PlayController {
 
     private final SipInviteSessionManager sessionManager;
 
@@ -70,7 +71,7 @@ public class PlayController extends BaseController {
     @Parameter(name = "deviceId", description = "设备国标编号", required = true)
     @Parameter(name = "channelId", description = "通道国标编号", required = true)
     @GetMapping("/start/{deviceId}/{channelId}")
-    public DeferredResult<R<StreamContentVo>> play(@PathVariable String deviceId, @PathVariable String channelId) {
+    public DeferredResult<R<StreamContentVo>> play(HttpServletRequest request, @PathVariable String deviceId, @PathVariable String channelId) {
 
         log.info("[开始点播] deviceId：{}, channelId：{}, ", deviceId, channelId);
         Assert.notNull(deviceId, "设备国标编号不可为NULL");

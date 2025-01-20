@@ -161,7 +161,7 @@ public class RecordInfoResponseMessageHandler extends SIPRequestProcessorParent 
     }
 
     public void releaseRequest(String deviceId, String sn,@NotNull RecordInfo recordInfo){
-        String key = DeferredResultHolder.CALLBACK_CMD_RECORDINFO + deviceId + sn;
+        String key = DeferredResultHolder.CALLBACK_CMD_RECORD_INFO + deviceId + sn;
         // 对数据进行排序
         if(recordInfo.getRecordList() != null) {
             Collections.sort(recordInfo.getRecordList());

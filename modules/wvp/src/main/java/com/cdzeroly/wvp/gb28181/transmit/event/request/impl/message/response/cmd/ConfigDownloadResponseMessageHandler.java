@@ -46,7 +46,7 @@ public class ConfigDownloadResponseMessageHandler extends SIPRequestProcessorPar
     @Override
     public void handForDevice(RequestEvent evt, Device device, Element element) {
         String channelId = getText(element, "DeviceID");
-        String key = DeferredResultHolder.CALLBACK_CMD_CONFIGDOWNLOAD + device.getDeviceId() + channelId;
+        String key = DeferredResultHolder.CALLBACK_CMD_CONFIG_DOWNLOAD + device.getDeviceId() + channelId;
         try {
             // 回复200 OK
             responseAck((SIPRequest) evt.getRequest(), Response.OK);

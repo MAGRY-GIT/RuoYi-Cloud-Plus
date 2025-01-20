@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cdzeroly.common.core.utils.AssertUtils;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.InviteInfo;
@@ -153,7 +154,7 @@ public class PlatformServiceImpl implements IPlatformService {
                     .replaceAll("_", "/_");
         }
         Page<Platform> page = pageQuery.build();
-        List<Platform> all = platformMapper.queryList(page,query);
+        Page<Platform> all = platformMapper.queryList(page,query);
            return  TableDataInfo.build(all);
     }
 
@@ -186,7 +187,7 @@ public class PlatformServiceImpl implements IPlatformService {
 
     @Override
     public boolean update(Platform platform) {
-        Assert.isTrue(platform.getId() > 0, "ID必须存在");
+        AssertUtils.isNotNull(platform.getId(), "ID必须存在");
         log.info("[国标级联] 更新平台 {}({})", platform.getName(), platform.getServerGbId());
         platform.setCharacterSet(platform.getCharacterSet().toUpperCase());
         Platform platformInDb = platformMapper.selectById(platform.getId());
@@ -775,7 +776,7 @@ public class PlatformServiceImpl implements IPlatformService {
 
     @Override
     @Transactional
-    public void delete(Integer platformId, CommonCallback<Object> callback) {
+    public void delete(Long platformId, CommonCallback<Object> callback) {
         Platform platform = platformMapper.selectById(platformId);
         Assert.notNull(platform, "平台不存在");
         // 发送离线消息,无论是否成功都删除缓存

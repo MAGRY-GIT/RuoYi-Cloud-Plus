@@ -9,6 +9,6 @@ import java.util.List;
  */
 @Data
 public class ChannelToRegionByGbDeviceParam {
-    private List<Integer> deviceIds;
+    private List<Long> deviceIds;
     private String civilCode;
 }

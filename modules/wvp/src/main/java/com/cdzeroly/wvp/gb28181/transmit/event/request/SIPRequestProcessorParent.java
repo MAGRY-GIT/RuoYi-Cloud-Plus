@@ -131,7 +131,8 @@ public abstract class SIPRequestProcessorParent {
      */
     public SIPResponse responseSdpAck(SIPRequest request, String sdp, Platform platform) throws SipException, InvalidArgumentException, ParseException {
 
-        ContentTypeHeader contentTypeHeader = SipFactory.getInstance().createHeaderFactory().createContentTypeHeader("APPLICATION", "SDP");
+        HeaderFactory headerFactory = SipFactory.getInstance().createHeaderFactory();
+        ContentTypeHeader contentTypeHeader = headerFactory.createContentTypeHeader("APPLICATION", "SDP");
 
         // 兼容国标中的使用编码@域名作为RequestURI的情况
         ResponseAckExtraParam responseAckExtraParam = getResponseAckExtraParam(request, sdp, platform, contentTypeHeader);

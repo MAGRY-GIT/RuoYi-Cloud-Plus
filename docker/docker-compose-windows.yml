@@ -30,7 +30,7 @@ services:
     build:
       context: ../visual/nacos
       dockerfile: Dockerfile
-    container_name: platform_nacos
+    container_name: platform_nacos_127
     ports:
       - "8848:8848"
       - "9848:9848"

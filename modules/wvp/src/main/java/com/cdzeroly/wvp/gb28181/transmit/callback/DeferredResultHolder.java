@@ -18,41 +18,41 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class DeferredResultHolder {
 
-	public static final String CALLBACK_CMD_DEVICESTATUS = "CALLBACK_DEVICESTATUS";
+	public static final String CALLBACK_CMD_DEVICE_STATUS = "CALLBACK_DEVICE_STATUS_";
 
-	public static final String CALLBACK_CMD_DEVICEINFO = "CALLBACK_DEVICEINFO";
+	public static final String CALLBACK_CMD_DEVICE_INFO = "CALLBACK_DEVICE_INFO_";
 
-	public static final String CALLBACK_CMD_DEVICECONTROL = "CALLBACK_DEVICECONTROL";
+	public static final String CALLBACK_CMD_DEVICE_CONTROL = "CALLBACK_DEVICE_CONTROL_";
 
-	public static final String CALLBACK_CMD_DEVICECONFIG = "CALLBACK_DEVICECONFIG";
+	public static final String CALLBACK_CMD_DEVICE_CONFIG = "CALLBACK_DEVICE_CONFIG_";
 
-	public static final String CALLBACK_CMD_CONFIGDOWNLOAD = "CALLBACK_CONFIGDOWNLOAD";
+	public static final String CALLBACK_CMD_CONFIG_DOWNLOAD = "CALLBACK_CONFIG_DOWNLOAD_";
 
-	public static final String CALLBACK_CMD_CATALOG = "CALLBACK_CATALOG";
+	public static final String CALLBACK_CMD_CATALOG = "CALLBACK_CATALOG_";
 
-	public static final String CALLBACK_CMD_RECORDINFO = "CALLBACK_RECORDINFO";
+	public static final String CALLBACK_CMD_RECORD_INFO = "CALLBACK_RECORD_INFO_";
 
-	public static final String CALLBACK_CMD_PLAY = "CALLBACK_PLAY";
+	public static final String CALLBACK_CMD_PLAY = "CALLBACK_PLAY_";
 
-	public static final String CALLBACK_CMD_PLAYBACK = "CALLBACK_PLAYBACK";
+	public static final String CALLBACK_CMD_PLAYBACK = "CALLBACK_PLAYBACK_";
 
-	public static final String CALLBACK_CMD_DOWNLOAD = "CALLBACK_DOWNLOAD";
+	public static final String CALLBACK_CMD_DOWNLOAD = "CALLBACK_DOWNLOAD_";
 
-	public static final String CALLBACK_CMD_PROXY = "CALLBACK_PROXY";
+	public static final String CALLBACK_CMD_PROXY = "CALLBACK_PROXY_";
 
-	public static final String CALLBACK_CMD_STOP = "CALLBACK_STOP";
+	public static final String CALLBACK_CMD_STOP = "CALLBACK_STOP_";
 
-	public static final String UPLOAD_FILE_CHANNEL = "UPLOAD_FILE_CHANNEL";
+	public static final String UPLOAD_FILE_CHANNEL = "UPLOAD_FILE_CHANNEL_";
 
-	public static final String CALLBACK_CMD_MOBILE_POSITION = "CALLBACK_CMD_MOBILE_POSITION";
+	public static final String CALLBACK_CMD_MOBILE_POSITION = "CALLBACK_CMD_MOBILE_POSITION_";
 
-	public static final String CALLBACK_CMD_PRESETQUERY = "CALLBACK_PRESETQUERY";
+	public static final String CALLBACK_CMD_PRESET_QUERY = "CALLBACK_PRESET_QUERY_";
 
-	public static final String CALLBACK_CMD_ALARM = "CALLBACK_ALARM";
+	public static final String CALLBACK_CMD_ALARM = "CALLBACK_ALARM_";
 
-	public static final String CALLBACK_CMD_BROADCAST = "CALLBACK_BROADCAST";
+	public static final String CALLBACK_CMD_BROADCAST = "CALLBACK_BROADCAST_";
 
-	public static final String CALLBACK_CMD_SNAP= "CALLBACK_SNAP";
+	public static final String CALLBACK_CMD_SNAP= "CALLBACK_SNAP_";
 
 	private final Map<String, Map<String, DeferredResultEx>> MAP = new ConcurrentHashMap<>();
 
@@ -97,7 +97,7 @@ public class DeferredResultHolder {
 
 	/**
 	 * 释放单个请求
-	 * @param msg
+	 * @param msg 消息
 	 */
 	public void invokeResult(RequestMessage msg) {
 		Map<String, DeferredResultEx> deferredResultMap = MAP.get(msg.getKey());
@@ -117,7 +117,7 @@ public class DeferredResultHolder {
 
 	/**
 	 * 释放所有的请求
-	 * @param msg
+	 * @param msg 消息
 	 */
 	public void invokeAllResult(RequestMessage msg) {
 		Map<String, DeferredResultEx> deferredResultMap = MAP.get(msg.getKey());

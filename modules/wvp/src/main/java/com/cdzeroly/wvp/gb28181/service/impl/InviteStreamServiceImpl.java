@@ -159,7 +159,7 @@ public class InviteStreamServiceImpl implements IInviteStreamService {
         if (filter.isEmpty()) {
             return null;
         }
-        return filter.get(0);
+        return filter.values().stream().findFirst().orElse(null);
     }
 
     @Override

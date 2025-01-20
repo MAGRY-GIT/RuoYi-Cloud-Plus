@@ -61,7 +61,7 @@ public class RecordDataCatch {
             // 超过五秒收不到消息任务超时， 只更新这一部分数据
             if ( recordInfo.getLastTime().isBefore(instantBefore5S)) {
                 // 处理录像数据， 返回给前端
-                String msgKey = DeferredResultHolder.CALLBACK_CMD_RECORDINFO + recordInfo.getDeviceId() + recordInfo.getSn();
+                String msgKey = DeferredResultHolder.CALLBACK_CMD_RECORD_INFO + recordInfo.getDeviceId() + recordInfo.getSn();
 
                 // 对数据进行排序
                 Collections.sort(recordInfo.getRecordList());

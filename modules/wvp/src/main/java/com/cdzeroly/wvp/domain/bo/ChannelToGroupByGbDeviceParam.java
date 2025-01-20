@@ -9,7 +9,7 @@ import java.util.List;
  */
 @Data
 public class ChannelToGroupByGbDeviceParam {
-    private List<Integer> deviceIds;
+    private List<Long> deviceIds;
     private String parentId;
     private String businessGroup;
 }

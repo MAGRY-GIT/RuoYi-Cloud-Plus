@@ -37,7 +37,7 @@ public class RecordPlanController {
 
 
 
-    @PostMapping("")
+    @PostMapping
     @Operation(summary = "添加录制计划")
     @Parameter(name = "plan", description = "计划", required = true)
     public R<Void> add(@RequestBody RecordPlanBo plan) {
@@ -80,7 +80,7 @@ public class RecordPlanController {
     }
 
 
-    @GetMapping("")
+    @GetMapping
     @Operation(summary = "查询录制计划")
     @Parameter(name = "planId", description = "计划ID", required = true)
     public R<RecordPlanVo> get(Long planId) {
@@ -123,7 +123,7 @@ public class RecordPlanController {
     }
 
 
-    @PutMapping("")
+    @PutMapping
     @Operation(summary = "更新录制计划")
     @Parameter(name = "plan", description = "计划", required = true)
     public R<Void> update(@RequestBody RecordPlanBo plan) {
@@ -135,10 +135,10 @@ public class RecordPlanController {
     }
 
 
-    @DeleteMapping()
+    @DeleteMapping("/{planId}")
     @Operation(summary = "删除录制计划")
     @Parameter(name = "planId", description = "计划ID", required = true)
-    public R<Void> delete(Long planId) {
+    public R<Void> delete(@PathVariable  Long planId) {
         if (planId == null) {
             throw new ServiceException("计划ID不可为NULL");
         }

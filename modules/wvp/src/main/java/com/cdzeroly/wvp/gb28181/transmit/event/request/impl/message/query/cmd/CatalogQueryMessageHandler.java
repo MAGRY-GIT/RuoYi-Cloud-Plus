@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.util.List;
 
 /**
+ * 目录查询消息处理程序
  * @author MGARY
  */
 @Slf4j

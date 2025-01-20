@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cdzeroly.common.tenant.core.TenantEntity;
@@ -75,15 +76,19 @@ public class Platform extends TenantEntity {
     private boolean status;
 
     @Schema(description = "通道数量")
+    @TableField(exist = false)
     private Integer channelCount;
 
     @Schema(description = "已被订阅目录信息")
+    @TableField(exist = false)
     private boolean catalogSubscribe;
 
     @Schema(description = "已被订阅报警信息")
+    @TableField(exist = false)
     private boolean alarmSubscribe;
 
     @Schema(description = "已被订阅移动位置信息")
+    @TableField(exist = false)
     private boolean mobilePositionSubscribe;
 
     @Schema(description = "目录分组-每次向上级发送通道信息时单个包携带的通道数量，取值1,2,4,8")

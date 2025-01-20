@@ -91,5 +91,5 @@ public interface IPlatformService {
 
     List<Platform> queryEnablePlatformList();
 
-    void delete(Integer platformId, CommonCallback<Object> callback);
+    void delete(Long platformId, CommonCallback<Object> callback);
 }

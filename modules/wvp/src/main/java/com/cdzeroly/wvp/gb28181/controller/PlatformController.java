@@ -8,7 +8,6 @@ import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.conf.SipConfig;
 
 
-
 import com.cdzeroly.wvp.domain.bean.SubscribeHolder;
 import com.cdzeroly.wvp.domain.bo.UpdateChannelParam;
 import com.cdzeroly.wvp.domain.Platform;
@@ -29,9 +28,10 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 /**
  * 级联平台管理
+ *
  * @author MGARY
  */
-@Tag(name  = "级联平台管理")
+@Tag(name = "级联平台管理")
 @Slf4j
 @RestController
 @AllArgsConstructor
@@ -44,7 +44,7 @@ public class PlatformController {
 
     private final SipConfig sipConfig;
 
-	private final IPlatformService platformService;
+    private final IPlatformService platformService;
 
 
     @Operation(summary = "获取国标服务的配置")
@@ -64,9 +64,9 @@ public class PlatformController {
     public Platform getPlatform(@PathVariable String id) {
         Platform parentPlatform = platformService.queryPlatformByServerGBId(id);
         if (parentPlatform != null) {
-            return  parentPlatform;
+            return parentPlatform;
         } else {
-            throw new ServiceException("未查询到此平台") ;
+            throw new ServiceException("未查询到此平台");
         }
     }
 
@@ -75,11 +75,10 @@ public class PlatformController {
     @Parameter(name = "page", description = "当前页")
     @Parameter(name = "count", description = "每页查询数量")
     @Parameter(name = "query", description = "查询内容")
-    public TableDataInfo<Platform> platforms(PageQuery pageQuery,
-                                             @RequestParam(required = false) String query) {
+    public TableDataInfo<Platform> platforms(PageQuery pageQuery, @RequestParam(required = false) String query) {
 
-        TableDataInfo<Platform> parentPlatformPageInfo = platformService.queryPlatformList( pageQuery, query);
-        return   parentPlatformPageInfo.map(platform -> {
+        TableDataInfo<Platform> parentPlatformPageInfo = platformService.queryPlatformList(pageQuery, query);
+        return parentPlatformPageInfo.map(platform -> {
             platform.setMobilePositionSubscribe(subscribeHolder.getMobilePositionSubscribe(platform.getServerGbId()) != null);
             platform.setCatalogSubscribe(subscribeHolder.getCatalogSubscribe(platform.getServerGbId()) != null);
             return platform;
@@ -123,7 +122,7 @@ public class PlatformController {
 
         Platform parentPlatformOld = platformService.queryPlatformByServerGBId(platform.getServerGbId());
         if (parentPlatformOld != null) {
-            throw new ServiceException( "平台 " + platform.getServerGbId() + " 已存在");
+            throw new ServiceException("平台 " + platform.getServerGbId() + " 已存在");
         }
         boolean updateResult = platformService.add(platform);
 
@@ -140,17 +139,7 @@ public class PlatformController {
         if (log.isDebugEnabled()) {
             log.debug("保存上级平台信息API调用");
         }
-        if (ObjectUtils.isEmpty(parentPlatform.getName())
-                || ObjectUtils.isEmpty(parentPlatform.getServerGbId())
-                || ObjectUtils.isEmpty(parentPlatform.getServerGbDomain())
-                || ObjectUtils.isEmpty(parentPlatform.getServerIp())
-                || ObjectUtils.isEmpty(parentPlatform.getServerPort())
-                || ObjectUtils.isEmpty(parentPlatform.getServerGbId())
-                || ObjectUtils.isEmpty(parentPlatform.getExpires())
-                || ObjectUtils.isEmpty(parentPlatform.getKeepTimeout())
-                || ObjectUtils.isEmpty(parentPlatform.getTransport())
-                || ObjectUtils.isEmpty(parentPlatform.getCharacterSet())
-        ) {
+        if (ObjectUtils.isEmpty(parentPlatform.getName()) || ObjectUtils.isEmpty(parentPlatform.getServerGbId()) || ObjectUtils.isEmpty(parentPlatform.getServerGbDomain()) || ObjectUtils.isEmpty(parentPlatform.getServerIp()) || ObjectUtils.isEmpty(parentPlatform.getServerPort()) || ObjectUtils.isEmpty(parentPlatform.getServerGbId()) || ObjectUtils.isEmpty(parentPlatform.getExpires()) || ObjectUtils.isEmpty(parentPlatform.getKeepTimeout()) || ObjectUtils.isEmpty(parentPlatform.getTransport()) || ObjectUtils.isEmpty(parentPlatform.getCharacterSet())) {
             // throw new ServiceException(ErrorCode.ERROR400);TODO
         }
         platformService.update(parentPlatform);
@@ -160,14 +149,14 @@ public class PlatformController {
     @Parameter(name = "id", description = "上级平台ID")
     @DeleteMapping("/delete")
     @ResponseBody
-    public DeferredResult<Object> deletePlatform(Integer id) {
+    public DeferredResult<Object> deletePlatform(Long id) {
 
         if (log.isDebugEnabled()) {
             log.debug("删除上级平台API调用");
         }
         DeferredResult<Object> deferredResult = new DeferredResult<>();
 
-        platformService.delete(id, (object)->{
+        platformService.delete(id, (object) -> {
             deferredResult.setResult(WVPResult.success());
         });
         return deferredResult;
@@ -192,19 +181,14 @@ public class PlatformController {
     @Parameter(name = "hasShare", description = "是否已经共享")
     @GetMapping("/channel/list")
     @ResponseBody
-    public TableDataInfo<PlatformChannel> queryChannelList(PageQuery pageQuery,
-                                                           @RequestParam(required = false) Long platformId,
-                                                      @RequestParam(required = false) String query,
-                                                      @RequestParam(required = false) Integer channelType,
-                                                      @RequestParam(required = false) Boolean online,
-                                                      @RequestParam(required = false) Boolean hasShare) {
+    public TableDataInfo<PlatformChannel> queryChannelList(PageQuery pageQuery, @RequestParam(required = false) Long platformId, @RequestParam(required = false) String query, @RequestParam(required = false) Integer channelType, @RequestParam(required = false) Boolean online, @RequestParam(required = false) Boolean hasShare) {
 
         Assert.notNull(platformId, "上级平台的数据ID不可为NULL");
         if (ObjectUtils.isEmpty(query)) {
             query = null;
         }
 
-        return platformChannelService.queryChannelList(pageQuery, query, channelType,  online, platformId, hasShare);
+        return platformChannelService.queryChannelList(pageQuery, query, channelType, online, platformId, hasShare);
     }
 
     @Operation(summary = "向上级平台添加国标通道")
@@ -221,7 +205,7 @@ public class PlatformController {
                 log.info("[国标级联]添加所有通道到上级平台， {}", param.getPlatformId());
                 result = platformChannelService.addAllChannel(param.getPlatformId());
             }
-        }else {
+        } else {
             result = platformChannelService.addChannels(param.getPlatformId(), param.getChannelIds());
         }
         if (result <= 0) {
@@ -243,7 +227,7 @@ public class PlatformController {
                 log.info("[国标级联]移除所有通道，上级平台， {}", param.getPlatformId());
                 result = platformChannelService.removeAllChannel(param.getPlatformId());
             }
-        }else {
+        } else {
             result = platformChannelService.removeChannels(param.getPlatformId(), param.getChannelIds());
         }
         if (result <= 0) {

@@ -230,7 +230,7 @@ public class DeviceQueryController extends BaseController {
         }
         Device device = deviceService.getDeviceByDeviceId(deviceId);
         String uuid = UUID.randomUUID().toString();
-        String key = DeferredResultHolder.CALLBACK_CMD_DEVICESTATUS + deviceId;
+        String key = DeferredResultHolder.CALLBACK_CMD_DEVICE_STATUS + deviceId;
         DeferredResult<ResponseEntity<String>> result = new DeferredResult<ResponseEntity<String>>(2 * 1000L);
         if (device == null) {
             result.setResult(new ResponseEntity(String.format("设备%s不存在", deviceId), org.springframework.http.HttpStatus.OK));
@@ -257,7 +257,7 @@ public class DeviceQueryController extends BaseController {
             msg.setData("Timeout. Device did not response to this command.");
             resultHolder.invokeResult(msg);
         });
-        resultHolder.put(DeferredResultHolder.CALLBACK_CMD_DEVICESTATUS + deviceId, uuid, result);
+        resultHolder.put(DeferredResultHolder.CALLBACK_CMD_DEVICE_STATUS + deviceId, uuid, result);
         return result;
     }
 

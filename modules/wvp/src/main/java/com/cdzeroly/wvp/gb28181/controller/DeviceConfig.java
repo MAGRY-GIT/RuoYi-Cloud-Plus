@@ -71,7 +71,7 @@ public class DeviceConfig {
 		}
 		Device device = deviceService.getDeviceByDeviceId(deviceId);
 		String uuid = UUID.randomUUID().toString();
-		String key = DeferredResultHolder.CALLBACK_CMD_DEVICECONFIG + deviceId + channelId;
+		String key = DeferredResultHolder.CALLBACK_CMD_DEVICE_CONFIG + deviceId + channelId;
 		try {
 			cmder.deviceBasicConfigCmd(device, channelId, name, expiration, heartBeatInterval, heartBeatCount, event -> {
 				RequestMessage msg = new RequestMessage();
@@ -120,7 +120,7 @@ public class DeviceConfig {
 		if (log.isDebugEnabled()) {
 			log.debug("设备状态查询API调用");
 		}
-		String key = DeferredResultHolder.CALLBACK_CMD_CONFIGDOWNLOAD + (ObjectUtils.isEmpty(channelId) ? deviceId : channelId);
+		String key = DeferredResultHolder.CALLBACK_CMD_CONFIG_DOWNLOAD + (ObjectUtils.isEmpty(channelId) ? deviceId : channelId);
 		String uuid = UUID.randomUUID().toString();
 		Device device = deviceService.getDeviceByDeviceId(deviceId);
 		try {

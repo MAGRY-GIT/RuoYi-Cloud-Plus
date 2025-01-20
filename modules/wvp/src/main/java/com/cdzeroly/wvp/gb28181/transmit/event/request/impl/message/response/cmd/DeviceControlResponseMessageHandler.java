@@ -26,6 +26,7 @@ import java.text.ParseException;
 import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
 
 /**
+ * 设备控制返回
  * @author MGARY
  */
 @Slf4j
@@ -56,7 +57,7 @@ public class DeviceControlResponseMessageHandler extends SIPRequestProcessorPare
         String result = getText(element, "Result");
 
         RequestMessage msg = new RequestMessage();
-        String key = DeferredResultHolder.CALLBACK_CMD_DEVICECONTROL +  device.getDeviceId() + channelId;
+        String key = DeferredResultHolder.CALLBACK_CMD_DEVICE_CONTROL +  device.getDeviceId() + channelId;
         msg.setKey(key);
         if ("OK".equalsIgnoreCase(result)) {
             msg.setData(WVPResult.success());

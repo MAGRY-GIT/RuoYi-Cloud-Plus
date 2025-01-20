@@ -305,7 +305,8 @@ public class SIPRequestHeaderPlatformProvider {
 
         // via
         ArrayList<ViaHeader> viaHeaders = new ArrayList<ViaHeader>();
-        ViaHeader viaHeader = SipFactory.getInstance().createHeaderFactory().createViaHeader(sipLayer.getLocalIp(platform.getDeviceIp()), platform.getDevicePort(), platform.getTransport(), viaTag);
+        HeaderFactory headerFactory = SipFactory.getInstance().createHeaderFactory();
+        ViaHeader viaHeader = headerFactory.createViaHeader(sipLayer.getLocalIp(platform.getDeviceIp()), platform.getDevicePort(), platform.getTransport(), viaTag);
         viaHeader.setRPort();
         viaHeaders.add(viaHeader);
 
@@ -313,27 +314,27 @@ public class SIPRequestHeaderPlatformProvider {
         SipURI fromSipUrl = SipFactory.getInstance().createAddressFactory().createSipURI(platform.getServerGbId(), sipConfig.getDomain());
         Address fromAddress = SipFactory.getInstance().createAddressFactory().createAddress(fromSipUrl);
         // 必须要有标记，否则无法创建会话，无法回应ack
-        FromHeader fromHeader = SipFactory.getInstance().createHeaderFactory().createFromHeader(fromAddress, fromTag);
+        FromHeader fromHeader = headerFactory.createFromHeader(fromAddress, fromTag);
         // to
         SipURI toSipUrl = SipFactory.getInstance().createAddressFactory().createSipURI(sourceId, platformHostAddress);
         Address toAddress = SipFactory.getInstance().createAddressFactory().createAddress(toSipUrl);
-        ToHeader toHeader = SipFactory.getInstance().createHeaderFactory().createToHeader(toAddress, null);
+        ToHeader toHeader = headerFactory.createToHeader(toAddress, null);
 
         // Forwards
-        MaxForwardsHeader maxForwards = SipFactory.getInstance().createHeaderFactory().createMaxForwardsHeader(70);
+        MaxForwardsHeader maxForwards = headerFactory.createMaxForwardsHeader(70);
 
         // ceq
-        CSeqHeader cSeqHeader = SipFactory.getInstance().createHeaderFactory().createCSeqHeader(redisCatchStorage.getCSEQ(), Request.INVITE);
+        CSeqHeader cSeqHeader = headerFactory.createCSeqHeader(redisCatchStorage.getCSEQ(), Request.INVITE);
         request = SipFactory.getInstance().createMessageFactory().createRequest(requestLine, Request.INVITE, callIdHeader, cSeqHeader, fromHeader, toHeader, viaHeaders, maxForwards);
 
         request.addHeader(SipUtils.createUserAgentHeader(gitUtil));
 
         Address concatAddress = SipFactory.getInstance().createAddressFactory().createAddress(SipFactory.getInstance().createAddressFactory().createSipURI(sipConfig.getId(), localHostAddress));
-        request.addHeader(SipFactory.getInstance().createHeaderFactory().createContactHeader(concatAddress));
+        request.addHeader(headerFactory.createContactHeader(concatAddress));
         // Subject
-        SubjectHeader subjectHeader = SipFactory.getInstance().createHeaderFactory().createSubjectHeader(String.format("%s:%s,%s:%s", sourceId, ssrc, channelId, 0));
+        SubjectHeader subjectHeader = headerFactory.createSubjectHeader(String.format("%s:%s,%s:%s", sourceId, ssrc, channelId, 0));
         request.addHeader(subjectHeader);
-        ContentTypeHeader contentTypeHeader = SipFactory.getInstance().createHeaderFactory().createContentTypeHeader("APPLICATION", "SDP");
+        ContentTypeHeader contentTypeHeader = headerFactory.createContentTypeHeader("APPLICATION", "SDP");
         request.setContent(content, contentTypeHeader);
         return request;
     }

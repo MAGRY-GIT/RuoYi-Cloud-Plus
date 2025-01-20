@@ -23,6 +23,7 @@ import com.cdzeroly.wvp.domain.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -39,7 +40,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping(value = "/commonChannel")
-public class CommonChannelController extends BaseController {
+public class CommonChannelController {
 
 
     private final IGbChannelService channelService;
@@ -222,7 +223,7 @@ public class CommonChannelController extends BaseController {
 
     @Operation(summary = "播放通道")
     @GetMapping("/play")
-    public DeferredResult<WVPResult<StreamContentVo>> deleteChannelToGroupByGbDevice(Long channelId){
+    public DeferredResult<WVPResult<StreamContentVo>> deleteChannelToGroupByGbDevice( HttpServletRequest request, Long channelId){
         Assert.notNull(channelId,"参数异常");
         CommonGbChannel channel = channelService.getOne(channelId);
         Assert.notNull(channel, "通道不存在");

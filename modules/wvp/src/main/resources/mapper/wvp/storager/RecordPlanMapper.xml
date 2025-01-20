@@ -14,9 +14,12 @@
 
     </select>
     <select id="queryRecordIng" resultType="java.lang.Long">
-        select wdc.id from wvp_device_channel wdc
-                               left join wvp_record_plan_item wrpi on wrpi.plan_id = wdc.record_plan_id
-        where wrpi.week_day = #{week} and wrpi.start &lt;= #{index} and wrpi.stop &gt;= #{index}
+        select wdc.id
+        from wvp_device_channel wdc
+                 left join wvp_record_plan_item wrpi on wrpi.plan_id = wdc.record_plan_id
+        where wrpi.week_day = #{week}
+          and wrpi.start &lt;= #{index}
+          and wrpi.stop &gt;= #{index}
         group by wdc.id
 
 

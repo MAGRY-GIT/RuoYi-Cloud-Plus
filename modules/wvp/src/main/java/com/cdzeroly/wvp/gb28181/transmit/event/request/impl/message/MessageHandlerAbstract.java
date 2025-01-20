@@ -26,13 +26,13 @@ import static com.cdzeroly.wvp.gb28181.utils.XmlUtil.getText;
 @Slf4j
 public abstract class MessageHandlerAbstract extends SIPRequestProcessorParent implements IMessageHandler{
 
-    public Map<String, IMessageHandler> messageHandlerMap = new ConcurrentHashMap<>();
+     final Map<String, IMessageHandler> MESSAGE_HANDLER_MAP = new ConcurrentHashMap<>();
 
     @Autowired
     private IPlatformService platformService;
 
     public void addHandler(String cmdType, IMessageHandler messageHandler) {
-        messageHandlerMap.put(cmdType, messageHandler);
+        MESSAGE_HANDLER_MAP.put(cmdType, messageHandler);
     }
 
     @Override
@@ -46,7 +46,7 @@ public abstract class MessageHandlerAbstract extends SIPRequestProcessorParent i
             }
             return;
         }
-        IMessageHandler messageHandler = messageHandlerMap.get(cmd);
+        IMessageHandler messageHandler = MESSAGE_HANDLER_MAP.get(cmd);
 
         if (messageHandler != null) {
             //两个国标平台互相级联时由于上一步判断导致本该在平台处理的消息 放到了设备的处理逻辑
@@ -63,7 +63,7 @@ public abstract class MessageHandlerAbstract extends SIPRequestProcessorParent i
     @Override
     public void handForPlatform(RequestEvent evt, Platform parentPlatform, Element element) {
         String cmd = getText(element, "CmdType");
-        IMessageHandler messageHandler = messageHandlerMap.get(cmd);
+        IMessageHandler messageHandler = MESSAGE_HANDLER_MAP.get(cmd);
         if (messageHandler != null) {
             messageHandler.handForPlatform(evt, parentPlatform, element);
         }

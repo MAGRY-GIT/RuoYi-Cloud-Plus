@@ -498,7 +498,7 @@ public class GbChannelServiceImpl implements IGbChannelService {
     }
 
     @Override
-    public void addChannelToRegionByGbDevice(String civilCode, List<Integer> deviceIds) {
+    public void addChannelToRegionByGbDevice(String civilCode, List<Long> deviceIds) {
         List<CommonGbChannel> channelList = commonGBChannelMapper.queryByGbDeviceIds(    ChannelDataType.GB28181.value,deviceIds);
         if (channelList.isEmpty()) {
             throw new ServiceException("所有通道Id不存在");
@@ -519,7 +519,7 @@ public class GbChannelServiceImpl implements IGbChannelService {
     }
 
     @Override
-    public void deleteChannelToRegionByGbDevice(List<Integer> deviceIds) {
+    public void deleteChannelToRegionByGbDevice(List<Long> deviceIds) {
         List<CommonGbChannel> channelList = commonGBChannelMapper.queryByGbDeviceIds(    ChannelDataType.GB28181.value,deviceIds);
         if (channelList.isEmpty()) {
             throw new ServiceException("所有通道Id不存在");
@@ -636,7 +636,7 @@ public class GbChannelServiceImpl implements IGbChannelService {
 
     @Override
     @Transactional
-    public void addChannelToGroupByGbDevice(String parentId, String businessGroup, List<Integer> deviceIds) {
+    public void addChannelToGroupByGbDevice(String parentId, String businessGroup, List<Long> deviceIds) {
         List<CommonGbChannel> channelList = commonGBChannelMapper.queryByGbDeviceIds(    ChannelDataType.GB28181.value,deviceIds);
         if (channelList.isEmpty()) {
             throw new ServiceException("所有通道Id不存在");
@@ -664,7 +664,7 @@ public class GbChannelServiceImpl implements IGbChannelService {
     }
 
     @Override
-    public void deleteChannelToGroupByGbDevice(List<Integer> deviceIds) {
+    public void deleteChannelToGroupByGbDevice(List<Long> deviceIds) {
         List<CommonGbChannel> channelList = commonGBChannelMapper.queryByGbDeviceIds(    ChannelDataType.GB28181.value,deviceIds);
         if (channelList.isEmpty()) {
             throw new ServiceException("所有通道Id不存在");

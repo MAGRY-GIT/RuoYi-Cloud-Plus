@@ -68,7 +68,7 @@ public class PresetQueryResponseMessageHandler extends SIPRequestProcessorParent
             Element snElement = rootElement.element("SN");
             //该字段可能为通道或则设备的id
             String deviceId = getText(rootElement, "DeviceID");
-            String key = DeferredResultHolder.CALLBACK_CMD_PRESETQUERY + deviceId;
+            String key = DeferredResultHolder.CALLBACK_CMD_PRESET_QUERY + deviceId;
             if (snElement == null || presetListNumElement == null) {
                 try {
                     responseAck(request, Response.BAD_REQUEST, "xml error");

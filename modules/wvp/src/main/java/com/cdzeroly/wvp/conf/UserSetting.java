@@ -97,7 +97,7 @@ public class UserSetting {
     /**
      * 是否开启sip日志
      */
-    private Boolean sipLog = Boolean.TRUE;
+    private Boolean sipLog = Boolean.FALSE;
 
 
 

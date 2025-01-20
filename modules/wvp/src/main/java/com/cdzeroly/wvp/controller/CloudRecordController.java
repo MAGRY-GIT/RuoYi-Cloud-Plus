@@ -55,8 +55,8 @@ public class CloudRecordController extends BaseController {
     @Operation(summary = "查询存在云端录像的日期")
     @Parameter(name = "app", description = "应用名", required = true)
     @Parameter(name = "stream", description = "流ID", required = true)
-    @Parameter(name = "year", description = "年，置空则查询当年", required = false)
-    @Parameter(name = "month", description = "月，置空则查询当月", required = false)
+    @Parameter(name = "year", description = "年，置空则查询当年")
+    @Parameter(name = "month", description = "月，置空则查询当月")
     @Parameter(name = "mediaServerId", description = "流媒体ID，置空则查询全部")
     public R<List<String>> openRtpServer(@RequestParam() String app, @RequestParam() String stream, @RequestParam(required = false) Integer year, @RequestParam(required = false) Integer month, @RequestParam(required = false) String mediaServerId
     ) {

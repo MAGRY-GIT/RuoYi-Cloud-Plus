@@ -8,6 +8,10 @@ import lombok.Data;
  */
 @Data
 public class InviteInfo {
+
+    /**
+     * 请求ID
+     */
     private String requesterId;
     private String targetChannelId;
     private String sourceChannelId;

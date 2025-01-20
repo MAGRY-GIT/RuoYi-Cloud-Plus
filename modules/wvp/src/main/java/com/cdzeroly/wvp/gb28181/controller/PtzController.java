@@ -223,7 +223,7 @@ public class PtzController {
 		}
 		Device device = deviceService.getDeviceByDeviceId(deviceId);
 		String uuid =  UUID.randomUUID().toString();
-		String key =  DeferredResultHolder.CALLBACK_CMD_PRESETQUERY + (ObjectUtils.isEmpty(channelId) ? deviceId : channelId);
+		String key =  DeferredResultHolder.CALLBACK_CMD_PRESET_QUERY + (ObjectUtils.isEmpty(channelId) ? deviceId : channelId);
 		DeferredResult<String> result = new DeferredResult<String> (3 * 1000L);
 		result.onTimeout(()->{
 			log.warn(String.format("获取设备预置位超时"));

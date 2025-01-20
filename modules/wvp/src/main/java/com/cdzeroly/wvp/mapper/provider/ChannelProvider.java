@@ -233,9 +233,9 @@ public class ChannelProvider {
         sqlBuild.append(BASE_SQL);
         sqlBuild.append("where channel_type = 0 and data_type = #{dataType} and data_device_id in ( ");
 
-        Collection<Integer> ids = (Collection<Integer>)params.get("deviceIds");
+        Collection<Long> ids = (Collection<Long>)params.get("deviceIds");
         boolean first = true;
-        for (Integer id : ids) {
+        for (Long id : ids) {
             if (!first) {
                 sqlBuild.append(",");
             }

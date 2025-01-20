@@ -13,7 +13,7 @@ spring:
     active: @profiles.active@
 # 日志配置
 logging:
-  config: classpath:logback-spring.xml
+  config: classpath:logback-plus.xml
 --- # nacos 配置
 spring:
   cloud:

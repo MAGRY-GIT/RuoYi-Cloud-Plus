@@ -20,7 +20,7 @@ public interface PlatformMapper  extends BaseMapper<Platform> {
     /**
      * 查询列表
      */
-    List<Platform> queryList(@Param("page") Page<Platform> page, @Param("query") String query);
+    Page<Platform> queryList(@Param("page") Page<Platform> page, @Param("query") String query);
 
     List<Platform> getByEnable(boolean enable);
 

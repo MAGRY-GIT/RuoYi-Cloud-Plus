@@ -87,7 +87,7 @@ public interface CommonGbChannelMapper extends BaseMapperPlus<CommonGbChannel, C
     List<CommonGbChannel> queryByCivilCode(@Param("civilCode") String civilCode);
 
     @SelectProvider(type = ChannelProvider.class, method = "queryByGbDeviceIds")
-    List<CommonGbChannel> queryByGbDeviceIds(@Param("dataType") Integer dataType, List<Integer> deviceIds);
+    List<CommonGbChannel> queryByGbDeviceIds(@Param("dataType") Integer dataType, List<Long> deviceIds);
 
     List<Long> queryByGbDeviceIdsForIds(@Param("dataType") Integer dataType, List<Long> deviceIds);
 

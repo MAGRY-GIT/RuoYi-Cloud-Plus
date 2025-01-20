@@ -45,7 +45,7 @@ public class DeviceConfigResponseMessageHandler extends SIPRequestProcessorParen
         if (log.isDebugEnabled()) {
             log.debug(json.toJSONString());
         }
-        String key = DeferredResultHolder.CALLBACK_CMD_DEVICECONFIG + device.getDeviceId() + channelId;
+        String key = DeferredResultHolder.CALLBACK_CMD_DEVICE_CONFIG + device.getDeviceId() + channelId;
         RequestMessage msg = new RequestMessage();
         msg.setKey(key);
         msg.setData(json);

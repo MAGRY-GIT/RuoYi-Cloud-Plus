@@ -70,7 +70,7 @@ public class DeviceInfoResponseMessageHandler extends SIPRequestProcessorParent 
             }
             Element deviceIdElement = rootElement.element("DeviceID");
             String channelId = deviceIdElement.getTextTrim();
-            String key = DeferredResultHolder.CALLBACK_CMD_DEVICEINFO + device.getDeviceId() + channelId;
+            String key = DeferredResultHolder.CALLBACK_CMD_DEVICE_INFO + device.getDeviceId() + channelId;
             device.setName(getText(rootElement, "DeviceName"));
 
             device.setManufacturer(getText(rootElement, "Manufacturer"));

@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.controller;
 
+import com.cdzeroly.common.core.domain.R;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.web.core.BaseController;
@@ -76,16 +77,18 @@ public class DeviceChannelController extends BaseController {
     @Parameter(name = "channelId", description = "通道的数据库ID", required = true)
     @Parameter(name = "audio", description = "开启/关闭音频", required = true)
     @PostMapping("/audio")
-    public void changeAudio(Long channelId, Boolean audio) {
+    public R<Void> changeAudio(Long channelId, Boolean audio) {
         Assert.notNull(channelId, "通道的数据库ID不可为NULL");
         Assert.notNull(audio, "开启/关闭音频不可为NULL");
         deviceChannelService.changeAudio(channelId, audio);
+        return R.ok();
     }
 
     @Operation(summary = "修改通道的码流类型")
     @PostMapping("/stream/identification/update/")
-    public void updateChannelStreamIdentification(DeviceChannel channel) {
+    public  R<Void>  updateChannelStreamIdentification(DeviceChannel channel) {
         deviceChannelService.updateChannelStreamIdentification(channel);
+        return R.ok();
     }
 
 

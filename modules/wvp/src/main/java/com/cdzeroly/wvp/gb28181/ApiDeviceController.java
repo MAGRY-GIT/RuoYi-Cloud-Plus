@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.gb28181;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.cdzeroly.common.core.domain.R;
 import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
@@ -84,8 +85,8 @@ public class ApiDeviceController {
             devices = deviceList.getRows();
         }
 
-        JSONArray deviceJSONList = new JSONArray();
-        devices.stream().forEach(device -> {
+        JSONArray deviceJsonList = new JSONArray();
+        devices.forEach(device -> {
             JSONObject deviceJsonObject = new JSONObject();
             deviceJsonObject.put("ID", device.getDeviceId());
             deviceJsonObject.put("Name", device.getName());
@@ -103,9 +104,9 @@ public class ApiDeviceController {
             deviceJsonObject.put("LastKeepaliveAt", "");
             deviceJsonObject.put("UpdatedAt", "");
             deviceJsonObject.put("CreatedAt", "");
-            deviceJSONList.add(deviceJsonObject);
+            deviceJsonList.add(deviceJsonObject);
         });
-        result.put("DeviceList",deviceJSONList);
+        result.put("DeviceList",deviceJsonList);
         return result;
     }
 
@@ -142,42 +143,42 @@ public class ApiDeviceController {
             }
             result.put("ChannelCount", allDeviceChannelList.size());
         }
-        JSONArray channleJSONList = new JSONArray();
-        deviceChannels.stream().forEach(deviceChannelExtendVo -> {
-            JSONObject deviceJOSNChannel = new JSONObject();
-            deviceJOSNChannel.put("ID", deviceChannelExtendVo.getChannelId());
-            deviceJOSNChannel.put("DeviceID", deviceChannelExtendVo.getDeviceId());
-            deviceJOSNChannel.put("DeviceName", deviceChannelExtendVo.getDeviceName());
-            deviceJOSNChannel.put("DeviceOnline", deviceChannelExtendVo.isDeviceOnline());
-            deviceJOSNChannel.put("Channel", 0); // TODO 自定义序号
-            deviceJOSNChannel.put("Name", deviceChannelExtendVo.getName());
-            deviceJOSNChannel.put("Custom", false);
-            deviceJOSNChannel.put("CustomName", "");
-            deviceJOSNChannel.put("SubCount", deviceChannelExtendVo.getSubCount()); // TODO ? 子节点数, SubCount > 0 表示该通道为子目录
-            deviceJOSNChannel.put("SnapURL", "");
-            deviceJOSNChannel.put("Manufacturer ", deviceChannelExtendVo.getManufacture());
-            deviceJOSNChannel.put("Model", deviceChannelExtendVo.getModel());
-            deviceJOSNChannel.put("Owner", deviceChannelExtendVo.getOwner());
-            deviceJOSNChannel.put("CivilCode", deviceChannelExtendVo.getCivilCode());
-            deviceJOSNChannel.put("Address", deviceChannelExtendVo.getAddress());
-            deviceJOSNChannel.put("Parental", deviceChannelExtendVo.getParental()); // 当为通道设备时, 是否有通道子设备, 1-有,0-没有
-            deviceJOSNChannel.put("ParentID", deviceChannelExtendVo.getParentId()); // 直接上级编号
-            deviceJOSNChannel.put("Secrecy", deviceChannelExtendVo.getSecrecy());
-            deviceJOSNChannel.put("RegisterWay", 1); // 注册方式, 缺省为1, 允许值: 1, 2, 3
+        JSONArray channelJsonList = new JSONArray();
+        deviceChannels.forEach(deviceChannelExtendVo -> {
+            JSONObject deviceJsonChannel = new JSONObject();
+            deviceJsonChannel.put("ID", deviceChannelExtendVo.getChannelId());
+            deviceJsonChannel.put("DeviceID", deviceChannelExtendVo.getDeviceId());
+            deviceJsonChannel.put("DeviceName", deviceChannelExtendVo.getDeviceName());
+            deviceJsonChannel.put("DeviceOnline", deviceChannelExtendVo.isDeviceOnline());
+            deviceJsonChannel.put("Channel", 0); // TODO 自定义序号
+            deviceJsonChannel.put("Name", deviceChannelExtendVo.getName());
+            deviceJsonChannel.put("Custom", false);
+            deviceJsonChannel.put("CustomName", "");
+            deviceJsonChannel.put("SubCount", deviceChannelExtendVo.getSubCount()); // TODO ? 子节点数, SubCount > 0 表示该通道为子目录
+            deviceJsonChannel.put("SnapURL", "");
+            deviceJsonChannel.put("Manufacturer ", deviceChannelExtendVo.getManufacture());
+            deviceJsonChannel.put("Model", deviceChannelExtendVo.getModel());
+            deviceJsonChannel.put("Owner", deviceChannelExtendVo.getOwner());
+            deviceJsonChannel.put("CivilCode", deviceChannelExtendVo.getCivilCode());
+            deviceJsonChannel.put("Address", deviceChannelExtendVo.getAddress());
+            deviceJsonChannel.put("Parental", deviceChannelExtendVo.getParental()); // 当为通道设备时, 是否有通道子设备, 1-有,0-没有
+            deviceJsonChannel.put("ParentID", deviceChannelExtendVo.getParentId()); // 直接上级编号
+            deviceJsonChannel.put("Secrecy", deviceChannelExtendVo.getSecrecy());
+            deviceJsonChannel.put("RegisterWay", 1); // 注册方式, 缺省为1, 允许值: 1, 2, 3
             // 1-IETF RFC3261,
             // 2-基于口令的双向认证,
             // 3-基于数字证书的双向认证
-            deviceJOSNChannel.put("Status", deviceChannelExtendVo.getStatus());
-            deviceJOSNChannel.put("Longitude", deviceChannelExtendVo.getLongitude());
-            deviceJOSNChannel.put("Latitude", deviceChannelExtendVo.getLatitude());
-            deviceJOSNChannel.put("PTZType ", deviceChannelExtendVo.getPTZType()); // 云台类型, 0 - 未知, 1 - 球机, 2 - 半球,
+            deviceJsonChannel.put("Status", deviceChannelExtendVo.getStatus());
+            deviceJsonChannel.put("Longitude", deviceChannelExtendVo.getLongitude());
+            deviceJsonChannel.put("Latitude", deviceChannelExtendVo.getLatitude());
+            deviceJsonChannel.put("PTZType ", deviceChannelExtendVo.getPTZType()); // 云台类型, 0 - 未知, 1 - 球机, 2 - 半球,
             //   3 - 固定枪机, 4 - 遥控枪机
-            deviceJOSNChannel.put("CustomPTZType", "");
-            deviceJOSNChannel.put("StreamID", deviceChannelExtendVo.getStreamId()); // StreamID 直播流ID, 有值表示正在直播
-            deviceJOSNChannel.put("NumOutputs ", -1); // 直播在线人数
-            channleJSONList.add(deviceJOSNChannel);
+            deviceJsonChannel.put("CustomPTZType", "");
+            deviceJsonChannel.put("StreamID", deviceChannelExtendVo.getStreamId()); // StreamID 直播流ID, 有值表示正在直播
+            deviceJsonChannel.put("NumOutputs ", -1); // 直播在线人数
+            channelJsonList.add(deviceJsonChannel);
         });
-        result.put("ChannelList", channleJSONList);
+        result.put("ChannelList", channelJsonList);
         return result;
     }
 
@@ -191,7 +192,7 @@ public class ApiDeviceController {
      * @return
      */
     @GetMapping(value = "/fetchpreset")
-    private DeferredResult<Object>  list(String serial,
+    private DeferredResult<R<String>>  list(String serial,
                       @RequestParam(required = false)Integer channel,
                       @RequestParam(required = false)String code,
                       @RequestParam(required = false)Boolean fill,
@@ -204,16 +205,16 @@ public class ApiDeviceController {
 
         Device device = deviceService.getDeviceByDeviceId(serial);
         String uuid =  UUID.randomUUID().toString();
-        String key =  DeferredResultHolder.CALLBACK_CMD_PRESETQUERY + (ObjectUtils.isEmpty(code) ? serial : code);
-        DeferredResult<Object> result = new DeferredResult<> (timeout * 1000L);
-        DeferredResultEx<Object> deferredResultEx = new DeferredResultEx<>(result);
+        String key =  DeferredResultHolder.CALLBACK_CMD_PRESET_QUERY + (ObjectUtils.isEmpty(code) ? serial : code);
+        DeferredResult<R<String>> result = new DeferredResult<> (timeout * 1000L);
+        DeferredResultEx<R<String>> deferredResultEx = new DeferredResultEx<>(result);
         result.onTimeout(()->{
             log.warn("<模拟接口> 获取设备预置位超时");
             // 释放rtpserver
             RequestMessage msg = new RequestMessage();
             msg.setId(uuid);
             msg.setKey(key);
-            msg.setData("wait for presetquery timeout["+timeout+"s]");
+            msg.setData(R.fail("wait for presetquery timeout["+timeout+"s]"));
             resultHolder.invokeResult(msg);
         });
         if (resultHolder.exist(key, null)) {
@@ -245,7 +246,7 @@ public class ApiDeviceController {
                 RequestMessage msg = new RequestMessage();
                 msg.setId(uuid);
                 msg.setKey(key);
-                msg.setData(String.format("获取设备预置位失败，错误码： %s, %s", event.statusCode, event.msg));
+                msg.setData(R.fail(String.format("获取设备预置位失败，错误码： %s, %s", event.statusCode, event.msg)));
                 resultHolder.invokeResult(msg);
             });
         } catch (InvalidArgumentException | SipException | ParseException e) {

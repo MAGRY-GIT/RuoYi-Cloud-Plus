@@ -1,6 +1,5 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.wvp.common.InviteInfo;
 import com.cdzeroly.wvp.common.*;
@@ -1467,7 +1466,7 @@ public class PlayServiceImpl implements IPlayService {
     }
 
     @Override
-    public void getSnap(String deviceId, String channelId, String fileName, ErrorCallback errorCallback) {
+    public void getSnap(String deviceId, String channelId, String fileName, ErrorCallback<Object> errorCallback) {
         Device device = deviceService.getDeviceByDeviceId(deviceId);
         Assert.notNull(device, "设备不存在");
         DeviceChannel channel = deviceChannelService.getOne(deviceId, channelId);

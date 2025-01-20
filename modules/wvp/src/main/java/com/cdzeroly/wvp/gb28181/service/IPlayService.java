@@ -72,7 +72,7 @@ public interface IPlayService {
 
     void stopTalk(Device device, DeviceChannel channel, Boolean streamIsReady);
 
-    void getSnap(String deviceId, String channelId, String fileName, ErrorCallback errorCallback);
+    void getSnap(String deviceId, String channelId, String fileName, ErrorCallback<Object> errorCallback);
 
     void stop(InviteSessionType type, Device device, DeviceChannel channel, String stream);
 

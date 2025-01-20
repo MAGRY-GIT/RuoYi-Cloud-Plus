@@ -17,9 +17,7 @@ import com.cdzeroly.wvp.gb28181.transmit.callback.DeferredResultHolder;
 import com.cdzeroly.wvp.gb28181.transmit.callback.RequestMessage;
 import com.cdzeroly.wvp.gb28181.transmit.cmd.impl.SIPCommander;
 import com.cdzeroly.wvp.domain.bean.InviteErrorCode;
-import com.cdzeroly.wvp.domain.ErrorCode;
 import com.cdzeroly.wvp.domain.vo.StreamContentVo;
-import com.cdzeroly.wvp.domain.WVPResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -76,7 +74,7 @@ public class GBRecordController extends BaseController {
 		// 指定超时时间 1分钟30秒
 		String uuid = UUID.randomUUID().toString();
 		int sn  =  (int)((Math.random()*9+1)*100000);
-		String key = DeferredResultHolder.CALLBACK_CMD_RECORDINFO + deviceId + sn;
+		String key = DeferredResultHolder.CALLBACK_CMD_RECORD_INFO + deviceId + sn;
 		RequestMessage msg = new RequestMessage();
 		msg.setId(uuid);
 		msg.setKey(key);
