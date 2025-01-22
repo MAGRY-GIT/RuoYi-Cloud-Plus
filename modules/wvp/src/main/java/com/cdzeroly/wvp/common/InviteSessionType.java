@@ -6,9 +6,29 @@ package com.cdzeroly.wvp.common;
  */
 
 public enum InviteSessionType {
+    /**
+     *  预览
+     */
     PLAY,
+
+    /**
+     * 回放
+     */
     PLAYBACK,
+
+    /**
+     *下载
+     */
     DOWNLOAD,
+
+    /**
+     * 播放
+     */
     BROADCAST,
+
+    /**
+     * 报告
+     */
     TALK
+
 }

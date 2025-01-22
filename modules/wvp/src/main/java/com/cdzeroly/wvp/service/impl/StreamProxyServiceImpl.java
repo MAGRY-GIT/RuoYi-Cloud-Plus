@@ -39,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -155,16 +156,18 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
         }
     }
 
-    @Scheduled(cron = "*/30 * * * * *")
+    @Scheduled(cron = "${jobs.snap.corn:0 0/10 * * * ? }")
     public void getExecution() {
         List<StreamProxy> list = streamProxyMapper.selectList().stream().filter(StreamProxy::isEnable).toList();
         Optional<MediaServer> mediaServerOptional = mediaServerService.getAll().stream().filter(MediaServer::isStatus).findFirst();
+        long timeMillis = System.currentTimeMillis();
         mediaServerOptional.ifPresent((mediaServer)->{
             list.forEach((streamProxy)->{
                 // 请求截图
                 log.info("[请求截图]: {}", mediaServer);
-                String fileName = streamProxy.getApp() +"_"+ streamProxy.getStream()+".jpg";
-                mediaServerService.getSnap(mediaServer, streamProxy.getSrcUrl(), 15, 1, "./", fileName);
+                String fileName = timeMillis+".jpg";
+                String path = "./"+streamProxy.getApp()+ File.separator+streamProxy.getStream() +File.separator;
+                mediaServerService.getSnap(mediaServer, streamProxy.getSrcUrl(), 15, 1, path, fileName);
             });
         });
     }
