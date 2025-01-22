@@ -33,15 +33,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 视频代理业务
@@ -155,6 +153,20 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
         } else {
             return null;
         }
+    }
+
+    @Scheduled(cron = "*/30 * * * * *")
+    public void getExecution() {
+        List<StreamProxy> list = streamProxyMapper.selectList().stream().filter(StreamProxy::isEnable).toList();
+        Optional<MediaServer> mediaServerOptional = mediaServerService.getAll().stream().filter(MediaServer::isStatus).findFirst();
+        mediaServerOptional.ifPresent((mediaServer)->{
+            list.forEach((streamProxy)->{
+                // 请求截图
+                log.info("[请求截图]: {}", mediaServer);
+                String fileName = streamProxy.getApp() +"_"+ streamProxy.getStream()+".jpg";
+                mediaServerService.getSnap(mediaServer, streamProxy.getSrcUrl(), 15, 1, "./", fileName);
+            });
+        });
     }
 
     @Override
