@@ -24,7 +24,6 @@ spring:
       password: @nacos.password@
       discovery:
         # 注册组
-        ip: @nacos.ip@
         group: @nacos.discovery.group@
         namespace: ${spring.profiles.active}
       config:

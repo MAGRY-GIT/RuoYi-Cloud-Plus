@@ -1,7 +1,7 @@
 services:
   mysql:
     image: mysql:8.0.33
-    container_name: base_platform_mysql
+    container_name: platform_mysql
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -13,7 +13,7 @@ services:
       - "3306:3306"
     volumes:
       # 数据挂载
-      - /docker/mysql/data/:/var/lib/mysql/
+      - my_data:/var/lib/mysql/
       # 配置挂载
       - /docker/mysql/conf/:/etc/mysql/conf.d/
     command:
@@ -24,11 +24,12 @@ services:
       --explicit_defaults_for_timestamp=true
       --lower_case_table_names=1
     privileged: true
-
+    networks:
+      - my_network
 
   nacos:
     image: cdzeroly/nacos:2.2.2
-    container_name: base_platform_nacos
+    container_name: platform_nacos
     ports:
       - "8848:8848"
       - "9848:9848"
@@ -38,14 +39,15 @@ services:
       JAVA_OPTS: "-Xms256m -Xmx512m"
     volumes:
       # 日志目录 注意集群模式下 日志目录不能一致 需要区分例如 nacos1 nacos2
-      - /docker/nacos/logs/:/root/nacos/logs
+      - my_data:/root/nacos/logs
       # 集群配置文件 集群所有nacos都必须使用此文件
       - /docker/nacos/conf/cluster.conf:/root/nacos/conf/cluster.conf
-
+    networks:
+      - my_network
 
   redis:
     image: redis:6.2.12
-    container_name: base_platform_redis
+    container_name: platform_redis
     ports:
       - "6379:6379"
     environment:
@@ -55,14 +57,15 @@ services:
       # 配置文件
       - ../docker/redis/conf:/redis/config
       # 数据文件
-      - ../docker/redis/data/:/redis/data/
+      - my_data:/redis/data/
     command: "redis-server /redis/config/redis.conf"
     privileged: true
-
+    networks:
+      - my_network
 
   minio:
     image: minio/minio:RELEASE.2023-03-24T21-41-23Z
-    container_name: base_platform_minio
+    container_name: platform_minio
     ports:
       # api 端口
       - "9000:9000"
@@ -86,16 +89,17 @@ services:
       MINIO_COMPRESS_MIME_TYPES: ""
     volumes:
       # 映射当前目录下的data目录至容器内/data目录
-      - ../docker/minio/data:/data
+      - .my_data:/data
       # 映射配置目录
       - ../docker/minio/config:/root/.minio/
     command: server --address ':9000' --console-address ':9001' /data  # 指定容器中的目录 /data
     privileged: true
-
+    networks:
+      - my_network
 
   seata-server:
     image: cdzeroly/seata-server:2.2.2
-    container_name: base_platform_seata_server
+    container_name: platform_seata_server
     ports:
       - "7091:7091"
       - "8091:8091"
@@ -105,51 +109,54 @@ services:
       # SEATA_IP: 127.0.0.1
       SEATA_PORT: 8091
     volumes:
-      - /docker/seata-server/logs/:/cdzeroly/seata-server/logs
+      - my_data:/cdzeroly/seata-server/logs
       # skywalking 探针
       - /docker/skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-
+    networks:
+      - my_network
 
   nginx-web:
     image: nginx:1.22.1
-    container_name: base_platform_nginx-web
+    container_name: platform_nginx-web
     environment:
       # 时区上海
       TZ: Asia/Shanghai
     ports:
       - "80:80"
-      - "443:443"
+#      - "443:443"
     volumes:
       # 证书映射
-      - /docker/nginx/cert:/etc/nginx/cert
+      - ./nginx/cert:/etc/nginx/cert
       # 配置文件映射
-      - /docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf/nginx.conf:/etc/nginx/nginx.conf
       # 页面目录
-      - /docker/nginx/html:/usr/share/nginx/html
+      - ./nginx/html:/usr/share/nginx/html
       # 日志目录
-      - /docker/nginx/log:/var/log/nginx
+      - my_data:/var/log/nginx
     privileged: true
-
+    networks:
+      - my_network
 
   sentinel:
     image: cdzeroly/sentinel-dashboard:2.2.2
-    container_name: base_platform_sentinel
+    container_name: platform_sentinel
     environment:
       TZ: Asia/Shanghai
     ports:
       - "8718:8718"
     volumes:
       # 配置文件
-      - /docker/sentinel-dashboard/logs/:/cdzeroly/sentinel-dashboard/logs
+      - my_data:/cdzeroly/sentinel-dashboard/logs
       # skywalking 探针
       - /docker/skywalking/agent/:/cdzeroly/skywalking/agent
     restart: always
-
+    networks:
+      - my_network
 
   monitor:
     image: cdzeroly/monitor:2.2.2
-    container_name: base_platform_monitor
+    container_name: platform_monitor
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -157,15 +164,16 @@ services:
       - "9100:9100"
     volumes:
       # 配置文件
-      - /docker/monitor/logs/:/cdzeroly/monitor/logs
+      - my_data:/cdzeroly/monitor/logs
       # skywalking 探针
       - /docker/skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-
+    networks:
+      - my_network
 
   snailjob-server:
     image: cdzeroly/snailjob-server:2.2.2
-    container_name: base_platform_snailjob_server
+    container_name: platform_snailjob_server
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -173,13 +181,14 @@ services:
       - "8800:8800"
       - "17888:17888"
     volumes:
-      - /docker/snailjob/logs/:/cdzeroly/snailjob/logs
+      - my_data:/cdzeroly/snailjob/logs
     privileged: true
-
+    networks:
+      - my_network
 
   gateway:
     image: cdzeroly/gateway:2.2.2
-    container_name: base_platform_gateway
+    container_name: platform_gateway
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -187,15 +196,16 @@ services:
       - "8080:8080"
     volumes:
       # 配置文件
-      - /docker/gateway/logs/:/cdzeroly/gateway/logs
+      - my_data:/cdzeroly/gateway/logs
       # skywalking 探针
       - /docker/skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-
+    networks:
+      - my_network
 
   auth:
     image: cdzeroly/auth:2.2.2
-    container_name: base_platform_auth
+    container_name: platform_auth
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -207,11 +217,12 @@ services:
       # skywalking 探针
       - /docker/skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-
+    networks:
+      - my_network
 
   system:
     image: cdzeroly/system:2.2.2
-    container_name: base_platform_system
+    container_name: platform_system
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -219,15 +230,16 @@ services:
       - "9201:9201"
     volumes:
       # 配置文件
-      - /docker/system/logs/:/cdzeroly/system/logs
+      - my_data:/cdzeroly/system/logs
       # skywalking 探针
       - /docker/skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-
+    networks:
+      - my_network
 
   gen:
     image: cdzeroly/gen:2.2.2
-    container_name: base_platform_gen
+    container_name: platform_gen
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -235,15 +247,16 @@ services:
       - "9202:9202"
     volumes:
       # 配置文件
-      - /docker/gen/logs/:/cdzeroly/gen/logs
+      - my_data:/cdzeroly/gen/logs
       # skywalking 探针
       - /docker/skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-
+    networks:
+      - my_network
 
   job:
     image: cdzeroly/job:2.2.2
-    container_name: base_platform_job
+    container_name: platform_job
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -251,15 +264,16 @@ services:
       - "9203:9203"
     volumes:
       # 配置文件
-      - /docker/job/logs/:/cdzeroly/job/logs
+      - my_data:/cdzeroly/job/logs
       # skywalking 探针
       - /docker/skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-
+    networks:
+      - my_network
 
   resource:
     image: cdzeroly/resource:2.2.2
-    container_name: base_platform_resource
+    container_name: platform_resource
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -267,15 +281,16 @@ services:
       - "9204:9204"
     volumes:
       # 配置文件
-      - /docker/resource/logs/:/cdzeroly/resource/logs
+      - my_data:/cdzeroly/resource/logs
       # skywalking 探针
       - /docker/skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
-
+    networks:
+      - my_network
 
   workflow:
     image: cdzeroly/workflow:2.2.2
-    container_name: base_platform_workflow
+    container_name: platform_workflow
     environment:
       # 时区上海
       TZ: Asia/Shanghai
@@ -283,10 +298,72 @@ services:
       - "9205:9205"
     volumes:
       # 配置文件
-      - /docker/workflow/logs/:/cdzeroly/workflow/logs
+      - my_data:/cdzeroly/workflow/logs
       # skywalking 探针
       - /docker/skywalking/agent/:/cdzeroly/skywalking/agent
     privileged: true
+    networks:
+      - my_network
+
+  wvp-zlmediakit:
+    build:
+      context: ./wvp-zlmediakit
+      args:
+        zlmGitUrl: "https://gitee.com/xia-chu/ZLMediaKit"
+      tags:
+        - cdzeroly/wvp-zlmediakit:2.2.2
+    restart: always
+    ports:
+      - "8117:8117"
+      - "8117:8117/udp"
+      - "18080:18080"
+      - "9520:9520"
+      - "10000:10000/tcp"
+      - "10000:10000/udp"
+      - "30000-30500:30000-30500/tcp"
+      - "30000-30500:30000-30500/udp"
+    volumes:
+      - my_data:/opt/media/www/record/
+      - my_data:/opt/wvp/logs/
+      - my_data:/opt/assist/logs/
+      - my_data:/opt/media/log/
+    environment:
+      TZ: "Asia/Shanghai"
+      # [必须修改] 本机的IP
+      WVP_HOST: wvp
+      WVP_PWD: 12345678
+      WVP_DOMAIN: 6101130049
+      WVP_ID: 61011300490000000001
+      ASSIST_JVM_CONFIG: -Xms128m -Xmx256m
+      WVP_JVM_CONFIG: -Xms128m -Xmx256m
+      ASSIST_CONFIG:
+      WVP_CONFIG:
+    networks:
+      - my_network
+
+  wvp:
+    image: cdzeroly/wvp:2.2.2
+    container_name: platform_wvp
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+      # [必须修改] 本机的IP
+      WVP_HOST: wvp
+      ZLM_HOST: zlMediaKit
+      WVP_PWD: 12345678
+      WVP_DOMAIN: 6101130049
+    ports:
+      - "18080:18080"
+      - "8117:8117/udp"
+      - "8117:8117"
+    volumes:
+      # 配置文件
+      - my_data:/cdzeroly/job/logs
+      # skywalking 探针
+      - ./docker/agent/:/cdzeroly/skywalking/agent
+    privileged: true
+    networks:
+      - my_network
 
   #################################################################################################
   #################################### 以下为扩展根据需求搭建 #########################################
@@ -294,7 +371,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.13.3
-    container_name: base_platform_rabbitmq
+    container_name: platform_rabbitmq
     build:
       context: ./rabbitmq
     environment:
@@ -304,69 +381,37 @@ services:
       - "15672:15672" # 管理界面端口
       - "5672:5672"   # api 端口
     volumes:
-      - ../docker/rabbitmq/log:/var/log/rabbitmq
-      - ../docker/rabbitmq/data:/var/lib/rabbitmq
+      - my_data:/var/log/rabbitmq
+      - my_data:/var/lib/rabbitmq
+    networks:
+      - my_network
 
 
 
-  ZLMediaKit:
+
+  zlMediaKit:
     image: zlmediakit/zlmediakit:master
-    container_name: base_platform_zlmediakit
-    #此镜像为github action 持续集成自动编译推送，跟代码(master分支)保持最新状态
-
+    container_name: platform_zlmediakit
     ports:
       - "1935:1935" # rtmp
-      - "8554:554"   # rtsp
-      - "9520:80"   # 服务的端口
-      - "8443:443"   # https
-      - "9000:9000/udp"   # srt
+      - "8554:8554"   # rtsp
+      - "9520:9520"   # 服务的端口
+      - "443:443"   # https
+      - "9521:9521/udp"   # srt
       - "8000:8000/udp"   # rtc
       - "10000:10000"  #  rtp_proxy
+      - "10000:10000/udp"  #  rtp_proxy
       - "30000-30500:30000-30500"   #rtsp服务器端口范围
     volumes:
-      - ../docker/rabbitmq/log:/var/log/rabbitmq
-      - ../docker/rabbitmq/data:/var/lib/rabbitmq
-
-  #此镜像为github action 持续集成自动编译推送，跟代码(master分支)保持最新状态
-  sky-oap:
-    image: apache/skywalking-oap-server:9.7.0
-    container_name: sky-oap
-    ports:
-      - "11800:11800"
-      - "12800:12800"
-    environment:
-      JAVA_OPTS: -Xms1G -Xmx2G
-      #记录数据的有效期，单位天
-      SW_CORE_RECORD_DATA_TTL: 7
-      #分析指标数据的有效期，单位天
-      SW_CORE_METRICS_DATA_TTL: 7
-      SW_STORAGE: elasticsearch
-      SW_STORAGE_ES_CLUSTER_NODES: 127.0.0.1:9200
-      TZ: Asia/Shanghai
+      - my_data:/opt/media/bin/logs
+      - ./zlmediakit/conf/config.ini:/opt/media/conf/config.ini
+      - ./zlmediakit/conf/default.pem:/opt/media/bin/default.pem
+    networks:
+      - my_network
 
 
-  sky-ui:
-    image: apache/skywalking-ui:9.7.0
-    container_name: sky-ui
-    ports:
-      - "18080:18080"
-    environment:
-      SW_SERVER_PORT: 18080
-      SW_OAP_ADDRESS: http://127.0.0.1:12800
-      TZ: Asia/Shanghai
-    depends_on:
-      - sky-oap
-
-
-  shardingproxy:
-    image: apache/shardingsphere-proxy:5.4.0
-    container_name: shardingsphere-proxy
-    command: server /data
-    ports:
-      - "3307:3307"
-    volumes:
-      - /docker/shardingproxy/conf:/opt/shardingsphere-proxy/conf
-      - /docker/shardingproxy/ext-lib:/opt/shardingsphere-proxy/ext-lib
-    environment:
-      - JVM_OPTS="-Djava.awt.headless=true"
-
+networks:
+  my_network:
+    driver: bridge
+volumes:
+  my_data:

@@ -30,7 +30,9 @@ services:
     build:
       context: ../visual/nacos
       dockerfile: Dockerfile
-    container_name: platform_nacos_127
+      tags:
+        - cdzeroly/nacos:2.2.2
+    container_name: platform_nacos
     ports:
       - "8848:8848"
       - "9848:9848"
@@ -99,6 +101,8 @@ services:
     build:
       context: ../visual/seata-server
       dockerfile: Dockerfile
+      tags:
+      - cdzeroly/seata-server:2.2.2
     container_name: platform_seata_server
     ports:
       - "7091:7091"
@@ -140,6 +144,8 @@ services:
     build:
       context: ../visual/sentinel-dashboard
       dockerfile: Dockerfile
+      tags:
+      - cdzeroly/sentinel-dashboard:2.2.2
     environment:
       TZ: Asia/Shanghai
     ports:
@@ -154,6 +160,8 @@ services:
 
   monitor:
     build:
+      tags:
+        - cdzeroly/monitor:2.2.2
       context: ../visual/monitor
       dockerfile: Dockerfile
     container_name: platform_monitor
@@ -172,6 +180,8 @@ services:
 
   snailjob-server:
     build:
+      tags:
+        - cdzeroly/snailjob-server:2.2.2
       context: ../visual/snailjob-server
       dockerfile: Dockerfile
     container_name: platform_snailjob_server
@@ -188,6 +198,8 @@ services:
 
   gateway:
     build:
+      tags:
+        - cdzeroly/gateway:2.2.2
       context: ../gateway
       dockerfile: Dockerfile
     container_name: platform_gateway
@@ -206,6 +218,8 @@ services:
 
   auth:
     build:
+      tags:
+        - cdzeroly/auth:2.2.2
       context: ../auth
       dockerfile: Dockerfile
     container_name: platform_auth
@@ -224,6 +238,8 @@ services:
 
   system:
     build:
+      tags:
+        - cdzeroly/system:2.2.2
       context: ../modules/system
       dockerfile: Dockerfile
     container_name: platform_system
@@ -242,6 +258,8 @@ services:
 
   gen:
     build:
+      tags:
+        - cdzeroly/gen:2.2.2
       context: ../modules/gen
       dockerfile: Dockerfile
     container_name: platform_gen
@@ -260,6 +278,8 @@ services:
 
   job:
     build:
+      tags:
+        - cdzeroly/job:2.2.2
       context: ../modules/job
       dockerfile: Dockerfile
     container_name: platform_job
@@ -276,8 +296,32 @@ services:
     privileged: true
 
 
+
+  wvp:
+    build:
+      tags:
+        - cdzeroly/wvp:2.2.2
+      context: ../modules/wvp
+      dockerfile: Dockerfile
+    container_name: platform_wvp
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    ports:
+      - "9203:9203"
+    volumes:
+      # 配置文件
+      - ./wvp/logs/:/cdzeroly/job/logs
+      # skywalking 探针
+      - ./skywalking/agent/:/cdzeroly/skywalking/agent
+    privileged: true
+
+
+
   resource:
     build:
+      tags:
+        - cdzeroly/resource:2.2.2
       context: ../modules/resource
       dockerfile: Dockerfile
     container_name: platform_resource
@@ -296,6 +340,8 @@ services:
 
   workflow:
     build:
+      tags:
+        - cdzeroly/workflow:2.2.2
       context: ../modules/workflow
       dockerfile: Dockerfile
     container_name: platform_workflow
@@ -316,9 +362,10 @@ services:
   #################################################################################################
 
   rabbitmq:
-    image: rabbitmq:3.13.3
     container_name: platform_rabbitmq
     build:
+      tags:
+        - rabbitmq:3.13.3
       context: ./rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: admin
@@ -343,25 +390,13 @@ services:
       - "8000:8000/udp"   # rtc
       - "10000:10000"  #  rtp_proxy
       - "10000:10000/udp"  #  rtp_proxy
-      - "30000-30500:30000-30500"   #rtsp服务器端口范围
+      - "30000-35000:30000-35000"   #rtsp服务器端口范围
     network_mode: "host"
     volumes:
       - ./zlmediakit/logs/:/opt/media/bin/logs
       - ./zlmediakit/conf/config.ini:/opt/media/conf/config.ini
       - ./zlmediakit/conf/default.pem:/opt/media/bin/default.pem
 
-  ZLMediaKit1:
-    image: zlmediakit/zlmediakit:master
-    container_name: platform_zlmediakit1
-    ports:
-      - "1936:1935" # rtmp
-      - "8555:554"   # rtsp
-      - "9530:80"   # 服务的端口
-      - "444:443"   # https
-      - "9001:9000/udp"   # srt
-      - "8001:8000/udp"   # rtc
-      - "10001:10000"  #  rtp_proxy
-      - "10001:10000/udp"  #  rtp_proxy
 
 
 #  #此镜像为github action 持续集成自动编译推送，跟代码(master分支)保持最新状态
