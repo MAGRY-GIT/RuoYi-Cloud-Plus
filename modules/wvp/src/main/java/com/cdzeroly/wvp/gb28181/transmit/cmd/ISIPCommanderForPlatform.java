@@ -24,22 +24,22 @@ public interface ISIPCommanderForPlatform {
 
     /**
      * 向上级平台注册
-     *
-     * @param parentPlatform
-     * @return
      */
     void register(Platform parentPlatform, SipSubscribe.Event errorEvent , SipSubscribe.Event okEvent) throws InvalidArgumentException, ParseException, SipException;
 
+    /**
+     * 向上级平台注册
+     */
     void register(Platform parentPlatform, SipTransactionInfo sipTransactionInfo, SipSubscribe.Event errorEvent , SipSubscribe.Event okEvent) throws InvalidArgumentException, ParseException, SipException;
 
+    /**
+     * 向上级平台注册
+     */
 
     void register(Platform parentPlatform, SipTransactionInfo sipTransactionInfo, WWWAuthenticateHeader www, SipSubscribe.Event errorEvent , SipSubscribe.Event okEvent, boolean isRegister) throws SipException, InvalidArgumentException, ParseException;
 
     /**
      * 向上级平台注销
-     *
-     * @param parentPlatform
-     * @return
      */
     void unregister(Platform parentPlatform, SipTransactionInfo sipTransactionInfo, SipSubscribe.Event errorEvent , SipSubscribe.Event okEvent) throws InvalidArgumentException, ParseException, SipException;
 
@@ -47,7 +47,6 @@ public interface ISIPCommanderForPlatform {
     /**
      * 向上级平发送心跳信息
      *
-     * @param parentPlatform
      * @return callId(作为接受回复的判定)
      */
     String keepalive(Platform parentPlatform, SipSubscribe.Event errorEvent, SipSubscribe.Event okEvent)

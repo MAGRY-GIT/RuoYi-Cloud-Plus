@@ -34,6 +34,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @RequiredArgsConstructor
 public class InviteStreamServiceImpl implements IInviteStreamService {
 
+    /**
+     * 邀请错误回调映射
+     */
     private final Map<String, List<ErrorCallback<StreamInfo>>> inviteErrorCallbackMap = new ConcurrentHashMap<>();
 
     private final RedisTemplate<Object, Object> redisTemplate;

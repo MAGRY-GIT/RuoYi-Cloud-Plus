@@ -68,6 +68,10 @@ public class SipUtils {
         return uri.getUser();
     }
 
+    /**
+     *获取新的Via标签
+     * @return Via标签
+     */
     public static  String getNewViaTag() {
         return "z9hG4bK" + RandomStringUtils.randomNumeric(10);
     }
@@ -88,6 +92,10 @@ public class SipUtils {
         return SipFactory.getInstance().createHeaderFactory().createUserAgentHeader(agentParam);
     }
 
+    /**
+     * 获取一个 From 标签
+     * @return 随机数
+     */
     public static String getNewFromTag(){
         return UUID.randomUUID().toString().replace("-", "");
     }

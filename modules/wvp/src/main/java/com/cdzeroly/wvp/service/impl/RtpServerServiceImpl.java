@@ -26,6 +26,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+/**
+ * RTP 服务
+ * @author MGARY
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -41,7 +45,6 @@ public class RtpServerServiceImpl implements IReceiveRtpServerService {
 
     private final HookSubscribe subscribe;
 
-    private final SipInviteSessionManager sessionManager;
 
     /**
      * 流到来的处理

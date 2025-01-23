@@ -106,6 +106,7 @@ public class SIPSender {
             CallIdHeader callIdHeader = (CallIdHeader) message.getHeader(CallIdHeader.NAME);
             CSeqHeader cSeqHeader = (CSeqHeader) message.getHeader(CSeqHeader.NAME);
             String key = callIdHeader.getCallId() + cSeqHeader.getSeqNumber();
+
             SipEvent sipEvent = SipEvent.getInstance(key, eventResult -> {
                 if(okEvent != null) {
                     okEvent.response(eventResult);
@@ -116,6 +117,8 @@ public class SIPSender {
                     errorEvent.response(eventResult);
                 }
             }), timeout == null ? sipConfig.getTimeout() : timeout);
+
+            //添加事件至订阅
             sipSubscribe.addSubscribe(key, sipEvent);
         }
 
@@ -145,6 +148,12 @@ public class SIPSender {
         }
     }
 
+    /**
+     * 获取新的CallId标头
+     * @param ip  IP
+     * @param transport  协议类型
+     * @return CallIdHeader
+     */
     public CallIdHeader getNewCallIdHeader(String ip, String transport) {
         if (ObjectUtils.isEmpty(transport)) {
             return sipLayer.getUdpSipProvider().getNewCallId();

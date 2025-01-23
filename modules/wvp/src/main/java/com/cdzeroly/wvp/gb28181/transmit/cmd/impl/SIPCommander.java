@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.cmd.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.common.StreamInfo;
@@ -260,7 +261,7 @@ public class SIPCommander implements ISIPCommander {
             return;
         }
         String sdpIp;
-        if (!ObjectUtils.isEmpty(device.getSdpIp())) {
+        if (StrUtil.isNotBlank(device.getSdpIp())) {
             sdpIp = device.getSdpIp();
         } else {
             sdpIp = mediaServerItem.getSdpIp();

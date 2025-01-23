@@ -94,14 +94,14 @@ public class SIPRequestHeaderProvider {
     /**
      * 创建邀请请求
      *
-     * @param device
-     * @param channelId
-     * @param content
-     * @param viaTag
-     * @param fromTag
-     * @param toTag
-     * @param ssrc
-     * @param callIdHeader
+     * @param device 设备信息
+     * @param channelId 通道ID
+     * @param content 类容
+     * @param viaTag via标签
+     * @param fromTag  from 随机树
+     * @param toTag   to 类型
+     * @param ssrc  校验和
+     * @param callIdHeader  返回处理
      * @return
      * @throws ParseException
      * @throws InvalidArgumentException

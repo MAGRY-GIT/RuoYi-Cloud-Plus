@@ -56,7 +56,8 @@ public class SipSubscribe {
     public void updateTimeout(String callId) {
         SipEvent sipEvent = subscribes.get(callId);
         if (sipEvent != null) {
-            delayQueue.remove(sipEvent);
+            boolean remove = delayQueue.remove(sipEvent);
+            log.trace("sipEvent 事件移除{}", remove);
             delayQueue.offer(sipEvent);
         }
     }
@@ -69,19 +70,33 @@ public class SipSubscribe {
      * EventResultType
      */
     public enum EventResultType {
-        // 超时
+        /**
+         * 超时
+         */
         TIMEOUT,
-        // 回复
+        /**
+         * 回复
+         */
         RESPONSE,
-        // 事务已结束
+        /**
+         * 事务已结束
+         */
         TRANSACTION_TERMINATED,
-        // 会话已结束
+        /**
+         * 会话已结束
+         */
         DIALOG_TERMINATED,
-        // 设备未找到
+        /**
+         * 设备未找到
+         */
         DEVICE_NOT_FOUND_EVENT,
-        // 消息发送失败
+        /**
+         * 消息发送失败
+         */
         CMD_SEND_FAIL_EVENT,
-        // 消息发送失败
+        /**
+         * 消息发送失败
+         */
         FAILED_TO_GET_PORT
     }
 
@@ -156,7 +171,8 @@ public class SipSubscribe {
         SipEvent sipEvent = subscribes.get(key);
         if (sipEvent != null) {
             subscribes.remove(key);
-            delayQueue.remove(sipEvent);
+            boolean remove = delayQueue.remove(sipEvent);
+            log.trace("sipEvent 事件移除{}", remove);
         }
         subscribes.put(key, event);
         delayQueue.offer(event);
@@ -173,7 +189,8 @@ public class SipSubscribe {
         SipEvent sipEvent = subscribes.get(key);
         if (sipEvent != null) {
             subscribes.remove(key);
-            delayQueue.remove(sipEvent);
+            boolean remove = delayQueue.remove(sipEvent);
+            log.trace("sipEvent 事件移除{}", remove);
         }
     }
 

@@ -307,6 +307,14 @@ public interface IMediaServerService {
      */
     StreamInfo getStreamInfoByAppAndStream(MediaServer mediaServer, String app, String stream, MediaInfo mediaInfo, String addr, String callId, boolean isPlay);
 
+
+    /**
+     * 查看流媒体是否存在
+     * @param mediaServer  流媒体服务
+     * @param rtp  rtp
+     * @param streamId   流ID
+     * @return 是否存在
+     */
     Boolean isStreamReady(MediaServer mediaServer, String rtp, String streamId);
 
     Integer startSendRtpPassive(MediaServer mediaServer, SendRtpInfo sendRtpItem, Integer timeout);
