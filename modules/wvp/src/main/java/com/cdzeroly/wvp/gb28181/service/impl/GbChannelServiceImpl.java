@@ -113,7 +113,7 @@ public class GbChannelServiceImpl implements IGbChannelService {
     @Override
     public int update(CommonGbChannel commonGBChannel) {
         log.info("[更新通道] 通道ID: {}, ", commonGBChannel.getGbId());
-        if (commonGBChannel.getGbId() <= 0) {
+        if () {
             log.warn("[更新通道] 未找到数据库ID，更新失败， {}({})", commonGBChannel.getGbName(), commonGBChannel.getGbDeviceId());
             return 0;
         }
@@ -131,7 +131,7 @@ public class GbChannelServiceImpl implements IGbChannelService {
 
     @Override
     public int offline(CommonGbChannel commonGBChannel) {
-        if (commonGBChannel.getGbId() <= 0) {
+        if (ObjectUtils.isEmpty(commonGBChannel.getGbId())) {
             log.warn("[通道离线] 未找到数据库ID，更新失败， {}({})", commonGBChannel.getGbName(), commonGBChannel.getGbDeviceId());
 
             return 0;
@@ -186,7 +186,7 @@ public class GbChannelServiceImpl implements IGbChannelService {
 
     @Override
     public int online(CommonGbChannel commonGBChannel) {
-        if (commonGBChannel.getGbId() <= 0) {
+        if (ObjectUtils.isEmpty(commonGBChannel.getGbId())) {
             log.warn("[通道上线] 未找到数据库ID，更新失败， {}", commonGBChannel.getGbDeviceId());
             return 0;
         }

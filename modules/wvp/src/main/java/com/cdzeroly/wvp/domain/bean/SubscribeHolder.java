@@ -6,6 +6,7 @@ import com.cdzeroly.wvp.conf.UserSetting;
 import com.cdzeroly.wvp.gb28181.task.ISubscribeTask;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +63,7 @@ public class SubscribeHolder {
         // 添加任务处理GPS定时推送
 
         int cycleForCatalog;
-        if (subscribeInfo.getGpsInterval() <= 0) {
+        if (ObjectUtils.isEmpty(subscribeInfo.getGpsInterval()) &&  subscribeInfo.getGpsInterval() <= 0) {
             cycleForCatalog = 5;
         }else {
             cycleForCatalog = subscribeInfo.getGpsInterval();

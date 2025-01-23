@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.cdzeroly.wvp.common.InviteInfo;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.conf.UserSetting;
@@ -30,6 +31,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 
 import javax.sip.InvalidArgumentException;
 import javax.sip.RequestEvent;
@@ -147,7 +149,7 @@ public class ByeRequestProcessor extends SIPRequestProcessorParent implements In
 
 				MediaInfo mediaInfo = mediaServerService.getMediaInfo(mediaServer, sendRtpItem.getApp(), streamId);
 
-				if (mediaInfo.getReaderCount() <= 0) {
+				if (ObjectUtils.isEmpty(mediaInfo.getReaderCount()) && mediaInfo.getReaderCount() <= 0) {
 					log.info("[收到bye] {} 无其它观看者，通知设备停止推流", streamId);
 					if (sendRtpItem.getPlayType().equals(InviteStreamType.PLAY)) {
 						Device device = deviceService.getDeviceByDeviceId(sendRtpItem.getTargetId());
