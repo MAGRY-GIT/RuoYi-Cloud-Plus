@@ -303,8 +303,7 @@ public class PlayServiceImpl implements IPlayService {
             return null;
         }
         //查询是否有点播信息
-        // InviteInfo inviteInfoInCatch = inviteStreamService.getInviteInfoByDeviceAndChannel(InviteSessionType.PLAY, channel.getId());
-        InviteInfo inviteInfoInCatch = null;
+        InviteInfo inviteInfoInCatch = inviteStreamService.getInviteInfoByDeviceAndChannel(InviteSessionType.PLAY, channel.getId());
         //存在存在点播
         if (inviteInfoInCatch != null) {
             //流信息为空
