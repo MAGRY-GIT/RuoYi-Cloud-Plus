@@ -54,7 +54,6 @@ public class InviteResponseProcessor extends SIPResponseProcessorAbstract {
      * 处理invite响应
      *
      * @param evt 响应消息
-     * @throws ParseException
      */
     @Override
     public void process(ResponseEvent evt) {

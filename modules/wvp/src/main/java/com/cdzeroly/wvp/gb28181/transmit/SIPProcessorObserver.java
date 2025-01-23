@@ -116,7 +116,7 @@ public class SIPProcessorObserver implements ISIPProcessorObserver {
             // 更新sip订阅的时间
 //            sipSubscribe.updateTimeout(response.getCallIdHeader().getCallId());
         } else {
-            log.warn("接收到失败的response响应！status：" + status + ",message:" + response.getReasonPhrase());
+            log.warn("接收到失败的response响应！status：{},message:{}", status, response.getReasonPhrase());
             if (responseEvent.getResponse() != null && !sipSubscribe.isEmpty() ) {
                 CallIdHeader callIdHeader = response.getCallIdHeader();
                 CSeqHeader cSeqHeader = response.getCSeqHeader();
