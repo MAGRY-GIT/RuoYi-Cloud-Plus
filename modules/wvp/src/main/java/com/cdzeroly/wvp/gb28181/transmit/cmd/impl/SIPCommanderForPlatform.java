@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.gb28181.transmit.cmd.impl;
 
 import com.alibaba.fastjson2.JSON;
+import com.cdzeroly.wvp.common.BroadcastForPlatform;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
@@ -710,21 +711,20 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
         content.append("u=" + channel.getGbDeviceId() + ":0\r\n");
         content.append("c=IN IP4 " + sdpIp + "\r\n");
         content.append("t=0 0\r\n");
-        if ("TCP-PASSIVE".equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
-            content.append("m=audio " + ssrcInfo.getPort() + " TCP/RTP/AVP 8 96\r\n");
-        } else if ("TCP-ACTIVE".equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
-            content.append("m=audio " + ssrcInfo.getPort() + " TCP/RTP/AVP 8 96\r\n");
-        } else if (NetProtocol.UDP.name().equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
-            content.append("m=audio " + ssrcInfo.getPort() + " RTP/AVP 8 96\r\n");
+
+        BroadcastForPlatform broadcastForPlatform = userSetting.getBroadcastForPlatform();
+        switch (broadcastForPlatform) {
+            case UDP -> content.append("m=audio " + ssrcInfo.getPort() + " RTP/AVP 8 96\r\n");
+            case TCP_PASSIVE, TCP_ACTIVE -> content.append("m=audio " + ssrcInfo.getPort() + " TCP/RTP/AVP 8 96\r\n");
         }
 
         content.append("a=recvonly\r\n");
         content.append("a=rtpmap:8 PCMA/8000\r\n");
         content.append("a=rtpmap:96 PS/90000\r\n");
-        if ("TCP-PASSIVE".equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
+        if (BroadcastForPlatform.TCP_PASSIVE.equals(broadcastForPlatform)) {
             content.append("a=setup:passive\r\n");
             content.append("a=connection:new\r\n");
-        }else if ("TCP-ACTIVE".equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
+        }else if (BroadcastForPlatform.TCP_ACTIVE.equals(broadcastForPlatform)) {
             content.append("a=setup:active\r\n");
             content.append("a=connection:new\r\n");
         }

@@ -113,7 +113,7 @@ public class GbChannelServiceImpl implements IGbChannelService {
     @Override
     public int update(CommonGbChannel commonGBChannel) {
         log.info("[更新通道] 通道ID: {}, ", commonGBChannel.getGbId());
-        if () {
+        if (ObjectUtils.isEmpty(commonGBChannel.getGbId())) {
             log.warn("[更新通道] 未找到数据库ID，更新失败， {}({})", commonGBChannel.getGbName(), commonGBChannel.getGbDeviceId());
             return 0;
         }

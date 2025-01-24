@@ -271,7 +271,7 @@ public class PlayServiceImpl implements IPlayService {
             throw new ServiceException("未找到可用的zlm");
         }
         Device device = redisCatchStorage.getDevice(deviceId);
-        if ("TCP-ACTIVE".equalsIgnoreCase(device.getStreamMode()) && !mediaServer.isRtpEnable()) {
+        if (BroadcastForPlatform.TCP_ACTIVE.equals(device.getStreamMode()) && !mediaServer.isRtpEnable()) {
             log.warn("[点播] 单端口收流时不支持TCP主动方式收流 deviceId: {},channelId:{}", deviceId, channelId);
             throw new ServiceException("单端口收流时不支持TCP主动方式收流");
         }
@@ -341,7 +341,8 @@ public class PlayServiceImpl implements IPlayService {
         }
         //打开RTP服务
         String streamId = String.format("%s_%s", device.getDeviceId(), channel.getDeviceId());
-        int tcpMode = "TCP-ACTIVE".equals(device.getStreamMode()) ? 2 : ("TCP-PASSIVE".equals(device.getStreamMode()) ? 1 : 0);
+
+        int tcpMode =  device.getStreamMode().getTcpMode();
         RTPServerParam rtpServerParam = new RTPServerParam();
         rtpServerParam.setMediaServer(mediaServer);
         rtpServerParam.setStreamId(streamId);
@@ -564,7 +565,7 @@ public class PlayServiceImpl implements IPlayService {
     }
 
     private void tcpActiveHandler(Device device, DeviceChannel channel, String contentString, MediaServer mediaServerItem, SSRCInfo ssrcInfo, ErrorCallback<StreamInfo> callback) {
-        if (!"TCP-ACTIVE".equalsIgnoreCase(device.getStreamMode())) {
+        if (!BroadcastForPlatform.TCP_ACTIVE.equals(device.getStreamMode())) {
             return;
         }
 
@@ -693,7 +694,7 @@ public class PlayServiceImpl implements IPlayService {
         if (newMediaServerItem == null) {
             throw new ServiceException("未找到可用的节点");
         }
-        if ("TCP-ACTIVE".equalsIgnoreCase(device.getStreamMode()) && !newMediaServerItem.isRtpEnable()) {
+        if (BroadcastForPlatform.TCP_ACTIVE.equals(device.getStreamMode()) && !newMediaServerItem.isRtpEnable()) {
             log.warn("[录像回放] 单端口收流时不支持TCP主动方式收流 deviceId: {},channelId:{}", device.getDeviceId(), channel.getDeviceId());
             throw new ServiceException("单端口收流时不支持TCP主动方式收流");
         }
@@ -707,7 +708,7 @@ public class PlayServiceImpl implements IPlayService {
         String endTimeTimeStr = endTime.replace("-", "").replace(":", "").replace(" ", "");
 
         String stream = device.getDeviceId() + "_" + channel.getDeviceId() + "_" + startTimeStr + "_" + endTimeTimeStr;
-        int tcpMode = "TCP-ACTIVE".equals(device.getStreamMode()) ? 2 : ("TCP-PASSIVE".equals(device.getStreamMode()) ? 1 : 0);
+        int tcpMode = BroadcastForPlatform.TCP_ACTIVE.equals(device.getStreamMode()) ? 2 : ("TCP-PASSIVE".equals(device.getStreamMode()) ? 1 : 0);
 
         RTPServerParam rtpServerParam = new RTPServerParam();
         rtpServerParam.setMediaServer(mediaServerItem);
@@ -801,12 +802,12 @@ public class PlayServiceImpl implements IPlayService {
             // ssrc 一致
             if (mediaServerItem.isRtpEnable()) {
                 // 多端口
-                if ("TCP-ACTIVE".equalsIgnoreCase(device.getStreamMode())) {
+                if (BroadcastForPlatform.TCP_ACTIVE.equals(device.getStreamMode())) {
                     tcpActiveHandler(device, channel, contentString, mediaServerItem, ssrcInfo, callback);
                 }
             } else {
                 // 单端口
-                if ("TCP-ACTIVE".equalsIgnoreCase(device.getStreamMode())) {
+                if (BroadcastForPlatform.TCP_ACTIVE.equals(device.getStreamMode())) {
                     log.warn("[Invite 200OK] 单端口收流模式不支持tcp主动模式收流");
                 }
 
@@ -844,7 +845,7 @@ public class PlayServiceImpl implements IPlayService {
                         ssrcInfo.setSsrc(ssrcInResponse);
                         inviteInfo.setSsrcInfo(ssrcInfo);
                         inviteInfo.setStream(ssrcInfo.getString());
-                        if ("TCP-ACTIVE".equalsIgnoreCase(device.getStreamMode())) {
+                        if (BroadcastForPlatform.TCP_ACTIVE.equals(device.getStreamMode())) {
                             if (mediaServerItem.isRtpEnable()) {
                                 tcpActiveHandler(device, channel, contentString, mediaServerItem, ssrcInfo, callback);
                             } else {
@@ -980,7 +981,7 @@ public class PlayServiceImpl implements IPlayService {
 
     @NotNull
     private RTPServerParam getRtpServerParam(MediaServer mediaServerItem, Device device, DeviceChannel channel) {
-        int tcpMode = "TCP-ACTIVE".equals(device.getStreamMode()) ? 2 : ("TCP-PASSIVE".equals(device.getStreamMode()) ? 1 : 0);
+        int tcpMode = BroadcastForPlatform.TCP_ACTIVE.equals(device.getStreamMode()) ? 2 : ("TCP-PASSIVE".equals(device.getStreamMode()) ? 1 : 0);
         // 录像下载不使用固定流地址，固定流地址会导致如果开始时间与结束时间一致时文件错误的叠加在一起
         RTPServerParam rtpServerParam = new RTPServerParam();
         rtpServerParam.setMediaServer(mediaServerItem);

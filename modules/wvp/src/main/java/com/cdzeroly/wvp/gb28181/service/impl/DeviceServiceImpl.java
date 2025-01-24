@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
+import com.cdzeroly.wvp.common.BroadcastForPlatform;
 import com.cdzeroly.wvp.common.CommonCallback;
 import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
@@ -426,7 +427,7 @@ public class DeviceServiceImpl implements IDeviceService {
         device.setOnLine(false);
         if(device.getStreamMode() == null) {
 
-            device.setStreamMode("TCP-PASSIVE");
+            device.setStreamMode(BroadcastForPlatform.TCP_PASSIVE);
         }
         deviceMapper.insert(device);
     }

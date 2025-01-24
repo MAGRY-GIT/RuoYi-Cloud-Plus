@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.cdzeroly.common.tenant.core.TenantEntity;
+import com.cdzeroly.wvp.common.BroadcastForPlatform;
 import com.cdzeroly.wvp.domain.bean.SipTransactionInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -68,7 +69,7 @@ public class Device extends TenantEntity {
 	 * TCP-PASSIVE：tcp被动模式
 	 */
 	@Schema(description = "数据流传输模式")
-	private String streamMode;
+	private BroadcastForPlatform streamMode;
 
 	/**
 	 * wan地址_ip

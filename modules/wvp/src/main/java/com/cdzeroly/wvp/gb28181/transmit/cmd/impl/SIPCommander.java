@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.gb28181.transmit.cmd.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.cdzeroly.wvp.common.BroadcastForPlatform;
 import com.cdzeroly.wvp.common.InviteSessionType;
 import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.common.StreamInfo;
@@ -274,12 +275,11 @@ public class SIPCommander implements ISIPCommander {
         content.append("t=0 0\r\n");
 
         if (userSetting.getSeniorSdp()) {
-            if ("TCP-PASSIVE".equalsIgnoreCase(device.getStreamMode())) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 126 125 99 34 98 97\r\n");
-            } else if ("TCP-ACTIVE".equalsIgnoreCase(device.getStreamMode())) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 126 125 99 34 98 97\r\n");
-            } else if (NetProtocol.UDP.name().equalsIgnoreCase(device.getStreamMode())) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" RTP/AVP 96 126 125 99 34 98 97\r\n");
+            switch (device.getStreamMode()) {
+                case UDP ->
+                    content.append("m=video ").append(ssrcInfo.getPort()).append(" RTP/AVP 96 126 125 99 34 98 97\r\n");
+                case TCP_PASSIVE, TCP_ACTIVE ->
+                    content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 126 125 99 34 98 97\r\n");
             }
             content.append("a=recvonly\r\n");
             content.append("a=rtpmap:96 PS/90000\r\n");
@@ -291,33 +291,32 @@ public class SIPCommander implements ISIPCommander {
             content.append("a=rtpmap:98 H264/90000\r\n");
             content.append("a=rtpmap:97 MPEG4/90000\r\n");
             // tcp被动模式
-            if ("TCP-PASSIVE".equalsIgnoreCase(device.getStreamMode())) {
+            if (BroadcastForPlatform.TCP_PASSIVE.equals(device.getStreamMode())) {
                 content.append("a=setup:passive\r\n");
                 content.append("a=connection:new\r\n");
                 // tcp主动模式
-            } else if ("TCP-ACTIVE".equalsIgnoreCase(device.getStreamMode())) {
+            } else if (BroadcastForPlatform.TCP_ACTIVE.equals(device.getStreamMode())) {
                 content.append("a=setup:active\r\n");
                 content.append("a=connection:new\r\n");
             }
         } else {
-            if ("TCP-PASSIVE".equalsIgnoreCase(device.getStreamMode())) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 97 98 99\r\n");
-            } else if ("TCP-ACTIVE".equalsIgnoreCase(device.getStreamMode())) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 97 98 99\r\n");
-            } else if (NetProtocol.UDP.name().equalsIgnoreCase(device.getStreamMode())) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" RTP/AVP 96 97 98 99\r\n");
+            switch (device.getStreamMode()) {
+                case UDP -> content.append("m=video ").append(ssrcInfo.getPort()).append(" RTP/AVP 96 97 98 99\r\n");
+                case TCP_PASSIVE, TCP_ACTIVE ->
+                    content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 97 98 99\r\n");
             }
+
             content.append("a=recvonly\r\n");
             content.append("a=rtpmap:96 PS/90000\r\n");
             content.append("a=rtpmap:98 H264/90000\r\n");
             content.append("a=rtpmap:97 MPEG4/90000\r\n");
             content.append("a=rtpmap:99 H265/90000\r\n");
             // tcp被动模式
-            if ("TCP-PASSIVE".equalsIgnoreCase(device.getStreamMode())) {
+            if (BroadcastForPlatform.TCP_PASSIVE.equals(device.getStreamMode())) {
                 content.append("a=setup:passive\r\n");
                 content.append("a=connection:new\r\n");
                 // tcp主动模式
-            } else if ("TCP-ACTIVE".equalsIgnoreCase(device.getStreamMode())) {
+            } else if (BroadcastForPlatform.TCP_ACTIVE.equals(device.getStreamMode())) {
                 content.append("a=setup:active\r\n");
                 content.append("a=connection:new\r\n");
             }
@@ -373,16 +372,16 @@ public class SIPCommander implements ISIPCommander {
         content.append("c=IN IP4 ").append(sdpIp).append("\r\n");
         content.append("t=").append(DateUtil.yyyyMmDdHhMmSsToTimestamp(startTime)).append(" ").append(DateUtil.yyyyMmDdHhMmSsToTimestamp(endTime)).append("\r\n");
 
-        String streamMode = device.getStreamMode();
+        BroadcastForPlatform streamMode = device.getStreamMode();
 
         if (userSetting.getSeniorSdp()) {
-            if ("TCP-PASSIVE".equalsIgnoreCase(streamMode)) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 126 125 99 34 98 97\r\n");
-            } else if ("TCP-ACTIVE".equalsIgnoreCase(streamMode)) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 126 125 99 34 98 97\r\n");
-            } else if (NetProtocol.UDP.name().equalsIgnoreCase(streamMode)) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" RTP/AVP 96 126 125 99 34 98 97\r\n");
+            switch (streamMode) {
+                case UDP ->
+                    content.append("m=video ").append(ssrcInfo.getPort()).append(" RTP/AVP 96 126 125 99 34 98 97\r\n");
+                case TCP_PASSIVE, TCP_ACTIVE ->
+                    content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 126 125 99 34 98 97\r\n");
             }
+
             content.append("a=recvonly\r\n");
             content.append("a=rtpmap:96 PS/90000\r\n");
             content.append("a=fmtp:126 profile-level-id=42e01e\r\n");
@@ -393,32 +392,30 @@ public class SIPCommander implements ISIPCommander {
             content.append("a=rtpmap:98 H264/90000\r\n");
             content.append("a=rtpmap:97 MPEG4/90000\r\n");
             // tcp被动模式
-            if ("TCP-PASSIVE".equalsIgnoreCase(streamMode)) {
+            if (BroadcastForPlatform.TCP_PASSIVE.equals(streamMode)) {
                 content.append("a=setup:passive\r\n");
                 content.append("a=connection:new\r\n");
                 // tcp主动模式
-            } else if ("TCP-ACTIVE".equalsIgnoreCase(streamMode)) {
+            } else if (BroadcastForPlatform.TCP_ACTIVE.equals(streamMode)) {
                 content.append("a=setup:active\r\n");
                 content.append("a=connection:new\r\n");
             }
         } else {
-            if ("TCP-PASSIVE".equalsIgnoreCase(streamMode)) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 97 98 99\r\n");
-            } else if ("TCP-ACTIVE".equalsIgnoreCase(streamMode)) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 97 98 99\r\n");
-            } else if (NetProtocol.UDP.name().equalsIgnoreCase(streamMode)) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" RTP/AVP 96 97 98 99\r\n");
+            switch (streamMode) {
+                case UDP -> content.append("m=video ").append(ssrcInfo.getPort()).append(" RTP/AVP 96 97 98 99\r\n");
+                case TCP_PASSIVE, TCP_ACTIVE ->
+                    content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 97 98 99\r\n");
             }
             content.append("a=recvonly\r\n");
             content.append("a=rtpmap:96 PS/90000\r\n");
             content.append("a=rtpmap:97 MPEG4/90000\r\n");
             content.append("a=rtpmap:98 H264/90000\r\n");
             content.append("a=rtpmap:99 H265/90000\r\n");
-            if ("TCP-PASSIVE".equalsIgnoreCase(streamMode)) {
+            if (BroadcastForPlatform.TCP_PASSIVE.equals(streamMode)) {
                 // tcp被动模式
                 content.append("a=setup:passive\r\n");
                 content.append("a=connection:new\r\n");
-            } else if ("TCP-ACTIVE".equalsIgnoreCase(streamMode)) {
+            } else if (BroadcastForPlatform.TCP_ACTIVE.equals(streamMode)) {
                 // tcp主动模式
                 content.append("a=setup:active\r\n");
                 content.append("a=connection:new\r\n");
@@ -460,16 +457,16 @@ public class SIPCommander implements ISIPCommander {
         content.append("c=IN IP4 ").append(sdpIp).append("\r\n");
         content.append("t=").append(DateUtil.yyyyMmDdHhMmSsToTimestamp(startTime)).append(" ").append(DateUtil.yyyyMmDdHhMmSsToTimestamp(endTime)).append("\r\n");
 
-        String streamMode = device.getStreamMode().toUpperCase();
+        BroadcastForPlatform streamMode = device.getStreamMode();
 
         if (userSetting.getSeniorSdp()) {
-            if ("TCP-PASSIVE".equals(streamMode)) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 126 125 99 34 98 97\r\n");
-            } else if ("TCP-ACTIVE".equals(streamMode)) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 126 125 99 34 98 97\r\n");
-            } else if (NetProtocol.UDP.name().equals(streamMode)) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" RTP/AVP 96 126 125 99 34 98 97\r\n");
+            switch (streamMode) {
+                case UDP ->
+                    content.append("m=video ").append(ssrcInfo.getPort()).append(" RTP/AVP 96 126 125 99 34 98 97\r\n");
+                case TCP_PASSIVE, TCP_ACTIVE ->
+                    content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 126 125 99 34 98 97\r\n");
             }
+
             content.append("a=recvonly\r\n");
             content.append("a=rtpmap:96 PS/90000\r\n");
             content.append("a=fmtp:126 profile-level-id=42e01e\r\n");
@@ -481,33 +478,38 @@ public class SIPCommander implements ISIPCommander {
             content.append("a=rtpmap:98 H264/90000\r\n");
             content.append("a=rtpmap:97 MPEG4/90000\r\n");
             // tcp被动模式
-            if ("TCP-PASSIVE".equals(streamMode)) {
+            if (BroadcastForPlatform.TCP_PASSIVE.equals(streamMode)) {
                 content.append("a=setup:passive\r\n");
                 content.append("a=connection:new\r\n");
                 // tcp主动模式
-            } else if ("TCP-ACTIVE".equals(streamMode)) {
+            } else if (BroadcastForPlatform.TCP_ACTIVE.equals(streamMode)) {
                 content.append("a=setup:active\r\n");
                 content.append("a=connection:new\r\n");
             }
         } else {
-            if ("TCP-PASSIVE".equals(streamMode)) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 97 98 99\r\n");
-            } else if ("TCP-ACTIVE".equals(streamMode)) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 97 98 99\r\n");
-            } else if (NetProtocol.UDP.name().equals(streamMode)) {
-                content.append("m=video ").append(ssrcInfo.getPort()).append(" RTP/AVP 96 97 98 99\r\n");
+            switch (streamMode) {
+                case UDP -> {
+                    content.append("m=video ").append(ssrcInfo.getPort()).append(" RTP/AVP 96 97 98 99\r\n");
+                }
+                case TCP_PASSIVE -> {
+                    content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 97 98 99\r\n");
+                }
+                case TCP_ACTIVE -> {
+                    content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 97 98 99\r\n");
+                }
             }
+
             content.append("a=recvonly\r\n");
             content.append("a=rtpmap:96 PS/90000\r\n");
             content.append("a=rtpmap:97 MPEG4/90000\r\n");
             content.append("a=rtpmap:98 H264/90000\r\n");
             content.append("a=rtpmap:99 H265/90000\r\n");
             // tcp被动模式
-            if ("TCP-PASSIVE".equals(streamMode)) {
+            if (BroadcastForPlatform.TCP_PASSIVE.equals(streamMode)) {
                 content.append("a=setup:passive\r\n");
                 content.append("a=connection:new\r\n");
                 // tcp主动模式
-            } else if ("TCP-ACTIVE".equals(streamMode)) {
+            } else if (BroadcastForPlatform.TCP_ACTIVE.equals(streamMode)) {
                 content.append("a=setup:active\r\n");
                 content.append("a=connection:new\r\n");
             }
@@ -1252,7 +1254,7 @@ public class SIPCommander implements ISIPCommander {
 
         // 有效时间默认为60秒以上
         SIPRequest request = (SIPRequest) headerProvider.createSubscribeRequest(device, cmdXml.toString(), requestOld, device.getSubscribeCycleForCatalog(), "Catalog", callIdHeader);
-        //发送请求
+        // 发送请求
         sipSender.transmitRequest(sipLayer.getLocalIp(device.getLocalIp()), request, errorEvent, okEvent);
         return request;
     }

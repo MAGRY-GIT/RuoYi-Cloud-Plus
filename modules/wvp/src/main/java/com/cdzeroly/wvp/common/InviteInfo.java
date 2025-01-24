@@ -38,7 +38,7 @@ public class InviteInfo {
 
 
     public static InviteInfo getInviteInfo(String deviceId, Long channelId, String stream, SSRCInfo ssrcInfo, String mediaServerId,
-                                           String receiveIp, Integer receivePort, String streamMode,
+                                           String receiveIp, Integer receivePort,  BroadcastForPlatform streamMode,
                                            InviteSessionType type, InviteSessionStatus status) {
         InviteInfo inviteInfo = new InviteInfo();
         inviteInfo.setDeviceId(deviceId);
@@ -47,7 +47,7 @@ public class InviteInfo {
         inviteInfo.setSsrcInfo(ssrcInfo);
         inviteInfo.setReceiveIp(receiveIp);
         inviteInfo.setReceivePort(receivePort);
-        inviteInfo.setStreamMode(streamMode);
+        inviteInfo.setStreamMode(streamMode.protocol);
         inviteInfo.setType(type);
         inviteInfo.setStatus(status);
         inviteInfo.setMediaServerId(mediaServerId);

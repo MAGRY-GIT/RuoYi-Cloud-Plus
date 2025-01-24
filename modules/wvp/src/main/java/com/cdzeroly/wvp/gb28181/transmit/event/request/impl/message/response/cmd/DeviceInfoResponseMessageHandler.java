@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl.message.response.cmd;
 
+import com.cdzeroly.wvp.common.BroadcastForPlatform;
 import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.domain.Device;
 import com.cdzeroly.wvp.domain.Platform;
@@ -77,7 +78,7 @@ public class DeviceInfoResponseMessageHandler extends SIPRequestProcessorParent 
             device.setModel(getText(rootElement, "Model"));
             device.setFirmware(getText(rootElement, "Firmware"));
             if (ObjectUtils.isEmpty(device.getStreamMode())) {
-                device.setStreamMode("TCP-PASSIVE");
+                device.setStreamMode(BroadcastForPlatform.TCP_PASSIVE);
             }
             deviceService.updateDevice(device);
 

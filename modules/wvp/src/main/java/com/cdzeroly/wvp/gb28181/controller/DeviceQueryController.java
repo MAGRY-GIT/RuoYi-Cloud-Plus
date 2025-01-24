@@ -14,6 +14,7 @@ import com.cdzeroly.common.log.enums.BusinessType;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.web.core.BaseController;
+import com.cdzeroly.wvp.common.BroadcastForPlatform;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 
 import com.cdzeroly.wvp.domain.bo.DeviceBo;
@@ -103,8 +104,13 @@ public class DeviceQueryController extends BaseController {
     @Parameter(name = "status", description = "状态")
     @GetMapping("/list")
     @SaCheckPermission("wvp:device:list")
-    public TableDataInfo<Device> devices(PageQuery pageQuery, String query, Boolean status) {
-        return deviceService.getAll(pageQuery, query, status);
+    public TableDataInfo<DeviceVo> devices(PageQuery pageQuery, String query, Boolean status) {
+        return deviceService.getAll(pageQuery, query, status).map((e)-> {
+            DeviceVo convert = MapstructUtils.convert(e, DeviceVo.class);
+            assert convert != null;
+            convert.setStreamMode(e.getStreamMode().protocol);
+            return convert;
+        });
     }
 
 
@@ -117,7 +123,7 @@ public class DeviceQueryController extends BaseController {
     @GetMapping("/{deviceId}/sync")
     public R<SyncStatus> devicesSync(@PathVariable String deviceId) {
         if (log.isDebugEnabled()) {
-            log.debug("设备通道信息同步API调用，deviceId：" + deviceId);
+            log.debug("设备通道信息同步API调用，deviceId：{}", deviceId);
         }
         Device device = deviceService.getDeviceByDeviceId(deviceId);
         deviceService.isSyncRunning(deviceId);
@@ -185,7 +191,7 @@ public class DeviceQueryController extends BaseController {
     @PostMapping("/transport/{deviceId}/{streamMode}")
     public void updateTransport(@PathVariable String deviceId, @PathVariable String streamMode) {
         Device device = deviceService.getDeviceByDeviceId(deviceId);
-        device.setStreamMode(streamMode);
+        device.setStreamMode(BroadcastForPlatform.protocol(streamMode).orElseThrow(()->ServiceException.build("数据流传输模式为空或错误")));
         deviceService.updateCustomDevice(device);
     }
 

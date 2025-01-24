@@ -497,14 +497,8 @@ public class PlatformServiceImpl implements IPlatformService {
         }
         // 默认不进行SSRC校验， TODO 后续可改为配置
         boolean ssrcCheck = false;
-        int tcpMode;
-        if ("TCP-PASSIVE".equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
-            tcpMode = 1;
-        } else if ("TCP-ACTIVE".equalsIgnoreCase(userSetting.getBroadcastForPlatform())) {
-            tcpMode = 2;
-        } else {
-            tcpMode = 0;
-        }
+        int tcpMode = userSetting.getBroadcastForPlatform().getTcpMode();
+
         SSRCInfo ssrcInfo = mediaServerService.openRTPServer(mediaServerItem, streamId, null, ssrcCheck, false, null, true, false, false, tcpMode);
         if (ssrcInfo == null || ssrcInfo.getPort() < 0) {
             log.info("[国标级联] 发起语音喊话 开启端口监听失败， platform: {}, channel： {}", platform.getServerGbId(), channel.getGbDeviceId());

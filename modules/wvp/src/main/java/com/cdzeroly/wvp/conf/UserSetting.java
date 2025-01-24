@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.conf;
 
+import com.cdzeroly.wvp.common.BroadcastForPlatform;
 import com.cdzeroly.wvp.common.NetProtocol;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -133,9 +134,12 @@ public class UserSetting {
 
 
     /**
-     * 国标级联语音喊话发流模式 * UDP:udp传输 TCP-ACTIVE：tcp主动模式 TCP-PASSIVE：tcp被动模式
+     * 国标级联语音喊话发流模式
+     * UDP:udp传输
+     * TCP-ACTIVE：tcp主动模式
+     * TCP-PASSIVE：tcp被动模式
      */
-    private String broadcastForPlatform = NetProtocol.UDP.name();
+    private BroadcastForPlatform broadcastForPlatform = BroadcastForPlatform.UDP;
 
     /**
      * 行政区划信息文件,系统启动时会加载到系统里

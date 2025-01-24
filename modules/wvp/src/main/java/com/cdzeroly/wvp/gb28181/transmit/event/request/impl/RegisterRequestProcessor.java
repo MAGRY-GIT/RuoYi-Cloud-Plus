@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl;
 
+import com.cdzeroly.wvp.common.BroadcastForPlatform;
 import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.conf.SipConfig;
 import com.cdzeroly.wvp.conf.UserSetting;
@@ -161,7 +162,7 @@ public class RegisterRequestProcessor extends SIPRequestProcessorParent implemen
 
             if (device == null) {
                 device = new Device();
-                device.setStreamMode("TCP-PASSIVE");
+                device.setStreamMode(BroadcastForPlatform.TCP_PASSIVE);
                 device.setCharset("GB2312");
                 device.setGeoCoordSys("WGS84");
                 device.setMediaServerId("auto");
@@ -169,7 +170,7 @@ public class RegisterRequestProcessor extends SIPRequestProcessorParent implemen
                 device.setOnLine(false);
             } else {
                 if (ObjectUtils.isEmpty(device.getStreamMode())) {
-                    device.setStreamMode("TCP-PASSIVE");
+                    device.setStreamMode(BroadcastForPlatform.TCP_PASSIVE);
                 }
                 if (ObjectUtils.isEmpty(device.getCharset())) {
                     device.setCharset("GB2312");

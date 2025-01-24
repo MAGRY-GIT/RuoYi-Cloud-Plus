@@ -465,21 +465,19 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
 
             // 查看是否支持PS 负载96
             int port = -1;
-            boolean mediaTransmissionTCP = false;
+            boolean mediaTransmissionTcp = false;
             Boolean tcpActive = null;
             for (int i = 0; i < mediaDescriptions.size(); i++) {
                 MediaDescription mediaDescription = (MediaDescription) mediaDescriptions.get(i);
                 Media media = mediaDescription.getMedia();
 
-                Vector mediaFormats = media.getMediaFormats(false);
-//                    if (mediaFormats.contains("8")) {
                 port = media.getMediaPort();
                 String protocol = media.getProtocol();
                 // 区分TCP发流还是udp， 当前默认udp
                 if ("TCP/RTP/AVP".equals(protocol)) {
                     String setup = mediaDescription.getAttribute("setup");
                     if (setup != null) {
-                        mediaTransmissionTCP = true;
+                        mediaTransmissionTcp = true;
                         if ("active".equals(setup)) {
                             tcpActive = true;
                         } else if ("passive".equals(setup)) {
@@ -488,7 +486,6 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
                     }
                 }
                 break;
-//                    }
             }
             if (port == -1) {
                 log.info("不支持的媒体格式，返回415");
@@ -505,7 +502,7 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
             }
             String addressStr = sdp.getOrigin().getAddress();
             log.info("设备{}请求语音流，地址：{}:{}，ssrc：{}, {}", inviteInfo.getRequesterId(), addressStr, port, gb28181Sdp.getSsrc(),
-                    mediaTransmissionTCP ? (tcpActive ? "TCP主动" : "TCP被动") : NetProtocol.UDP.name());
+                    mediaTransmissionTcp ? (Boolean.TRUE.equals(tcpActive) ? "TCP主动" : "TCP被动") : NetProtocol.UDP.name());
 
             MediaServer mediaServerItem = broadcastCatch.getMediaServerItem();
             if (mediaServerItem == null) {
@@ -519,12 +516,12 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
                 return;
             }
             log.info("设备{}请求语音流， 收流地址：{}:{}，ssrc：{}, {}, 对讲方式：{}", inviteInfo.getRequesterId(), addressStr, port, gb28181Sdp.getSsrc(),
-                    mediaTransmissionTCP ? (tcpActive ? "TCP主动" : "TCP被动") : NetProtocol.UDP.name(), sdp.getSessionName().getValue());
+                    mediaTransmissionTcp ? (tcpActive ? "TCP主动" : "TCP被动") : NetProtocol.UDP.name(), sdp.getSessionName().getValue());
             CallIdHeader callIdHeader = (CallIdHeader) request.getHeader(CallIdHeader.NAME);
 
             SendRtpInfo sendRtpItem = sendRtpServerService.createSendRtpInfo(mediaServerItem, addressStr, port, gb28181Sdp.getSsrc(), inviteInfo.getRequesterId(),
                     device.getDeviceId(), deviceChannel.getId(),
-                    mediaTransmissionTCP, false);
+                    mediaTransmissionTcp, false);
 
             if (sendRtpItem == null) {
                 log.warn("服务器端口资源不足");
@@ -547,7 +544,7 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
             sendRtpItem.setUsePs(false);
             sendRtpItem.setRtcp(false);
             sendRtpItem.setOnlyAudio(true);
-            sendRtpItem.setTcp(mediaTransmissionTCP);
+            sendRtpItem.setTcp(mediaTransmissionTcp);
             if (tcpActive != null) {
                 sendRtpItem.setTcpActive(tcpActive);
             }
@@ -556,7 +553,7 @@ public class InviteRequestProcessor extends SIPRequestProcessorParent implements
 
             Boolean streamReady = mediaServerService.isStreamReady(mediaServerItem, broadcastCatch.getApp(), broadcastCatch.getStream());
             if (streamReady) {
-                sendOk(device, deviceChannel, sendRtpItem, sdp, request, mediaServerItem, mediaTransmissionTCP, gb28181Sdp.getSsrc());
+                sendOk(device, deviceChannel, sendRtpItem, sdp, request, mediaServerItem, mediaTransmissionTcp, gb28181Sdp.getSsrc());
             } else {
                 log.warn("[语音通话]， 未发现待推送的流,app={},stream={}", broadcastCatch.getApp(), broadcastCatch.getStream());
                 try {

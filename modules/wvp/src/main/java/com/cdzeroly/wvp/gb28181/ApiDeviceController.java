@@ -54,21 +54,12 @@ public class ApiDeviceController {
 
     /**
      * 分页获取设备列表 现在直接返回，尚未实现分页
-     * @param start
-     * @param limit
-     * @param q
-     * @param online
-     * @return
      */
     @GetMapping(value = "/list")
     public JSONObject list( @RequestParam(required = false)Integer start,
                             @RequestParam(required = false)Integer limit,
                             @RequestParam(required = false)String q,
                             @RequestParam(required = false)Boolean online ){
-
-//        if (logger.isDebugEnabled()) {
-//            logger.debug("查询所有视频设备API调用");
-//        }
 
         JSONObject result = new JSONObject();
         List<Device> devices;
