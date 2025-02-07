@@ -63,8 +63,8 @@ public class GbChannelServiceImpl implements IGbChannelService {
         if (commonGbChannel.getDataType() == null || commonGbChannel.getDataDeviceId() == null) {
             throw new ServiceException("缺少通道数据类型或通道数据关联设备ID");
         }
-        CommonGbChannel commonGBChannelInDb =  commonGBChannelMapper.queryByDataId(commonGbChannel.getDataType(), commonGbChannel.getDataDeviceId());
-        if (commonGBChannelInDb != null) {
+        CommonGbChannel commonGbChannelInDb =  commonGBChannelMapper.queryByDataId(commonGbChannel.getDataType(), commonGbChannel.getDataDeviceId());
+        if (commonGbChannelInDb != null) {
             throw new ServiceException( "此推流已经关联通道");
         }
         return commonGBChannelMapper.insert(commonGbChannel);
