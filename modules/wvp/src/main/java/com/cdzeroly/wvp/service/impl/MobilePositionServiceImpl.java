@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 移动定位服务实施
  * @author MGARY
  */
 @Slf4j

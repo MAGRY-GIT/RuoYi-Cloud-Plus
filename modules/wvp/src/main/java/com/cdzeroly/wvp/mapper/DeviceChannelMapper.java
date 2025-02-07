@@ -31,8 +31,7 @@ public interface DeviceChannelMapper extends BaseMapperPlus<DeviceChannel, Devic
                                       @Param("query") String query, @Param("hasSubChannel") Boolean hasSubChannel,
                                       @Param("online") Boolean online, @Param("channelIds") List<String> channelIds);
 
-    @SelectProvider(type = DeviceChannelProvider.class, method = "queryChannelsByDeviceDbId")
-    List<DeviceChannel> queryChannelsByDeviceDbId(@Param("dataDeviceId") Long dataDeviceId);
+    List<DeviceChannel> queryChannelsByDeviceDbId(@Param("dataDeviceId") Long dataDeviceId,@Param("dataDeviceId") Integer dataType);
 
 
 
@@ -152,8 +151,9 @@ public interface DeviceChannelMapper extends BaseMapperPlus<DeviceChannel, Devic
      */
     DeviceChannel getOneForSource(@Param("id") Long id);
 
-    @SelectProvider(type = DeviceChannelProvider.class, method = "getOneByDeviceId")
-    DeviceChannel getOneByDeviceId(@Param("dataDeviceId") Long dataDeviceId, @Param("channelId") String channelId);
+
+
+    DeviceChannel getOneByDeviceId(@Param("dataDeviceId") Integer dataType,@Param("dataDeviceId") Long dataDeviceId, @Param("channelId") String channelId);
 
 
     /**

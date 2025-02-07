@@ -108,19 +108,8 @@ public class DeviceChannelProvider {
     }
 
 
-    public String queryChannelsByDeviceDbId(Map<String, Object> params ){
-        StringBuilder sqlBuild = new StringBuilder();
-        sqlBuild.append(getBaseSelectSql());
-        sqlBuild.append(" where data_type = " + ChannelDataType.GB28181.value + " and dc.data_device_id = #{dataDeviceId}");
-        return sqlBuild.toString();
-    }
 
-    public String queryAllChannels(Map<String, Object> params ){
-        StringBuilder sqlBuild = new StringBuilder();
-        sqlBuild.append(getBaseSelectSql());
-        sqlBuild.append(" where data_type = " + ChannelDataType.GB28181.value + " and dc.data_device_id = #{dataDeviceId}");
-        return sqlBuild.toString();
-    }
+
 
     public String getOne(Map<String, Object> params ){
         StringBuilder sqlBuild = new StringBuilder();
@@ -129,12 +118,6 @@ public class DeviceChannelProvider {
         return sqlBuild.toString();
     }
 
-    public String getOneByDeviceId(Map<String, Object> params ){
-        StringBuilder sqlBuild = new StringBuilder();
-        sqlBuild.append(getBaseSelectSql());
-        sqlBuild.append(" where data_type = " + ChannelDataType.GB28181.value + " and dc.data_device_id=#{dataDeviceId} and coalesce(dc.gb_device_id, dc.device_id) = #{channelId}");
-        return sqlBuild.toString();
-    }
 
 
 

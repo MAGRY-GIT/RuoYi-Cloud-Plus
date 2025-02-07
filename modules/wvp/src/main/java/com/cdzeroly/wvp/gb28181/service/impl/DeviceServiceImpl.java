@@ -8,7 +8,6 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.wvp.common.BroadcastForPlatform;
 import com.cdzeroly.wvp.common.CommonCallback;
-import com.cdzeroly.wvp.common.NetProtocol;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.common.enums.ChannelDataType;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
@@ -157,7 +156,7 @@ public class DeviceServiceImpl implements IDeviceService {
                 deviceMapper.insertOrUpdate(device);
                 redisCatchStorage.updateDevice(device);
             }
-            if (deviceChannelMapper.queryChannelsByDeviceDbId(device.getId()).isEmpty()) {
+            if (deviceChannelMapper.queryChannelsByDeviceDbId(device.getId(), ChannelDataType.GB28181.value).isEmpty()) {
                 log.info("[设备上线]: {}，通道数为0,查询通道信息", device.getDeviceId());
                 sync(device);
             }

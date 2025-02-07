@@ -73,7 +73,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
         HashMap<String, DeviceChannel> channelsInStore = new HashMap<>();
         int result = 0;
         if (channels != null && !channels.isEmpty()) {
-            List<DeviceChannel> channelList = channelMapper.queryChannelsByDeviceDbId(device.getId());
+            List<DeviceChannel> channelList = channelMapper.queryChannelsByDeviceDbId(device.getId(), ChannelDataType.GB28181.value);
             if (channelList.isEmpty()) {
                 for (DeviceChannel channel : channels) {
                     channel.setDataDeviceId(device.getId());
@@ -88,17 +88,17 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
                 for (DeviceChannel deviceChannel : channelList) {
                     channelsInStore.put(deviceChannel.getDataDeviceId() + deviceChannel.getDeviceId(), deviceChannel);
                 }
-                for (DeviceChannel channel : channels) {
-                    InviteInfo inviteInfo = inviteStreamService.getInviteInfoByDeviceAndChannel(InviteSessionType.PLAY, channel.getId());
+                for (DeviceChannel deviceChannel : channels) {
+                    InviteInfo inviteInfo = inviteStreamService.getInviteInfoByDeviceAndChannel(InviteSessionType.PLAY, deviceChannel.getId());
                     if (inviteInfo != null && inviteInfo.getStreamInfo() != null) {
-                        channel.setStreamId(inviteInfo.getStreamInfo().getStream());
+                        deviceChannel.setStreamId(inviteInfo.getStreamInfo().getStream());
                     }
-                    DeviceChannel deviceChannelInDb = channelsInStore.get(channel.getDataDeviceId() + channel.getDeviceId());
+                    DeviceChannel deviceChannelInDb = channelsInStore.get(deviceChannel.getDataDeviceId() + deviceChannel.getDeviceId());
                     if ( deviceChannelInDb != null) {
-                        channel.setId(deviceChannelInDb.getId());
-                        updateChannels.add(channel);
+                        deviceChannel.setId(deviceChannelInDb.getId());
+                        updateChannels.add(deviceChannel);
                     }else {
-                        addChannels.add(channel);
+                        addChannels.add(deviceChannel);
                     }
                 }
             }
@@ -239,7 +239,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
         if (device == null) {
             throw new ServiceException("未找到设备：" + deviceId);
         }
-        return channelMapper.getOneByDeviceId(device.getId(), channelId);
+        return channelMapper.getOneByDeviceId(ChannelDataType.GB28181.value, device.getId(), channelId);
     }
 
     @Override
@@ -328,12 +328,12 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
         if (device == null) {
             throw new ServiceException("未找到通道：" + deviceId);
         }
-        return channelMapper.queryChannelsByDeviceDbId(device.getId());
+        return channelMapper.queryChannelsByDeviceDbId(device.getId(), ChannelDataType.GB28181.value);
     }
 
     @Override
     public List<DeviceChannel> queryChaneListByDeviceDbId(Long deviceDbId) {
-        return channelMapper.queryChannelsByDeviceDbId(deviceDbId);
+        return channelMapper.queryChannelsByDeviceDbId(deviceDbId, ChannelDataType.GB28181.value);
     }
 
     @Override
@@ -639,7 +639,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
 
     @Override
     public DeviceChannel getBroadcastChannel(Long deviceDbId) {
-        List<DeviceChannel> channels = channelMapper.queryChannelsByDeviceDbId(deviceDbId);
+        List<DeviceChannel> channels = channelMapper.queryChannelsByDeviceDbId(deviceDbId, ChannelDataType.GB28181.value);
         if (channels.size() == 1) {
             return channels.get(0);
         }

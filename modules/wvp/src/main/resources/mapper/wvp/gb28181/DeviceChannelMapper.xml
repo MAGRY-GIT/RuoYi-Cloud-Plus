@@ -421,53 +421,9 @@
 
     </select>
     <select id="queryAllChannelsForRefresh" resultType="com.cdzeroly.wvp.domain.DeviceChannel">
-        select id,
-               data_device_id,
-               create_time,
-               update_time,
-               sub_count,
-               stream_id,
-               has_audio,
-               gps_time,
-               stream_identification,
-               channel_type,
-               device_id,
-               name,
-               manufacturer,
-               model,
-               owner,
-               civil_code,
-               block,
-               address,
-               parental,
-               parent_id,
-               safety_way,
-               register_way,
-               cert_num,
-               certifiable,
-               err_code,
-               end_time,
-               secrecy,
-               ip_address,
-               port,
-               password,
-               status,
-               longitude,
-               latitude,
-               ptz_type,
-               position_type,
-               room_type,
-               use_type,
-               supply_light_type,
-               direction_type,
-               resolution,
-               business_group_id,
-               download_speed,
-               svc_space_support_mod,
-               svc_time_support_mode
-        from wvp_device_channel
+        <include refid="paramDeviceSql"/>
         where data_type = 1
-          and data_device_id = #{dataDeviceId}
+        and data_device_id = #{dataDeviceId}
 
     </select>
     <select id="getDeviceByChannelDeviceId" resultType="com.cdzeroly.wvp.domain.Device">
@@ -485,155 +441,39 @@
     </select>
 
     <select id="getOneForSource" resultType="com.cdzeroly.wvp.domain.DeviceChannel">
-        SELECT id,
-               data_device_id,
-               create_time,
-               update_time,
-               sub_count,
-               stream_id,
-               has_audio,
-               gps_time,
-               stream_identification,
-               channel_type,
-               device_id,
-               name,
-               manufacturer,
-               model,
-               owner,
-               civil_code,
-               block,
-               address,
-               parental,
-               parent_id,
-               safety_way,
-               register_way,
-               cert_num,
-               certifiable,
-               err_code,
-               end_time,
-               secrecy,
-               ip_address,
-               port,
-               password,
-               status,
-               longitude,
-               latitude,
-               ptz_type,
-               position_type,
-               room_type,
-               use_type,
-               supply_light_type,
-               direction_type,
-               resolution,
-               business_group_id,
-               download_speed,
-               svc_space_support_mod,
-               svc_time_support_mode
-        FROM wvp_device_channel
+        <include refid="paramDeviceSql"/>
         WHERE id = #{id}
 
     </select>
     <select id="getOneByDeviceIdForSource" resultType="com.cdzeroly.wvp.domain.DeviceChannel">
-        SELECT id,
-               data_device_id,
-               create_time,
-               update_time,
-               sub_count,
-               stream_id,
-               has_audio,
-               gps_time,
-               stream_identification,
-               channel_type,
-               device_id,
-               name,
-               manufacturer,
-               model,
-               owner,
-               civil_code,
-               block,
-               address,
-               parental,
-               parent_id,
-               safety_way,
-               register_way,
-               cert_num,
-               certifiable,
-               err_code,
-               end_time,
-               secrecy,
-               ip_address,
-               port,
-               password,
-               status,
-               longitude,
-               latitude,
-               ptz_type,
-               position_type,
-               room_type,
-               use_type,
-               supply_light_type,
-               direction_type,
-               resolution,
-               business_group_id,
-               download_speed,
-               svc_space_support_mod,
-               svc_time_support_mode
-        FROM wvp_device_channel
+        <include refid="paramDeviceSql"/>
         WHERE data_type = 1
-          and data_device_id = #{dataDeviceId}
-          AND COALESCE(gb_device_id, device_id) = #{channelId}
+        and data_device_id = #{dataDeviceId}
+        AND COALESCE(gb_device_id, device_id) = #{channelId}
 
     </select>
     <select id="getOneBySourceChannelId" resultType="com.cdzeroly.wvp.domain.DeviceChannel">
-        SELECT id,
-               data_device_id,
-               create_time,
-               update_time,
-               sub_count,
-               stream_id,
-               has_audio,
-               gps_time,
-               stream_identification,
-               channel_type,
-               device_id,
-               name,
-               manufacturer,
-               model,
-               owner,
-               civil_code,
-               block,
-               address,
-               parental,
-               parent_id,
-               safety_way,
-               register_way,
-               cert_num,
-               certifiable,
-               err_code,
-               end_time,
-               secrecy,
-               ip_address,
-               port,
-               password,
-               status,
-               longitude,
-               latitude,
-               ptz_type,
-               position_type,
-               room_type,
-               use_type,
-               supply_light_type,
-               direction_type,
-               resolution,
-               business_group_id,
-               download_speed,
-               svc_space_support_mod,
-               svc_time_support_mode
-        FROM wvp_device_channel
+        <include refid="paramDeviceSql"/>
         WHERE data_type = 1
-          AND data_device_id = #{dataDeviceId}
-          AND device_id = #{channelId}
+        AND data_device_id = #{dataDeviceId}
+        AND device_id = #{channelId}
 
+    </select>
+    <select id="queryChannelsByDeviceDbId" resultType="com.cdzeroly.wvp.domain.DeviceChannel">
+        <include refid="paramSql"/>
+        <where>
+            data_type = #{dataType}
+            and dc.data_device_id = #{dataDeviceId}
+        </where>
+
+    </select>
+    <select id="getOneByDeviceId" resultType="com.cdzeroly.wvp.domain.DeviceChannel">
+
+        <include refid="paramSql"/>
+        <where>
+            data_type = #{dataType}
+            and dc.data_device_id=#{dataDeviceId} and coalesce(dc.gb_device_id, dc.device_id) = #{channelId}
+        </where>
     </select>
 
     <update id="stopPlayById">
@@ -717,4 +557,106 @@
         UPDATE wvp_device_channel
         SET stream_identification=#{streamIdentification}
     </update>
+
+
+    <!--通用 T-SQL -->
+    <sql id="paramSql">
+        SELECT dc.id,
+               dc.data_device_id,
+               dc.create_time,
+               dc.update_time,
+               dc.sub_count,
+               dc.stream_id,
+               dc.has_audio,
+               dc.gps_time,
+               dc.stream_identification,
+               dc.channel_type,
+               COALESCE(dc.gb_device_id, dc.device_id)                         AS device_id,
+               COALESCE(dc.gb_name, dc.name)                                   AS name,
+               COALESCE(dc.gb_manufacturer, dc.manufacturer)                   AS manufacturer,
+               COALESCE(dc.gb_model, dc.model)                                 AS model,
+               COALESCE(dc.gb_owner, dc.owner)                                 AS owner,
+               COALESCE(dc.gb_civil_code, dc.civil_code)                       AS civil_code,
+               COALESCE(dc.gb_block, dc.block)                                 AS block,
+               COALESCE(dc.gb_address, dc.address)                             AS address,
+               COALESCE(dc.gb_parental, dc.parental)                           AS parental,
+               COALESCE(dc.gb_parent_id, dc.parent_id)                         AS parent_id,
+               COALESCE(dc.gb_safety_way, dc.safety_way)                       AS safety_way,
+               COALESCE(dc.gb_register_way, dc.register_way)                   AS register_way,
+               COALESCE(dc.gb_cert_num, dc.cert_num)                           AS cert_num,
+               COALESCE(dc.gb_certifiable, dc.certifiable)                     AS certifiable,
+               COALESCE(dc.gb_err_code, dc.err_code)                           AS err_code,
+               COALESCE(dc.gb_end_time, dc.end_time)                           AS end_time,
+               COALESCE(dc.gb_secrecy, dc.secrecy)                             AS secrecy,
+               COALESCE(dc.gb_ip_address, dc.ip_address)                       AS ip_address,
+               COALESCE(dc.gb_port, dc.port)                                   AS port,
+               COALESCE(dc.gb_password, dc.password)                           AS password,
+               COALESCE(dc.gb_status, dc.status)                               AS status,
+               COALESCE(dc.gb_longitude, dc.longitude)                         AS longitude,
+               COALESCE(dc.gb_latitude, dc.latitude)                           AS latitude,
+               COALESCE(dc.gb_ptz_type, dc.ptz_type)                           AS ptz_type,
+               COALESCE(dc.gb_position_type, dc.position_type)                 AS position_type,
+               COALESCE(dc.gb_room_type, dc.room_type)                         AS room_type,
+               COALESCE(dc.gb_use_type, dc.use_type)                           AS use_type,
+               COALESCE(dc.gb_supply_light_type, dc.supply_light_type)         AS supply_light_type,
+               COALESCE(dc.gb_direction_type, dc.direction_type)               AS direction_type,
+               COALESCE(dc.gb_resolution, dc.resolution)                       AS resolution,
+               COALESCE(dc.gb_business_group_id, dc.business_group_id)         AS business_group_id,
+               COALESCE(dc.gb_download_speed, dc.download_speed)               AS download_speed,
+               COALESCE(dc.gb_svc_space_support_mod, dc.svc_space_support_mod) AS svc_space_support_mod,
+               COALESCE(dc.gb_svc_time_support_mode, dc.svc_time_support_mode) AS svc_time_support_mode
+        FROM wvp_device_channel dc;
+    </sql>
+
+
+    <!--通用 T-SQL -->
+    <sql id="paramDeviceSql">
+        SELECT id,
+               data_device_id,
+               create_time,
+               update_time,
+               sub_count,
+               stream_id,
+               has_audio,
+               gps_time,
+               stream_identification,
+               channel_type,
+               device_id,
+               name,
+               manufacturer,
+               model,
+               owner,
+               civil_code,
+               block,
+               address,
+               parental,
+               parent_id,
+               safety_way,
+               register_way,
+               cert_num,
+               certifiable,
+               err_code,
+               end_time,
+               secrecy,
+               ip_address,
+               port,
+               password,
+               status,
+               longitude,
+               latitude,
+               ptz_type,
+               position_type,
+               room_type,
+               use_type,
+               supply_light_type,
+               direction_type,
+               resolution,
+               business_group_id,
+               download_speed,
+               svc_space_support_mod,
+               svc_time_support_mode
+        FROM wvp_device_channel
+    </sql>
+
+
 </mapper>

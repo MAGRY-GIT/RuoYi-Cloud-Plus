@@ -28,8 +28,11 @@ public class DeviceChannel  extends CommonGbChannel {
 	@Schema(description = "数据库自增ID")
 	private Long id;
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	@MessageElementForCatalog("DeviceID")
+    @MessageElementForCatalog("DeviceID")
 	@Schema(description = "编码")
 	private String deviceId;
 

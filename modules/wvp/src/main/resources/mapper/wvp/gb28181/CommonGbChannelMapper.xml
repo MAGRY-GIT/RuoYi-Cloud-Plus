@@ -255,6 +255,8 @@
 
 
     </select>
+
+
     <select id="queryForRecordPlanForWebList" resultType="com.cdzeroly.wvp.domain.CommonGbChannel">
 
         select
