@@ -491,12 +491,7 @@ public class SIPCommander implements ISIPCommander {
                 case UDP -> {
                     content.append("m=video ").append(ssrcInfo.getPort()).append(" RTP/AVP 96 97 98 99\r\n");
                 }
-                case TCP_PASSIVE -> {
-                    content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 97 98 99\r\n");
-                }
-                case TCP_ACTIVE -> {
-                    content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 97 98 99\r\n");
-                }
+                case TCP_PASSIVE, TCP_ACTIVE -> content.append("m=video ").append(ssrcInfo.getPort()).append(" TCP/RTP/AVP 96 97 98 99\r\n");
             }
 
             content.append("a=recvonly\r\n");
@@ -914,9 +909,8 @@ public class SIPCommander implements ISIPCommander {
     @Override
     public void deviceStatusQuery(Device device, SipSubscribe.Event errorEvent) throws InvalidArgumentException, SipException, ParseException {
 
-        String charset = device.getCharset();
         StringBuilder catalogXml = new StringBuilder(200);
-        catalogXml.append("<?xml version=\"1.0\" encoding=\"").append(charset).append("\"?>\r\n");
+        catalogXml.append("<?xml version=\"1.0\" encoding=\"").append(device.getCharset()).append("\"?>\r\n");
         catalogXml.append("<Query>\r\n");
         catalogXml.append("<CmdType>DeviceStatus</CmdType>\r\n");
         catalogXml.append("<SN>").append(getRandom()).append("</SN>\r\n");

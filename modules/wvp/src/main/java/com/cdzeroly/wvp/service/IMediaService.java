@@ -15,5 +15,13 @@ public interface IMediaService {
 
     ResultForOnPublish authenticatePublish(MediaServer mediaServer, String app, String stream, String params);
 
+    /**
+     * 无人观看关闭流
+     * @param mediaServerId
+     * @param app
+     * @param stream
+     * @param schema
+     * @return
+     */
     boolean closeStreamOnNoneReader(String mediaServerId, String app, String stream, String schema);
 }

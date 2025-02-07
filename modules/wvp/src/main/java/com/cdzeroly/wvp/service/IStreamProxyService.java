@@ -46,21 +46,17 @@ public interface IStreamProxyService {
      * 停用用视频代理
      * @param app
      * @param stream
-     * @return
      */
     void stopByAppAndStream(String app, String stream);
 
     /**
      * 获取ffmpeg.cmd模板
      *
-     * @return
      */
     Map<String, String> getFFmpegCMDs(MediaServer mediaServerItem);
 
     /**
      * 根据app与stream获取streamProxy
-     *
-     * @return
      */
     StreamProxyVo getStreamProxyByAppAndStream(String app, String streamId);
 
@@ -74,7 +70,7 @@ public interface IStreamProxyService {
 
     /**
      * 节点离线
-     * @param mediaServer
+     * @param mediaServer 
      * @return
      */
     void zlmServerOffline(MediaServer mediaServer);

@@ -83,7 +83,7 @@ public class PtzController {
 	public void ptz(@PathVariable String deviceId,@PathVariable String channelId, String command, Integer horizonSpeed, Integer verticalSpeed, Integer zoomSpeed){
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("设备云台控制 API调用，deviceId：%s ，channelId：%s ，command：%s ，horizonSpeed：%d ，verticalSpeed：%d ，zoomSpeed：%d",deviceId, channelId, command, horizonSpeed, verticalSpeed, zoomSpeed));
+			log.debug("设备云台控制 API调用，deviceId：{} ，channelId：{} ，command：{} ，horizonSpeed：{} ，verticalSpeed：{} ，zoomSpeed：{}", deviceId, channelId, command, horizonSpeed, verticalSpeed, zoomSpeed);
 		}
 		if (horizonSpeed == null) {
 			horizonSpeed = 100;

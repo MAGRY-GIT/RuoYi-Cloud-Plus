@@ -320,7 +320,7 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
                     redisCatchStorage.addStream(mediaServer, "pull", streamInfo.getApp(), streamInfo.getStream(), streamInfo.getMediaInfo());
                     if ("OFF".equalsIgnoreCase(streamProxy.getGbStatus()) && ObjUtil.isNotNull(streamProxy.getGbId())) {
                         streamProxy.setGbStatus("ON");
-                        channelListForOnline.add(streamProxy.buildCommonGBChannel());
+                        channelListForOnline.add(streamProxy.buildCommonGbChannel());
                     }
                     streamProxyVoMap.remove(key);
                 }
@@ -336,7 +336,7 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
             for (StreamProxyVo streamProxy : streamProxyVoMap.values()) {
                 if ("ON".equalsIgnoreCase(streamProxy.getGbStatus()) && ObjUtil.isNotNull(streamProxy.getGbId())) {
                     streamProxy.setGbStatus("OFF");
-                    channelListForOffline.add(streamProxy.buildCommonGBChannel());
+                    channelListForOffline.add(streamProxy.buildCommonGbChannel());
                 }
                 // 移除开启了无人观看自动移除的流
                 if (streamProxy.getGbDeviceId() == null && streamProxy.isEnableRemoveNoneReader()) {
@@ -376,7 +376,7 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
 
         for (StreamProxyVo streamProxy : streamProxyVos) {
             if (ObjUtil.isNotNull(streamProxy.getGbId()) && "ON".equalsIgnoreCase(streamProxy.getGbStatus())) {
-                channelListForOffline.add(streamProxy.buildCommonGBChannel());
+                channelListForOffline.add(streamProxy.buildCommonGbChannel());
             }
             if (streamProxy.getGbId() == 0 && streamProxy.isEnableRemoveNoneReader()) {
                 streamProxiesForRemove.add(streamProxy);
@@ -423,9 +423,9 @@ public class StreamProxyServiceImpl implements IStreamProxyService {
         streamProxyVo.setGbStatus(status ? "ON" : "OFF");
         if (ObjUtil.isNotNull(streamProxyVo.getGbId())) {
             if (status) {
-                gbChannelService.online(streamProxyVo.buildCommonGBChannel());
+                gbChannelService.online(streamProxyVo.buildCommonGbChannel());
             } else {
-                gbChannelService.offline(streamProxyVo.buildCommonGBChannel());
+                gbChannelService.offline(streamProxyVo.buildCommonGbChannel());
             }
         }
     }

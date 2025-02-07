@@ -111,19 +111,19 @@ public class GbChannelServiceImpl implements IGbChannelService {
     }
 
     @Override
-    public int update(CommonGbChannel commonGBChannel) {
-        log.info("[更新通道] 通道ID: {}, ", commonGBChannel.getGbId());
-        if (ObjectUtils.isEmpty(commonGBChannel.getGbId())) {
-            log.warn("[更新通道] 未找到数据库ID，更新失败， {}({})", commonGBChannel.getGbName(), commonGBChannel.getGbDeviceId());
+    public int update(CommonGbChannel commonGbChannel) {
+        log.info("[更新通道] 通道ID: {}, ", commonGbChannel.getGbId());
+        if (ObjectUtils.isEmpty(commonGbChannel.getGbId())) {
+            log.warn("[更新通道] 未找到数据库ID，更新失败， {}({})", commonGbChannel.getGbName(), commonGbChannel.getGbDeviceId());
             return 0;
         }
-        int result = commonGBChannelMapper.update(commonGBChannel, Wrappers.emptyWrapper());
+        int result = commonGBChannelMapper.update(commonGbChannel, Wrappers.emptyWrapper());
         if (result >0) {
             try {
                 // 发送通知
-                eventPublisher.catalogEventPublish(null, commonGBChannel, CatalogEvent.UPDATE);
+                eventPublisher.catalogEventPublish(null, commonGbChannel, CatalogEvent.UPDATE);
             } catch (Exception e) {
-                log.warn("[更新通道通知] 发送失败，{}", commonGBChannel.getGbDeviceId(), e);
+                log.warn("[更新通道通知] 发送失败，{}", commonGbChannel.getGbDeviceId(), e);
             }
         }
         return result;

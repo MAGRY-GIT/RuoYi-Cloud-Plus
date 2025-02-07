@@ -79,7 +79,7 @@ public class StreamProxyVo extends CommonGbChannelBean {
      * 转换传输对象
      * @return  CommonGBChannel
      */
-    public CommonGbChannel buildCommonGBChannel() {
+    public CommonGbChannel buildCommonGbChannel() {
 
 
         if (ObjectUtils.isEmpty(this.getGbDeviceId())) {

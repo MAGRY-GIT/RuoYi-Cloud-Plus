@@ -103,7 +103,7 @@ public class MobilePositionController {
         }
         DeferredResult<MobilePosition> result = new DeferredResult<MobilePosition>(5*1000L);
 		result.onTimeout(()->{
-			log.warn(String.format("获取移动位置信息超时"));
+			log.warn("获取移动位置信息超时");
 			// 释放rtpserver
 			RequestMessage msg = new RequestMessage();
             msg.setId(uuid);

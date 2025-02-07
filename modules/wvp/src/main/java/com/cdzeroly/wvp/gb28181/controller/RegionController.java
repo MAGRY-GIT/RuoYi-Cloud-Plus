@@ -29,7 +29,6 @@ import java.util.List;
 @RequestMapping("/region")
 public class RegionController {
 
-    private final static Logger logger = LoggerFactory.getLogger(RegionController.class);
 
     @Resource
     private IRegionService regionService;
