@@ -7,6 +7,7 @@ import com.cdzeroly.wvp.media.zlm.dto.hook.OnStreamChangedHookParam;
 import com.cdzeroly.wvp.utils.MediaServerUtils;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -84,6 +85,8 @@ public class MediaInfo {
         Long bytesSpeed = jsonObject.getLong("bytesSpeed");
         if (totalReaderCount != null) {
             mediaInfo.setReaderCount(totalReaderCount);
+        }else {
+            mediaInfo.setReaderCount(0);
         }
         if (online != null) {
             mediaInfo.setOnline(online);
@@ -108,7 +111,7 @@ public class MediaInfo {
             }
         }
         JSONArray jsonArray = jsonObject.getJSONArray("tracks");
-        if (!jsonArray.isEmpty()) {
+        if (!ObjectUtils.isEmpty(jsonArray)) {
             for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject trackJson = jsonArray.getJSONObject(i);
                 Integer channels = trackJson.getInteger("channels");
