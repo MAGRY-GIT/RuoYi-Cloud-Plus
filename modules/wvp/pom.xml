@@ -25,6 +25,11 @@
             <artifactId>common-sentinel</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.cdzeroly</groupId>
+            <artifactId>api-wvp</artifactId>
+        </dependency>
+
         <!-- sip协议栈 -->
         <dependency>
             <groupId>javax.sip</groupId>

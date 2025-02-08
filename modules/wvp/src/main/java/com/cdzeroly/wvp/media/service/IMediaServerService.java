@@ -248,7 +248,15 @@ public interface IMediaServerService {
 
     Boolean connectRtpServer(MediaServer mediaServerItem, String address, int port, String stream);
 
-    void getSnap(MediaServer mediaServerItemInuse, String streamUrl, int timeoutSec, int expireSec, String path, String fileName);
+    /**
+     * @param mediaServer 媒体服务
+     * @param streamUrl   流地址
+     * @param timeoutSec  超时秒
+     * @param expireSec   过期秒
+     * @param path        路径
+     * @param fileName    文件名
+     */
+    void getSnap(MediaServer mediaServer, String streamUrl, int timeoutSec, int expireSec, String path, String fileName);
 
     MediaInfo getMediaInfo(MediaServer mediaServerItem, String app, String stream);
 
@@ -310,9 +318,10 @@ public interface IMediaServerService {
 
     /**
      * 查看流媒体是否存在
-     * @param mediaServer  流媒体服务
-     * @param rtp  rtp
-     * @param streamId   流ID
+     *
+     * @param mediaServer 流媒体服务
+     * @param rtp         rtp
+     * @param streamId    流ID
      * @return 是否存在
      */
     Boolean isStreamReady(MediaServer mediaServer, String rtp, String streamId);

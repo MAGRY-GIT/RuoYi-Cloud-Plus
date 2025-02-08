@@ -39,8 +39,8 @@ CREATE TABLE `sj_group_config`
   AUTO_INCREMENT = 0
   DEFAULT CHARSET = utf8mb4 COMMENT ='组配置';
 
-INSERT INTO `sj_group_config` VALUES (1, 'dev', 'ruoyi_group', '', 'SJ_cKqBTPzCsWA3VyuCfFoccmuIEGXjr5KT', 1, 1, 0, 1, 1, 4, now(), now());
-INSERT INTO `sj_group_config` VALUES (2, 'prod', 'ruoyi_group', '', 'SJ_cKqBTPzCsWA3VyuCfFoccmuIEGXjr5KT', 1, 1, 0, 1, 1, 4, now(), now());
+INSERT INTO `sj_group_config` VALUES (1, 'dev', 'base_platform_group', '', 'SJ_Wyz3dmsdbDOkDujOTSSoBjGQP1BMsVnj', 1, 1, 0, 1, 1, 4, now(), now());
+INSERT INTO `sj_group_config` VALUES (2, 'prod', 'base_platform_group', '', 'SJ_Wyz3dmsdbDOkDujOTSSoBjGQP1BMsVnj', 1, 1, 0, 1, 1, 4, now(), now());
 
 CREATE TABLE `sj_notify_config`
 (

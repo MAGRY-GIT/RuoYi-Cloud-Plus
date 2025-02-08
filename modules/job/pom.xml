@@ -75,6 +75,11 @@
             <artifactId>api-system</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.cdzeroly</groupId>
+            <artifactId>api-wvp</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
