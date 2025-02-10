@@ -605,7 +605,7 @@
                COALESCE(dc.gb_download_speed, dc.download_speed)               AS download_speed,
                COALESCE(dc.gb_svc_space_support_mod, dc.svc_space_support_mod) AS svc_space_support_mod,
                COALESCE(dc.gb_svc_time_support_mode, dc.svc_time_support_mode) AS svc_time_support_mode
-        FROM wvp_device_channel dc;
+        FROM wvp_device_channel dc
     </sql>
 
 

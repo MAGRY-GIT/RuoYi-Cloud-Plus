@@ -153,7 +153,7 @@ public interface DeviceChannelMapper extends BaseMapperPlus<DeviceChannel, Devic
 
 
 
-    DeviceChannel getOneByDeviceId(@Param("dataDeviceId") Integer dataType,@Param("dataDeviceId") Long dataDeviceId, @Param("channelId") String channelId);
+    DeviceChannel getOneByDeviceId(@Param("dataType") Integer dataType,@Param("dataDeviceId") Long dataDeviceId, @Param("channelId") String channelId);
 
 
     /**

@@ -342,7 +342,7 @@ public class PlayServiceImpl implements IPlayService {
         //打开RTP服务
         String streamId = String.format("%s_%s", device.getDeviceId(), channel.getDeviceId());
 
-        int tcpMode =  device.getStreamMode().getTcpMode();
+        int tcpMode =  Optional.ofNullable(device.getStreamMode()).orElse(BroadcastForPlatform.TCP_ACTIVE).getTcpMode();
         RTPServerParam rtpServerParam = new RTPServerParam();
         rtpServerParam.setMediaServer(mediaServer);
         rtpServerParam.setStreamId(streamId);
