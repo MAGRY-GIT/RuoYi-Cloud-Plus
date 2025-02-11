@@ -65,6 +65,7 @@
         <flowable.version>7.0.1</flowable.version>
         <!-- mq配置 -->
         <rocketmq.version>2.3.0</rocketmq.version>
+        <ffmpeg.version>0.6.2</ffmpeg.version>
 
         <!-- 插件版本 -->
         <maven-compiler-plugin.verison>3.11.0</maven-compiler-plugin.verison>
@@ -387,6 +388,14 @@
                 <artifactId>rocketmq-spring-boot-starter</artifactId>
                 <version>${rocketmq.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>net.bramp.ffmpeg</groupId>
+                <artifactId>ffmpeg</artifactId>
+                <version>${ffmpeg.version}</version>
+
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>

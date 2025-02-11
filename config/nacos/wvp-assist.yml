@@ -1,0 +1,23 @@
+spring:
+  # 设置接口超时时间
+  mvc:
+    async:
+      request-timeout: 20000
+  thymeleaf:
+    cache: false
+#[可选] WVP监听的HTTP端口, 网页和接口调用都是这个端口
+server:
+  port: 18081
+
+
+# [根据业务需求配置]
+userSettings:
+  id: 111
+  # [可选 ] 录像保存时长（单位： 天）每天晚12点自动对过期文件执行清理, 不配置则不删除
+  record-temp-day: 7
+  # [必选 ] ffmpeg路径
+  ffmpeg: ./lib/ffmpeg
+  # [必选 ] ffprobe路径， 一般安装ffmpeg就会自带， 一般跟ffmpeg在同一目录,用于查询文件的信息，
+  ffprobe: ./lib/ffprobe
+  # [可选 ] 限制 ffmpeg 合并文件使用的线程数，间接限制cpu使用率， 默认2 限制到50%
+  threads: 2

@@ -16,6 +16,7 @@
         <module>workflow</module>
         <module>wvp</module>
         <module>weather</module>
+        <module>wvp-assist</module>
     </modules>
 
     <artifactId>modules</artifactId>
