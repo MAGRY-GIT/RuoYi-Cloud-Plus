@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.cmd.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.cdzeroly.wvp.common.BroadcastForPlatform;
 import com.cdzeroly.wvp.common.InviteSessionType;
@@ -1160,7 +1161,7 @@ public class SIPCommander implements ISIPCommander {
         subscribePostitionXml.append("<CmdType>MobilePosition</CmdType>\r\n");
         subscribePostitionXml.append("<SN>").append(getRandom()).append("</SN>\r\n");
         subscribePostitionXml.append("<DeviceID>").append(device.getDeviceId()).append("</DeviceID>\r\n");
-        if (device.getSubscribeCycleForMobilePosition() > 0) {
+        if (ObjUtil.isNotNull(device.getSubscribeCycleForMobilePosition())) {
             subscribePostitionXml.append("<Interval>").append(device.getMobilePositionSubmissionInterval()).append("</Interval>\r\n");
         } else {
             subscribePostitionXml.append("<Interval>5</Interval>\r\n");

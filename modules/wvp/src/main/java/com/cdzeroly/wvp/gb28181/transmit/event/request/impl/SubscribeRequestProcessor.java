@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.transmit.event.request.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import com.cdzeroly.wvp.domain.bean.CmdType;
 import com.cdzeroly.wvp.domain.bean.SubscribeInfo;
 import com.cdzeroly.wvp.domain.Platform;
@@ -118,7 +119,7 @@ public class SubscribeRequestProcessor extends SIPRequestProcessorParent impleme
 				.append("<Result>OK</Result>\r\n")
 				.append("</Response>\r\n");
 
-		if (subscribeInfo.getExpires() > 0) {
+		if (ObjUtil.isNotNull(subscribeInfo.getExpires() )) {
 			// GPS上报时间间隔
 			String interval = XmlUtil.getText(rootElement, "Interval");
 			if (interval == null) {
@@ -172,7 +173,7 @@ public class SubscribeRequestProcessor extends SIPRequestProcessorParent impleme
 				.append("<Result>OK</Result>\r\n")
 				.append("</Response>\r\n");
 
-		if (subscribeInfo.getExpires() > 0) {
+		if (ObjUtil.isNotNull(subscribeInfo.getExpires())) {
 			subscribeHolder.putCatalogSubscribe(platformId, subscribeInfo);
 		}else if (subscribeInfo.getExpires() == 0) {
 			subscribeHolder.removeCatalogSubscribe(platformId);

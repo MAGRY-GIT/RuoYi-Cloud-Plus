@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.gb28181.service.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cdzeroly.common.core.utils.AssertUtils;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
@@ -295,7 +296,7 @@ public class PlatformServiceImpl implements IPlatformService {
                         // 心跳成功
                         // 清空之前的心跳超时计数
                         PlatformCatch platformCatchForNow = redisCatchStorage.queryPlatformCatchInfo(platform.getServerGbId());
-                        if (platformCatchForNow != null && platformCatchForNow.getKeepAliveReply() > 0) {
+                        if (platformCatchForNow != null && ObjUtil.isNotNull(platformCatchForNow.getKeepAliveReply())) {
                             platformCatchForNow.setKeepAliveReply(0);
                             redisCatchStorage.updatePlatformCatchInfo(platformCatchForNow);
                         }
@@ -382,7 +383,7 @@ public class PlatformServiceImpl implements IPlatformService {
         // 停止订阅回复
         SubscribeInfo catalogSubscribe = subscribeHolder.getCatalogSubscribe(platform.getServerGbId());
         if (catalogSubscribe != null) {
-            if (catalogSubscribe.getExpires() > 0) {
+            if (ObjUtil.isNotNull(catalogSubscribe.getExpires())) {
                 log.info("[平台离线] {}({}), 停止目录订阅回复", platform.getName(), platform.getServerGbId());
                 subscribeHolder.removeCatalogSubscribe(platform.getServerGbId());
             }

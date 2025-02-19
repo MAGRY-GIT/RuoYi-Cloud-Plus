@@ -503,7 +503,7 @@ public class DeviceChannelServiceImpl implements IDeviceChannelService {
             }
         }
 
-        if (stringBuilder.length() > 0) {
+        if (!stringBuilder.isEmpty()) {
             log.info("[目录查询]收到的数据存在重复： {}" , stringBuilder);
         }
         if(CollectionUtils.isEmpty(channels)){

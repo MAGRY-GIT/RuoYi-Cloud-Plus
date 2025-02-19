@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.domain.bean;
 
+import cn.hutool.core.util.ObjUtil;
 import com.cdzeroly.wvp.common.VideoManagerConstants;
 import com.cdzeroly.wvp.conf.task.DynamicTask;
 import com.cdzeroly.wvp.conf.UserSetting;
@@ -31,7 +32,7 @@ public class SubscribeHolder {
 
     public void putCatalogSubscribe(String platformId, SubscribeInfo subscribeInfo) {
         CATALOG_MAP.put(platformId, subscribeInfo);
-        if (subscribeInfo.getExpires() > 0) {
+        if (ObjUtil.isNotNull(subscribeInfo.getExpires())) {
             // 添加订阅到期
             String taskOverdueKey = taskOverduePrefix +  "catalog_" + platformId;
             // 添加任务处理订阅过期
@@ -71,7 +72,7 @@ public class SubscribeHolder {
         dynamicTask.startCron(key, gpsTask,
                 cycleForCatalog * 1000);
         String taskOverdueKey = taskOverduePrefix +  "MobilePosition_" + platformId;
-        if (subscribeInfo.getExpires() > 0) {
+        if (ObjUtil.isNotNull(subscribeInfo.getExpires())) {
             // 添加任务处理订阅过期
             dynamicTask.startDelay(taskOverdueKey, () -> {
                         removeMobilePositionSubscribe(subscribeInfo.getId());
@@ -101,7 +102,7 @@ public class SubscribeHolder {
 
     public List<String> getAllCatalogSubscribePlatform() {
         List<String> platforms = new ArrayList<>();
-        if(CATALOG_MAP.size() > 0) {
+        if(!CATALOG_MAP.isEmpty()) {
             for (String key : CATALOG_MAP.keySet()) {
                 platforms.add(CATALOG_MAP.get(key).getId());
             }

@@ -140,11 +140,11 @@ public class DeviceServiceImpl implements IDeviceService {
                     // TODO 如果设备下的通道级联到了其他平台，那么需要发送事件或者notify给上级平台
                 }
                 // 上线添加订阅
-                if (device.getSubscribeCycleForCatalog() > 0) {
+                if (ObjUtil.isNotNull(device.getSubscribeCycleForCatalog())) {
                     // 查询在线设备那些开启了订阅，为设备开启定时的目录订阅
                     addCatalogSubscribe(device);
                 }
-                if (device.getSubscribeCycleForMobilePosition() > 0) {
+                if (ObjUtil.isNotNull(device.getSubscribeCycleForMobilePosition())) {
                     addMobilePositionSubscribe(device);
                 }
                 if (userSetting.getDeviceStatusNotify()) {
@@ -206,7 +206,7 @@ public class DeviceServiceImpl implements IDeviceService {
 //        deviceChannelMapper.offlineByDeviceId(deviceId);
         // 离线释放所有ssrc
         List<SsrcTransaction> ssrcTransactions = sessionManager.getSsrcTransactionByDeviceId(deviceId);
-        if (ssrcTransactions != null && ssrcTransactions.size() > 0) {
+        if (ssrcTransactions != null && !ssrcTransactions.isEmpty()) {
             for (SsrcTransaction ssrcTransaction : ssrcTransactions) {
                 mediaServerService.releaseSsrc(ssrcTransaction.getMediaServerId(), ssrcTransaction.getSsrc());
                 mediaServerService.closeRTPServer(ssrcTransaction.getMediaServerId(), ssrcTransaction.getStream());
@@ -516,7 +516,7 @@ public class DeviceServiceImpl implements IDeviceService {
         }
 
         //  目录订阅相关的信息
-        if (device.getSubscribeCycleForCatalog() > 0) {
+        if (ObjUtil.isNotNull(device.getSubscribeCycleForCatalog())) {
             // 订阅周期不同，则先取消
             removeCatalogSubscribe(device, result->{
                 device.setSubscribeCycleForCatalog(cycle);
@@ -546,7 +546,7 @@ public class DeviceServiceImpl implements IDeviceService {
         }
 
         //  目录订阅相关的信息
-        if (device.getSubscribeCycleForMobilePosition() > 0) {
+        if (ObjUtil.isNotNull(device.getSubscribeCycleForMobilePosition())) {
             // 订阅周期已经开启，则先取消
             removeMobilePositionSubscribe(device, result->{
                 // 开启订阅

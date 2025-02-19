@@ -558,7 +558,7 @@ public class SIPCommanderForPlatform implements ISIPCommanderForPlatform {
             recordXml.append("<RecordList Num=\"0\">\r\n");
         }else {
             recordXml.append("<RecordList Num=\"" + recordInfo.getRecordList().size()+"\">\r\n");
-            if (recordInfo.getRecordList().size() > 0) {
+            if (!recordInfo.getRecordList().isEmpty()) {
                 for (RecordItem recordItem : recordInfo.getRecordList()) {
                     recordXml.append("<Item>\r\n");
                     if (deviceChannel != null) {
