@@ -50,7 +50,7 @@ public class ServerChannelInitializer extends ChannelInitializer<SocketChannel> 
                 if (ChannelHandler.class.isAssignableFrom(clazz)) {
                     @SuppressWarnings("unchecked")
                     Class<? extends ChannelHandler> handlerClass = (Class<? extends ChannelHandler>) clazz;
-                    PACKET_MAP.put(classInfo.getName(), handlerClass);
+                    PACKET_MAP.put(classInfo.getSimpleName(), handlerClass);
                 } else {
                     log.warn("Class {} does not implement ChannelHandler", classInfo.getName());
                 }

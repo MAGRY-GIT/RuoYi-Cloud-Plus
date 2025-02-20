@@ -88,7 +88,7 @@ public class RedisRpcConfig implements MessageListener {
         if (userSetting.getServerId().equals(response.getToId())) {
             return;
         }
-        log.info("[redis-rpc] << {}", response);
+        log.trace("[redis-rpc] << {}", response);
         response(response);
     }
 
@@ -101,7 +101,7 @@ public class RedisRpcConfig implements MessageListener {
             if (userSetting.getServerId().equals(request.getFromId())) {
                 return;
             }
-            log.info("[redis-rpc] << {}", request);
+            log.trace("[redis-rpc] << {}", request);
 
             Method method = getMethod(request.getUri());
             // 没有携带目标ID的可以理解为哪个wvp有结果就哪个回复，携带目标ID，但是如果是不存在的uri则直接回复404
@@ -144,7 +144,7 @@ public class RedisRpcConfig implements MessageListener {
     }
 
     private void sendResponse(RedisRpcResponse response){
-        log.info("[redis-rpc] >> {}", response);
+        log.trace("[redis-rpc] >> {}", response);
         response.setToId(userSetting.getServerId());
         RedisRpcMessage message = new RedisRpcMessage();
         message.setResponse(response);
@@ -152,7 +152,7 @@ public class RedisRpcConfig implements MessageListener {
     }
 
     private void sendRequest(RedisRpcRequest request){
-        log.info("[redis-rpc] >> {}", request);
+        log.trace("[redis-rpc] >> {}", request);
         RedisRpcMessage message = new RedisRpcMessage();
         message.setRequest(request);
         redisTemplate.convertAndSend(REDIS_REQUEST_CHANNEL_KEY, message);

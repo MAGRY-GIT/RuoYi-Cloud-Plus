@@ -54,7 +54,7 @@ public class ZLMRESTFullUtils {
             httpClientBuilder.connectionPool(new ConnectionPool(16, 5, TimeUnit.MINUTES));
             if (log.isDebugEnabled()) {
                 HttpLoggingInterceptor logging = new HttpLoggingInterceptor(message -> {
-                    log.debug("http请求参数：{}", message);
+                    log.trace("http请求参数：{}", message);
                 });
                 logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
                 // OkHttp進行添加攔截器loggingInterceptor
@@ -113,19 +113,19 @@ public class ZLMRESTFullUtils {
                         Objects.requireNonNull(response.body()).close();
                     }
                 }catch (IOException e) {
-                    log.error(String.format("[ %s ]请求失败: %s", url, e.getMessage()));
+                    log.error("[ {} ]请求失败: {}", url, e.getMessage());
 
                     if(e instanceof SocketTimeoutException){
                         //读取超时超时异常
-                        log.error(String.format("读取ZLM数据超时失败: %s, %s", url, e.getMessage()));
+                        log.error("读取ZLM数据超时失败: {}, {}", url, e.getMessage());
                     }
                     if(e instanceof ConnectException){
                         //判断连接异常，我这里是报Failed to connect to 10.7.5.144
-                        log.error(String.format("连接ZLM连接失败: %s, %s", url, e.getMessage()));
+                        log.error("连接ZLM连接失败: {}, {}", url, e.getMessage());
                     }
 
                 }catch (Exception e){
-                    log.error(String.format("访问ZLM失败: %s, %s", url, e.getMessage()));
+                    log.error("访问ZLM失败: {}, {}", url, e.getMessage());
                 }
             }else {
                 client.newCall(request).enqueue(new Callback(){

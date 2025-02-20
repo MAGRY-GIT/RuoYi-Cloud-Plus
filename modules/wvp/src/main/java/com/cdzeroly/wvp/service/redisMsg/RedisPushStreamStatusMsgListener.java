@@ -46,7 +46,7 @@ public class RedisPushStreamStatusMsgListener implements MessageListener, Applic
 
     @Override
     public void onMessage(Message message, byte[] bytes) {
-        log.info("[REDIS: 流设备状态变化]： {}", new String(message.getBody()));
+        log.trace("[REDIS: 流设备状态变化]： {}", new String(message.getBody()));
         taskQueue.offer(message);
     }
 
@@ -109,7 +109,7 @@ public class RedisPushStreamStatusMsgListener implements MessageListener, Applic
         //  启动时设置所有推流通道离线，发起查询请求
         redisCatchStorage.sendStreamPushRequestedMsgForStatus();
         dynamicTask.startDelay(VideoManagerConstants.VM_MSG_GET_ALL_ONLINE_REQUESTED, () -> {
-            log.info("[REDIS消息]未收到redis回复推流设备状态，执行推流设备离线");
+            log.trace("[REDIS消息]未收到redis回复推流设备状态，执行推流设备离线");
             // 五秒收不到请求就设置通道离线，然后通知上级离线
             streamPushService.allOffline();
         }, 5000);

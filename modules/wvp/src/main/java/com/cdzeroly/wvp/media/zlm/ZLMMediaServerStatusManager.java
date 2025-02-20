@@ -97,7 +97,7 @@ public class ZLMMediaServerStatusManager {
         if (serverItem == null) {
             return;
         }
-        log.info("[ZLM-HOOK事件-服务启动] ID：" + event.getMediaServerItem().getId());
+        log.trace("[ZLM-HOOK事件-服务启动] ID：" + event.getMediaServerItem().getId());
         online(serverItem, null);
     }
 

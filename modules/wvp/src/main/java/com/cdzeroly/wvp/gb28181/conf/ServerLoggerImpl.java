@@ -15,7 +15,7 @@ import java.util.Properties;
  */
 public class ServerLoggerImpl implements ServerLogger {
 
-    private boolean showLog = true;
+    private boolean showLog = false;
 
     private SIPTransactionStack sipStack;
 

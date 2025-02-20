@@ -12,7 +12,7 @@ import java.util.Properties;
  */
 @Component
 public class StackLoggerImpl implements StackLogger {
-
+    private boolean showLog = false;
 	/**
 	 * 完全限定类名(Fully Qualified Class Name)，用于定位日志位置
 	 */
@@ -94,12 +94,12 @@ public class StackLoggerImpl implements StackLogger {
 
 	@Override
 	public boolean isLoggingEnabled() {
-		return true;
+		return showLog;
 	}
 
 	@Override
 	public boolean isLoggingEnabled(int logLevel) {
-		return true;
+		return showLog;
 	}
 
 	@Override

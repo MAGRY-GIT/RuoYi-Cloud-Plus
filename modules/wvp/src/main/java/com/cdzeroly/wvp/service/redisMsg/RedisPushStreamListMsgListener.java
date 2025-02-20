@@ -39,7 +39,7 @@ public class RedisPushStreamListMsgListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] bytes) {
-        log.info("[REDIS: 流设备列表更新]： {}", new String(message.getBody()));
+        log.trace("[REDIS: 流设备列表更新]： {}", new String(message.getBody()));
         taskQueue.offer(message);
     }
 
@@ -104,14 +104,14 @@ public class RedisPushStreamListMsgListener implements MessageListener {
                     }
                 }
                 if (!streamPushVoItemForSave.isEmpty()) {
-                    log.info("添加{}条", streamPushVoItemForSave.size());
-                    log.info(JSONObject.toJSONString(streamPushVoItemForSave));
+                    log.trace("添加{}条", streamPushVoItemForSave.size());
+                    log.trace(JSONObject.toJSONString(streamPushVoItemForSave));
                     streamPushService.batchAdd(streamPushVoItemForSave);
 
                 }
                 if (!streamPushVoItemForUpdate.isEmpty()) {
-                    log.info("修改{}条", streamPushVoItemForUpdate.size());
-                    log.info(JSONObject.toJSONString(streamPushVoItemForUpdate));
+                    log.trace("修改{}条", streamPushVoItemForUpdate.size());
+                    log.trace(JSONObject.toJSONString(streamPushVoItemForUpdate));
                     streamPushService.batchUpdate(streamPushVoItemForUpdate);
                 }
             } catch (Exception e) {

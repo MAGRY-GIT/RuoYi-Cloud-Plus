@@ -20,4 +20,6 @@
     <root level="info">
         <appender-ref ref="console" />
     </root>
+    <!-- 针对Netty包设置更详细的日志级别 -->
+    <logger name="io.netty" level="error"/>
 </configuration>

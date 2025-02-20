@@ -42,7 +42,7 @@ public class RedisPushStreamResponseListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] bytes) {
-        log.info("[REDIS: 推流结果]： {}", new String(message.getBody()));
+        log.trace("[REDIS: 推流结果]： {}", new String(message.getBody()));
         taskQueue.offer(message);
     }
 
@@ -66,7 +66,7 @@ public class RedisPushStreamResponseListener implements MessageListener {
             try {
                 MessageForPushChannelResponse response = JSON.parseObject(new String(msg.getBody()), MessageForPushChannelResponse.class);
                 if (response == null || ObjectUtils.isEmpty(response.getApp()) || ObjectUtils.isEmpty(response.getStream())) {
-                    log.info("[REDIS消息-请求推流结果]：参数不全");
+                    log.trace("[REDIS消息-请求推流结果]：参数不全");
                     continue;
                 }
                 // 查看正在等待的invite消息

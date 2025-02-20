@@ -115,7 +115,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
     @Override
     public void sendStreamChangeMsg(String type, JSONObject jsonObject) {
         String key = VideoManagerConstants.WVP_MSG_STREAM_CHANGE_PREFIX + type;
-        log.info("[redis 流变化事件] 发送 {}: {}", key, jsonObject.toString());
+        log.trace("[redis 流变化事件] 发送 {}: {}", key, jsonObject.toString());
         redisTemplate.convertAndSend(key, jsonObject);
     }
 
@@ -298,7 +298,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
     @Override
     public void sendStreamPushRequestedMsg(MessageForPushChannel msg) {
         String key = VideoManagerConstants.VM_MSG_STREAM_PUSH_REQUESTED;
-        log.info("[redis发送通知] 发送 推流被请求 {}: {}/{}", key, msg.getApp(), msg.getStream());
+        log.trace("[redis发送通知] 发送 推流被请求 {}: {}/{}", key, msg.getApp(), msg.getStream());
         redisTemplate.convertAndSend(key, JSON.toJSON(msg));
     }
 
@@ -306,7 +306,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
     public void sendAlarmMsg(AlarmChannelMessage msg) {
         // 此消息用于对接第三方服务下级来的消息内容
         String key = VideoManagerConstants.VM_MSG_SUBSCRIBE_ALARM;
-        log.info("[redis发送通知] 发送 报警{}: {}", key, JSON.toJSON(msg));
+        log.trace("[redis发送通知] 发送 报警{}: {}", key, JSON.toJSON(msg));
         redisTemplate.convertAndSend(key, JSON.toJSON(msg));
     }
 
@@ -319,7 +319,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
     @Override
     public void sendStreamPushRequestedMsgForStatus() {
         String key = VideoManagerConstants.VM_MSG_GET_ALL_ONLINE_REQUESTED;
-        log.info("[redis通知] 发送 获取所有推流设备的状态");
+        log.trace("[redis通知] 发送 获取所有推流设备的状态");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(key, key);
         redisTemplate.convertAndSend(key, jsonObject);
@@ -352,7 +352,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
             msg.append(":").append(channelId);
         }
         msg.append(" ").append(online? "ON":"OFF");
-        log.info("[redis通知] 推送设备/通道状态-> {} ", msg);
+        log.trace("[redis通知] 推送设备/通道状态-> {} ", msg);
         // 使用 RedisTemplate<Object, Object> 发送字符串消息会导致发送的消息多带了双引号
         stringRedisTemplate.convertAndSend(key, msg.toString());
     }
@@ -368,7 +368,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
             msg.append(":").append(channelId);
         }
         msg.append(" ").append(add? "ADD":"DELETE");
-        log.info("[redis通知] 推送通道-> {}", msg);
+        log.trace("[redis通知] 推送通道-> {}", msg);
         // 使用 RedisTemplate<Object, Object> 发送字符串消息会导致发送的消息多带了双引号
         stringRedisTemplate.convertAndSend(key, msg.toString());
     }
@@ -381,7 +381,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
                     sendRtpItem.getMediaServerId());
             messageForPushChannel.setPlatFormIndex(platform.getId());
             String key = VideoManagerConstants.VM_MSG_STREAM_START_PLAY_NOTIFY;
-            log.info("[redis发送通知] 发送 推流被上级平台观看 {}: {}/{}->{}", key, sendRtpItem.getApp(), sendRtpItem.getStream(), platform.getServerGbId());
+            log.trace("[redis发送通知] 发送 推流被上级平台观看 {}: {}/{}->{}", key, sendRtpItem.getApp(), sendRtpItem.getStream(), platform.getServerGbId());
             redisTemplate.convertAndSend(key, JSON.toJSON(messageForPushChannel));
         }
     }
@@ -395,7 +395,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
         msg.setPlatFormIndex(platform.getId());
 
         String key = VideoManagerConstants.VM_MSG_STREAM_STOP_PLAY_NOTIFY;
-        log.info("[redis发送通知] 发送 上级平台停止观看 {}: {}/{}->{}", key, sendRtpItem.getApp(), sendRtpItem.getStream(), platform.getServerGbId());
+        log.trace("[redis发送通知] 发送 上级平台停止观看 {}: {}/{}->{}", key, sendRtpItem.getApp(), sendRtpItem.getStream(), platform.getServerGbId());
         redisTemplate.convertAndSend(key, JSON.toJSON(msg));
     }
 
@@ -423,7 +423,7 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
     @Override
     public void sendPushStreamClose(MessageForPushChannel msg) {
         String key = VideoManagerConstants.VM_MSG_STREAM_PUSH_CLOSE_REQUESTED;
-        log.info("[redis发送通知] 发送 停止向上级推流 {}: {}/{}->{}", key, msg.getApp(), msg.getStream(), msg.getPlatFormId());
+        log.trace("[redis发送通知] 发送 停止向上级推流 {}: {}/{}->{}", key, msg.getApp(), msg.getStream(), msg.getPlatFormId());
         redisTemplate.convertAndSend(key, JSON.toJSON(msg));
     }
 
@@ -442,14 +442,14 @@ public class RedisCatchStorageImpl implements IRedisCatchStorage {
     @Override
     public void sendStartSendRtp(SendRtpInfo sendRtpItem) {
         String key = VideoManagerConstants.START_SEND_PUSH_STREAM + sendRtpItem.getApp() + "_" + sendRtpItem.getStream();
-        log.info("[redis发送通知] 通知其他WVP推流 {}: {}/{}->{}", key, sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getTargetId());
+        log.trace("[redis发送通知] 通知其他WVP推流 {}: {}/{}->{}", key, sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getTargetId());
         redisTemplate.convertAndSend(key, JSON.toJSON(sendRtpItem));
     }
 
     @Override
     public void sendPushStreamOnline(SendRtpInfo sendRtpItem) {
         String key = VideoManagerConstants.VM_MSG_STREAM_PUSH_CLOSE_REQUESTED;
-        log.info("[redis发送通知] 流上线 {}: {}/{}->{}", key, sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getTargetId());
+        log.trace("[redis发送通知] 流上线 {}: {}/{}->{}", key, sendRtpItem.getApp(), sendRtpItem.getStream(), sendRtpItem.getTargetId());
         redisTemplate.convertAndSend(key, JSON.toJSON(sendRtpItem));
     }
 }

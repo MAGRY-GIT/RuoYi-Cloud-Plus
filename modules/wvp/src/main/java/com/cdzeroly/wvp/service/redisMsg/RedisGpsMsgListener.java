@@ -60,7 +60,7 @@ public class RedisGpsMsgListener implements MessageListener {
         for (Message msg : messageDataList) {
             try {
                 GPSMsgInfo gpsMsgInfo = JSON.parseObject(msg.getBody(), GPSMsgInfo.class);
-                log.info("[REDIS的位置变化通知], {}", JSON.toJSONString(gpsMsgInfo));
+                log.trace("[REDIS的位置变化通知], {}", JSON.toJSONString(gpsMsgInfo));
                 // 只是放入redis缓存起来
                 redisCatchStorage.updateGpsMsgInfo(gpsMsgInfo);
             } catch (Exception e) {

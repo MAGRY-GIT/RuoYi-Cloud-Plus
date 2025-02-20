@@ -32,7 +32,6 @@ public class ZLMServerFactory {
      * @param port 端口， 0/null为使用随机
      * @param reUsePort 是否重用端口
      * @param tcpMode 0/null udp 模式，1 tcp 被动模式, 2 tcp 主动模式。
-     * @return
      */
     public int createRtpServer(MediaServer mediaServerItem, String streamId, long ssrc, Integer port, Boolean onlyAuto, Boolean reUsePort, Integer tcpMode) {
         int result = -1;

@@ -31,7 +31,7 @@ public interface DeviceChannelMapper extends BaseMapperPlus<DeviceChannel, Devic
                                       @Param("query") String query, @Param("hasSubChannel") Boolean hasSubChannel,
                                       @Param("online") Boolean online, @Param("channelIds") List<String> channelIds);
 
-    List<DeviceChannel> queryChannelsByDeviceDbId(@Param("dataDeviceId") Long dataDeviceId,@Param("dataDeviceId") Integer dataType);
+    List<DeviceChannel> queryChannelsByDeviceDbId(@Param("dataDeviceId") Long dataDeviceId,@Param("dataType") Integer dataType);
 
 
 

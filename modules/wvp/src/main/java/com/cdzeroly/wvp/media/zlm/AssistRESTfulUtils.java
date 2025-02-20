@@ -97,7 +97,7 @@ public class AssistRESTfulUtils {
         }
 
         String url = stringBuffer.toString();
-        log.info("[访问assist]： {}", url);
+        log.trace("[访问assist]： {}", url);
         Request request = new Request.Builder()
                 .get()
                 .url(url)
@@ -117,7 +117,7 @@ public class AssistRESTfulUtils {
                     }
                 } catch (ConnectException e) {
                     log.error(String.format("连接Assist失败: %s, %s", e.getCause().getMessage(), e.getMessage()));
-                    log.info("请检查media配置并确认Assist已启动...");
+                    log.error("请检查media配置并确认Assist已启动...");
                 }catch (IOException e) {
                     log.error(String.format("[ %s ]请求失败: %s", url, e.getMessage()));
                 }

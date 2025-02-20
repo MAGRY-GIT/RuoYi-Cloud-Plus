@@ -63,7 +63,7 @@ public class RedisAlarmMsgListener implements MessageListener {
 
     @Override
     public void onMessage(@NotNull Message message, byte[] bytes) {
-        log.info("[REDIS: ALARM]： {}", new String(message.getBody()));
+        log.trace("[REDIS: ALARM]： {}", new String(message.getBody()));
         taskQueue.offer(message);
     }
 

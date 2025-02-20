@@ -31,7 +31,7 @@ public class RedisCloseStreamMsgListener implements MessageListener {
 
     @Override
     public void onMessage(@NotNull Message message, byte[] bytes) {
-        log.info("[REDIS: 关闭流]： {}", new String(message.getBody()));
+        log.trace("[REDIS: 关闭流]： {}", new String(message.getBody()));
         taskQueue.offer(message);
     }
 
