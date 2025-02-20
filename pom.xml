@@ -67,6 +67,8 @@
         <rocketmq.version>2.3.0</rocketmq.version>
         <ffmpeg.version>0.6.2</ffmpeg.version>
 
+        <classgraph.version>4.8.179</classgraph.version>
+
         <!-- 插件版本 -->
         <maven-compiler-plugin.verison>3.11.0</maven-compiler-plugin.verison>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
@@ -393,9 +395,12 @@
                 <groupId>net.bramp.ffmpeg</groupId>
                 <artifactId>ffmpeg</artifactId>
                 <version>${ffmpeg.version}</version>
-
             </dependency>
-
+            <dependency>
+                <groupId>io.github.classgraph</groupId>
+                <artifactId>classgraph</artifactId>
+                <version>${classgraph.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

@@ -171,7 +171,8 @@ public class I12020ServiceImpl implements I12020Service {
 
 
 
-    public ImageAnalysisParams imageAnalysisParamsQuery(String monitoringDeviceId, byte requestSetFlag,  List<ImageAnalysisParamsQuery> imageAnalysisParamsQueryList) throws ExecutionException, InterruptedException, TimeoutException {
+    @Override
+    public ImageAnalysisParams imageAnalysisParamsQuery(String monitoringDeviceId, byte requestSetFlag, List<ImageAnalysisParamsQuery> imageAnalysisParamsQueryList) throws ExecutionException, InterruptedException, TimeoutException {
         CompletableFuture<ImageAnalysisParams> future = new CompletableFuture<>();
 
         GImageAnalysisParamsQueryPacket packet = new GImageAnalysisParamsQueryPacket(imageAnalysisParamsQueryList);

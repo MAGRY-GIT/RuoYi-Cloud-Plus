@@ -4,7 +4,6 @@ package com.cdzeroly.wvp.i1.codec;
 import com.cdzeroly.wvp.i1.packet.AbstractPacket;
 import com.cdzeroly.wvp.utils.BytesUtils;
 import com.cdzeroly.wvp.utils.CRC16ModbusUtil;
-import com.cdzeroly.wvp.utils.CRC8Utils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
