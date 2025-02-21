@@ -1,8 +1,7 @@
-package com.cdzeroly.wvp.i1.packet.v2022;
+package com.cdzeroly.wvp.i1.packet.v2020;
 
 import com.cdzeroly.wvp.i1.bean.constant.FrameTypeConstant;
 import com.cdzeroly.wvp.i1.packet.AbstractPacket;
-import com.cdzeroly.wvp.utils.BytesUtils;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;

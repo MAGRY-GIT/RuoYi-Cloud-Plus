@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.i1.service;
 
 import com.cdzeroly.wvp.i1.bean.*;
 import com.cdzeroly.wvp.i1.packet.GCameraSchedulePacket;
-import com.cdzeroly.wvp.i1.packet.v2022.*;
+import com.cdzeroly.wvp.i1.packet.v2020.*;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -41,7 +41,7 @@ public interface I12020Service {
      * @param monitoringDeviceId  设备ID
      * @param requestSetFlag  ① 00H 查询配置信息 ② 01H 设置配置信息
      */
-    PhotoTimeTableV2022 photoScheduleSettings(String monitoringDeviceId, byte requestSetFlag, PhotoTimeTableV2022 photoTimeTable) throws ExecutionException, InterruptedException, TimeoutException;
+    PhotoTimeTableV2020 photoScheduleSettings(String monitoringDeviceId, byte requestSetFlag, PhotoTimeTableV2020 photoTimeTable) throws ExecutionException, InterruptedException, TimeoutException;
 
 
 
@@ -50,7 +50,7 @@ public interface I12020Service {
      * @param monitoringDeviceId  设备ID
      * @param requestSetFlag  ① 00H 查询配置信息 ② 01H 设置配置信息
      */
-    ImageAcquisition imageAcquisitionSettings(String monitoringDeviceId, byte requestSetFlag,  ImageAcquisition imageAcquisition) throws ExecutionException, InterruptedException, TimeoutException;
+    ImageAcquisitionDto imageAcquisitionSettings(String monitoringDeviceId, byte requestSetFlag, ImageAcquisitionDto imageAcquisition) throws ExecutionException, InterruptedException, TimeoutException;
 
 
 
@@ -59,7 +59,7 @@ public interface I12020Service {
      * @param monitoringDeviceId  设备ID
      * @param requestSetFlag  ① 00H 查询配置信息 ② 01H 设置配置信息
      */
-    VideoCaptureSettings videoCaptureSettings(String monitoringDeviceId, byte requestSetFlag, ImageAcquisition imageAcquisition) throws ExecutionException, InterruptedException, TimeoutException;
+    VideoCaptureSettingsDto videoCaptureSettings(String monitoringDeviceId, byte requestSetFlag, VideoCaptureSettingsDto imageAcquisition) throws ExecutionException, InterruptedException, TimeoutException;
 
 
 
@@ -73,11 +73,11 @@ public interface I12020Service {
 
     /**
      * 图像分析类型查询
+     *
      * @param monitoringDeviceId 设备ID
-     * @param requestSetFlag ① 00H 查询配置信息 ② 01H 设置配置信息
      * @return 响应结果
      */
-    GImageAnalysisTypeQueryPacket imageAnalysisTypeQuery(String monitoringDeviceId, byte requestSetFlag, byte channelNo, byte[] dataSources) throws ExecutionException, InterruptedException, TimeoutException;
+    GImageAnalysisTypeQueryPacket imageAnalysisTypeQuery(String monitoringDeviceId,  byte channelNo, byte[] dataSources) throws ExecutionException, InterruptedException, TimeoutException;
 
     /**
      * 图像分析参数查询报

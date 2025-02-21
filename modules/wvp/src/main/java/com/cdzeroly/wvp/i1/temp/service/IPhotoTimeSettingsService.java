@@ -1,10 +1,11 @@
 package com.cdzeroly.wvp.i1.temp.service;
 
-import com.cdzeroly.wvp.i1.temp.domain.PhotoTimeSettings;
+import com.cdzeroly.wvp.i1.bean.PhotoTimeTableV2020;
 import com.cdzeroly.wvp.i1.temp.domain.vo.PhotoTimeSettingsVo;
 import com.cdzeroly.wvp.i1.temp.domain.bo.PhotoTimeSettingsBo;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -66,4 +67,6 @@ public interface IPhotoTimeSettingsService {
      * @return 是否删除成功
      */
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+
+    PhotoTimeSettingsVo queryByMonitoringDeviceId(@NotNull(message = "设备ID不能为空") String monitoringDeviceId, PhotoTimeTableV2020 photoTimeTableV2022);
 }

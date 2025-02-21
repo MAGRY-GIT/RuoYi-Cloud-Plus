@@ -9,7 +9,7 @@ import lombok.Data;
  * @createDate : 2025/2/15 15:42
  */
 @Data
-public class ImageAcquisition {
+public class ImageAcquisitionDto {
     /**
      * 参数配置类型标识：
      * ①00H查询配置信息

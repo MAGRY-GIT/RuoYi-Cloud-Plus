@@ -1,13 +1,8 @@
 package com.cdzeroly.wvp.i1.bean;
 
 import com.cdzeroly.wvp.enums.VideoFormatEnum;
-import com.cdzeroly.wvp.i1.bean.constant.FrameTypeConstant;
-import com.cdzeroly.wvp.i1.packet.AbstractPacket;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 /**
  * 短视频采集参数设置报 数据包
@@ -16,7 +11,7 @@ import java.nio.ByteOrder;
  */
 @Setter
 @Getter
-public class VideoCaptureSettings{
+public class VideoCaptureSettingsDto {
 
     // 通道号
     private byte channelNo;
@@ -31,7 +26,7 @@ public class VideoCaptureSettings{
     private int videoTime;
 
 
-    public VideoCaptureSettings() {
+    public VideoCaptureSettingsDto() {
     }
 
 

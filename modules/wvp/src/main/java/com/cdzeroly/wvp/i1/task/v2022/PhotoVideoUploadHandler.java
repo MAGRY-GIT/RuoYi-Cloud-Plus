@@ -1,14 +1,12 @@
 package com.cdzeroly.wvp.i1.task.v2022;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.cdzeroly.wvp.i1.NetService;
 import com.cdzeroly.wvp.i1.packet.*;
-import com.cdzeroly.wvp.i1.packet.v2022.GPhotoVideoUploadRequestPacket;
-import com.cdzeroly.wvp.i1.packet.v2022.GRemoteImageDataEndPacket;
-import com.cdzeroly.wvp.i1.packet.v2022.GRemoteImageDataPacket;
-import com.cdzeroly.wvp.i1.packet.v2022.GRemoteImageReplenishV2022Packet;
-import com.cdzeroly.wvp.utils.BytesUtils;
+import com.cdzeroly.wvp.i1.packet.v2020.GPhotoVideoUploadRequestPacket;
+import com.cdzeroly.wvp.i1.packet.v2020.GRemoteImageDataEndPacket;
+import com.cdzeroly.wvp.i1.packet.v2020.GRemoteImageDataPacket;
+import com.cdzeroly.wvp.i1.packet.v2020.GRemoteImageReplenishV2022Packet;
 import com.cdzeroly.wvp.utils.ImageUtil;
 import io.netty.buffer.ByteBuf;
 import lombok.extern.slf4j.Slf4j;

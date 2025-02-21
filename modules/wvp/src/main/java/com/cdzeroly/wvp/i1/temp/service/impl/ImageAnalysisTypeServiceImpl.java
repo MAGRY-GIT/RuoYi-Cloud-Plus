@@ -7,7 +7,10 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.cdzeroly.wvp.i1.packet.v2020.GImageAnalysisTypeQueryPacket;
+import com.cdzeroly.wvp.i1.service.I12020Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.cdzeroly.wvp.i1.temp.domain.bo.ImageAnalysisTypeBo;
 import com.cdzeroly.wvp.i1.temp.domain.vo.ImageAnalysisTypeVo;
@@ -18,6 +21,8 @@ import com.cdzeroly.wvp.i1.temp.service.IImageAnalysisTypeService;
 import java.util.List;
 import java.util.Map;
 import java.util.Collection;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 图像分析类型查询报Service业务层处理
@@ -30,6 +35,8 @@ import java.util.Collection;
 public class ImageAnalysisTypeServiceImpl implements IImageAnalysisTypeService {
 
     private final ImageAnalysisTypeMapper baseMapper;
+
+    private final I12020Service i12020Service;
 
     /**
      * 查询图像分析类型查询报
@@ -67,6 +74,8 @@ public class ImageAnalysisTypeServiceImpl implements IImageAnalysisTypeService {
         LambdaQueryWrapper<ImageAnalysisType> lqw = buildQueryWrapper(bo);
         return baseMapper.selectVoList(lqw);
     }
+
+
 
     private LambdaQueryWrapper<ImageAnalysisType> buildQueryWrapper(ImageAnalysisTypeBo bo) {
         Map<String, Object> params = bo.getParams();
@@ -127,5 +136,27 @@ public class ImageAnalysisTypeServiceImpl implements IImageAnalysisTypeService {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
         return baseMapper.deleteByIds(ids) > 0;
+    }
+
+    @Override
+    public ImageAnalysisTypeVo queryByMonitoringDeviceId(String monitoringDeviceId, List<Integer> dataSources) {
+        try {
+            byte[] byteArray = new byte[dataSources.size()];
+            for (int i = 0; i < dataSources.size(); i++) {
+                byteArray[i] = dataSources.get(i).byteValue();
+            }
+
+            GImageAnalysisTypeQueryPacket imageAnalysisParamsDto = i12020Service.imageAnalysisTypeQuery(monitoringDeviceId, (byte) byteArray.length, byteArray);
+            ImageAnalysisTypeVo imageAnalysisTypeVo = new ImageAnalysisTypeVo();
+            BeanUtils.copyProperties(imageAnalysisParamsDto, imageAnalysisTypeVo);
+            imageAnalysisTypeVo.setImageAnalysisType(imageAnalysisParamsDto.imageAnalysisTypeToJson());
+            return  imageAnalysisTypeVo;
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

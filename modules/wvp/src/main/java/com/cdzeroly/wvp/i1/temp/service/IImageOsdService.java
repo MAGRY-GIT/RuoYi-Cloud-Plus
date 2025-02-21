@@ -1,10 +1,12 @@
 package com.cdzeroly.wvp.i1.temp.service;
 
+import com.cdzeroly.wvp.i1.bean.ImageOSD;
 import com.cdzeroly.wvp.i1.temp.domain.ImageOsd;
 import com.cdzeroly.wvp.i1.temp.domain.vo.ImageOsdVo;
 import com.cdzeroly.wvp.i1.temp.domain.bo.ImageOsdBo;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -66,4 +68,6 @@ public interface IImageOsdService {
      * @return 是否删除成功
      */
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+
+    ImageOsdVo queryByMonitoringDeviceId(@NotNull(message = "设备ID不能为空") String monitoringDeviceId, ImageOSD osd);
 }

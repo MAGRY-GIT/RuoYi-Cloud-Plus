@@ -7,7 +7,12 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.cdzeroly.wvp.i1.bean.ImageAcquisitionDto;
+import com.cdzeroly.wvp.i1.packet.v2020.GImageAnalysisTypeQueryPacket;
+import com.cdzeroly.wvp.i1.service.I12020Service;
+import com.cdzeroly.wvp.i1.temp.domain.vo.ImageAnalysisTypeVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.cdzeroly.wvp.i1.temp.domain.bo.ImageAcquisitionBo;
 import com.cdzeroly.wvp.i1.temp.domain.vo.ImageAcquisitionVo;
@@ -18,6 +23,8 @@ import com.cdzeroly.wvp.i1.temp.service.IImageAcquisitionService;
 import java.util.List;
 import java.util.Map;
 import java.util.Collection;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 图像采集参数设置Service业务层处理
@@ -30,6 +37,7 @@ import java.util.Collection;
 public class ImageAcquisitionServiceImpl implements IImageAcquisitionService {
 
     private final ImageAcquisitionMapper baseMapper;
+    private final I12020Service i12020Service;
 
     /**
      * 查询图像采集参数设置
@@ -87,6 +95,19 @@ public class ImageAcquisitionServiceImpl implements IImageAcquisitionService {
      */
     @Override
     public Boolean insertByBo(ImageAcquisitionBo bo) {
+
+        try {
+            ImageAcquisitionDto acquisitionDto = new ImageAcquisitionDto();
+            BeanUtils.copyProperties(bo, acquisitionDto);
+            ImageAcquisitionDto imageAcquisitionDto = i12020Service.imageAcquisitionSettings(bo.getMonitoringDeviceId(), (byte) 0x01,acquisitionDto);
+
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
         ImageAcquisition add = MapstructUtils.convert(bo, ImageAcquisition.class);
         validEntityBeforeSave(add);
         boolean flag = baseMapper.insert(add) > 0;
@@ -129,5 +150,22 @@ public class ImageAcquisitionServiceImpl implements IImageAcquisitionService {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
         return baseMapper.deleteByIds(ids) > 0;
+    }
+
+    @Override
+    public ImageAcquisitionVo queryByMonitoringDeviceId(String monitoringDeviceId, ImageAcquisitionDto imageAcquisition) {
+        try {
+
+            ImageAcquisitionDto imageAcquisitionDto = i12020Service.imageAcquisitionSettings(monitoringDeviceId, (byte) 0x00,imageAcquisition);
+            ImageAcquisitionVo imageAcquisitionVo = new ImageAcquisitionVo();
+            BeanUtils.copyProperties(imageAcquisitionDto, imageAcquisitionVo);
+            return  imageAcquisitionVo;
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

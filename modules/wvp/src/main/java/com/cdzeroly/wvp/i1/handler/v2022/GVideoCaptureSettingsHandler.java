@@ -1,7 +1,7 @@
 package com.cdzeroly.wvp.i1.handler.v2022;
 
 import com.cdzeroly.wvp.i1.handler.BaseAckHandler;
-import com.cdzeroly.wvp.i1.packet.v2022.GVideoCaptureSettingsPacket;
+import com.cdzeroly.wvp.i1.packet.v2020.GVideoCaptureSettingsPacket;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;

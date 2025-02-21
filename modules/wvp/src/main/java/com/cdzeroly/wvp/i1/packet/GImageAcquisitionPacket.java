@@ -1,7 +1,6 @@
 package com.cdzeroly.wvp.i1.packet;
 
 import com.cdzeroly.wvp.enums.ImageResolutionEnum;
-import com.cdzeroly.wvp.i1.bean.ImageAcquisition;
 import com.cdzeroly.wvp.i1.bean.constant.FrameTypeConstant;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;

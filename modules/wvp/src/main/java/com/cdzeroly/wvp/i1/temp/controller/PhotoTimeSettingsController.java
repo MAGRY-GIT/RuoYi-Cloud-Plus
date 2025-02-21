@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.i1.temp.controller;
 
 import java.util.List;
 
+import com.cdzeroly.wvp.i1.bean.PhotoTimeTableV2020;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.*;
@@ -91,6 +92,16 @@ public class PhotoTimeSettingsController extends BaseController {
         return toAjax(photoTimeSettingsService.updateByBo(bo));
     }
 
+
+    /**
+     * 获取图像分析类型详细信息
+     *
+     * @param monitoringDeviceId 主键
+     */
+    @GetMapping("/find/{monitoringDeviceId}")
+    public R<PhotoTimeSettingsVo> find(@NotNull(message = "设备ID不能为空") @PathVariable String monitoringDeviceId, PhotoTimeTableV2020 photoTimeTableV2020 ) {
+        return R.ok(photoTimeSettingsService.queryByMonitoringDeviceId(monitoringDeviceId,photoTimeTableV2020));
+    }
     /**
      * 删除拍照时间设置报
      *

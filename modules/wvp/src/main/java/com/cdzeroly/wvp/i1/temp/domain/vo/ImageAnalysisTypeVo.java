@@ -47,10 +47,7 @@ public class ImageAnalysisTypeVo implements Serializable {
     private String dataSources;
 
     /**
-     * （TODO）
      */
-    @ExcelProperty(value = "", converter = ExcelDictConvert.class)
-    @ExcelDictFormat(readConverterExp = "T=ODO")
     private String imageAnalysisType;
 
 

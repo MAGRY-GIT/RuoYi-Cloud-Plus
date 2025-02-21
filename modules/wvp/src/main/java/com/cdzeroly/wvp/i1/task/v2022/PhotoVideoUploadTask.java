@@ -2,7 +2,7 @@ package com.cdzeroly.wvp.i1.task.v2022;
 
 import com.cdzeroly.wvp.i1.NetService;
 import com.cdzeroly.wvp.i1.NettyChannelManager;
-import com.cdzeroly.wvp.i1.packet.v2022.GPhotoVideoUploadRequestPacket;
+import com.cdzeroly.wvp.i1.packet.v2020.GPhotoVideoUploadRequestPacket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

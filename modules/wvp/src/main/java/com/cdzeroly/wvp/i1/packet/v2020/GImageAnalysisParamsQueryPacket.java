@@ -1,4 +1,4 @@
-package com.cdzeroly.wvp.i1.packet.v2022;
+package com.cdzeroly.wvp.i1.packet.v2020;
 
 import com.cdzeroly.wvp.i1.bean.ImageAnalysisParamsDto;
 import com.cdzeroly.wvp.i1.bean.ImageAnalysisParamsQuery;

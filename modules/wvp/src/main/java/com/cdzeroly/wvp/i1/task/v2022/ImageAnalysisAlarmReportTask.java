@@ -2,8 +2,7 @@ package com.cdzeroly.wvp.i1.task.v2022;
 
 import com.cdzeroly.wvp.i1.NetService;
 import com.cdzeroly.wvp.i1.NettyChannelManager;
-import com.cdzeroly.wvp.i1.packet.v2022.GImageAnalysisAlarmReportPacket;
-import com.cdzeroly.wvp.i1.packet.v2022.GPhotoVideoUploadRequestPacket;
+import com.cdzeroly.wvp.i1.packet.v2020.GImageAnalysisAlarmReportPacket;
 import com.cdzeroly.wvp.i1.temp.domain.ImageAnalysisAlarmReport;
 import com.cdzeroly.wvp.i1.temp.mapper.ImageAnalysisAlarmReportMapper;
 import org.springframework.beans.BeanUtils;

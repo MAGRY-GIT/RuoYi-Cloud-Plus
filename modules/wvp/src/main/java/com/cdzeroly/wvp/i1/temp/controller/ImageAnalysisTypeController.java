@@ -2,6 +2,8 @@ package com.cdzeroly.wvp.i1.temp.controller;
 
 import java.util.List;
 
+import com.cdzeroly.wvp.i1.bean.ImageAnalysisParamsQuery;
+import com.cdzeroly.wvp.i1.temp.domain.vo.ImageAnalysisParamsVo;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.*;
@@ -78,6 +80,17 @@ public class ImageAnalysisTypeController extends BaseController {
     @PostMapping()
     public R<Void> add(@Validated(AddGroup.class) @RequestBody ImageAnalysisTypeBo bo) {
         return toAjax(imageAnalysisTypeService.insertByBo(bo));
+    }
+
+
+    /**
+     * 获取图像分析类型详细信息
+     *
+     * @param monitoringDeviceId 主键
+     */
+    @GetMapping("/find/{monitoringDeviceId}")
+    public R<ImageAnalysisTypeVo> find(@NotNull(message = "设备ID不能为空") @PathVariable String monitoringDeviceId, List<Integer> dataSources) {
+        return R.ok(imageAnalysisTypeService.queryByMonitoringDeviceId(monitoringDeviceId,dataSources));
     }
 
     /**

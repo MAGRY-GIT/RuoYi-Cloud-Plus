@@ -1,9 +1,8 @@
 package com.cdzeroly.wvp.i1.service;
 
-import com.cdzeroly.wvp.i1.bean.ImageAcquisition;
+import com.cdzeroly.wvp.i1.bean.ImageAcquisitionDto;
 import com.cdzeroly.wvp.i1.bean.PhotoTimeTable;
 import com.cdzeroly.wvp.i1.packet.GCameraSchedulePacket;
-import com.cdzeroly.wvp.i1.packet.GPhotoTimeTablePacket;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -48,5 +47,5 @@ public interface I1Service {
      * @param monitoringDeviceId  设备ID
      * @param requestSetFlag  ① 00H 查询配置信息 ② 01H 设置配置信息
      */
-    ImageAcquisition imageAcquisitionSettings(String monitoringDeviceId, byte requestSetFlag,  ImageAcquisition imageAcquisition) throws ExecutionException, InterruptedException, TimeoutException;
+    ImageAcquisitionDto imageAcquisitionSettings(String monitoringDeviceId, byte requestSetFlag, ImageAcquisitionDto imageAcquisition) throws ExecutionException, InterruptedException, TimeoutException;
 }

@@ -1,5 +1,6 @@
-package com.cdzeroly.wvp.i1.packet.v2022;
+package com.cdzeroly.wvp.i1.packet.v2020;
 
+import com.cdzeroly.common.json.utils.JsonUtils;
 import com.cdzeroly.wvp.i1.bean.IdentifyType;
 import com.cdzeroly.wvp.i1.bean.ImageAnalysisType;
 import com.cdzeroly.wvp.i1.packet.AbstractPacket;
@@ -46,6 +47,10 @@ public class GImageAnalysisTypeQueryPacket extends AbstractPacket {
         }
     }
 
+
+    public  String imageAnalysisTypeToJson(){
+        return JsonUtils.toJsonString(imageAnalysisType);
+    }
 
     /**
      * 构建数据包字节数组。

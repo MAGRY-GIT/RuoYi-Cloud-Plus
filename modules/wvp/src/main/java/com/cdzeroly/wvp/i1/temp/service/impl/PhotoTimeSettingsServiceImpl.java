@@ -6,7 +6,10 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.cdzeroly.wvp.i1.bean.PhotoTimeTableV2020;
+import com.cdzeroly.wvp.i1.service.I12020Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.cdzeroly.wvp.i1.temp.domain.bo.PhotoTimeSettingsBo;
 import com.cdzeroly.wvp.i1.temp.domain.vo.PhotoTimeSettingsVo;
@@ -17,6 +20,8 @@ import com.cdzeroly.wvp.i1.temp.service.IPhotoTimeSettingsService;
 import java.util.List;
 import java.util.Map;
 import java.util.Collection;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 拍照时间设置报Service业务层处理
@@ -29,6 +34,7 @@ import java.util.Collection;
 public class PhotoTimeSettingsServiceImpl implements IPhotoTimeSettingsService {
 
     private final PhotoTimeSettingsMapper baseMapper;
+    private final I12020Service i12020Service;
 
     /**
      * 查询拍照时间设置报
@@ -105,6 +111,18 @@ public class PhotoTimeSettingsServiceImpl implements IPhotoTimeSettingsService {
      */
     @Override
     public Boolean updateByBo(PhotoTimeSettingsBo bo) {
+
+        try {
+            PhotoTimeTableV2020 photoTimeTableV2020 = new PhotoTimeTableV2020();
+            BeanUtils.copyProperties(bo, photoTimeTableV2020);
+            PhotoTimeTableV2020 timeTableV2020 = i12020Service.photoScheduleSettings(bo.getMonitoringDeviceId(), (byte) 0x00,photoTimeTableV2020);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
         PhotoTimeSettings update = MapstructUtils.convert(bo, PhotoTimeSettings.class);
         validEntityBeforeSave(update);
         return baseMapper.updateById(update) > 0;
@@ -130,5 +148,24 @@ public class PhotoTimeSettingsServiceImpl implements IPhotoTimeSettingsService {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
         return baseMapper.deleteByIds(ids) > 0;
+    }
+
+    @Override
+    public PhotoTimeSettingsVo queryByMonitoringDeviceId(String monitoringDeviceId, PhotoTimeTableV2020 photoTimeTableV2020) {
+        try {
+
+            PhotoTimeTableV2020 timeTableV2020 = i12020Service.photoScheduleSettings(monitoringDeviceId, (byte) 0x00,photoTimeTableV2020);
+            PhotoTimeSettingsVo imageOsdVo = new PhotoTimeSettingsVo();
+            BeanUtils.copyProperties(timeTableV2020, imageOsdVo);
+            return  imageOsdVo;
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 }

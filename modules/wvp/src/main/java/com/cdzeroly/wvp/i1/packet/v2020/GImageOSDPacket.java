@@ -1,4 +1,4 @@
-package com.cdzeroly.wvp.i1.packet.v2022;
+package com.cdzeroly.wvp.i1.packet.v2020;
 
 import com.cdzeroly.wvp.i1.packet.AbstractPacket;
 import com.cdzeroly.wvp.i1.bean.constant.FrameTypeConstant;
@@ -9,32 +9,28 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * 远程图像补包数据下发报 数据包
+ * 图像OSD查询/设置报 数据包
  * <p>
- * 该类用于构建远程图像补包数据下发报，包含通道号、补包包数和补包包号序列。
- * 该数据包用于通知监拍装置需要补传的图像数据包。
+ * 该类用于构建图像OSD查询/设置报，包含通道号、是否显示时间、是否显示文本和文本内容。
+ * 该数据包用于查询或设置图像OSD（屏幕显示）参数。
  *
  * @author MAGRY
  */
 @Getter
 @Setter
-public class GRemoteImageReplenishV2022Packet extends AbstractPacket {
-    public static final byte FRAME_TYPE_REMOTE_IMAGE_REPLENISH = (byte) 0xF2;
-
+public class GImageOSDPacket extends AbstractPacket {
+    public static final byte FRAME_TYPE_IMAGE_OSD = (byte) 0xF3;
+    private byte   roquestSetFlag;
     // 通道号
     private byte channelNo;
-    // 补包包数
-    private short complementPackSum;
-    // 补包包号序列
-    private short[] complementPackNo;
+    // 是否显示时间标识：0 不显示，1 显示
+    private byte showTime;
+    // 文本显示标识：0 不显示，1 显示
+    private byte showText;
+    // 文本内容，UTF-8编码格式，以'\0'结尾
+    private String textContent;
 
-    // 内容ID
-    private int contentId;
-    //    后4字节备用
-    private int reserve;
-
-
-    public GRemoteImageReplenishV2022Packet() {
+    public GImageOSDPacket() {
     }
 
     /**
@@ -47,15 +43,15 @@ public class GRemoteImageReplenishV2022Packet extends AbstractPacket {
     @Override
     public byte[] getFrameBytes() {
         // 计算总长度
-        int totalLength = 12 + complementPackNo.length * 2;
+        byte[] textBytes = (textContent + "\0").getBytes(java.nio.charset.StandardCharsets.UTF_8);
+        int totalLength = 12 + textBytes.length;
         ByteBuffer buffer = ByteBuffer.allocate(totalLength)
             .order(ByteOrder.LITTLE_ENDIAN)
             .put(channelNo)
-            .putShort(complementPackSum);
-
-        for (short packNo : complementPackNo) {
-            buffer.putShort(packNo);
-        }
+            .put(roquestSetFlag)
+            .put(showTime)
+            .put(showText)
+            .put(textBytes);
 
         return packet(monitoringDeviceId, serialNumber, buffer.array());
     }
@@ -81,6 +77,6 @@ public class GRemoteImageReplenishV2022Packet extends AbstractPacket {
      */
     @Override
     public byte getMessageType() {
-        return FRAME_TYPE_REMOTE_IMAGE_REPLENISH;
+        return FRAME_TYPE_IMAGE_OSD;
     }
 }

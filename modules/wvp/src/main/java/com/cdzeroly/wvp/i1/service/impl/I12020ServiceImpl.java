@@ -4,7 +4,7 @@ import com.cdzeroly.wvp.i1.NetService;
 import com.cdzeroly.wvp.i1.NettyChannelManager;
 import com.cdzeroly.wvp.i1.bean.*;
 import com.cdzeroly.wvp.i1.packet.*;
-import com.cdzeroly.wvp.i1.packet.v2022.*;
+import com.cdzeroly.wvp.i1.packet.v2020.*;
 import com.cdzeroly.wvp.i1.service.I12020Service;
 import com.cdzeroly.wvp.utils.BytesUtils;
 import org.springframework.beans.BeanUtils;
@@ -79,17 +79,17 @@ public class I12020ServiceImpl implements I12020Service {
     }
 
     @Override
-    public PhotoTimeTableV2022 photoScheduleSettings(String monitoringDeviceId, byte requestSetFlag, PhotoTimeTableV2022 photoTimeTable) throws ExecutionException, InterruptedException, TimeoutException {
+    public PhotoTimeTableV2020 photoScheduleSettings(String monitoringDeviceId, byte requestSetFlag, PhotoTimeTableV2020 photoTimeTable) throws ExecutionException, InterruptedException, TimeoutException {
         GPhotoTimeSettingsPacket gPhotoTimeSettingsPacket = new GPhotoTimeSettingsPacket();
         BeanUtils.copyProperties(photoTimeTable, gPhotoTimeSettingsPacket);
         byte[] monitoringDeviceIdFinal = BytesUtils.s2b(monitoringDeviceId);
         gPhotoTimeSettingsPacket.setMonitoringDeviceId(monitoringDeviceIdFinal);
         gPhotoTimeSettingsPacket.setRequestSetFlag(requestSetFlag);
-        CompletableFuture<PhotoTimeTableV2022> future = new CompletableFuture<>();
+        CompletableFuture<PhotoTimeTableV2020> future = new CompletableFuture<>();
 
         netService.sendPacket(gPhotoTimeSettingsPacket, ack -> ack instanceof GPhotoTimeSettingsPacket).subscribe(ack -> {
 
-            PhotoTimeTableV2022 photoTimeTableV2022 = new PhotoTimeTableV2022();
+            PhotoTimeTableV2020 photoTimeTableV2022 = new PhotoTimeTableV2020();
             BeanUtils.copyProperties(ack, photoTimeTableV2022);
             future.complete(photoTimeTableV2022);
         });
@@ -97,13 +97,13 @@ public class I12020ServiceImpl implements I12020Service {
     }
 
     @Override
-    public ImageAcquisition imageAcquisitionSettings(String monitoringDeviceId, byte requestSetFlag, ImageAcquisition imageAcquisition) throws ExecutionException, InterruptedException, TimeoutException {
-        CompletableFuture<ImageAcquisition> future = new CompletableFuture<>();
+    public ImageAcquisitionDto imageAcquisitionSettings(String monitoringDeviceId, byte requestSetFlag, ImageAcquisitionDto imageAcquisition) throws ExecutionException, InterruptedException, TimeoutException {
+        CompletableFuture<ImageAcquisitionDto> future = new CompletableFuture<>();
 
         GImageCaptureSettingsPacket imageCaptureSettingsPacket = new GImageCaptureSettingsPacket();
         BeanUtils.copyProperties(imageAcquisition, imageCaptureSettingsPacket);
         netService.sendPacket(imageCaptureSettingsPacket, ack -> ack instanceof GImageAcquisitionPacket).subscribe(ack -> {
-            ImageAcquisition gImageAcquisition = new ImageAcquisition();
+            ImageAcquisitionDto gImageAcquisition = new ImageAcquisitionDto();
             BeanUtils.copyProperties(ack, gImageAcquisition);
             future.complete(gImageAcquisition);
         });
@@ -118,8 +118,8 @@ public class I12020ServiceImpl implements I12020Service {
         GImageOSDPacket imageOSDPacket = new GImageOSDPacket();
         BeanUtils.copyProperties(imageOsd, imageOSDPacket);
         imageOSDPacket.setMonitoringDeviceId(BytesUtils.h2b(monitoringDeviceId, ""));
-
-        netService.sendPacket(imageOSDPacket, ack -> ack instanceof GImageAcquisitionPacket).subscribe(ack -> {
+        imageOSDPacket.setRoquestSetFlag(requestSetFlag);
+        netService.sendPacket(imageOSDPacket, ack -> ack instanceof GImageOSDPacket).subscribe(ack -> {
             ImageOSD osd = new ImageOSD();
             BeanUtils.copyProperties(ack, osd);
             future.complete(osd);
@@ -130,13 +130,13 @@ public class I12020ServiceImpl implements I12020Service {
 
 
     @Override
-    public VideoCaptureSettings videoCaptureSettings(String monitoringDeviceId, byte requestSetFlag, ImageAcquisition imageAcquisition) throws ExecutionException, InterruptedException, TimeoutException {
-        CompletableFuture<VideoCaptureSettings> future = new CompletableFuture<>();
+    public VideoCaptureSettingsDto videoCaptureSettings(String monitoringDeviceId, byte requestSetFlag, VideoCaptureSettingsDto videoCaptureSettingsDto) throws ExecutionException, InterruptedException, TimeoutException {
+        CompletableFuture<VideoCaptureSettingsDto> future = new CompletableFuture<>();
 
         GVideoCaptureSettingsPacket gVideoCaptureSettingsPacket = new GVideoCaptureSettingsPacket();
-        BeanUtils.copyProperties(imageAcquisition, gVideoCaptureSettingsPacket);
-        netService.sendPacket(gVideoCaptureSettingsPacket, ack -> ack instanceof GImageAcquisitionPacket).subscribe(ack -> {
-            VideoCaptureSettings videoCaptureSettings = new VideoCaptureSettings();
+        BeanUtils.copyProperties(videoCaptureSettingsDto, gVideoCaptureSettingsPacket);
+        netService.sendPacket(gVideoCaptureSettingsPacket, ack -> ack instanceof GVideoCaptureSettingsPacket).subscribe(ack -> {
+            VideoCaptureSettingsDto videoCaptureSettings = new VideoCaptureSettingsDto();
             BeanUtils.copyProperties(ack, videoCaptureSettings);
             future.complete(videoCaptureSettings);
         });
@@ -147,7 +147,7 @@ public class I12020ServiceImpl implements I12020Service {
     }
 
     @Override
-    public GImageAnalysisTypeQueryPacket imageAnalysisTypeQuery(String monitoringDeviceId, byte requestSetFlag, byte channelNo, byte[] dataSources) throws ExecutionException, InterruptedException, TimeoutException {
+    public GImageAnalysisTypeQueryPacket imageAnalysisTypeQuery(String monitoringDeviceId, byte channelNo, byte[] dataSources) throws ExecutionException, InterruptedException, TimeoutException {
         CompletableFuture<GImageAnalysisTypeQueryPacket> future = new CompletableFuture<>();
 
         GImageAnalysisTypeQueryPacket imageAnalysisTypeQueryPacket = new GImageAnalysisTypeQueryPacket();

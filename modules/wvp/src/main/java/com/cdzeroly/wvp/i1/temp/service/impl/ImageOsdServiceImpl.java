@@ -7,7 +7,10 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.cdzeroly.wvp.i1.bean.ImageOSD;
+import com.cdzeroly.wvp.i1.service.I12020Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.cdzeroly.wvp.i1.temp.domain.bo.ImageOsdBo;
 import com.cdzeroly.wvp.i1.temp.domain.vo.ImageOsdVo;
@@ -18,6 +21,8 @@ import com.cdzeroly.wvp.i1.temp.service.IImageOsdService;
 import java.util.List;
 import java.util.Map;
 import java.util.Collection;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 图像OSD查询/设置报Service业务层处理
@@ -30,6 +35,7 @@ import java.util.Collection;
 public class ImageOsdServiceImpl implements IImageOsdService {
 
     private final ImageOsdMapper baseMapper;
+    private final I12020Service i12020Service;
 
     /**
      * 查询图像OSD查询/设置报
@@ -86,6 +92,21 @@ public class ImageOsdServiceImpl implements IImageOsdService {
      */
     @Override
     public Boolean insertByBo(ImageOsdBo bo) {
+
+
+        try {
+            ImageOSD osd = new ImageOSD();
+            BeanUtils.copyProperties(bo, osd);
+            ImageOSD imageOSD = i12020Service.imageOsdSettings(bo.getMonitoringDeviceId(), (byte) 0x01,osd);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
+
+
         ImageOsd add = MapstructUtils.convert(bo, ImageOsd.class);
         validEntityBeforeSave(add);
         boolean flag = baseMapper.insert(add) > 0;
@@ -128,5 +149,22 @@ public class ImageOsdServiceImpl implements IImageOsdService {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
         return baseMapper.deleteByIds(ids) > 0;
+    }
+
+    @Override
+    public ImageOsdVo queryByMonitoringDeviceId(String monitoringDeviceId ,ImageOSD osd ) {
+        try {
+
+            ImageOSD imageOSD = i12020Service.imageOsdSettings(monitoringDeviceId, (byte) 0x00,osd);
+            ImageOsdVo imageOsdVo = new ImageOsdVo();
+            BeanUtils.copyProperties(imageOSD, imageOsdVo);
+            return  imageOsdVo;
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

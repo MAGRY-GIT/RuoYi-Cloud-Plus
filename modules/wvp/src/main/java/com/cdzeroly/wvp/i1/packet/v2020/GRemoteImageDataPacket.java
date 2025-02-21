@@ -1,13 +1,10 @@
-package com.cdzeroly.wvp.i1.packet.v2022;
+package com.cdzeroly.wvp.i1.packet.v2020;
 
 import com.cdzeroly.wvp.i1.packet.AbstractPacket;
 import com.cdzeroly.wvp.i1.bean.constant.FrameTypeConstant;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 /**
  * 远程图像数据报 数据包

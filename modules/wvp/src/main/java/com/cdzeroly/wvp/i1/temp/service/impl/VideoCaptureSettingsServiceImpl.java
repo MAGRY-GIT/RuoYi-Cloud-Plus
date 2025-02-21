@@ -7,7 +7,10 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.cdzeroly.wvp.i1.bean.VideoCaptureSettingsDto;
+import com.cdzeroly.wvp.i1.service.I12020Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.cdzeroly.wvp.i1.temp.domain.bo.VideoCaptureSettingsBo;
 import com.cdzeroly.wvp.i1.temp.domain.vo.VideoCaptureSettingsVo;
@@ -18,6 +21,8 @@ import com.cdzeroly.wvp.i1.temp.service.IVideoCaptureSettingsService;
 import java.util.List;
 import java.util.Map;
 import java.util.Collection;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 短视频采集参数设置报Service业务层处理
@@ -30,6 +35,7 @@ import java.util.Collection;
 public class VideoCaptureSettingsServiceImpl implements IVideoCaptureSettingsService {
 
     private final VideoCaptureSettingsMapper baseMapper;
+    private final I12020Service i12020Service;
 
     /**
      * 查询短视频采集参数设置报
@@ -85,6 +91,19 @@ public class VideoCaptureSettingsServiceImpl implements IVideoCaptureSettingsSer
      */
     @Override
     public Boolean insertByBo(VideoCaptureSettingsBo bo) {
+
+
+        try {
+            VideoCaptureSettingsDto captureSettingsDto = new VideoCaptureSettingsDto();
+            BeanUtils.copyProperties(bo, captureSettingsDto);
+            VideoCaptureSettingsDto videoCaptureSettingsDto = i12020Service.videoCaptureSettings(bo.getMonitoringDeviceId(), (byte) 0x00,captureSettingsDto);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
         VideoCaptureSettings add = MapstructUtils.convert(bo, VideoCaptureSettings.class);
         validEntityBeforeSave(add);
         boolean flag = baseMapper.insert(add) > 0;
@@ -127,5 +146,22 @@ public class VideoCaptureSettingsServiceImpl implements IVideoCaptureSettingsSer
             //TODO 做一些业务上的校验,判断是否需要校验
         }
         return baseMapper.deleteByIds(ids) > 0;
+    }
+
+    @Override
+    public VideoCaptureSettingsVo queryByMonitoringDeviceId(String monitoringDeviceId, VideoCaptureSettingsDto captureSettingsDto) {
+        try {
+
+            VideoCaptureSettingsDto videoCaptureSettingsDto = i12020Service.videoCaptureSettings(monitoringDeviceId, (byte) 0x00,captureSettingsDto);
+            VideoCaptureSettingsVo videoCaptureSettingsVo = new VideoCaptureSettingsVo();
+            BeanUtils.copyProperties(videoCaptureSettingsDto, videoCaptureSettingsVo);
+            return  videoCaptureSettingsVo;
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

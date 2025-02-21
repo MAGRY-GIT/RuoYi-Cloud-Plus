@@ -1,10 +1,7 @@
-package com.cdzeroly.wvp.i1.packet.v2022;
+package com.cdzeroly.wvp.i1.packet.v2020;
 
 import com.cdzeroly.wvp.i1.packet.AbstractPacket;
 import com.cdzeroly.wvp.i1.bean.constant.FrameTypeConstant;
-import com.cdzeroly.wvp.utils.BytesUtils;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,40 +9,33 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * 远程图像数据上送结束标记报 数据包
+ * 远程图像补包数据下发报 数据包
  * <p>
- * 该类用于构建远程图像数据上送结束标记报，包含通道号和时间戳。
- * 该数据包用于通知主站系统图像数据上送完成。
+ * 该类用于构建远程图像补包数据下发报，包含通道号、补包包数和补包包号序列。
+ * 该数据包用于通知监拍装置需要补传的图像数据包。
  *
  * @author MAGRY
  */
 @Getter
 @Setter
-public class GRemoteImageDataEndPacket extends AbstractPacket {
-    public static final byte FRAME_TYPE_REMOTE_IMAGE_DATA_END = (byte) 0xF1;
+public class GRemoteImageReplenishV2022Packet extends AbstractPacket {
+    public static final byte FRAME_TYPE_REMOTE_IMAGE_REPLENISH = (byte) 0xF2;
 
     // 通道号
     private byte channelNo;
-    // 时间戳
-    private int timeStamp;
-    //文件MD5码
-    private String   md5;
-    //前1字节表示文件类型： 0图片，1视频。后7字节备用
-    private long    reserve;
+    // 补包包数
+    private short complementPackSum;
+    // 补包包号序列
+    private short[] complementPackNo;
 
-    public GRemoteImageDataEndPacket() {
+    // 内容ID
+    private int contentId;
+    //    后4字节备用
+    private int reserve;
+
+
+    public GRemoteImageReplenishV2022Packet() {
     }
-
-    public GRemoteImageDataEndPacket(ByteBuf data) {
-        this.channelNo = data.readByte();
-       this. timeStamp = data.readInt();
-       byte[]  md5 = new byte[32];
-        data.readBytes(md5);
-        this.md5 = BytesUtils.b2h(md5);
-        this.reserve = data.readLong();
-    }
-
-
 
     /**
      * 构建数据包字节数组。
@@ -56,10 +46,16 @@ public class GRemoteImageDataEndPacket extends AbstractPacket {
      */
     @Override
     public byte[] getFrameBytes() {
-        ByteBuffer buffer = ByteBuffer.allocate(10)
+        // 计算总长度
+        int totalLength = 12 + complementPackNo.length * 2;
+        ByteBuffer buffer = ByteBuffer.allocate(totalLength)
             .order(ByteOrder.LITTLE_ENDIAN)
             .put(channelNo)
-            .putInt(timeStamp);
+            .putShort(complementPackSum);
+
+        for (short packNo : complementPackNo) {
+            buffer.putShort(packNo);
+        }
 
         return packet(monitoringDeviceId, serialNumber, buffer.array());
     }
@@ -85,6 +81,6 @@ public class GRemoteImageDataEndPacket extends AbstractPacket {
      */
     @Override
     public byte getMessageType() {
-        return FRAME_TYPE_REMOTE_IMAGE_DATA_END;
+        return FRAME_TYPE_REMOTE_IMAGE_REPLENISH;
     }
 }

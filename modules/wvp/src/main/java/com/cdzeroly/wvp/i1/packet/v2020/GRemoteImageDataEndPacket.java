@@ -1,7 +1,9 @@
-package com.cdzeroly.wvp.i1.packet.v2022;
+package com.cdzeroly.wvp.i1.packet.v2020;
 
 import com.cdzeroly.wvp.i1.packet.AbstractPacket;
 import com.cdzeroly.wvp.i1.bean.constant.FrameTypeConstant;
+import com.cdzeroly.wvp.utils.BytesUtils;
+import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,29 +11,40 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * 图像OSD查询/设置报 数据包
+ * 远程图像数据上送结束标记报 数据包
  * <p>
- * 该类用于构建图像OSD查询/设置报，包含通道号、是否显示时间、是否显示文本和文本内容。
- * 该数据包用于查询或设置图像OSD（屏幕显示）参数。
+ * 该类用于构建远程图像数据上送结束标记报，包含通道号和时间戳。
+ * 该数据包用于通知主站系统图像数据上送完成。
  *
  * @author MAGRY
  */
 @Getter
 @Setter
-public class GImageOSDPacket extends AbstractPacket {
-    public static final byte FRAME_TYPE_IMAGE_OSD = (byte) 0xF3;
+public class GRemoteImageDataEndPacket extends AbstractPacket {
+    public static final byte FRAME_TYPE_REMOTE_IMAGE_DATA_END = (byte) 0xF1;
 
     // 通道号
     private byte channelNo;
-    // 是否显示时间标识：0 不显示，1 显示
-    private byte showTime;
-    // 文本显示标识：0 不显示，1 显示
-    private byte showText;
-    // 文本内容，UTF-8编码格式，以'\0'结尾
-    private String textContent;
+    // 时间戳
+    private int timeStamp;
+    //文件MD5码
+    private String   md5;
+    //前1字节表示文件类型： 0图片，1视频。后7字节备用
+    private long    reserve;
 
-    public GImageOSDPacket() {
+    public GRemoteImageDataEndPacket() {
     }
+
+    public GRemoteImageDataEndPacket(ByteBuf data) {
+        this.channelNo = data.readByte();
+       this. timeStamp = data.readInt();
+       byte[]  md5 = new byte[32];
+        data.readBytes(md5);
+        this.md5 = BytesUtils.b2h(md5);
+        this.reserve = data.readLong();
+    }
+
+
 
     /**
      * 构建数据包字节数组。
@@ -42,15 +55,10 @@ public class GImageOSDPacket extends AbstractPacket {
      */
     @Override
     public byte[] getFrameBytes() {
-        // 计算总长度
-        byte[] textBytes = (textContent + "\0").getBytes(java.nio.charset.StandardCharsets.UTF_8);
-        int totalLength = 12 + textBytes.length;
-        ByteBuffer buffer = ByteBuffer.allocate(totalLength)
+        ByteBuffer buffer = ByteBuffer.allocate(10)
             .order(ByteOrder.LITTLE_ENDIAN)
             .put(channelNo)
-            .put(showTime)
-            .put(showText)
-            .put(textBytes);
+            .putInt(timeStamp);
 
         return packet(monitoringDeviceId, serialNumber, buffer.array());
     }
@@ -76,6 +84,6 @@ public class GImageOSDPacket extends AbstractPacket {
      */
     @Override
     public byte getMessageType() {
-        return FRAME_TYPE_IMAGE_OSD;
+        return FRAME_TYPE_REMOTE_IMAGE_DATA_END;
     }
 }

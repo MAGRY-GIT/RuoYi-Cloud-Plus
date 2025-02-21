@@ -60,10 +60,7 @@ public abstract class AbstractPacket {
      */
     protected byte serialNumber;
 
-    /**
-     * 帧序类型
-     */
-    protected byte frameType;
+
 
 
 

@@ -1,11 +1,9 @@
-package com.cdzeroly.wvp.i1.packet.v2022;
+package com.cdzeroly.wvp.i1.packet.v2020;
 
 import com.cdzeroly.wvp.i1.bean.AlarmLinkage;
-import com.cdzeroly.wvp.i1.bean.AlarmLinkageParamsQuery;
 import com.cdzeroly.wvp.i1.packet.AbstractPacket;
 import com.cdzeroly.wvp.i1.bean.constant.FrameTypeConstant;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,35 +13,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 监拍装置告警联动参数查询报 数据包
+ * 监拍装置告警联动参数配置报 数据包
  * <p>
- * 该类用于构建监拍装置告警联动参数查询报，包含通道号和预置位号。
- * 该数据包用于查询监拍装置的告警联动参数。
+ * 该类用于构建监拍装置告警联动参数配置报，包含通道号、预置位号、联动配置数量及其详细配置。
+ * 该数据包用于设置监拍装置的告警联动参数。
  *
  * @author MAGRY
  */
 @Getter
 @Setter
-public class GAlarmLinkageParamsQueryPacket extends AbstractPacket {
-    public static final byte FRAME_TYPE_ALARM_LINKAGE_PARAMS_QUERY = (byte) 0xF9;
+public class GAlarmLinkageConfigPacket extends AbstractPacket {
+    public static final byte FRAME_TYPE_ALARM_LINKAGE_CONFIG = (byte) 0xF8;
 
     // 通道号
     private byte channelNo;
     // 预置位号，无云台固定为255 (FFH)
     private byte presettingNo;
+    // 联动配置列表
+    private List<AlarmLinkage> linkageConfigs;
 
-    List<AlarmLinkage> linkageConfigs;
-
-
-    public GAlarmLinkageParamsQueryPacket() {
+    public GAlarmLinkageConfigPacket() {
     }
 
-    public GAlarmLinkageParamsQueryPacket(ByteBuf data) {
+    public GAlarmLinkageConfigPacket(ByteBuf data) {
         this.commandStatus = data.readBoolean();
         this.channelNo = data.readByte();
         this.presettingNo = data.readByte();
-        int size = data.readByte();
-        linkageConfigs = new ArrayList<>(size);
+         int size = data.readByte();
+          linkageConfigs = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             AlarmLinkage alarmLinkage = new AlarmLinkage( data.readByte(),data.readByte(), data.readShort(), data.readShort());
 
@@ -53,15 +50,6 @@ public class GAlarmLinkageParamsQueryPacket extends AbstractPacket {
 
     }
 
-    public GAlarmLinkageParamsQueryPacket(List<AlarmLinkageParamsQuery> alarmLinkageParamsQueries) {
-        int size = alarmLinkageParamsQueries.size();
-        ByteBuf buffer = Unpooled.buffer(size * 2);
-
-        alarmLinkageParamsQueries.forEach(alarmLinkageParamsQuery -> {
-            buffer.writeBytes(alarmLinkageParamsQuery.toBytes());
-        });
-        this.content = buffer;
-    }
 
 
     /**
@@ -73,8 +61,22 @@ public class GAlarmLinkageParamsQueryPacket extends AbstractPacket {
      */
     @Override
     public byte[] getFrameBytes() {
+        // 计算总长度
+        int totalLength = 12;
+        for (AlarmLinkage config : linkageConfigs) {
+            totalLength += config.toBytes().length;
+        }
 
-        return packet(monitoringDeviceId, serialNumber, content.array());
+        ByteBuffer buffer = ByteBuffer.allocate(totalLength).order(ByteOrder.LITTLE_ENDIAN);
+        buffer.put(channelNo);
+        buffer.put(presettingNo);
+        buffer.put((byte) linkageConfigs.size());
+
+        for (AlarmLinkage config : linkageConfigs) {
+            buffer.put(config.toBytes());
+        }
+
+        return packet(monitoringDeviceId, serialNumber, buffer.array());
     }
 
     /**
@@ -86,7 +88,7 @@ public class GAlarmLinkageParamsQueryPacket extends AbstractPacket {
      */
     @Override
     public byte getFrameType() {
-        return FrameTypeConstant.IMAGE_CONTROL_RESPONSE_MESSAGE;
+        return FrameTypeConstant.WORK_STATUS_RESPONSE_REPORT;
     }
 
     /**
@@ -98,6 +100,6 @@ public class GAlarmLinkageParamsQueryPacket extends AbstractPacket {
      */
     @Override
     public byte getMessageType() {
-        return FRAME_TYPE_ALARM_LINKAGE_PARAMS_QUERY;
+        return FRAME_TYPE_ALARM_LINKAGE_CONFIG;
     }
 }

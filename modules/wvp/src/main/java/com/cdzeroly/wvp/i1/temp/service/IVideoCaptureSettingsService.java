@@ -1,10 +1,11 @@
 package com.cdzeroly.wvp.i1.temp.service;
 
-import com.cdzeroly.wvp.i1.temp.domain.VideoCaptureSettings;
+import com.cdzeroly.wvp.i1.bean.VideoCaptureSettingsDto;
 import com.cdzeroly.wvp.i1.temp.domain.vo.VideoCaptureSettingsVo;
 import com.cdzeroly.wvp.i1.temp.domain.bo.VideoCaptureSettingsBo;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -66,4 +67,6 @@ public interface IVideoCaptureSettingsService {
      * @return 是否删除成功
      */
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+
+    VideoCaptureSettingsVo queryByMonitoringDeviceId(@NotNull(message = "设备ID不能为空") String monitoringDeviceId, VideoCaptureSettingsDto videoCaptureSettingsDto);
 }

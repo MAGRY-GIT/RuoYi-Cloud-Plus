@@ -1,28 +1,23 @@
 package com.cdzeroly.wvp.i1.service.impl;
 
 import com.cdzeroly.wvp.i1.NetService;
-import com.cdzeroly.wvp.i1.bean.ImageAcquisition;
+import com.cdzeroly.wvp.i1.bean.ImageAcquisitionDto;
 import com.cdzeroly.wvp.i1.bean.PhotoTimeTable;
 import com.cdzeroly.wvp.i1.packet.*;
 import com.cdzeroly.wvp.i1.service.I1Service;
 import com.cdzeroly.wvp.utils.BytesUtils;
 import com.cdzeroly.wvp.i1.NettyChannelManager;
-import com.cdzeroly.wvp.utils.ImageUtil;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.disposables.Disposable;
 import lombok.SneakyThrows;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.IntStream;
 
 /**
  * @author : MGARY
@@ -105,13 +100,13 @@ public class I1ServiceImpl implements I1Service {
     }
 
     @Override
-    public ImageAcquisition imageAcquisitionSettings(String monitoringDeviceId, byte requestSetFlag, ImageAcquisition imageAcquisition) throws ExecutionException, InterruptedException, TimeoutException {
-        CompletableFuture<ImageAcquisition> future = new CompletableFuture<>();
+    public ImageAcquisitionDto imageAcquisitionSettings(String monitoringDeviceId, byte requestSetFlag, ImageAcquisitionDto imageAcquisition) throws ExecutionException, InterruptedException, TimeoutException {
+        CompletableFuture<ImageAcquisitionDto> future = new CompletableFuture<>();
 
         GImageAcquisitionPacket gImageAcquisitionPacket = new GImageAcquisitionPacket();
         BeanUtils.copyProperties(imageAcquisition, gImageAcquisitionPacket);
         netService.sendPacket(gImageAcquisitionPacket, ack -> ack instanceof GImageAcquisitionPacket).subscribe(ack -> {
-            ImageAcquisition gImageAcquisition = new ImageAcquisition();
+            ImageAcquisitionDto gImageAcquisition = new ImageAcquisitionDto();
             BeanUtils.copyProperties(ack, gImageAcquisition);
             future.complete(gImageAcquisition);
         });

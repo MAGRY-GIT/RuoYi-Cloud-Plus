@@ -2,6 +2,8 @@ package com.cdzeroly.wvp.i1.temp.controller;
 
 import java.util.List;
 
+import com.cdzeroly.wvp.i1.bean.ImageOSD;
+import com.cdzeroly.wvp.i1.temp.domain.vo.ImageAnalysisTypeVo;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.*;
@@ -55,6 +57,16 @@ public class ImageOsdController extends BaseController {
     public void export(ImageOsdBo bo, HttpServletResponse response) {
         List<ImageOsdVo> list = imageOsdService.queryList(bo);
         ExcelUtil.exportExcel(list, "图像OSD查询/设置报", ImageOsdVo.class, response);
+    }
+
+    /**
+     * 获取图像分析类型详细信息
+     *
+     * @param monitoringDeviceId 主键
+     */
+    @GetMapping("/find/{monitoringDeviceId}")
+    public R<ImageOsdVo> find(@NotNull(message = "设备ID不能为空") @PathVariable String monitoringDeviceId, ImageOSD osd ) {
+        return R.ok(imageOsdService.queryByMonitoringDeviceId(monitoringDeviceId,osd));
     }
 
     /**

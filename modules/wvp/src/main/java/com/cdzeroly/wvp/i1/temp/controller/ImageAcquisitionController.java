@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.i1.temp.controller;
 
 import java.util.List;
 
+import com.cdzeroly.wvp.i1.bean.ImageAcquisitionDto;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.*;
@@ -55,6 +56,17 @@ public class ImageAcquisitionController extends BaseController {
     public void export(ImageAcquisitionBo bo, HttpServletResponse response) {
         List<ImageAcquisitionVo> list = imageAcquisitionService.queryList(bo);
         ExcelUtil.exportExcel(list, "图像采集参数设置", ImageAcquisitionVo.class, response);
+    }
+
+
+    /**
+     * 获取图像分析类型详细信息
+     *
+     * @param monitoringDeviceId 主键
+     */
+    @GetMapping("/find/{monitoringDeviceId}")
+    public R<ImageAcquisitionVo> find(@NotNull(message = "设备ID不能为空") @PathVariable String monitoringDeviceId, ImageAcquisitionDto imageAcquisition ) {
+        return R.ok(imageAcquisitionService.queryByMonitoringDeviceId(monitoringDeviceId,imageAcquisition));
     }
 
     /**
