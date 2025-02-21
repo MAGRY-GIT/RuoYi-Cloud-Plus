@@ -2,6 +2,9 @@ package com.cdzeroly.wvp.i1.temp.controller;
 
 import java.util.List;
 
+import com.cdzeroly.wvp.i1.bean.CameraScheduleDto;
+import com.cdzeroly.wvp.i1.bean.PhotoTimeTableDto;
+import com.cdzeroly.wvp.i1.temp.domain.vo.PhotoTimeTableVo;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.*;
@@ -89,6 +92,17 @@ public class CameraScheduleController extends BaseController {
     @PutMapping()
     public R<Void> edit(@Validated(EditGroup.class) @RequestBody CameraScheduleBo bo) {
         return toAjax(cameraScheduleService.updateByBo(bo));
+    }
+
+
+    /**
+     * 获取图像分析类型详细信息
+     *
+     * @param monitoringDeviceId 主键
+     */
+    @GetMapping("/find/{monitoringDeviceId}")
+    public R<CameraScheduleVo> find(@NotNull(message = "设备ID不能为空") @PathVariable String monitoringDeviceId, CameraScheduleDto cameraScheduleDto ) {
+        return R.ok(cameraScheduleService.queryByMonitoringDeviceId(monitoringDeviceId,cameraScheduleDto));
     }
 
     /**

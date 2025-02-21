@@ -1,7 +1,8 @@
 package com.cdzeroly.wvp.i1.service;
 
+import com.cdzeroly.wvp.i1.bean.CameraScheduleDto;
 import com.cdzeroly.wvp.i1.bean.ImageAcquisitionDto;
-import com.cdzeroly.wvp.i1.bean.PhotoTimeTable;
+import com.cdzeroly.wvp.i1.bean.PhotoTimeTableDto;
 import com.cdzeroly.wvp.i1.packet.GCameraSchedulePacket;
 
 import java.util.List;
@@ -27,20 +28,19 @@ public interface I1Service {
 
     /**
      * 摄像机定时工作时间表设置
-     * @param monitoringDeviceId  设备ID
-     * @param requestSetFlag  ① 00H 查询配置信息 ② 01H 设置配置信息
-     * @param startTimes 开始事件  数组大小为4
-     * @param endTimes  结束事件 数组大小为4
+     *
+     * @param monitoringDeviceId 设备ID
+     * @param requestSetFlag     ① 00H 查询配置信息 ② 01H 设置配置信息
+     * @param cameraScheduleDto
      */
-    GCameraSchedulePacket cameraTimerWorkScheduleSettings(String monitoringDeviceId, byte requestSetFlag, List<Integer>  startTimes , List<Integer>  endTimes) throws ExecutionException, InterruptedException, TimeoutException;    /**
-
-
-    /**
+    GCameraSchedulePacket cameraTimerWorkScheduleSettings(String monitoringDeviceId, byte requestSetFlag, CameraScheduleDto cameraScheduleDto) throws ExecutionException, InterruptedException, TimeoutException;    /**
+     * /**
      * 拍照时间表设置
-     * @param monitoringDeviceId  设备ID
-     * @param requestSetFlag  ① 00H 查询配置信息 ② 01H 设置配置信息
+     *
+     * @param monitoringDeviceId 设备ID
+     * @param requestSetFlag     ① 00H 查询配置信息 ② 01H 设置配置信息
      */
-    PhotoTimeTable photoScheduleSettings(String monitoringDeviceId, byte channelNo,byte group,byte requestSetFlag, PhotoTimeTable photoTimeTable) throws ExecutionException, InterruptedException, TimeoutException;    /**
+    PhotoTimeTableDto photoScheduleSettings(String monitoringDeviceId, byte requestSetFlag, PhotoTimeTableDto photoTimeTable) throws ExecutionException, InterruptedException, TimeoutException;    /**
 
 
      * 图像采集参数查询/设置

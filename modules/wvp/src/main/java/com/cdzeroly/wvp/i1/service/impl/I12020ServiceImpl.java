@@ -42,7 +42,6 @@ public class I12020ServiceImpl implements I12020Service {
         sendPacket.setChannelNo(channelNo);
         netService.sendPacket(sendPacket, ack -> ack instanceof GManualCaptureRequestPacket).subscribe(ack -> {
             //成功收到数据
-            //成功收到数据
             if (ack.isCommandStatus()) {
                 future.complete("拍照请求发送成功");
             }
@@ -52,31 +51,7 @@ public class I12020ServiceImpl implements I12020Service {
         return future.get(3000, TimeUnit.MILLISECONDS);
     }
 
-    @Override
-    public void cameraVideoTransmissionSettings(String monitoringDeviceId, byte channelNo, byte control) {
-        GCameraVideoControlPacket sendPacket = new GCameraVideoControlPacket();
-        byte[] monitoringDeviceIdFinal = BytesUtils.s2b(monitoringDeviceId);
-        sendPacket.setMonitoringDeviceId(monitoringDeviceIdFinal);
-        sendPacket.setControl(control);
-        sendPacket.setChannelNo(channelNo);
-        netService.sendPacket(sendPacket);
-    }
 
-    @Override
-    public GCameraSchedulePacket cameraTimerWorkScheduleSettings(String monitoringDeviceId, byte requestSetFlag, List<Integer> startTimes, List<Integer> endTimes) throws ExecutionException, InterruptedException, TimeoutException {
-
-        GCameraSchedulePacket sendPacket = new GCameraSchedulePacket();
-        byte[] monitoringDeviceIdFinal = BytesUtils.s2b(monitoringDeviceId);
-        sendPacket.setMonitoringDeviceId(monitoringDeviceIdFinal);
-        sendPacket.setStartTimes(startTimes);
-        sendPacket.setEndTimes(endTimes);
-        CompletableFuture<GCameraSchedulePacket> future = new CompletableFuture<>();
-
-        netService.sendPacket(sendPacket, ack -> ack instanceof GCameraSchedulePacket).subscribe(ack -> {
-            future.complete((GCameraSchedulePacket) ack);
-        });
-        return future.get(1000, TimeUnit.MILLISECONDS);
-    }
 
     @Override
     public PhotoTimeTableV2020 photoScheduleSettings(String monitoringDeviceId, byte requestSetFlag, PhotoTimeTableV2020 photoTimeTable) throws ExecutionException, InterruptedException, TimeoutException {

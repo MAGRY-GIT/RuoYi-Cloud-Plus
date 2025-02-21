@@ -20,20 +20,6 @@ public interface I12020Service {
      */
     String getScreenshots(String monitoringDeviceId,byte channelNo, byte[] reserve) throws ExecutionException, InterruptedException, TimeoutException;
 
-    /**
-     * 相机视频传输设置
-     * @param monitoringDeviceId 监测设备ID
-     */
-       void cameraVideoTransmissionSettings(String monitoringDeviceId, byte channelNo, byte control);
-
-    /**
-     * 摄像机定时工作时间表设置
-     * @param monitoringDeviceId  设备ID
-     * @param requestSetFlag  ① 00H 查询配置信息 ② 01H 设置配置信息
-     * @param startTimes 开始事件  数组大小为4
-     * @param endTimes  结束事件 数组大小为4
-     */
-    GCameraSchedulePacket cameraTimerWorkScheduleSettings(String monitoringDeviceId, byte requestSetFlag, List<Integer>  startTimes , List<Integer>  endTimes) throws ExecutionException, InterruptedException, TimeoutException;    /**
 
 
     /**

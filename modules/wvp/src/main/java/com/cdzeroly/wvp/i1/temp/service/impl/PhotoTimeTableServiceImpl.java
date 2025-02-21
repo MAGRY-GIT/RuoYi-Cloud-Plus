@@ -7,7 +7,12 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.cdzeroly.wvp.i1.bean.PhotoTimeTableDto;
+import com.cdzeroly.wvp.i1.bean.VideoCaptureSettingsDto;
+import com.cdzeroly.wvp.i1.service.I1Service;
+import com.cdzeroly.wvp.i1.temp.domain.vo.VideoCaptureSettingsVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.cdzeroly.wvp.i1.temp.domain.bo.PhotoTimeTableBo;
 import com.cdzeroly.wvp.i1.temp.domain.vo.PhotoTimeTableVo;
@@ -18,6 +23,8 @@ import com.cdzeroly.wvp.i1.temp.service.IPhotoTimeTableService;
 import java.util.List;
 import java.util.Map;
 import java.util.Collection;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 拍照时间设置Service业务层处理
@@ -30,6 +37,7 @@ import java.util.Collection;
 public class PhotoTimeTableServiceImpl implements IPhotoTimeTableService {
 
     private final PhotoTimeTableMapper baseMapper;
+    private final I1Service i1Service;
 
     /**
      * 查询拍照时间设置
@@ -72,7 +80,6 @@ public class PhotoTimeTableServiceImpl implements IPhotoTimeTableService {
         Map<String, Object> params = bo.getParams();
         LambdaQueryWrapper<PhotoTimeTable> lqw = Wrappers.lambdaQuery();
         lqw.eq(bo.getChannelNo() != null, PhotoTimeTable::getChannelNo, bo.getChannelNo());
-        lqw.eq(StringUtils.isNotBlank(bo.getTimeTables()), PhotoTimeTable::getTimeTables, bo.getTimeTables());
 
         return lqw;
     }
@@ -102,6 +109,18 @@ public class PhotoTimeTableServiceImpl implements IPhotoTimeTableService {
      */
     @Override
     public Boolean updateByBo(PhotoTimeTableBo bo) {
+        try {
+            PhotoTimeTableDto timeTableDto = new PhotoTimeTableDto();
+            BeanUtils.copyProperties(bo, timeTableDto);
+            PhotoTimeTableDto videoCaptureSettingsDto = i1Service.photoScheduleSettings(bo.getMonitoringDeviceId(), (byte) 0x01,timeTableDto);
+
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
         PhotoTimeTable update = MapstructUtils.convert(bo, PhotoTimeTable.class);
         validEntityBeforeSave(update);
         return baseMapper.updateById(update) > 0;
@@ -127,5 +146,22 @@ public class PhotoTimeTableServiceImpl implements IPhotoTimeTableService {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
         return baseMapper.deleteByIds(ids) > 0;
+    }
+
+    @Override
+    public PhotoTimeTableVo queryByMonitoringDeviceId(String monitoringDeviceId, PhotoTimeTableDto photoTimeTable) {
+        try {
+
+            PhotoTimeTableDto videoCaptureSettingsDto = i1Service.photoScheduleSettings(monitoringDeviceId, (byte) 0x00,photoTimeTable);
+            PhotoTimeTableVo photoTimeTableVo = new PhotoTimeTableVo();
+            BeanUtils.copyProperties(videoCaptureSettingsDto, photoTimeTableVo);
+            return  photoTimeTableVo;
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

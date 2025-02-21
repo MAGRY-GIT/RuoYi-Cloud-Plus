@@ -1,10 +1,12 @@
 package com.cdzeroly.wvp.i1.temp.service;
 
+import com.cdzeroly.wvp.i1.bean.CameraScheduleDto;
 import com.cdzeroly.wvp.i1.temp.domain.CameraSchedule;
 import com.cdzeroly.wvp.i1.temp.domain.vo.CameraScheduleVo;
 import com.cdzeroly.wvp.i1.temp.domain.bo.CameraScheduleBo;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -66,4 +68,6 @@ public interface ICameraScheduleService {
      * @return 是否删除成功
      */
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
+
+    CameraScheduleVo queryByMonitoringDeviceId(@NotNull(message = "设备ID不能为空") String monitoringDeviceId, CameraScheduleDto cameraScheduleDto);
 }

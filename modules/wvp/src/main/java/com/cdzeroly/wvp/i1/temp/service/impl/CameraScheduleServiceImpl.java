@@ -7,7 +7,13 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.cdzeroly.wvp.i1.bean.CameraScheduleDto;
+import com.cdzeroly.wvp.i1.bean.PhotoTimeTableDto;
+import com.cdzeroly.wvp.i1.packet.GCameraSchedulePacket;
+import com.cdzeroly.wvp.i1.service.I1Service;
+import com.cdzeroly.wvp.i1.temp.domain.vo.PhotoTimeTableVo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import com.cdzeroly.wvp.i1.temp.domain.bo.CameraScheduleBo;
 import com.cdzeroly.wvp.i1.temp.domain.vo.CameraScheduleVo;
@@ -18,6 +24,8 @@ import com.cdzeroly.wvp.i1.temp.service.ICameraScheduleService;
 import java.util.List;
 import java.util.Map;
 import java.util.Collection;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * 摄像机定时工作时间设置Service业务层处理
@@ -30,6 +38,7 @@ import java.util.Collection;
 public class CameraScheduleServiceImpl implements ICameraScheduleService {
 
     private final CameraScheduleMapper baseMapper;
+    private final I1Service i1Service;
 
     /**
      * 查询摄像机定时工作时间设置
@@ -84,6 +93,17 @@ public class CameraScheduleServiceImpl implements ICameraScheduleService {
      */
     @Override
     public Boolean insertByBo(CameraScheduleBo bo) {
+        try {
+            CameraScheduleDto cameraScheduleDto = new CameraScheduleDto();
+            BeanUtils.copyProperties(bo.getMonitoringDeviceId(), cameraScheduleDto);
+            GCameraSchedulePacket videoCaptureSettingsDto = i1Service.cameraTimerWorkScheduleSettings(bo.getMonitoringDeviceId(), (byte) 0x01,cameraScheduleDto);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
         CameraSchedule add = MapstructUtils.convert(bo, CameraSchedule.class);
         validEntityBeforeSave(add);
         boolean flag = baseMapper.insert(add) > 0;
@@ -126,5 +146,22 @@ public class CameraScheduleServiceImpl implements ICameraScheduleService {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
         return baseMapper.deleteByIds(ids) > 0;
+    }
+
+    @Override
+    public CameraScheduleVo queryByMonitoringDeviceId(String monitoringDeviceId, CameraScheduleDto cameraScheduleDto) {
+        try {
+
+            GCameraSchedulePacket videoCaptureSettingsDto = i1Service.cameraTimerWorkScheduleSettings(monitoringDeviceId, (byte) 0x00,cameraScheduleDto);
+            CameraScheduleVo cameraScheduleVo = new CameraScheduleVo();
+            BeanUtils.copyProperties(videoCaptureSettingsDto, cameraScheduleVo);
+            return  cameraScheduleVo;
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

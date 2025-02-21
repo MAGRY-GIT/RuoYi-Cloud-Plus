@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.i1.temp.domain.bo;
 
 import com.cdzeroly.common.core.validate.AddGroup;
 import com.cdzeroly.common.core.validate.EditGroup;
+import com.cdzeroly.wvp.i1.bean.TimeTable;
 import com.cdzeroly.wvp.i1.temp.domain.PhotoTimeTable;
 import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
 import io.github.linpeilie.annotations.AutoMapper;
@@ -9,6 +10,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import jakarta.validation.constraints.*;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.cdzeroly.common.core.validate.AddGroup;
 import com.cdzeroly.common.core.validate.EditGroup;
@@ -41,8 +44,8 @@ public class PhotoTimeTableBo extends BaseEntity {
     /**
      * 时间表
      */
-    @NotBlank(message = "时间表不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String timeTables;
+    @NotBlank(message = "时间表不能为空")
+    private List<TimeTable> timeTables;
 
 
 
