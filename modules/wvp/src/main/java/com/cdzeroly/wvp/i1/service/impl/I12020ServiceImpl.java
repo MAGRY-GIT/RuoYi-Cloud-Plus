@@ -179,7 +179,7 @@ public class I12020ServiceImpl implements I12020Service {
     }
 
     @Override
-    public ImageAnalysisParamsDto imageAnalysisParamsSettings(String monitoringDeviceId, byte requestSetFlag, ImageAnalysisParamsDto imageAnalysisParams) throws ExecutionException, InterruptedException, TimeoutException {
+    public ImageAnalysisParamsDto imageAnalysisParamsSettings(String monitoringDeviceId, ImageAnalysisParamsDto imageAnalysisParams) throws ExecutionException, InterruptedException, TimeoutException {
 
         CompletableFuture<ImageAnalysisParamsDto> future = new CompletableFuture<>();
 

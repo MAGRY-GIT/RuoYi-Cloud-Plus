@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.i1.temp.domain.bo;
 
+import com.cdzeroly.wvp.i1.bean.ImageAnalysisParamsDto;
 import com.cdzeroly.wvp.i1.temp.domain.ImageAnalysisParams;
 import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
 import io.github.linpeilie.annotations.AutoMapper;
@@ -47,17 +48,12 @@ public class ImageAnalysisParamsBo extends BaseEntity {
     @NotNull(message = "智能分析启用不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long analysisEnableFlag;
 
-    /**
-     * 告警类型
-     */
-    @NotBlank(message = "告警类型不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String alarmTypeInfo;
+    // 告警类型编码列表，告警类型编码参考
+    private ImageAnalysisParamsDto.AlarmTypeInfo alarmTypeInfo;
 
-    /**
-     * 告警区域信息
-     */
-    @NotBlank(message = "告警区域信息不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String alarmRegion;
+    // 告警区域信息
+    private ImageAnalysisParamsDto.AlarmRegion alarmRegion;
+
 
 
 

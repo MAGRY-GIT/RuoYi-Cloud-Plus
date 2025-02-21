@@ -11,7 +11,7 @@ import com.cdzeroly.wvp.i1.bean.AlarmLinkageConfigDto;
 import com.cdzeroly.wvp.i1.bean.ImageAnalysisParamsDto;
 import com.cdzeroly.wvp.i1.bean.ImageAnalysisParamsQuery;
 import com.cdzeroly.wvp.i1.service.I12020Service;
-import com.cdzeroly.wvp.i1.temp.domain.vo.AlarmLinkageConfigVo;
+import com.cdzeroly.wvp.i1.temp.domain.AlarmLinkageConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -83,8 +83,6 @@ public class ImageAnalysisParamsServiceImpl implements IImageAnalysisParamsServi
         lqw.eq(bo.getChannelNo() != null, ImageAnalysisParams::getChannelNo, bo.getChannelNo());
         lqw.eq(bo.getPresettingNo() != null, ImageAnalysisParams::getPresettingNo, bo.getPresettingNo());
         lqw.eq(bo.getAnalysisEnableFlag() != null, ImageAnalysisParams::getAnalysisEnableFlag, bo.getAnalysisEnableFlag());
-        lqw.eq(StringUtils.isNotBlank(bo.getAlarmTypeInfo()), ImageAnalysisParams::getAlarmTypeInfo, bo.getAlarmTypeInfo());
-        lqw.eq(StringUtils.isNotBlank(bo.getAlarmRegion()), ImageAnalysisParams::getAlarmRegion, bo.getAlarmRegion());
         return lqw;
     }
 
@@ -98,6 +96,18 @@ public class ImageAnalysisParamsServiceImpl implements IImageAnalysisParamsServi
     public Boolean insertByBo(ImageAnalysisParamsBo bo) {
         ImageAnalysisParams add = MapstructUtils.convert(bo, ImageAnalysisParams.class);
         validEntityBeforeSave(add);
+        ImageAnalysisParamsDto imageAnalysisParamsDto = new ImageAnalysisParamsDto();
+        BeanUtils.copyProperties(bo, imageAnalysisParamsDto);
+        try {
+            i12020Service.imageAnalysisParamsSettings(bo.getMonitoringDeviceId(),imageAnalysisParamsDto);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (TimeoutException e) {
+            throw new RuntimeException(e);
+        }
+
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {
             bo.setId(add.getId());
@@ -146,6 +156,10 @@ public class ImageAnalysisParamsServiceImpl implements IImageAnalysisParamsServi
             ImageAnalysisParamsDto imageAnalysisParamsDto = i12020Service.imageAnalysisParamsQuery(monitoringDeviceId, alarmLinkageParamsQuery);
             ImageAnalysisParamsVo alarmLinkageConfigVo = new ImageAnalysisParamsVo();
             BeanUtils.copyProperties(imageAnalysisParamsDto, alarmLinkageConfigVo);
+            alarmLinkageConfigVo.setAlarmTypeInfo(imageAnalysisParamsDto.alarmTypeInfoToJson());
+            alarmLinkageConfigVo.setAlarmRegion(imageAnalysisParamsDto.alarmRegionToJson());
+
+
             return  alarmLinkageConfigVo;
         } catch (ExecutionException e) {
             throw new RuntimeException(e);

@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.i1.bean;
 
+import com.cdzeroly.common.json.utils.JsonUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Data;
@@ -28,7 +29,6 @@ public class ImageAnalysisParamsDto {
 
     // 告警区域信息
     private AlarmRegion alarmRegion;
-
 
 
     public void setAlarmTypeInfo(ByteBuf data, byte size) {
@@ -93,6 +93,14 @@ public class ImageAnalysisParamsDto {
             return bytes;
         }
 
+
+    }
+
+    public String alarmRegionToJson() {
+        return JsonUtils.toJsonString(alarmRegion);
+    }
+    public String alarmTypeInfoToJson() {
+        return JsonUtils.toJsonString(alarmTypeInfo);
     }
 
 
@@ -131,7 +139,7 @@ public class ImageAnalysisParamsDto {
         }
 
         @Data
-        public  static class RegionalInfo {
+        public static class RegionalInfo {
 
             // 区域作用标志列表，0：对划定区域内的隐患不分析；1：对划定区域内的隐患分析、告警
             private Byte regionEnableFlags;
@@ -155,8 +163,9 @@ public class ImageAnalysisParamsDto {
 
                 data.release();
             }
-            public byte[] toBytes(){
-                byte[] bytes = new byte[regionPoints.size() * 2 +2];
+
+            public byte[] toBytes() {
+                byte[] bytes = new byte[regionPoints.size() * 2 + 2];
                 bytes[0] = regionEnableFlags;
                 bytes[1] = regionPointCounts;
                 for (int i = 0; i < regionPoints.size(); i++) {
@@ -167,6 +176,7 @@ public class ImageAnalysisParamsDto {
 
                 return bytes;
             }
+
             @Data
             public static class Point {
                 private Byte x;

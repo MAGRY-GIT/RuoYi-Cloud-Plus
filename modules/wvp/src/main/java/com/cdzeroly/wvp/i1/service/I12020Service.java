@@ -90,11 +90,11 @@ public interface I12020Service {
 
     /**
      * 图像分析参数设置报
+     *
      * @param monitoringDeviceId 设备ID
-     * @param requestSetFlag ① 00H 查询配置信息 ② 01H 设置配置信息
      * @return 响应结果
      */
-    ImageAnalysisParamsDto imageAnalysisParamsSettings(String monitoringDeviceId, byte requestSetFlag, ImageAnalysisParamsDto imageAnalysisParams) throws ExecutionException, InterruptedException, TimeoutException;
+    ImageAnalysisParamsDto imageAnalysisParamsSettings(String monitoringDeviceId, ImageAnalysisParamsDto imageAnalysisParams) throws ExecutionException, InterruptedException, TimeoutException;
 
 
     /**

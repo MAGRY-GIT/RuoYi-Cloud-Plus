@@ -1,12 +1,8 @@
 package com.cdzeroly.wvp.i1.temp.domain.vo;
 
-import java.util.Date;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.cdzeroly.wvp.i1.temp.domain.ImageAnalysisParams;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.cdzeroly.common.excel.annotation.ExcelDictFormat;
-import com.cdzeroly.common.excel.convert.ExcelDictConvert;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 
