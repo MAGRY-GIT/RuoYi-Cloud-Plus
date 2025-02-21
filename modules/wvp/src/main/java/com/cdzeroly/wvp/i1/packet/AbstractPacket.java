@@ -96,10 +96,6 @@ public abstract class AbstractPacket {
         this.monitoringDeviceId = monitoringDeviceId;
     }
 
-    public void setFrameType(byte frameType) {
-        this.frameType = frameType;
-    }
-
 
 
 

@@ -1,7 +1,6 @@
 package com.cdzeroly.wvp.i1.packet.v2022;
 
 import com.cdzeroly.wvp.i1.bean.AlarmLinkage;
-import com.cdzeroly.wvp.i1.bean.AlarmLinkageConfig;
 import com.cdzeroly.wvp.i1.packet.AbstractPacket;
 import com.cdzeroly.wvp.i1.bean.constant.FrameTypeConstant;
 import io.netty.buffer.ByteBuf;

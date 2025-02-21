@@ -1,16 +1,12 @@
 package com.cdzeroly.wvp.i1.packet.v2022;
 
-import com.cdzeroly.wvp.i1.bean.IdentifyType;
-import com.cdzeroly.wvp.i1.bean.ImageAnalysisParams;
+import com.cdzeroly.wvp.i1.bean.ImageAnalysisParamsDto;
 import com.cdzeroly.wvp.i1.packet.AbstractPacket;
 import com.cdzeroly.wvp.i1.bean.constant.FrameTypeConstant;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 /**
  * 图像分析参数设置报 数据包
@@ -27,19 +23,19 @@ public class GImageAnalysisParamsPacket extends AbstractPacket {
 
 
 
-    ImageAnalysisParams imageAnalysisParams;
+    ImageAnalysisParamsDto imageAnalysisParams;
 
     public GImageAnalysisParamsPacket() {
     }
 
 
 
-    public GImageAnalysisParamsPacket( ImageAnalysisParams imageAnalysisParams) {
+    public GImageAnalysisParamsPacket( ImageAnalysisParamsDto imageAnalysisParams) {
     }
 
 
     public GImageAnalysisParamsPacket(ByteBuf data) {
-        ImageAnalysisParams imageAnalysisParams = new ImageAnalysisParams();
+        ImageAnalysisParamsDto imageAnalysisParams = new ImageAnalysisParamsDto();
         imageAnalysisParams.setChannelNo(data.readByte());
         imageAnalysisParams.setPresettingNo(data.readByte());
         imageAnalysisParams.setAnalysisEnableFlag(data.readByte());

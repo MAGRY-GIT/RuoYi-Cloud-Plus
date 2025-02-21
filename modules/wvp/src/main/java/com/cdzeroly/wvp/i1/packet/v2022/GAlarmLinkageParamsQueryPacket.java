@@ -86,7 +86,7 @@ public class GAlarmLinkageParamsQueryPacket extends AbstractPacket {
      */
     @Override
     public byte getFrameType() {
-        return FrameTypeConstant.WORK_STATUS_RESPONSE_REPORT;
+        return FrameTypeConstant.IMAGE_CONTROL_RESPONSE_MESSAGE;
     }
 
     /**

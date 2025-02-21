@@ -4,6 +4,9 @@ import com.cdzeroly.wvp.i1.NetService;
 import com.cdzeroly.wvp.i1.NettyChannelManager;
 import com.cdzeroly.wvp.i1.packet.v2022.GImageAnalysisAlarmReportPacket;
 import com.cdzeroly.wvp.i1.packet.v2022.GPhotoVideoUploadRequestPacket;
+import com.cdzeroly.wvp.i1.temp.domain.ImageAnalysisAlarmReport;
+import com.cdzeroly.wvp.i1.temp.mapper.ImageAnalysisAlarmReportMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,8 +28,9 @@ public class ImageAnalysisAlarmReportTask extends Thread {
 
     @Autowired
     private NetService netService;
+
     @Autowired
-    private PhotoVideoUploadHandler photoUploadHandler;
+    private  ImageAnalysisAlarmReportMapper baseMapper;
 
     @Override
     public void run() {
@@ -36,6 +40,9 @@ public class ImageAnalysisAlarmReportTask extends Thread {
                 Optional<GImageAnalysisAlarmReportPacket> photoVideoUploadRequestPacket;
                 photoVideoUploadRequestPacket = netService.getFilterPacket(e -> e instanceof GImageAnalysisAlarmReportPacket);
                 photoVideoUploadRequestPacket.ifPresent(videoUploadRequestPacket -> {
+                    ImageAnalysisAlarmReport imageAnalysisAlarmReport = new ImageAnalysisAlarmReport();
+                    BeanUtils.copyProperties(videoUploadRequestPacket, imageAnalysisAlarmReport);
+                    baseMapper.insert(imageAnalysisAlarmReport);
                     videoUploadRequestPacket.setCommandStatus(true);
                     netService.sendPacket(videoUploadRequestPacket);
                 });

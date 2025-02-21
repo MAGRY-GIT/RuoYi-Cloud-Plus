@@ -5,7 +5,6 @@ import io.netty.buffer.Unpooled;
 import lombok.Data;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -14,7 +13,7 @@ import java.util.List;
  * @createDate : 2025/2/17 16:36
  */
 @Data
-public class ImageAnalysisParams {
+public class ImageAnalysisParamsDto {
 
     private byte channelNo;
     // 预置位号，从1开始，无预置位传FFH

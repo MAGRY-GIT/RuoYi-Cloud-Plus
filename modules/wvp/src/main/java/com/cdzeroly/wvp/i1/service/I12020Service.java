@@ -81,11 +81,11 @@ public interface I12020Service {
 
     /**
      * 图像分析参数查询报
+     *
      * @param monitoringDeviceId 设备ID
-     * @param requestSetFlag ① 00H 查询配置信息 ② 01H 设置配置信息
      * @return 响应结果
      */
-    ImageAnalysisParams imageAnalysisParamsQuery(String monitoringDeviceId, byte requestSetFlag, List<ImageAnalysisParamsQuery> imageAnalysisParamsQueryList) throws ExecutionException, InterruptedException, TimeoutException;
+    ImageAnalysisParamsDto imageAnalysisParamsQuery(String monitoringDeviceId, List<ImageAnalysisParamsQuery> imageAnalysisParamsQueryList) throws ExecutionException, InterruptedException, TimeoutException;
 
 
     /**
@@ -94,25 +94,23 @@ public interface I12020Service {
      * @param requestSetFlag ① 00H 查询配置信息 ② 01H 设置配置信息
      * @return 响应结果
      */
-    ImageAnalysisParams imageAnalysisParamsSettings(String monitoringDeviceId, byte requestSetFlag,    ImageAnalysisParams imageAnalysisParams) throws ExecutionException, InterruptedException, TimeoutException;
+    ImageAnalysisParamsDto imageAnalysisParamsSettings(String monitoringDeviceId, byte requestSetFlag, ImageAnalysisParamsDto imageAnalysisParams) throws ExecutionException, InterruptedException, TimeoutException;
 
 
     /**
      * 监拍装置告警联动参数配置报
      * @param monitoringDeviceId 设备ID
-     * @param requestSetFlag ① 00H 查询配置信息 ② 01H 设置配置信息
      * @return 响应结果
      */
-    AlarmLinkageConfig alarmLinkageConfig(String monitoringDeviceId, byte requestSetFlag, AlarmLinkageConfig imageAnalysisParams) throws ExecutionException, InterruptedException, TimeoutException;
+    AlarmLinkageConfigDto alarmLinkageConfig(String monitoringDeviceId, AlarmLinkageConfigDto imageAnalysisParams) throws ExecutionException, InterruptedException, TimeoutException;
 
 
     /**
      * 监拍装置告警联动参数查询报
      * @param monitoringDeviceId 设备ID
-     * @param requestSetFlag ① 00H 查询配置信息 ② 01H 设置配置信息
      * @return 响应结果
      */
-    AlarmLinkageConfig alarmLinkageParamsQuery(String monitoringDeviceId, byte requestSetFlag, List<AlarmLinkageParamsQuery> alarmLinkageParamsQueries) throws ExecutionException, InterruptedException, TimeoutException;
+    AlarmLinkageConfigDto alarmLinkageParamsQuery(String monitoringDeviceId, List<AlarmLinkageParamsQuery> alarmLinkageParamsQueries) throws ExecutionException, InterruptedException, TimeoutException;
 
 
 

@@ -4,23 +4,18 @@ import com.cdzeroly.wvp.i1.NetService;
 import com.cdzeroly.wvp.i1.NettyChannelManager;
 import com.cdzeroly.wvp.i1.bean.*;
 import com.cdzeroly.wvp.i1.packet.*;
-import com.cdzeroly.wvp.i1.packet.GRemoteImageReplenishPacket;
 import com.cdzeroly.wvp.i1.packet.v2022.*;
 import com.cdzeroly.wvp.i1.service.I12020Service;
 import com.cdzeroly.wvp.utils.BytesUtils;
-import com.cdzeroly.wvp.utils.ImageUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.IntStream;
 
 /**
  * @author : MGARY
@@ -123,7 +118,6 @@ public class I12020ServiceImpl implements I12020Service {
         GImageOSDPacket imageOSDPacket = new GImageOSDPacket();
         BeanUtils.copyProperties(imageOsd, imageOSDPacket);
         imageOSDPacket.setMonitoringDeviceId(BytesUtils.h2b(monitoringDeviceId, ""));
-        imageOSDPacket.setFrameType(requestSetFlag);
 
         netService.sendPacket(imageOSDPacket, ack -> ack instanceof GImageAcquisitionPacket).subscribe(ack -> {
             ImageOSD osd = new ImageOSD();
@@ -160,7 +154,6 @@ public class I12020ServiceImpl implements I12020Service {
         imageAnalysisTypeQueryPacket.setDataSources(dataSources);
         imageAnalysisTypeQueryPacket.setChannelNo(channelNo);
         imageAnalysisTypeQueryPacket.setMonitoringDeviceId(BytesUtils.h2b(monitoringDeviceId, ""));
-        imageAnalysisTypeQueryPacket.setFrameType(requestSetFlag);
 
         netService.sendPacket(imageAnalysisTypeQueryPacket, ack -> ack instanceof GImageAnalysisTypeQueryPacket).subscribe(ack -> {
             future.complete((GImageAnalysisTypeQueryPacket)ack);
@@ -172,12 +165,11 @@ public class I12020ServiceImpl implements I12020Service {
 
 
     @Override
-    public ImageAnalysisParams imageAnalysisParamsQuery(String monitoringDeviceId, byte requestSetFlag, List<ImageAnalysisParamsQuery> imageAnalysisParamsQueryList) throws ExecutionException, InterruptedException, TimeoutException {
-        CompletableFuture<ImageAnalysisParams> future = new CompletableFuture<>();
+    public ImageAnalysisParamsDto imageAnalysisParamsQuery(String monitoringDeviceId, List<ImageAnalysisParamsQuery> imageAnalysisParamsQueryList) throws ExecutionException, InterruptedException, TimeoutException {
+        CompletableFuture<ImageAnalysisParamsDto> future = new CompletableFuture<>();
 
         GImageAnalysisParamsQueryPacket packet = new GImageAnalysisParamsQueryPacket(imageAnalysisParamsQueryList);
         packet.setMonitoringDeviceId(BytesUtils.h2b(monitoringDeviceId, ""));
-        packet.setFrameType(requestSetFlag);
 
         netService.sendPacket(packet, ack -> ack instanceof GImageAnalysisTypeQueryPacket).subscribe(ack -> {
             future.complete(((GImageAnalysisParamsQueryPacket)ack).getImageAnalysisParams());
@@ -187,13 +179,12 @@ public class I12020ServiceImpl implements I12020Service {
     }
 
     @Override
-    public ImageAnalysisParams imageAnalysisParamsSettings(String monitoringDeviceId, byte requestSetFlag, ImageAnalysisParams imageAnalysisParams) throws ExecutionException, InterruptedException, TimeoutException {
+    public ImageAnalysisParamsDto imageAnalysisParamsSettings(String monitoringDeviceId, byte requestSetFlag, ImageAnalysisParamsDto imageAnalysisParams) throws ExecutionException, InterruptedException, TimeoutException {
 
-        CompletableFuture<ImageAnalysisParams> future = new CompletableFuture<>();
+        CompletableFuture<ImageAnalysisParamsDto> future = new CompletableFuture<>();
 
         GImageAnalysisParamsPacket packet = new GImageAnalysisParamsPacket(imageAnalysisParams);
         packet.setMonitoringDeviceId(BytesUtils.h2b(monitoringDeviceId, ""));
-        packet.setFrameType(requestSetFlag);
 
         netService.sendPacket(packet, ack -> ack instanceof GImageAnalysisTypeQueryPacket).subscribe(ack -> {
             future.complete(((GImageAnalysisParamsPacket)ack).getImageAnalysisParams());
@@ -204,18 +195,17 @@ public class I12020ServiceImpl implements I12020Service {
     }
 
     @Override
-    public AlarmLinkageConfig alarmLinkageConfig(String monitoringDeviceId, byte requestSetFlag, AlarmLinkageConfig alarmLinkageConfig) throws ExecutionException, InterruptedException, TimeoutException {
+    public AlarmLinkageConfigDto alarmLinkageConfig(String monitoringDeviceId,  AlarmLinkageConfigDto alarmLinkageConfig) throws ExecutionException, InterruptedException, TimeoutException {
 
-        CompletableFuture<AlarmLinkageConfig> future = new CompletableFuture<>();
+        CompletableFuture<AlarmLinkageConfigDto> future = new CompletableFuture<>();
 
         GAlarmLinkageConfigPacket packet = new GAlarmLinkageConfigPacket();
         BeanUtils.copyProperties(alarmLinkageConfig, packet);
         packet.setMonitoringDeviceId(BytesUtils.h2b(monitoringDeviceId, ""));
-        packet.setFrameType(requestSetFlag);
 
         netService.sendPacket(packet, ack -> ack instanceof GAlarmLinkageConfigPacket).subscribe(ack -> {
 
-            AlarmLinkageConfig linkageConfig = new AlarmLinkageConfig();
+            AlarmLinkageConfigDto linkageConfig = new AlarmLinkageConfigDto();
             BeanUtils.copyProperties(ack, linkageConfig);
             future.complete(linkageConfig);
         });
@@ -224,16 +214,14 @@ public class I12020ServiceImpl implements I12020Service {
     }
 
     @Override
-    public AlarmLinkageConfig alarmLinkageParamsQuery(String monitoringDeviceId, byte requestSetFlag, List<AlarmLinkageParamsQuery> alarmLinkageParamsQueries) throws ExecutionException, InterruptedException, TimeoutException {
-        CompletableFuture<AlarmLinkageConfig> future = new CompletableFuture<>();
+    public AlarmLinkageConfigDto alarmLinkageParamsQuery(String monitoringDeviceId, List<AlarmLinkageParamsQuery> alarmLinkageParamsQueries) throws ExecutionException, InterruptedException, TimeoutException {
+        CompletableFuture<AlarmLinkageConfigDto> future = new CompletableFuture<>();
 
         GAlarmLinkageParamsQueryPacket packet = new GAlarmLinkageParamsQueryPacket(alarmLinkageParamsQueries);
         packet.setMonitoringDeviceId(BytesUtils.h2b(monitoringDeviceId, ""));
-        packet.setFrameType(requestSetFlag);
-
         netService.sendPacket(packet, ack -> ack instanceof GAlarmLinkageParamsQueryPacket).subscribe(ack -> {
 
-            AlarmLinkageConfig linkageConfig = new AlarmLinkageConfig();
+            AlarmLinkageConfigDto linkageConfig = new AlarmLinkageConfigDto();
             BeanUtils.copyProperties(ack, linkageConfig);
             future.complete(linkageConfig);
         });

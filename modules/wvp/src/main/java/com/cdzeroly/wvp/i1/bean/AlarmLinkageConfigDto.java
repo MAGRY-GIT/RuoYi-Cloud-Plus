@@ -1,5 +1,8 @@
 package com.cdzeroly.wvp.i1.bean;
 
+import com.cdzeroly.wvp.i1.temp.domain.AlarmLinkageConfig;
+import com.cdzeroly.wvp.i1.temp.domain.vo.AlarmLinkageConfigVo;
+import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 
 import java.util.List;
@@ -11,7 +14,7 @@ import java.util.List;
  * @createDate : 2025/2/18 18:18
  */
 @Data
-public class AlarmLinkageConfig {
+public class AlarmLinkageConfigDto {
 
 
     // 通道号

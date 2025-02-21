@@ -77,7 +77,6 @@ public class ServerFrameDecoder extends BaseFrameDecoder {
         packet.ifPresent(packetData -> {
             packetData.setMonitoringDeviceId(monitoringDeviceId);
             packetData.setSerialNumber(serialNumber);
-            packetData.setFrameType(serialNumber);
         });
 
         return packet;
