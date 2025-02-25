@@ -1,8 +1,10 @@
 package com.cdzeroly.wvp.i1.task;
 
+import com.cdzeroly.resource.api.RemoteFileService;
 import com.cdzeroly.wvp.i1.NetService;
 import com.cdzeroly.wvp.i1.packet.*;
 import com.cdzeroly.wvp.utils.ImageUtil;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.awt.image.BufferedImage;
@@ -20,15 +22,15 @@ import java.util.stream.IntStream;
  * @createDate : 2025/2/17 12:14
  */
 @Component
+@AllArgsConstructor
 public class PhotoUploadHandler {
     // 根据需要调整线程池大小
     private final ExecutorService photoUploadExecutor = Executors.newFixedThreadPool(10);
 
     private final NetService netService;
+    private final RemoteFileService remoteFileService;
 
-    public PhotoUploadHandler(NetService netService) {
-        this.netService = netService;
-    }
+
 
 
     public void processPhotoUpload(GPhotoUploadRequestPacket gPhotoUploadRequestPacket) {
@@ -61,6 +63,7 @@ public class PhotoUploadHandler {
             BufferedImage bufferedImage = null;
             try {
                 bufferedImage = ImageUtil.convertBytesToImage(mergedBytes);
+                remoteFileService.upload("test", "test.jpg", "jpg", mergedBytes);
                 ImageUtil.saveImageToFile(bufferedImage, "D:\\test.jpg", "jpg");
             } catch (IOException e) {
                 throw new RuntimeException(e);

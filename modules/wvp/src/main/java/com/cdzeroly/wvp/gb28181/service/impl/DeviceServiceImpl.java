@@ -299,7 +299,7 @@ public class DeviceServiceImpl implements IDeviceService {
 
     @Override
     public boolean removeMobilePositionSubscribe(Device device, CommonCallback<Boolean> callback) {
-        if (device == null || device.getSubscribeCycleForCatalog() < 0) {
+        if (device == null || ObjUtil.isEmpty(device.getSubscribeCycleForCatalog())) {
             if (callback != null) {
                 callback.run(false);
             }

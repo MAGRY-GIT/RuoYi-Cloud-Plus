@@ -2,10 +2,12 @@ package com.cdzeroly.wvp.i1.temp.domain.bo;
 
 import com.cdzeroly.common.core.validate.AddGroup;
 import com.cdzeroly.common.core.validate.EditGroup;
+import com.cdzeroly.wvp.i1.bean.AlarmLinkage;
 import com.cdzeroly.wvp.i1.bean.TimeTable;
 import com.cdzeroly.wvp.i1.temp.domain.PhotoTimeTable;
 import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
 import io.github.linpeilie.annotations.AutoMapper;
+import io.github.linpeilie.annotations.AutoMapping;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import jakarta.validation.constraints.*;
@@ -45,9 +47,13 @@ public class PhotoTimeTableBo extends BaseEntity {
      * 时间表
      */
     @NotBlank(message = "时间表不能为空")
+    @AutoMapping(target = "timeTables", expression = "java(com.cdzeroly.wvp.i1.temp.domain.bo.PhotoTimeTableBo.mapToString(source.getTimeTables()))")
     private List<TimeTable> timeTables;
 
 
-
+    // 新增方法：将 List<AlarmLinkage> 转换为 String
+    public static String mapToString(List<TimeTable> configs) {
+        return com.cdzeroly.common.json.utils.JsonUtils.toJsonString(configs);
+    }
 
 }
