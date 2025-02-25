@@ -15,6 +15,9 @@ public interface RemoteFileService {
     /**
      * 上传文件
      *
+     * @param name 名称
+     * @param originalFilename 原始文件名
+     * @param contentType 文件类型
      * @param file 文件信息
      * @return 结果
      */
