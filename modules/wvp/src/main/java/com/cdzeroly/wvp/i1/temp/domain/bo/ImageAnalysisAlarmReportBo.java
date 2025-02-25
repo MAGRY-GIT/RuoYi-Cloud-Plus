@@ -1,12 +1,17 @@
 package com.cdzeroly.wvp.i1.temp.domain.bo;
 
+import com.cdzeroly.common.json.utils.JsonUtils;
+import com.cdzeroly.wvp.i1.bean.AlarmTarget;
 import com.cdzeroly.wvp.i1.temp.domain.ImageAnalysisAlarmReport;
 import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import jakarta.validation.constraints.*;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.cdzeroly.common.core.validate.AddGroup;
 import com.cdzeroly.common.core.validate.EditGroup;
@@ -45,7 +50,7 @@ public class ImageAnalysisAlarmReportBo extends BaseEntity {
     /**
      * 告警时间;
      */
-    @NotNull(message = "告警时间;不能为空", groups = { AddGroup.class, EditGroup.class })
+    @NotNull(message = "告警时间不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long alarmTime;
 
     /**
@@ -60,29 +65,11 @@ public class ImageAnalysisAlarmReportBo extends BaseEntity {
     @NotBlank(message = "告警目标信息不能为空", groups = { AddGroup.class, EditGroup.class })
     private String alarmTargetsInfo;
 
-    /**
-     * 创建人
-     */
-    @NotBlank(message = "创建人不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String createdBy;
+    private List<AlarmTarget> alarmTargetsInfoList;
 
-    /**
-     * 创建时间
-     */
-    @NotNull(message = "创建时间不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Date createdTime;
-
-    /**
-     * 更新人
-     */
-    @NotBlank(message = "更新人不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String updatedBy;
-
-    /**
-     * 更新时间
-     */
-    @NotNull(message = "更新时间不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Date updatedTime;
-
+    public   List<Integer> getAlarmTargetsInfoList() {
+        return JsonUtils.parseObject(alarmTargetsInfo, new TypeReference<>() {
+        });
+    }
 
 }

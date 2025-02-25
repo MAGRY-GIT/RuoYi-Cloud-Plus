@@ -59,29 +59,7 @@ public class ImageAcquisitionBo extends BaseEntity {
     @NotNull(message = "饱和度不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long saturation;
 
-    /**
-     * 创建人
-     */
-    @NotBlank(message = "创建人不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String createdBy;
 
-    /**
-     * 创建时间
-     */
-    @NotNull(message = "创建时间不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Date createdTime;
-
-    /**
-     * 更新人
-     */
-    @NotBlank(message = "更新人不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String updatedBy;
-
-    /**
-     * 更新时间
-     */
-    @NotNull(message = "更新时间不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Long updatedTime;
 
 
 }

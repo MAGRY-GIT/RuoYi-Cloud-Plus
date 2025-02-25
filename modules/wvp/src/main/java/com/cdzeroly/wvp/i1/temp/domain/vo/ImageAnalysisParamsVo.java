@@ -1,8 +1,11 @@
 package com.cdzeroly.wvp.i1.temp.domain.vo;
 
+import com.cdzeroly.common.json.utils.JsonUtils;
+import com.cdzeroly.wvp.i1.bean.ImageAnalysisParamsDto;
 import com.cdzeroly.wvp.i1.temp.domain.ImageAnalysisParams;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 
@@ -61,6 +64,22 @@ public class ImageAnalysisParamsVo implements Serializable {
     private String alarmRegion;
 
 
+    // 告警类型编码列表，告警类型编码参考
+    private ImageAnalysisParamsDto.AlarmTypeInfo alarmTypeInfoData;
 
+    // 告警区域信息
+    private ImageAnalysisParamsDto.AlarmRegion alarmRegionData;
+
+
+
+    public  ImageAnalysisParamsDto.AlarmTypeInfo getAlarmTypeInfoData() {
+        return JsonUtils.parseObject(alarmTypeInfo, new TypeReference<>() {
+        });
+    }
+
+    public  ImageAnalysisParamsDto.AlarmRegion getAlarmRegionData() {
+        return JsonUtils.parseObject(alarmRegion, new TypeReference<>() {
+        });
+    }
 
 }

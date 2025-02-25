@@ -68,7 +68,7 @@ public class PhotoTimeSettingsVo implements Serializable {
      * 时3
      */
     @ExcelProperty(value = "时3")
-    private Long Hour3;
+    private Long hour3;
 
     /**
      * 分3

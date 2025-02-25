@@ -64,7 +64,7 @@ public class PhotoTimeSettingsBo extends BaseEntity {
      * 时3
      */
     @NotNull(message = "时3不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Long Hour3;
+    private Long hour3;
 
     /**
      * 分3

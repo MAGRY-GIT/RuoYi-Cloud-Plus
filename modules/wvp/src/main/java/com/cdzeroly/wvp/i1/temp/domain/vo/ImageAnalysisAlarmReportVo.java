@@ -1,17 +1,22 @@
 package com.cdzeroly.wvp.i1.temp.domain.vo;
 
 import java.util.Date;
+
+import com.cdzeroly.common.json.utils.JsonUtils;
+import com.cdzeroly.wvp.i1.bean.AlarmTarget;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.cdzeroly.wvp.i1.temp.domain.ImageAnalysisAlarmReport;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.cdzeroly.common.excel.annotation.ExcelDictFormat;
 import com.cdzeroly.common.excel.convert.ExcelDictConvert;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 
 /**
@@ -66,5 +71,10 @@ public class ImageAnalysisAlarmReportVo implements Serializable {
 
 
 
+    private List<AlarmTarget> alarmTargetsInfoList;
 
+    public   List<Integer> getAlarmTargetsInfoList() {
+        return JsonUtils.parseObject(alarmTargetsInfo, new TypeReference<>() {
+        });
+    }
 }

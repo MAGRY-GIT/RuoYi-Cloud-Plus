@@ -97,11 +97,7 @@ public class CameraScheduleServiceImpl implements ICameraScheduleService {
             CameraScheduleDto cameraScheduleDto = new CameraScheduleDto();
             BeanUtils.copyProperties(bo.getMonitoringDeviceId(), cameraScheduleDto);
             GCameraSchedulePacket videoCaptureSettingsDto = i1Service.cameraTimerWorkScheduleSettings(bo.getMonitoringDeviceId(), (byte) 0x01,cameraScheduleDto);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
+        } catch (ExecutionException | TimeoutException |InterruptedException e) {
             throw new RuntimeException(e);
         }
         CameraSchedule add = MapstructUtils.convert(bo, CameraSchedule.class);

@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.i1.temp.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.cdzeroly.common.mybatis.core.domain.BaseDateEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.util.Date;
@@ -18,7 +19,7 @@ import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("image_acquisition")
-public class ImageAcquisition extends BaseEntity {
+public class ImageAcquisition extends BaseDateEntity {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -54,25 +55,7 @@ public class ImageAcquisition extends BaseEntity {
      */
     private Long saturation;
 
-    /**
-     * 创建人
-     */
-    private String createdBy;
 
-    /**
-     * 创建时间
-     */
-    private Date createdTime;
-
-    /**
-     * 更新人
-     */
-    private String updatedBy;
-
-    /**
-     * 更新时间
-     */
-    private Long updatedTime;
 
 
 }

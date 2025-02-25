@@ -1,9 +1,12 @@
 package com.cdzeroly.wvp.i1.temp.domain.bo;
 
+import com.cdzeroly.common.json.utils.JsonUtils;
+import com.cdzeroly.wvp.i1.bean.AlarmTarget;
 import com.cdzeroly.wvp.i1.bean.ImageAnalysisParamsDto;
 import com.cdzeroly.wvp.i1.bean.TimeTable;
 import com.cdzeroly.wvp.i1.temp.domain.ImageAnalysisParams;
 import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.github.linpeilie.annotations.AutoMapping;
 import lombok.Data;
@@ -52,22 +55,30 @@ public class ImageAnalysisParamsBo extends BaseEntity {
     @NotNull(message = "智能分析启用不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long analysisEnableFlag;
 
+
     // 告警类型编码列表，告警类型编码参考
-    @AutoMapping(target = "alarmTypeInfo", expression = "java(com.cdzeroly.wvp.i1.temp.domain.bo.ImageAnalysisParamsBo.map1ToString(source.getAlarmTypeInfo()))")
-    private ImageAnalysisParamsDto.AlarmTypeInfo alarmTypeInfo;
+    private String alarmTypeInfo;
 
     // 告警区域信息
-    @AutoMapping(target = "alarmRegion", expression = "java(com.cdzeroly.wvp.i1.temp.domain.bo.ImageAnalysisParamsBo.mapToString(source.getAlarmRegion()))")
-    private ImageAnalysisParamsDto.AlarmRegion alarmRegion;
-    public static String map1ToString(ImageAnalysisParamsDto.AlarmTypeInfo configs) {
-        return com.cdzeroly.common.json.utils.JsonUtils.toJsonString(configs);
+    private String alarmRegion;
+
+    // 告警类型编码列表，告警类型编码参考
+    private ImageAnalysisParamsDto.AlarmTypeInfo alarmTypeInfoData;
+
+    // 告警区域信息
+    private ImageAnalysisParamsDto.AlarmRegion alarmRegionData;
+
+
+
+    public  ImageAnalysisParamsDto.AlarmTypeInfo getAlarmTypeInfoData() {
+        return JsonUtils.parseObject(alarmTypeInfo, new TypeReference<>() {
+        });
     }
 
-
-    public static String mapToString(ImageAnalysisParamsDto.AlarmRegion configs) {
-        return com.cdzeroly.common.json.utils.JsonUtils.toJsonString(configs);
+    public  ImageAnalysisParamsDto.AlarmRegion getAlarmRegionData() {
+        return JsonUtils.parseObject(alarmRegion, new TypeReference<>() {
+        });
     }
-
 
 
 }

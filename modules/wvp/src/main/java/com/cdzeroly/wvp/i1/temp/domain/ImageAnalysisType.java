@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.i1.temp.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.cdzeroly.common.mybatis.core.domain.BaseDateEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.util.Date;
@@ -18,7 +19,7 @@ import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("image_analysis_type")
-public class ImageAnalysisType extends BaseEntity {
+public class ImageAnalysisType extends BaseDateEntity {
 
     @Serial
     private static final long serialVersionUID = 1L;

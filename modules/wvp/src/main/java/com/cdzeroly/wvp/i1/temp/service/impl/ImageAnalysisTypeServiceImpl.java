@@ -113,6 +113,9 @@ public class ImageAnalysisTypeServiceImpl implements IImageAnalysisTypeService {
     public Boolean updateByBo(ImageAnalysisTypeBo bo) {
         ImageAnalysisType update = MapstructUtils.convert(bo, ImageAnalysisType.class);
         validEntityBeforeSave(update);
+
+
+
         return baseMapper.updateById(update) > 0;
     }
 

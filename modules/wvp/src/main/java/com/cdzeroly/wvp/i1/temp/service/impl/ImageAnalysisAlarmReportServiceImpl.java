@@ -7,6 +7,7 @@ import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.cdzeroly.wvp.i1.service.I12020Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.cdzeroly.wvp.i1.temp.domain.bo.ImageAnalysisAlarmReportBo;
@@ -30,7 +31,6 @@ import java.util.Collection;
 public class ImageAnalysisAlarmReportServiceImpl implements IImageAnalysisAlarmReportService {
 
     private final ImageAnalysisAlarmReportMapper baseMapper;
-
     /**
      * 查询图像分析告警上报报
      *
@@ -105,6 +105,7 @@ public class ImageAnalysisAlarmReportServiceImpl implements IImageAnalysisAlarmR
     @Override
     public Boolean updateByBo(ImageAnalysisAlarmReportBo bo) {
         ImageAnalysisAlarmReport update = MapstructUtils.convert(bo, ImageAnalysisAlarmReport.class);
+
         validEntityBeforeSave(update);
         return baseMapper.updateById(update) > 0;
     }

@@ -1,12 +1,15 @@
 package com.cdzeroly.wvp.i1.temp.domain.vo;
 
 import java.util.Date;
+
+import com.cdzeroly.common.json.utils.JsonUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.cdzeroly.wvp.i1.temp.domain.ImageAnalysisType;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.cdzeroly.common.excel.annotation.ExcelDictFormat;
 import com.cdzeroly.common.excel.convert.ExcelDictConvert;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 
@@ -52,5 +55,11 @@ public class ImageAnalysisTypeVo implements Serializable {
 
 
 
+    private  ImageAnalysisType imageAnalysisTypeData;
+
+    public  ImageAnalysisType getImageAnalysisTypeData() {
+        return JsonUtils.parseObject(imageAnalysisType, new TypeReference<>() {
+        });
+    }
 
 }

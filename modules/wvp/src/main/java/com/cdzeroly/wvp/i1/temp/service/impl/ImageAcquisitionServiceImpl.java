@@ -96,18 +96,14 @@ public class ImageAcquisitionServiceImpl implements IImageAcquisitionService {
     @Override
     public Boolean insertByBo(ImageAcquisitionBo bo) {
 
-        try {
-            ImageAcquisitionDto acquisitionDto = new ImageAcquisitionDto();
-            BeanUtils.copyProperties(bo, acquisitionDto);
-            ImageAcquisitionDto imageAcquisitionDto = i12020Service.imageAcquisitionSettings(bo.getMonitoringDeviceId(), (byte) 0x01,acquisitionDto);
-
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            ImageAcquisitionDto acquisitionDto = new ImageAcquisitionDto();
+//            BeanUtils.copyProperties(bo, acquisitionDto);
+//            ImageAcquisitionDto imageAcquisitionDto = i12020Service.imageAcquisitionSettings(bo.getMonitoringDeviceId(), (byte) 0x01,acquisitionDto);
+//
+//        } catch (ExecutionException | InterruptedException | TimeoutException e ) {
+//            throw new RuntimeException(e);
+//        }
         ImageAcquisition add = MapstructUtils.convert(bo, ImageAcquisition.class);
         validEntityBeforeSave(add);
         boolean flag = baseMapper.insert(add) > 0;

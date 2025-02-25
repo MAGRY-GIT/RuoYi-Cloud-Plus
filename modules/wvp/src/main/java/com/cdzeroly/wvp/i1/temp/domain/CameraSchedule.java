@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.i1.temp.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.cdzeroly.common.mybatis.core.domain.BaseDateEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import java.util.Date;
@@ -18,7 +19,7 @@ import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("camera_schedule")
-public class CameraSchedule extends BaseEntity {
+public class CameraSchedule extends BaseDateEntity {
 
     @Serial
     private static final long serialVersionUID = 1L;

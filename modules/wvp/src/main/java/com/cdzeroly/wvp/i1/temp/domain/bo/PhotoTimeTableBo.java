@@ -2,10 +2,13 @@ package com.cdzeroly.wvp.i1.temp.domain.bo;
 
 import com.cdzeroly.common.core.validate.AddGroup;
 import com.cdzeroly.common.core.validate.EditGroup;
+import com.cdzeroly.common.json.utils.JsonUtils;
 import com.cdzeroly.wvp.i1.bean.AlarmLinkage;
 import com.cdzeroly.wvp.i1.bean.TimeTable;
+import com.cdzeroly.wvp.i1.temp.domain.ImageAnalysisType;
 import com.cdzeroly.wvp.i1.temp.domain.PhotoTimeTable;
 import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.github.linpeilie.annotations.AutoMapping;
 import lombok.Data;
@@ -43,17 +46,15 @@ public class PhotoTimeTableBo extends BaseEntity {
     @NotNull(message = "通道号不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long channelNo;
 
+    private String timeTables;
     /**
      * 时间表
      */
     @NotBlank(message = "时间表不能为空")
-    @AutoMapping(target = "timeTables", expression = "java(com.cdzeroly.wvp.i1.temp.domain.bo.PhotoTimeTableBo.mapToString(source.getTimeTables()))")
-    private List<TimeTable> timeTables;
+    private List<TimeTable> timeTableList;
 
-
-    // 新增方法：将 List<AlarmLinkage> 转换为 String
-    public static String mapToString(List<TimeTable> configs) {
-        return com.cdzeroly.common.json.utils.JsonUtils.toJsonString(configs);
+    public List<TimeTable> getTimeTableList() {
+        return JsonUtils.parseObject(timeTables, new TypeReference<>() {
+        });
     }
-
 }

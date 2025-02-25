@@ -1,7 +1,10 @@
 package com.cdzeroly.wvp.i1.temp.domain.bo;
 
+import com.cdzeroly.common.json.utils.JsonUtils;
+import com.cdzeroly.wvp.i1.bean.ImageAnalysisParamsDto;
 import com.cdzeroly.wvp.i1.temp.domain.ImageAnalysisType;
 import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.linpeilie.annotations.AutoMapper;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -47,29 +50,10 @@ public class ImageAnalysisTypeBo extends BaseEntity {
     @NotBlank(message = "（TODO）不能为空", groups = { AddGroup.class, EditGroup.class })
     private String imageAnalysisType;
 
-    /**
-     * 创建人
-     */
-    @NotBlank(message = "创建人不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String createdBy;
+    private  ImageAnalysisType imageAnalysisTypeData;
 
-    /**
-     * 创建时间
-     */
-    @NotNull(message = "创建时间不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Date createdTime;
-
-    /**
-     * 更新人
-     */
-    @NotBlank(message = "更新人不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String updatedBy;
-
-    /**
-     * 更新时间
-     */
-    @NotNull(message = "更新时间不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Date updatedTime;
-
-
+    public  ImageAnalysisType getImageAnalysisTypeData() {
+        return JsonUtils.parseObject(imageAnalysisType, new TypeReference<>() {
+        });
+    }
 }

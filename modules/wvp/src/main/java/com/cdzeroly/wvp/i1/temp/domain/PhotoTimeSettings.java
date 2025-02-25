@@ -1,6 +1,7 @@
 package com.cdzeroly.wvp.i1.temp.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.cdzeroly.common.mybatis.core.domain.BaseDateEntity;
 import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,7 +20,7 @@ import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("photo_time_settings")
-public class PhotoTimeSettings extends BaseEntity {
+public class PhotoTimeSettings extends BaseDateEntity {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -58,7 +59,7 @@ public class PhotoTimeSettings extends BaseEntity {
     /**
      * 时3
      */
-    private Long Hour3;
+    private Long hour3;
 
     /**
      * 分3
