@@ -1,17 +1,18 @@
 package com.cdzeroly.wvp.i1.temp.domain.bo;
 
+import com.cdzeroly.common.json.utils.JsonUtils;
 import com.cdzeroly.wvp.i1.bean.AlarmLinkage;
 import com.cdzeroly.wvp.i1.temp.domain.AlarmLinkageConfig;
 import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.linpeilie.annotations.AutoMapper;
 import io.github.linpeilie.annotations.AutoMapping;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import jakarta.validation.constraints.*;
-import java.util.Date;
+
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.cdzeroly.common.core.validate.AddGroup;
 import com.cdzeroly.common.core.validate.EditGroup;
 
@@ -47,15 +48,22 @@ public class AlarmLinkageConfigBo extends BaseEntity {
     private Long presettingNo;
 
     // 联动配置列表
+
     /**
      * 联动配置
      */
-    @AutoMapping(target = "linkageConfigs", expression = "java(com.cdzeroly.wvp.i1.temp.domain.bo.AlarmLinkageConfigBo.mapLinkageConfigsToString(source.getLinkageConfigs()))")
-    private List<AlarmLinkage> linkageConfigs;
+    private String linkageConfigs;
+    /**
+     * 联动配置
+     */
+    private List<AlarmLinkage> alarmLinkageList;
+
+
 
     // 新增方法：将 List<AlarmLinkage> 转换为 String
-    public static String mapLinkageConfigsToString(List<AlarmLinkage> configs) {
-        return com.cdzeroly.common.json.utils.JsonUtils.toJsonString(configs);
+    public   List<AlarmLinkage> getAlarmLinkageList() {
+        return JsonUtils.parseObject(linkageConfigs, new TypeReference<>() {
+        });
     }
 
 }

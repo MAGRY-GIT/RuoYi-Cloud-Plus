@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.i1.temp.service.impl;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.common.core.utils.StringUtils;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
@@ -97,15 +98,13 @@ public class AlarmLinkageConfigServiceImpl implements IAlarmLinkageConfigService
         AlarmLinkageConfig add = MapstructUtils.convert(bo, AlarmLinkageConfig.class);
         AlarmLinkageConfigDto alarmLinkageConfigDto = new AlarmLinkageConfigDto();
         BeanUtils.copyProperties(bo, alarmLinkageConfigDto);
-        try {
-            i12020Service.alarmLinkageConfig(bo.getMonitoringDeviceId(),alarmLinkageConfigDto);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
-        }
+        alarmLinkageConfigDto.setLinkageConfigs(bo.getAlarmLinkageList());
+        //TODO 调试
+//        try {
+//            i12020Service.alarmLinkageConfig(bo.getMonitoringDeviceId(),alarmLinkageConfigDto);
+//        } catch (ExecutionException | InterruptedException |TimeoutException e) {
+//            throw new ServiceException("设备无法连接,或超时");
+//        }
 
 
         validEntityBeforeSave(add);
