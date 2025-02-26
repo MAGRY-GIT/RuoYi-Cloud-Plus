@@ -51,20 +51,7 @@ public class CameraScheduleVo implements Serializable {
     private String endTimes;
 
 
-    // 工作起始时间数组
-    private List<Integer> startTimeList;
-    // 工作结束时间数组
-    private List<Integer> endTimeList;
 
-    public   List<Integer> getStartTimeList() {
-        return JsonUtils.parseObject(startTimes, new TypeReference<>() {
-        });
-    }
-
-    public   List<Integer> getEndTimeList() {
-        return JsonUtils.parseObject(endTimes, new TypeReference<>() {
-        });
-    }
 
 
 }

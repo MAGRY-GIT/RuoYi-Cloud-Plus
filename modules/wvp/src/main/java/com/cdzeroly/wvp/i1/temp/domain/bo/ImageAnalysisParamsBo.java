@@ -2,6 +2,7 @@ package com.cdzeroly.wvp.i1.temp.domain.bo;
 
 import com.cdzeroly.common.json.utils.JsonUtils;
 import com.cdzeroly.wvp.i1.bean.AlarmTarget;
+import com.cdzeroly.wvp.i1.bean.IdentifyType;
 import com.cdzeroly.wvp.i1.bean.ImageAnalysisParamsDto;
 import com.cdzeroly.wvp.i1.bean.TimeTable;
 import com.cdzeroly.wvp.i1.temp.domain.ImageAnalysisParams;
@@ -56,29 +57,34 @@ public class ImageAnalysisParamsBo extends BaseEntity {
     private Long analysisEnableFlag;
 
 
-    // 告警类型编码列表，告警类型编码参考
+    // 告警类型
     private String alarmTypeInfo;
 
     // 告警区域信息
     private String alarmRegion;
 
-    // 告警类型编码列表，告警类型编码参考
-    private ImageAnalysisParamsDto.AlarmTypeInfo alarmTypeInfoData;
+    // 告警类型编码列表
+    private List<IdentifyType> alarmTypes;
 
-    // 告警区域信息
-    private ImageAnalysisParamsDto.AlarmRegion alarmRegionData;
+    // 告警阈值列表，取值范围[1-100]
+    private List<Byte> alarmThresholds;
 
 
+    private List<ImageAnalysisParamsDto.AlarmRegion.RegionalInfo> regionalInfos;
 
-    public  ImageAnalysisParamsDto.AlarmTypeInfo getAlarmTypeInfoData() {
-        return JsonUtils.parseObject(alarmTypeInfo, new TypeReference<>() {
-        });
+
+    public String getAlarmTypeInfo() {
+        ImageAnalysisParamsDto.AlarmTypeInfo alarmTypeInfo1 = new ImageAnalysisParamsDto.AlarmTypeInfo(alarmThresholds, alarmTypes);
+        return JsonUtils.toJsonString(alarmTypeInfo1);
     }
 
-    public  ImageAnalysisParamsDto.AlarmRegion getAlarmRegionData() {
-        return JsonUtils.parseObject(alarmRegion, new TypeReference<>() {
-        });
+    public String getAlarmRegion() {
+
+        ImageAnalysisParamsDto.AlarmRegion alarmRegion1 = new ImageAnalysisParamsDto.AlarmRegion(regionalInfos);
+        return JsonUtils.toJsonString(alarmRegion1);
     }
+
+
 
 
 }

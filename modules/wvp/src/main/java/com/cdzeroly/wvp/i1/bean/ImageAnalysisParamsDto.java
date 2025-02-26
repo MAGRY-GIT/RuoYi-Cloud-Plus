@@ -72,6 +72,11 @@ public class ImageAnalysisParamsDto {
         // 告警阈值列表，取值范围[1-100]
         private List<Byte> alarmThresholds;
 
+        public AlarmTypeInfo(List<Byte> alarmThresholds, List<IdentifyType> alarmTypes) {
+            this.alarmThresholds = alarmThresholds;
+            this.alarmTypes = alarmTypes;
+        }
+
         public AlarmTypeInfo(ByteBuf data, byte size) {
             this.alarmTypes = new ArrayList<>(size);
             this.alarmThresholds = new ArrayList<>(size);
@@ -109,6 +114,10 @@ public class ImageAnalysisParamsDto {
     public static class AlarmRegion {
 
         private List<RegionalInfo> regionalInfos;
+
+        public AlarmRegion(List<RegionalInfo> regionalInfos) {
+            this.regionalInfos = regionalInfos;
+        }
 
         public AlarmRegion(ByteBuf data, byte size) {
             this.regionalInfos = new ArrayList<>(size);

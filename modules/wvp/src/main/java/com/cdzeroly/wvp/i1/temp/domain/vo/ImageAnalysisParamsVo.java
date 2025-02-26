@@ -64,22 +64,5 @@ public class ImageAnalysisParamsVo implements Serializable {
     private String alarmRegion;
 
 
-    // 告警类型编码列表，告警类型编码参考
-    private ImageAnalysisParamsDto.AlarmTypeInfo alarmTypeInfoData;
-
-    // 告警区域信息
-    private ImageAnalysisParamsDto.AlarmRegion alarmRegionData;
-
-
-
-    public  ImageAnalysisParamsDto.AlarmTypeInfo getAlarmTypeInfoData() {
-        return JsonUtils.parseObject(alarmTypeInfo, new TypeReference<>() {
-        });
-    }
-
-    public  ImageAnalysisParamsDto.AlarmRegion getAlarmRegionData() {
-        return JsonUtils.parseObject(alarmRegion, new TypeReference<>() {
-        });
-    }
 
 }

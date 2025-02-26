@@ -163,11 +163,7 @@ public class ImageAnalysisTypeServiceImpl implements IImageAnalysisTypeService {
             BeanUtils.copyProperties(imageAnalysisParamsDto, imageAnalysisTypeVo);
             imageAnalysisTypeVo.setImageAnalysisType(imageAnalysisParamsDto.imageAnalysisTypeToJson());
             return  imageAnalysisTypeVo;
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
+                    } catch (ExecutionException | TimeoutException |InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

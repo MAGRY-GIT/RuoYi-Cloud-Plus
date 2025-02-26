@@ -44,7 +44,7 @@ public class ImageAnalysisParamsServiceImpl implements IImageAnalysisParamsServi
      * @return 图像分析参数设置报
      */
     @Override
-    public ImageAnalysisParamsVo queryById(Long id){
+    public ImageAnalysisParamsVo queryById(Long id) {
         return baseMapper.selectVoById(id);
     }
 
@@ -93,17 +93,13 @@ public class ImageAnalysisParamsServiceImpl implements IImageAnalysisParamsServi
     public Boolean insertByBo(ImageAnalysisParamsBo bo) {
         ImageAnalysisParams add = MapstructUtils.convert(bo, ImageAnalysisParams.class);
         validEntityBeforeSave(add);
-        ImageAnalysisParamsDto imageAnalysisParamsDto = new ImageAnalysisParamsDto();
-        BeanUtils.copyProperties(bo, imageAnalysisParamsDto);
-        try {
-            i12020Service.imageAnalysisParamsSettings(bo.getMonitoringDeviceId(),imageAnalysisParamsDto);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
-        }
+//        ImageAnalysisParamsDto imageAnalysisParamsDto = new ImageAnalysisParamsDto();
+//        BeanUtils.copyProperties(bo, imageAnalysisParamsDto);
+//        try {
+//            i12020Service.imageAnalysisParamsSettings(bo.getMonitoringDeviceId(), imageAnalysisParamsDto);
+//        } catch (ExecutionException | TimeoutException | InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
 
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {
@@ -128,7 +124,7 @@ public class ImageAnalysisParamsServiceImpl implements IImageAnalysisParamsServi
     /**
      * 保存前的数据校验
      */
-    private void validEntityBeforeSave(ImageAnalysisParams entity){
+    private void validEntityBeforeSave(ImageAnalysisParams entity) {
         //TODO 做一些数据校验,如唯一约束
     }
 
@@ -141,7 +137,7 @@ public class ImageAnalysisParamsServiceImpl implements IImageAnalysisParamsServi
      */
     @Override
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
-        if(isValid){
+        if (isValid) {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
         return baseMapper.deleteByIds(ids) > 0;
@@ -157,7 +153,7 @@ public class ImageAnalysisParamsServiceImpl implements IImageAnalysisParamsServi
             alarmLinkageConfigVo.setAlarmRegion(imageAnalysisParamsDto.alarmRegionToJson());
 
 
-            return  alarmLinkageConfigVo;
+            return alarmLinkageConfigVo;
         } catch (ExecutionException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException e) {

@@ -93,14 +93,16 @@ public class CameraScheduleServiceImpl implements ICameraScheduleService {
      */
     @Override
     public Boolean insertByBo(CameraScheduleBo bo) {
-        try {
-            CameraScheduleDto cameraScheduleDto = new CameraScheduleDto();
-            BeanUtils.copyProperties(bo.getMonitoringDeviceId(), cameraScheduleDto);
-            GCameraSchedulePacket videoCaptureSettingsDto = i1Service.cameraTimerWorkScheduleSettings(bo.getMonitoringDeviceId(), (byte) 0x01,cameraScheduleDto);
-        } catch (ExecutionException | TimeoutException |InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            CameraScheduleDto cameraScheduleDto = new CameraScheduleDto();
+//            BeanUtils.copyProperties(bo.getMonitoringDeviceId(), cameraScheduleDto);
+//            GCameraSchedulePacket videoCaptureSettingsDto = i1Service.cameraTimerWorkScheduleSettings(bo.getMonitoringDeviceId(), (byte) 0x01,cameraScheduleDto);
+//        } catch (ExecutionException | TimeoutException |InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
         CameraSchedule add = MapstructUtils.convert(bo, CameraSchedule.class);
+        add.setStartTimes(bo.getStartTimes());
+        add.setEndTimes(bo.getEndTimes());
         validEntityBeforeSave(add);
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {
