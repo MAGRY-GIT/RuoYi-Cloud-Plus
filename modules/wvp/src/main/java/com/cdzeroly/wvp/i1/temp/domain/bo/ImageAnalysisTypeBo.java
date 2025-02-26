@@ -10,6 +10,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import jakarta.validation.constraints.*;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.cdzeroly.common.core.validate.AddGroup;
 import com.cdzeroly.common.core.validate.EditGroup;
@@ -42,18 +44,7 @@ public class ImageAnalysisTypeBo extends BaseEntity {
      * 数据源
      */
     @NotBlank(message = "数据源不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String dataSources;
+    private List<Byte> dataSources;
 
-    /**
-     * （TODO）
-     */
-    @NotBlank(message = "（TODO）不能为空", groups = { AddGroup.class, EditGroup.class })
-    private String imageAnalysisType;
 
-    private  ImageAnalysisType imageAnalysisTypeData;
-
-    public  ImageAnalysisType getImageAnalysisTypeData() {
-        return JsonUtils.parseObject(imageAnalysisType, new TypeReference<>() {
-        });
-    }
 }

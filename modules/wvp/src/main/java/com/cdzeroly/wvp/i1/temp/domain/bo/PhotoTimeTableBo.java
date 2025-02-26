@@ -3,23 +3,17 @@ package com.cdzeroly.wvp.i1.temp.domain.bo;
 import com.cdzeroly.common.core.validate.AddGroup;
 import com.cdzeroly.common.core.validate.EditGroup;
 import com.cdzeroly.common.json.utils.JsonUtils;
-import com.cdzeroly.wvp.i1.bean.AlarmLinkage;
 import com.cdzeroly.wvp.i1.bean.TimeTable;
-import com.cdzeroly.wvp.i1.temp.domain.ImageAnalysisType;
 import com.cdzeroly.wvp.i1.temp.domain.PhotoTimeTable;
 import com.cdzeroly.common.mybatis.core.domain.BaseEntity;
 import com.fasterxml.jackson.core.type.TypeReference;
 import io.github.linpeilie.annotations.AutoMapper;
-import io.github.linpeilie.annotations.AutoMapping;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import jakarta.validation.constraints.*;
-import java.util.Date;
+
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.cdzeroly.common.core.validate.AddGroup;
-import com.cdzeroly.common.core.validate.EditGroup;
 /**
  * 拍照时间设置业务对象 photo_time_table
  *

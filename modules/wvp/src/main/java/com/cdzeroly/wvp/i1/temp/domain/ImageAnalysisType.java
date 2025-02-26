@@ -35,13 +35,10 @@ public class ImageAnalysisType extends BaseDateEntity {
      */
     private Long channelNo;
 
-    /**
-     * 数据源
-     */
-    private String dataSources;
+
 
     /**
-     * （TODO）
+     *  通道类型
      */
     private String imageAnalysisType;
 

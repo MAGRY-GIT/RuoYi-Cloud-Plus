@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.i1.temp.service.impl;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.common.core.utils.StringUtils;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
@@ -114,12 +115,8 @@ public class PhotoTimeTableServiceImpl implements IPhotoTimeTableService {
             BeanUtils.copyProperties(bo, timeTableDto);
             PhotoTimeTableDto videoCaptureSettingsDto = i1Service.photoScheduleSettings(bo.getMonitoringDeviceId(), (byte) 0x01,timeTableDto);
 
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
+        } catch (ExecutionException | InterruptedException |TimeoutException e) {
+            throw new ServiceException("超时");
         }
         PhotoTimeTable update = MapstructUtils.convert(bo, PhotoTimeTable.class);
         validEntityBeforeSave(update);

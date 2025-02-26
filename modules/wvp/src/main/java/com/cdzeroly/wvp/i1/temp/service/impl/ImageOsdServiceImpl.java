@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.i1.temp.service.impl;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.common.core.utils.StringUtils;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
@@ -94,17 +95,13 @@ public class ImageOsdServiceImpl implements IImageOsdService {
     public Boolean insertByBo(ImageOsdBo bo) {
 
 
-        try {
-            ImageOSD osd = new ImageOSD();
-            BeanUtils.copyProperties(bo, osd);
-            ImageOSD imageOSD = i12020Service.imageOsdSettings(bo.getMonitoringDeviceId(), (byte) 0x01,osd);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            ImageOSD osd = new ImageOSD();
+//            BeanUtils.copyProperties(bo, osd);
+//            ImageOSD imageOSD = i12020Service.imageOsdSettings(bo.getMonitoringDeviceId(), (byte) 0x01,osd);
+//        } catch (ExecutionException | InterruptedException |TimeoutException e) {
+//          throw new ServiceException("超时");
+//        }
 
 
         ImageOsd add = MapstructUtils.convert(bo, ImageOsd.class);

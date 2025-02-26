@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.i1.temp.service.impl;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.common.core.utils.StringUtils;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
@@ -81,8 +82,6 @@ public class ImageAnalysisTypeServiceImpl implements IImageAnalysisTypeService {
         Map<String, Object> params = bo.getParams();
         LambdaQueryWrapper<ImageAnalysisType> lqw = Wrappers.lambdaQuery();
         lqw.eq(bo.getChannelNo() != null, ImageAnalysisType::getChannelNo, bo.getChannelNo());
-        lqw.eq(StringUtils.isNotBlank(bo.getDataSources()), ImageAnalysisType::getDataSources, bo.getDataSources());
-        lqw.eq(StringUtils.isNotBlank(bo.getImageAnalysisType()), ImageAnalysisType::getImageAnalysisType, bo.getImageAnalysisType());
         return lqw;
     }
 
@@ -95,6 +94,16 @@ public class ImageAnalysisTypeServiceImpl implements IImageAnalysisTypeService {
     @Override
     public Boolean insertByBo(ImageAnalysisTypeBo bo) {
         ImageAnalysisType add = MapstructUtils.convert(bo, ImageAnalysisType.class);
+        byte[] byteArray = new byte[ bo.getDataSources().size()];
+
+        for (int i = 0; i <  bo.getDataSources().size(); i++) {
+            byteArray[i] = bo.getDataSources().get(i);
+        }
+//        try {
+//            i12020Service.imageAnalysisTypeQuery(bo.getMonitoringDeviceId(), (byte) bo.getDataSources().size(), byteArray);
+//        } catch (ExecutionException | InterruptedException |TimeoutException e) {
+//          throw new  ServiceException("超时");
+//        }
         validEntityBeforeSave(add);
         boolean flag = baseMapper.insert(add) > 0;
         if (flag) {

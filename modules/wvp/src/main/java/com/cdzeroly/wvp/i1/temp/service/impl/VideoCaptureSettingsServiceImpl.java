@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.i1.temp.service.impl;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.common.core.utils.StringUtils;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
@@ -93,17 +94,13 @@ public class VideoCaptureSettingsServiceImpl implements IVideoCaptureSettingsSer
     public Boolean insertByBo(VideoCaptureSettingsBo bo) {
 
 
-        try {
-            VideoCaptureSettingsDto captureSettingsDto = new VideoCaptureSettingsDto();
-            BeanUtils.copyProperties(bo, captureSettingsDto);
-            VideoCaptureSettingsDto videoCaptureSettingsDto = i12020Service.videoCaptureSettings(bo.getMonitoringDeviceId(), (byte) 0x00,captureSettingsDto);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            VideoCaptureSettingsDto captureSettingsDto = new VideoCaptureSettingsDto();
+//            BeanUtils.copyProperties(bo, captureSettingsDto);
+//            VideoCaptureSettingsDto videoCaptureSettingsDto = i12020Service.videoCaptureSettings(bo.getMonitoringDeviceId(), (byte) 0x00,captureSettingsDto);
+//        } catch (ExecutionException | InterruptedException |TimeoutException e) {
+//            throw new ServiceException("超时");
+//        }
         VideoCaptureSettings add = MapstructUtils.convert(bo, VideoCaptureSettings.class);
         validEntityBeforeSave(add);
         boolean flag = baseMapper.insert(add) > 0;

@@ -1,5 +1,6 @@
 package com.cdzeroly.wvp.i1.temp.service.impl;
 
+import com.cdzeroly.common.core.exception.ServiceException;
 import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
@@ -112,17 +113,13 @@ public class PhotoTimeSettingsServiceImpl implements IPhotoTimeSettingsService {
     @Override
     public Boolean updateByBo(PhotoTimeSettingsBo bo) {
 
-        try {
-            PhotoTimeTableV2020 photoTimeTableV2020 = new PhotoTimeTableV2020();
-            BeanUtils.copyProperties(bo, photoTimeTableV2020);
-            PhotoTimeTableV2020 timeTableV2020 = i12020Service.photoScheduleSettings(bo.getMonitoringDeviceId(), (byte) 0x00,photoTimeTableV2020);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (TimeoutException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            PhotoTimeTableV2020 photoTimeTableV2020 = new PhotoTimeTableV2020();
+//            BeanUtils.copyProperties(bo, photoTimeTableV2020);
+//            PhotoTimeTableV2020 timeTableV2020 = i12020Service.photoScheduleSettings(bo.getMonitoringDeviceId(), (byte) 0x00,photoTimeTableV2020);
+//        } catch (ExecutionException | InterruptedException |TimeoutException e) {
+//            throw new ServiceException("超时");
+//        }
         PhotoTimeSettings update = MapstructUtils.convert(bo, PhotoTimeSettings.class);
         validEntityBeforeSave(update);
         return baseMapper.updateById(update) > 0;
