@@ -8,7 +8,7 @@ import com.cdzeroly.common.mybatis.core.mapper.BaseMapperPlus;
  * 中国地面气象站点Mapper接口
  *
  * @author MGARY
- * @date 2025-01-10
+ * @date 2025-03-07
  */
 public interface GroundStationMapper extends BaseMapperPlus<GroundStation, GroundStationVo> {
 

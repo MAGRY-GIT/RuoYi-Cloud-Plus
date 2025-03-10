@@ -2,14 +2,10 @@ package com.cdzeroly.weather.controller;
 
 import java.util.List;
 
-import cn.hutool.core.bean.BeanUtil;
-import com.cdzeroly.common.excel.core.ExcelResult;
-import com.cdzeroly.weather.domain.GroundStation;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.*;
 import cn.dev33.satoken.annotation.SaCheckPermission;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import com.cdzeroly.common.idempotent.annotation.RepeatSubmit;
@@ -25,14 +21,13 @@ import com.cdzeroly.weather.domain.vo.GroundStationVo;
 import com.cdzeroly.weather.domain.bo.GroundStationBo;
 import com.cdzeroly.weather.service.IGroundStationService;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 中国地面气象站点
  * 前端访问路由地址为:/weather/groundStation
  *
  * @author MGARY
- * @date 2025-01-10
+ * @date 2025-03-07
  */
 @Validated
 @RequiredArgsConstructor
@@ -94,21 +89,6 @@ public class GroundStationController extends BaseController {
     @PutMapping()
     public R<Void> edit(@Validated(EditGroup.class) @RequestBody GroundStationBo bo) {
         return toAjax(groundStationService.updateByBo(bo));
-    }
-
-    /**
-     * 导入中国地面气象站点
-     *
-     * @param file 导入文件
-     */
-    @Log(title = "中国地面气象站点单表", businessType = BusinessType.IMPORT)
-    @PostMapping(value = "/importData", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public R<Void> importData(@RequestPart("file") MultipartFile file) throws Exception {
-        ExcelResult<GroundStationVo> excelResult = ExcelUtil.importExcel(file.getInputStream(), GroundStationVo.class, true);
-        List<GroundStationVo> volist = excelResult.getList();
-        List<GroundStation> list = BeanUtil.copyToList(volist, GroundStation.class);
-        groundStationService.saveBatch(list);
-        return R.ok(excelResult.getAnalysis());
     }
 
     /**

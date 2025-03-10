@@ -14,7 +14,7 @@ import jakarta.validation.constraints.*;
  * 中国地面气象站点业务对象 w_ground_station
  *
  * @author MGARY
- * @date 2025-01-10
+ * @date 2025-03-07
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -49,13 +49,13 @@ public class GroundStationBo extends BaseEntity {
      * 经度
      */
     @NotNull(message = "经度不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Double longitude;
+    private Long longitude;
 
     /**
      * 纬度
      */
     @NotNull(message = "纬度不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Double latitude;
+    private Long latitude;
 
     /**
      * 地理坐标
@@ -73,13 +73,13 @@ public class GroundStationBo extends BaseEntity {
      * 观测场拔海高度（米）
      */
     @NotNull(message = "观测场拔海高度（米）不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Float obsSeaLevel;
+    private Long obsSeaLevel;
 
     /**
      * 气压传感器拔海高度（米）
      */
     @NotNull(message = "气压传感器拔海高度（米）不能为空", groups = { AddGroup.class, EditGroup.class })
-    private Float apSensorSeaLevel;
+    private Long apSensorSeaLevel;
 
 
 }

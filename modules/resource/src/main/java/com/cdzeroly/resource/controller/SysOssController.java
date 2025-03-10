@@ -81,6 +81,26 @@ public class SysOssController extends BaseController {
     }
 
     /**
+     * 上传OSS对象存储
+     *
+     * @param file 文件
+     */
+    @SaCheckPermission("system:oss:upload")
+    @Log(title = "OSS对象存储", businessType = BusinessType.INSERT)
+    @PostMapping(value = "/upload/analysis", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public R<SysOssUploadVo> uploadAnalysis(@RequestPart("file") MultipartFile file) {
+        if (ObjectUtil.isNull(file)) {
+            return R.fail("上传文件不能为空");
+        }
+        SysOssVo oss = iSysOssService.uploadAnalysis(file);
+        SysOssUploadVo uploadVo = new SysOssUploadVo();
+        uploadVo.setUrl(oss.getUrl());
+        uploadVo.setFileName(oss.getOriginalName());
+        uploadVo.setOssId(oss.getOssId().toString());
+        return R.ok(uploadVo);
+    }
+
+    /**
      * 下载OSS对象存储
      *
      * @param ossId OSS对象ID

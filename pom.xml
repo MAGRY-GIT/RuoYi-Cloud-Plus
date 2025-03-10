@@ -66,6 +66,7 @@
         <!-- mq配置 -->
         <rocketmq.version>2.3.0</rocketmq.version>
         <ffmpeg.version>0.6.2</ffmpeg.version>
+        <meteothink.version>3.9.11</meteothink.version>
 
         <classgraph.version>4.8.179</classgraph.version>
 
@@ -116,7 +117,11 @@
                 <artifactId>jain-sip-ri</artifactId>
                 <version>${sip.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.meteothink</groupId>
+                <artifactId>meteoinfo-geo</artifactId>
+                <version>${meteothink.version}</version>
+            </dependency>
             <!-- 地图坐标转换 -->
             <dependency>
                 <groupId>com.vividsolutions</groupId>

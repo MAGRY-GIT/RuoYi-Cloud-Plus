@@ -13,7 +13,7 @@ import java.util.List;
  * 中国地面气象站点Service接口
  *
  * @author MGARY
- * @date 2025-01-10
+ * @date 2025-03-07
  */
 public interface IGroundStationService {
 
@@ -66,6 +66,4 @@ public interface IGroundStationService {
      * @return 是否删除成功
      */
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
-
-    void saveBatch(List<GroundStation> list);
 }

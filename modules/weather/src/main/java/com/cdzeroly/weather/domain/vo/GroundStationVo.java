@@ -17,7 +17,7 @@ import java.io.Serializable;
  * 中国地面气象站点视图对象 w_ground_station
  *
  * @author MGARY
- * @date 2025-01-10
+ * @date 2025-03-07
  */
 @Data
 @ExcelIgnoreUnannotated
@@ -55,13 +55,13 @@ public class GroundStationVo implements Serializable {
      * 经度
      */
     @ExcelProperty(value = "经度")
-    private Double longitude;
+    private Long longitude;
 
     /**
      * 纬度
      */
     @ExcelProperty(value = "纬度")
-    private Double latitude;
+    private Long latitude;
 
     /**
      * 地理坐标
@@ -78,14 +78,16 @@ public class GroundStationVo implements Serializable {
     /**
      * 观测场拔海高度（米）
      */
-    @ExcelProperty(value = "观测场拔海高度")
-    private Float obsSeaLevel;
-
+    @ExcelProperty(value = "观测场拔海高度", converter = ExcelDictConvert.class)
+    @ExcelDictFormat(readConverterExp = "米=")
+    private Long obsSeaLevel;
 
     /**
      * 气压传感器拔海高度（米）
      */
-    @ExcelProperty(value = "气压传感器拔海高度")
-    private Float apSensorSeaLevel;
+    @ExcelProperty(value = "气压传感器拔海高度", converter = ExcelDictConvert.class)
+    @ExcelDictFormat(readConverterExp = "米=")
+    private Long apSensorSeaLevel;
+
 
 }

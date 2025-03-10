@@ -23,6 +23,10 @@
         </dependency>
 
         <dependency>
+            <groupId>org.meteothink</groupId>
+            <artifactId>meteoinfo-geo</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.cdzeroly</groupId>
             <artifactId>common-sentinel</artifactId>
         </dependency>

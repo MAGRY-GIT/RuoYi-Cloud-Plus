@@ -70,4 +70,9 @@ public interface CacheNames {
      */
     String ONLINE_TOKEN = "online_tokens";
 
+
+    /**
+     * 气象站点
+     */
+    String WEATHER_STATIONS = "weather_stations";
 }

@@ -2,10 +2,12 @@ package com.cdzeroly.resource.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cdzeroly.resource.analysis.TempAnalysis;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import com.cdzeroly.common.core.constant.CacheNames;
@@ -32,6 +34,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -120,8 +125,7 @@ public class SysOssServiceImpl implements ISysOssService {
         lqw.like(StringUtils.isNotBlank(bo.getOriginalName()), SysOss::getOriginalName, bo.getOriginalName());
         lqw.eq(StringUtils.isNotBlank(bo.getFileSuffix()), SysOss::getFileSuffix, bo.getFileSuffix());
         lqw.eq(StringUtils.isNotBlank(bo.getUrl()), SysOss::getUrl, bo.getUrl());
-        lqw.between(params.get("beginCreateTime") != null && params.get("endCreateTime") != null,
-            SysOss::getCreateTime, params.get("beginCreateTime"), params.get("endCreateTime"));
+        lqw.between(params.get("beginCreateTime") != null && params.get("endCreateTime") != null, SysOss::getCreateTime, params.get("beginCreateTime"), params.get("endCreateTime"));
         lqw.eq(ObjectUtil.isNotNull(bo.getCreateBy()), SysOss::getCreateBy, bo.getCreateBy());
         lqw.eq(StringUtils.isNotBlank(bo.getService()), SysOss::getService, bo.getService());
         lqw.orderByAsc(SysOss::getOssId);
@@ -245,19 +249,51 @@ public class SysOssServiceImpl implements ISysOssService {
         return baseMapper.deleteByIds(ids) > 0;
     }
 
-    /**
-     * 桶类型为 private 的URL 修改为临时URL时长为120s
-     *
-     * @param oss OSS对象
-     * @return oss 匹配Url的OSS对象
-     */
-    private SysOssVo matchingUrl(SysOssVo oss) {
-        OssClient storage = OssFactory.instance(oss.getService());
-        // 仅修改桶类型为 private 的URL，临时URL时长为120s
-        if (AccessPolicyType.PRIVATE == storage.getAccessPolicy()) {
-            oss.setUrl(storage.getPrivateUrl(oss.getFileName(), 120));
-        }
-        return oss;
-    }
+    @Override
+    public SysOssVo uploadAnalysis(MultipartFile file) {
 
-}
+        // 获取文件输入流
+        InputStream inputStream = null;
+        try {
+            inputStream = file.getInputStream();
+
+            // 创建临时文件
+            File tempFile = File.createTempFile("temp", ".nc");
+            tempFile.deleteOnExit(); // 确保临时文件在程序退出时被删除
+
+            // 将输入流写入临时文件
+            Files.copy(inputStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            TempAnalysis.alysis(tempFile.getAbsolutePath());
+
+            String originalfileName = file.getOriginalFilename();
+            String suffix = StringUtils.substring(originalfileName, originalfileName.lastIndexOf("."), originalfileName.length());
+            OssClient storage = OssFactory.instance();
+            UploadResult uploadResult;
+            try {
+                //上传
+                uploadResult = storage.uploadSuffix(file.getBytes(), suffix, file.getContentType());
+            } catch (IOException e) {
+                throw new ServiceException(e.getMessage());
+            }
+            // 保存文件信息
+            return buildResultEntity(originalfileName, suffix, storage.getConfigKey(), uploadResult);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+        /**
+         * 桶类型为 private 的URL 修改为临时URL时长为120s
+         *
+         * @param oss OSS对象
+         * @return oss 匹配Url的OSS对象
+         */
+        private SysOssVo matchingUrl (SysOssVo oss){
+            OssClient storage = OssFactory.instance(oss.getService());
+            // 仅修改桶类型为 private 的URL，临时URL时长为120s
+            if (AccessPolicyType.PRIVATE == storage.getAccessPolicy()) {
+                oss.setUrl(storage.getPrivateUrl(oss.getFileName(), 120));
+            }
+            return oss;
+        }
+
+    }

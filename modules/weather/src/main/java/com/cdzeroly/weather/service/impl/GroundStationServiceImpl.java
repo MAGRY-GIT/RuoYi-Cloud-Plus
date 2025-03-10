@@ -1,5 +1,6 @@
 package com.cdzeroly.weather.service.impl;
 
+import com.cdzeroly.common.core.constant.CacheNames;
 import com.cdzeroly.common.core.utils.MapstructUtils;
 import com.cdzeroly.common.core.utils.StringUtils;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
@@ -8,6 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import com.cdzeroly.weather.domain.bo.GroundStationBo;
 import com.cdzeroly.weather.domain.vo.GroundStationVo;
@@ -23,7 +25,7 @@ import java.util.Collection;
  * 中国地面气象站点Service业务层处理
  *
  * @author MGARY
- * @date 2025-01-10
+ * @date 2025-03-07
  */
 @RequiredArgsConstructor
 @Service
@@ -37,6 +39,7 @@ public class GroundStationServiceImpl implements IGroundStationService {
      * @param id 主键
      * @return 中国地面气象站点
      */
+    @Cacheable(cacheNames = CacheNames.WEATHER_STATIONS, key = "#id")
     @Override
     public GroundStationVo queryById(Long id){
         return baseMapper.selectVoById(id);
@@ -133,10 +136,5 @@ public class GroundStationServiceImpl implements IGroundStationService {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
         return baseMapper.deleteByIds(ids) > 0;
-    }
-
-    @Override
-    public void saveBatch(List<GroundStation> list) {
-         baseMapper.insertBatch(list);
     }
 }

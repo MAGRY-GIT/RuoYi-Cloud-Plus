@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cdzeroly.weather.mapper.StationDataMapper">
+    <select id="findByDataTime" resultType="com.cdzeroly.weather.domain.vo.StationDataVo1">
+        select station_data.*,
+               w_ground_station.longitude,
+               w_ground_station.latitude,
+               w_ground_station.station_name
+        from station_data
+        left join w_ground_station  on station_data.station_id = w_ground_station.id
+        where station_data.create_time = #{dataTime}
+
+
+    </select>
+</mapper>

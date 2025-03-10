@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 中国地面气象站点对象 w_ground_station
  *
  * @author MGARY
- * @date 2025-01-10
+ * @date 2025-03-07
  */
 @Data
 @TableName("w_ground_station")
@@ -64,12 +64,12 @@ public class GroundStation implements Serializable {
     /**
      * 观测场拔海高度（米）
      */
-    private Float obsSeaLevel;
+    private Long obsSeaLevel;
 
     /**
      * 气压传感器拔海高度（米）
      */
-    private Float apSensorSeaLevel;
+    private Long apSensorSeaLevel;
 
 
 }
