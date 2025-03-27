@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<MeteoInfo file="123" type="LegendScheme">
+  <LegendScheme FieldName="Contour" LegendType="GraduatedColor" ShapeType="Polygon" BreakNum="4" HasNoData="False" MinValue="0" MaxValue="100" UNDEF="-9999">
+    <Breaks>
+      <Break Caption="0 - 520" StartValue="0" EndValue="520" Color="#860562" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="520 - 570" StartValue="520" EndValue="570" Color="#C20430" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="570 - 620" StartValue="570" EndValue="620" Color="#FB0801" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="620 - 670" StartValue="620" EndValue="670" Color="#FF4700" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="670 - 720" StartValue="670" EndValue="720" Color="#FA8803" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="720 - 770" StartValue="720" EndValue="770" Color="#FF4700" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="770 - 820" StartValue="770" EndValue="820" Color="#FFDC08" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="820 - 870" StartValue="820" EndValue="870" Color="#F9F600" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="870 - 920" StartValue="870" EndValue="920" Color="#BBF409" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="920 - 970" StartValue="920" EndValue="970" Color="#56D208" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="970 - 980" StartValue="970" EndValue="980" Color="#09B315" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="980 - 990" StartValue="980" EndValue="990" Color="#0ED377" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="990 - 1000" StartValue="990" EndValue="1000" Color="#09EACC" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="1000 - 1010" StartValue="1000" EndValue="1010" Color="#00D2FF" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="1010 - 1020" StartValue="1010" EndValue="1020" Color="#0075FF" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+      <Break Caption="&gt; - 1020" StartValue="1020" EndValue="99999" Color="#0074FC" DrawShape="True" OutlineColor="Black" DrawOutline="False" DrawFill="True" OutlineSize="1" UsingHatchStyle="False" Style="Horizontal" BackColor="Transparent" />
+    </Breaks>
+  </LegendScheme>
+</MeteoInfo>

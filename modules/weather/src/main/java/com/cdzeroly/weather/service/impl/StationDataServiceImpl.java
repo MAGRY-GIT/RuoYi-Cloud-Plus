@@ -1,30 +1,36 @@
 package com.cdzeroly.weather.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import com.cdzeroly.common.core.exception.ServiceException;
-import com.cdzeroly.common.core.utils.CoordinateTransformUtil;
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.cdzeroly.common.core.utils.MapstructUtils;
+import com.cdzeroly.weather.domain.vo.GroundStationVo;
+import com.cdzeroly.weather.mapper.GroundStationMapper;
+import com.cdzeroly.weather.utils.MapImagesUtil;
+import com.cdzeroly.weather.utils.WeatherUtils;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.cdzeroly.resource.api.RemoteFileService;
 import com.cdzeroly.weather.domain.vo.StationDataVo1;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.RequiredArgsConstructor;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.jetbrains.annotations.NotNull;
 import org.meteoinfo.common.Extent;
 import org.meteoinfo.data.GridData;
-import org.meteoinfo.data.GridDataSetting;
-import org.meteoinfo.geo.analysis.InterpolationMethods;
-import org.meteoinfo.geo.analysis.InterpolationSetting;
 import org.meteoinfo.geo.layer.VectorLayer;
 import org.meteoinfo.geo.layout.MapLayout;
-import org.meteoinfo.geo.mapdata.MapDataManage;
 import org.meteoinfo.geo.mapview.MapView;
 import org.meteoinfo.geo.meteodata.DrawMeteoData;
-import org.meteoinfo.geo.util.GeoMathUtil;
 import org.meteoinfo.geometry.legend.LegendScheme;
-import org.meteoinfo.geometry.legend.PolygonBreak;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import com.cdzeroly.weather.domain.bo.StationDataBo;
 import com.cdzeroly.weather.domain.vo.StationDataVo;
@@ -32,13 +38,8 @@ import com.cdzeroly.weather.domain.StationData;
 import com.cdzeroly.weather.mapper.StationDataMapper;
 import com.cdzeroly.weather.service.IStationDataService;
 import org.springframework.web.multipart.MultipartFile;
-import ucar.nc2.dataset.CoordinateTransform;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.format.DateTimeFormatter;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * 地面站点数据Service业务层处理
@@ -58,6 +60,11 @@ import java.util.Collection;
 public class StationDataServiceImpl implements IStationDataService {
 
     private final StationDataMapper baseMapper;
+    private final GroundStationMapper groundStationMapper;
+
+
+    @DubboReference
+    RemoteFileService remoteFileService;
 
     /**
      * 查询地面站点数据
@@ -67,145 +74,90 @@ public class StationDataServiceImpl implements IStationDataService {
      */
     @Override
     public StationDataVo queryById(Long id) throws Exception {
-        DateTime parse = DateUtil.parse("2025-01-07 09:00:00");
+        DateTime parse = DateUtil.parse("2025-03-11 03:00:00");
+
+        ArrayList<String> strings = Lists.newArrayList("prs", "prs_sea", "prs_max", "prs_min", "win_s_max", "win_s_inst_max", "win_d_inst_max", "win_d_avg2mi", "win_s_avg2mi", "win_d_s_max", "tem", "tem_max", "tem_min", "Rhu", "rhu_min", "pre3h");
+        final Map<String, String> staticMap = getTypePathStringMap();
         List< StationDataVo1> list = baseMapper.findByDataTime(parse, "prs");
+        staticMap.forEach((name,path)->{
+            try {
+                processStationData(list,name,path,parse);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return baseMapper.selectVoById(id);
+    }
+
+    @NotNull
+    private Map<String, String> getTypePathStringMap() {
+        String path = getClass().getClassLoader().getResource("color.scale/TEM.lgs").getFile();
+        String rainfall = getClass().getClassLoader().getResource("color.scale/3rainfall.lgs").getFile();
+        String dimianQiya = getClass().getClassLoader().getResource("color.scale/dimian-qiya.lgs").getFile();
 
 
-        //从数据库查询cimiss数据
-         //创建站点格点
-        org.meteoinfo.data.StationData stationData = new org.meteoinfo.data.StationData();
-        //循环数据将值塞入格点中
-        for (StationDataVo1 stationData1 : list) {
-            stationData.addData(stationData1.getStationName(),
-                stationData1.getLongitude(),
-                stationData1.getLatitude(),
-                stationData1.getTem());
+        final Map<String, String> staticMap = Maps.newHashMap();
+        staticMap.put("prs", dimianQiya);
+        staticMap.put("prsSea", dimianQiya);
+        staticMap.put("prsMax", dimianQiya);
+        staticMap.put("prsMin", dimianQiya);
+        staticMap.put("tem", path);
+        staticMap.put("temMax", path);
+        staticMap.put("temMin", path);
+        staticMap.put("rhu", "");
+        staticMap.put("rhuMin", "");
+        staticMap.put("pre3h", rainfall);
+        return staticMap;
+    }
+
+    private void processStationData(List<StationDataVo1> list, String name, String path, DateTime parse) throws Exception {
+        org.meteoinfo.data.StationData stationData = MapImagesUtil.getStationData(list, name);
+        ClassPathResource resource = new ClassPathResource("shp/sichuan.shp");
+        String fn = resource.getFile().getAbsolutePath();
+        //读取地图图层
+        VectorLayer altMap = MapImagesUtil.getVectorLayer(fn);
+        GridData gridData =  MapImagesUtil.getGridData(list, altMap, stationData);
+        VectorLayer layer;
+        //绘制图层
+        if (StrUtil.isNotBlank(path)) {
+            LegendScheme als = MapImagesUtil.readFromLgs(path);
+            layer = DrawMeteoData.createShadedLayer(gridData, als, "", "", true);
+        } else {
+            layer = DrawMeteoData.createShadedLayer(gridData, "", "", true);
         }
 
-        String fn = "C:\\Users\\Administrator\\Downloads\\四川省1\\四川省.shp";
-        //读取地图图层
-        VectorLayer altMap = MapDataManage.readMapFile_ShapeFile(fn);
-    //创建网格设置参数
-        GridDataSetting gridDataSetting = new GridDataSetting();
-//设定数据区域
-        gridDataSetting.dataExtent = altMap.getExtent();
-//设定格点数
-        gridDataSetting.xNum = list.size();
-        gridDataSetting.yNum = list.size();
-//创建插值设置
-        InterpolationSetting interpolationSetting = new InterpolationSetting();
-//设定格点配置
-        interpolationSetting.setGridDataSetting(gridDataSetting);
-//设定插值方法
-        interpolationSetting.setInterpolationMethod(InterpolationMethods.KRIGING);
-//设定搜索半径
-        interpolationSetting.setRadius(10);
-//设置最小点数
-        interpolationSetting.setMinPointNum(1);
-//插值到格点
-        GridData gridData = GeoMathUtil.interpolateData(stationData, interpolationSetting);
-//        GridData gridData = stationData.interpolateData(interpolationSetting);
-        LegendScheme als = readFromLgs("C:\\Users\\Administrator\\Downloads\\色阶\\TEM.lgs");
-//绘制图层
-        VectorLayer layer = DrawMeteoData.createShadedLayer(gridData,als,"","",true);
-//创建视图
+        //创建视图
         MapView view = new MapView();
-        PolygonBreak pb = (PolygonBreak) altMap.getLegendScheme().getLegendBreak(0);
-        pb.setDrawFill(false);
-        pb.setOutlineColor(Color.GRAY);
         layer = layer.clip(altMap);
-//叠加图层
+        //叠加图层
         view.addLayer(layer);
         view.addLayer(altMap);
 
-
-/**
- * 通用方法,可以抽成工具类
- */
-        MapLayout layout  = new MapLayout();
-//去除图形边框
-        layout.getActiveMapFrame().setDrawNeatLine(false);
-//区域边界
-        Extent extent = view.getExtent();
-//设置矩形的宽和高
-        Rectangle bounds = new Rectangle(800, (int) (800 * 1D / extent.getWidth() * extent.getHeight()));
-//设置地图边框
-        layout.setPageBounds(new Rectangle(0, 0, bounds.width, bounds.height));
-//设置页面边框
-        layout.getActiveMapFrame().setLayoutBounds(new Rectangle(0, 0, bounds.width, bounds.height));
-        layout.getActiveMapFrame().setMapView(view);
-//        String imagePath = "C:\\Users\\Administrator\\Desktop\\99.png";
-//        String name =   gridData.getBorderYMax() + "-"+  gridData.getBorderXMax() + "," +  gridData.getBorderYMin()+"-"+  gridData.getBorderXMin();
-        Double[] doubles1 = CoordinateTransformUtil.WGS84ToGCJ02(gridData.getBorderYMax(), gridData.getBorderXMax());
-        Double[] doubles = CoordinateTransformUtil.WGS84ToGCJ02(gridData.getBorderYMin(), gridData.getBorderXMin());
-        String name =   doubles1[0] + "-"+  doubles1[1]  + "," +  doubles[0]+"-"+ doubles[1];
+        MapLayout mapLayout = MapImagesUtil.getMapLayout(view);
+        name = name + "_" + parse.getTime() + "_" + gridData.getBorderYMax() + "-" + gridData.getBorderXMax() + "," + gridData.getBorderYMin() + "_"  + gridData.getBorderXMin();
         //指定导出图像的路径
-        String imagePath = "C:\\Users\\Administrator\\Desktop\\" + name+".png";
-        layout.exportToPicture(imagePath);
-        transparentProcessing(imagePath);
-        return baseMapper.selectVoById(id);
-    } /**
-     * 获取矢量图层
-     * @return
-     * @throws Exception
-     */
-    private static VectorLayer getVectorLayer(String  shapeFilepath) throws Exception {
-        if (shapeFilepath == null){
-            throw ServiceException.build ("请输入矢量图层路径");
-        }
-        //读取地图A
-        VectorLayer scmap = MapDataManage.readMapFile_ShapeFile(shapeFilepath);
-        //描述地图边界线
-        PolygonBreak pb = (PolygonBreak) scmap.getLegendScheme().getLegendBreak(0);
-        //是否设置填充
-        pb.setDrawFill(false);
-        //设置轮廓大小
-        pb.setOutlineSize(2f);
-        //设置轮廓颜色
-        pb.setOutlineColor(Color.black);
-        return scmap;
+        String imagePath = FileUtil.getTmpDir().getAbsolutePath() + "\\" + name + ".png";
+        //导出图片
+        mapLayout.exportToPicture(imagePath);
+        //转换为透明图片
+        WeatherUtils.transparentProcessing(imagePath);
+        remoteFileService.upload(name, name + ".png", "png", FileUtil.readBytes(imagePath));
     }
 
-    private static void transparentProcessing(String imagePath) throws IOException {
-        //读取图片
-        BufferedImage bi = ImageIO.read(new File(imagePath));
-        //类型转换
-        BufferedImage img = new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = (Graphics2D) img.getGraphics();
-        g.drawImage(bi, null, 0, 0);
-        //透明处理
-        int alpha = 0;
-        for(int i=img.getMinY(); i<img.getHeight(); i++){
-            for(int j=img.getMinX(); j<img.getWidth(); j++){
-                int rgb = img.getRGB(j, i);
-                //透明部分不需要处理
-                if(rgb < 0){
-                    int R = (rgb & 0xff0000) >> 16;
-                    int G = (rgb & 0xff00) >> 8;
-                    int B = (rgb & 0xff);
-                    //将白色剔除
-                    Color color = Color.white;
-                    if(color.getRed() == R && color.getGreen() == G && color.getBlue() == B){
-                        alpha = 0;
-                    }
-                    else {
-                        alpha = 255;
-                    }
-                    rgb = (alpha << 24) | (rgb & 0x00ffffff);
-                    img.setRGB(j, i, rgb);
-                }
-            }
+
+    private GridData processStationData(List<StationDataVo1> list, String name, Extent extent) throws Exception {
+        org.meteoinfo.data.StationData stationData = MapImagesUtil.getStationData(list, name);
+        ClassPathResource resource = new ClassPathResource("shp/sichuan.shp");
+        String fn = resource.getFile().getAbsolutePath();
+        //读取地图图层
+        VectorLayer altMap = MapImagesUtil.getVectorLayer(fn);
+        if (extent != null){
+            altMap.setExtent(extent);
         }
-        //释放资源
-        g.dispose();
-        ImageIO.write(img, "png", new File(imagePath));
+        return MapImagesUtil.getGridData(list, altMap, stationData);
     }
 
-    public static LegendScheme readFromLgs(String path) throws Exception {
-        LegendScheme scheme = new LegendScheme();
-        scheme.importFromXMLFile(path, false);
-        return scheme;
-    }
+
 
     /**
      * 分页查询地面站点数据列表
@@ -229,7 +181,16 @@ public class StationDataServiceImpl implements IStationDataService {
      */
     @Override
     public List<StationDataVo> queryList(StationDataBo bo) {
+        if(ObjectUtil.isNull(bo.getCreateTime())){
+            DateTime parse = DateUtil.parse("2025-03-11 03:00:00");
+            bo.setCreateTime(parse);
+        }
+        ArrayList<String> wind = Lists.newArrayList( "win_s_max", "win_s_inst_max", "win_d_inst_max", "win_d_avg2mi", "win_s_avg2mi", "win_d_s_max");
+        if (!wind.contains(bo.getType())) {
+            throw new RuntimeException("类型错误");
+        }
         LambdaQueryWrapper<StationData> lqw = buildQueryWrapper(bo);
+
         return baseMapper.selectVoList(lqw);
     }
 
@@ -289,7 +250,7 @@ public class StationDataServiceImpl implements IStationDataService {
     /**
      * 保存前的数据校验
      */
-    private void validEntityBeforeSave(StationData entity){
+    private void validEntityBeforeSave(StationData entity) {
         //TODO 做一些数据校验,如唯一约束
     }
 
@@ -302,7 +263,7 @@ public class StationDataServiceImpl implements IStationDataService {
      */
     @Override
     public Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid) {
-        if(isValid){
+        if (isValid) {
             //TODO 做一些业务上的校验,判断是否需要校验
         }
         return baseMapper.deleteByIds(ids) > 0;
@@ -331,10 +292,51 @@ public class StationDataServiceImpl implements IStationDataService {
                 StationData groundInfo = parseToGroundInfo(columns);
                 stationData.add(groundInfo);
             }
+            //存储数据
+            List<Long> stationIds = stationData.stream().map(StationData::getStationId).toList();
+            Map<Long, GroundStationVo> groundStationVoMap = groundStationMapper.selectVoByIds(stationIds).stream().collect(Collectors.toMap(GroundStationVo::getId, groundStation -> groundStation));
+
+            stationData.stream().map(e -> {
+                StationDataVo1 stationDataVo1 = new StationDataVo1();
+                BeanUtil.copyProperties(e, stationDataVo1);
+                GroundStationVo groundStationVo = groundStationVoMap.get(e.getStationId());
+                stationDataVo1.setLatitude(groundStationVo.getLatitude());
+                stationDataVo1.setLongitude(groundStationVo.getLongitude());
+                return stationDataVo1;
+            }).collect(Collectors.groupingBy(StationDataVo1::getCreateTime)).forEach((createTime, list) -> {
+                getTypePathStringMap().forEach((name, path) -> {
+                    try {
+                        processStationData(list, name, path, DateTime.of(createTime));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            });
+
+
             baseMapper.insertBatch(stationData);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Override
+    public GridData queryListGridDataVo(StationDataBo bo) throws Exception {
+
+        ArrayList<String> types = Lists.newArrayList("prs", "prs_sea", "prs_max", "prs_min", "tem", "tem_max", "tem_min", "Rhu", "rhu_min", "pre3h");
+        if (!types.contains(bo.getType())) {
+            throw new RuntimeException("类型错误");
+        }
+        if(ObjectUtil.isNull(bo.getCreateTime())){
+            DateTime parse = DateUtil.parse("2025-03-11 03:00:00");
+            bo.setCreateTime(parse);
+        }
+        List< StationDataVo1> stationDataVos = baseMapper.findByDataTime(bo.getCreateTime(), "prs");
+
+
+        return processStationData(stationDataVos, bo.getType(),bo.getExtent());
+
 
     }
 
@@ -343,31 +345,27 @@ public class StationDataServiceImpl implements IStationDataService {
         StationData groundInfo = new StationData();
 
         groundInfo.setStationId(Long.parseLong(columns[0]));
-        String dateTiem = columns[1] + "-" +((columns[2].length() == 1 )? "0"+ columns[2]: columns[2]) + "-" + ((columns[3].length() == 1 )? "0"+ columns[3]: columns[3]) + "_" + ((columns[4].length() == 1 )? "0"+ columns[4]: columns[4]);
+        String dateTiem = columns[1] + "-" + ((columns[2].length() == 1) ? "0" + columns[2] : columns[2]) + "-" + ((columns[3].length() == 1) ? "0" + columns[3] : columns[3]) + "_" + ((columns[4].length() == 1) ? "0" + columns[4] : columns[4]);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH");
         DateTime parse = DateUtil.parse(dateTiem, formatter);
         groundInfo.setCreateTime(parse);
 
-        groundInfo.setPrs(Double.parseDouble( columns[5]));
-        groundInfo.setPrsSea(Double.parseDouble( columns[6]));
-        groundInfo.setPrsMax(Double.parseDouble( columns[7]));
-        groundInfo.setPrsMin(Double.parseDouble( columns[8]));
-        groundInfo.setWinSMax(Double.parseDouble( columns[9]));
-        groundInfo.setWinSInstMax(Double.parseDouble( columns[10]));
-        groundInfo.setWinDInstMax(Double.parseDouble( columns[11]));
-        groundInfo.setWinDAvg2mi(Double.parseDouble( columns[12]));
-        groundInfo.setWinSAvg2mi(Double.parseDouble( columns[13]));
-        groundInfo.setWinDSMax(Double.parseDouble( columns[14]));
-        groundInfo.setTem(Double.parseDouble( columns[15]));
-        groundInfo.setTemMax(Double.parseDouble( columns[16]));
-        groundInfo.setTemMin(Double.parseDouble( columns[17]));
-        groundInfo.setRhu(Double.parseDouble( columns[18]));
-        groundInfo.setRhuMin(Double.parseDouble( columns[19]));
-        groundInfo.setPre3h(Double.parseDouble( columns[20]));
-
-
-
-
+        groundInfo.setPrs(Double.parseDouble(columns[5]));
+        groundInfo.setPrsSea(Double.parseDouble(columns[6]));
+        groundInfo.setPrsMax(Double.parseDouble(columns[7]));
+        groundInfo.setPrsMin(Double.parseDouble(columns[8]));
+        groundInfo.setWinSMax(Double.parseDouble(columns[9]));
+        groundInfo.setWinSInstMax(Double.parseDouble(columns[10]));
+        groundInfo.setWinDInstMax(Double.parseDouble(columns[11]));
+        groundInfo.setWinDAvg2mi(Double.parseDouble(columns[12]));
+        groundInfo.setWinSAvg2mi(Double.parseDouble(columns[13]));
+        groundInfo.setWinDSMax(Double.parseDouble(columns[14]));
+        groundInfo.setTem(Double.parseDouble(columns[15]));
+        groundInfo.setTemMax(Double.parseDouble(columns[16]));
+        groundInfo.setTemMin(Double.parseDouble(columns[17]));
+        groundInfo.setRhu(Double.parseDouble(columns[18]));
+        groundInfo.setRhuMin(Double.parseDouble(columns[19]));
+        groundInfo.setPre3h(Double.parseDouble(columns[20]));
 
 
         return groundInfo;

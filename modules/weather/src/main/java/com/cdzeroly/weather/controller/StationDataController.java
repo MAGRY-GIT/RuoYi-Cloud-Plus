@@ -2,10 +2,14 @@ package com.cdzeroly.weather.controller;
 
 import java.util.List;
 
+import cn.hutool.core.util.ObjectUtil;
+import com.cdzeroly.weather.domain.vo.GridDataVo;
 import lombok.RequiredArgsConstructor;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.*;
 import cn.dev33.satoken.annotation.SaCheckPermission;
+import org.meteoinfo.data.GridData;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import com.cdzeroly.common.idempotent.annotation.RepeatSubmit;
@@ -47,6 +51,28 @@ public class StationDataController extends BaseController {
         return stationDataService.queryPageList(bo, pageQuery);
     }
 
+
+    /**
+     * 查询地面站点数据列表
+     */
+    @GetMapping("/listAll")
+    public R<List<StationDataVo>> list(StationDataBo bo) {
+        return R.ok(stationDataService.queryList(bo));
+    }
+
+
+
+    /**
+     * 查询地面格点数据列表
+     */
+    @GetMapping("/gridData")
+    public R<GridData> gridData(StationDataBo bo) throws Exception {
+        return R.ok(stationDataService.queryListGridDataVo(bo));
+    }
+
+
+
+
     /**
      * 导出地面站点数据列表
      */
@@ -62,7 +88,7 @@ public class StationDataController extends BaseController {
      * 导入气象数据列表
      */
     @SaCheckPermission("weather:groundInfo:export")
-    @Log(title = "气象数据", businessType = BusinessType.IMPORT)
+    @Log(title = "气象数据导入", businessType = BusinessType.IMPORT)
     @PostMapping("/import")
     public void importData(@RequestPart("file") MultipartFile file) {
         stationDataService.importData(file);

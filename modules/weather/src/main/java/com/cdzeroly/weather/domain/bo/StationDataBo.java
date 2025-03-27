@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import jakarta.validation.constraints.*;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.meteoinfo.common.Extent;
 
 /**
  * 地面站点数据业务对象 station_data
@@ -33,6 +34,21 @@ public class StationDataBo extends BaseEntity {
      */
     @NotNull(message = "区站号不能为空", groups = { AddGroup.class, EditGroup.class })
     private Long stationId;
+
+
+
+    /**
+     * 数据类型
+     */
+    private String type;
+
+    /**
+     * 数据区域
+     */
+    private Extent extent;
+
+
+
 
     /**
      * 气压

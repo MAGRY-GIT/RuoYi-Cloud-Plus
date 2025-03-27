@@ -1,10 +1,12 @@
 package com.cdzeroly.weather.service;
 
 import com.cdzeroly.weather.domain.StationData;
+import com.cdzeroly.weather.domain.vo.GridDataVo;
 import com.cdzeroly.weather.domain.vo.StationDataVo;
 import com.cdzeroly.weather.domain.bo.StationDataBo;
 import com.cdzeroly.common.mybatis.core.page.TableDataInfo;
 import com.cdzeroly.common.mybatis.core.page.PageQuery;
+import org.meteoinfo.data.GridData;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
@@ -69,4 +71,12 @@ public interface IStationDataService {
     Boolean deleteWithValidByIds(Collection<Long> ids, Boolean isValid);
 
     void importData(MultipartFile file);
+
+    /**
+     *
+     * 返回格点数据
+     * @param bo
+     * @return
+     */
+    GridData queryListGridDataVo(StationDataBo bo) throws Exception;
 }

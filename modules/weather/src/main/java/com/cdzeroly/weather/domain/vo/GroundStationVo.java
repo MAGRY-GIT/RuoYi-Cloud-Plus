@@ -55,13 +55,13 @@ public class GroundStationVo implements Serializable {
      * 经度
      */
     @ExcelProperty(value = "经度")
-    private Long longitude;
+    private Double longitude;
 
     /**
      * 纬度
      */
     @ExcelProperty(value = "纬度")
-    private Long latitude;
+    private Double latitude;
 
     /**
      * 地理坐标
