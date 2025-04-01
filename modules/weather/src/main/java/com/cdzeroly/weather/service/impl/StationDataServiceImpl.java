@@ -75,17 +75,20 @@ public class StationDataServiceImpl implements IStationDataService {
     @Override
     public StationDataVo queryById(Long id) throws Exception {
         DateTime parse = DateUtil.parse("2025-03-11 03:00:00");
-
+//
         ArrayList<String> strings = Lists.newArrayList("prs", "prs_sea", "prs_max", "prs_min", "win_s_max", "win_s_inst_max", "win_d_inst_max", "win_d_avg2mi", "win_s_avg2mi", "win_d_s_max", "tem", "tem_max", "tem_min", "Rhu", "rhu_min", "pre3h");
         final Map<String, String> staticMap = getTypePathStringMap();
         List< StationDataVo1> list = baseMapper.findByDataTime(parse, "prs");
-        staticMap.forEach((name,path)->{
-            try {
-                processStationData(list,name,path,parse);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
+//        staticMap.forEach((name,path)->{
+//            try {
+//                processStationData(list,name,path,parse);
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
+//        return baseMapper.selectVoById(id);
+
+        processStationData1(list,"prs", "", parse);
         return baseMapper.selectVoById(id);
     }
 
@@ -143,6 +146,38 @@ public class StationDataServiceImpl implements IStationDataService {
         WeatherUtils.transparentProcessing(imagePath);
         remoteFileService.upload(name, name + ".png", "png", FileUtil.readBytes(imagePath));
     }
+
+
+    private void processStationData1(List<StationDataVo1> list, String name, String path, DateTime parse) throws Exception {
+        ClassPathResource resource = new ClassPathResource("shp/sichuan.shp");
+        String fn = resource.getFile().getAbsolutePath();
+        //读取地图图层
+        VectorLayer altMap = MapImagesUtil.getVectorLayer(fn);
+        VectorLayer layer;
+        //绘制图层
+
+
+        org.meteoinfo.data.StationData uData = MapImagesUtil.getStationData(list, "winDSMax");
+        org.meteoinfo.data.StationData vData = MapImagesUtil.getStationData(list, "winSMax");
+        layer =   DrawMeteoData.createSTVectorLayer(uData, vData,"",false);
+
+        //创建视图
+        MapView view = new MapView();
+//        layer = layer.clip(altMap);
+        //叠加图层
+        view.addLayer(layer);
+//        view.addLayer(altMap);
+
+        MapLayout mapLayout = MapImagesUtil.getMapLayout(view);
+        name = name + "_" + parse.getTime() + "_";
+        //指定导出图像的路径
+        String imagePath = FileUtil.getTmpDir().getAbsolutePath() + "\\" + name + ".tiff";
+        //导出图片
+        mapLayout.exportToPicture(imagePath);
+        //转换为透明图片
+//        remoteFileService.upload(name, name + ".png", "png", FileUtil.readBytes(imagePath));
+    }
+
 
 
     private GridData processStationData(List<StationDataVo1> list, String name, Extent extent) throws Exception {
@@ -366,8 +401,40 @@ public class StationDataServiceImpl implements IStationDataService {
         groundInfo.setRhu(Double.parseDouble(columns[18]));
         groundInfo.setRhuMin(Double.parseDouble(columns[19]));
         groundInfo.setPre3h(Double.parseDouble(columns[20]));
+        return groundInfo;
+    }
 
+    private StationData parseToGroundInfoV2(String[] columns) {
+        StationData groundInfo = new StationData();
 
+        groundInfo.setStationId(Long.parseLong(columns[0]));
+        String dateTiem = columns[1] + "-" + ((columns[2].length() == 1) ? "0" + columns[2] : columns[2]) + "-" + ((columns[3].length() == 1) ? "0" + columns[3] : columns[3]) + "_" + ((columns[4].length() == 1) ? "0" + columns[4] : columns[4]);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH");
+        DateTime parse = DateUtil.parse(dateTiem, formatter);
+        groundInfo.setCreateTime(parse);
+
+        groundInfo.setPrs(Double.parseDouble(columns[5]));
+        groundInfo.setPrsSea(Double.parseDouble(columns[6]));
+        groundInfo.setPrsMax(Double.parseDouble(columns[7]));
+        groundInfo.setPrsMin(Double.parseDouble(columns[8]));
+        groundInfo.setWinSMax(Double.parseDouble(columns[9]));
+        groundInfo.setWinSInstMax(Double.parseDouble(columns[10]));
+        groundInfo.setWinDInstMax(Double.parseDouble(columns[11]));
+        groundInfo.setWinDAvg2mi(Double.parseDouble(columns[12]));
+        groundInfo.setWinSAvg2mi(Double.parseDouble(columns[13]));
+        groundInfo.setWinDSMax(Double.parseDouble(columns[14]));
+        groundInfo.setTem(Double.parseDouble(columns[15]));
+        groundInfo.setTemMax(Double.parseDouble(columns[16]));
+        groundInfo.setTemMin(Double.parseDouble(columns[17]));
+        groundInfo.setRhu(Double.parseDouble(columns[18]));
+        groundInfo.setRhuMin(Double.parseDouble(columns[19]));
+        //积雪深度21 Snow_Depth
+
+//        groundInfo.setPre3h(Double.parseDouble(columns[20]));
+        groundInfo.setPre1h(Double.parseDouble(columns[21]));
+        groundInfo.setVisHor10mi(Integer.parseInt(columns[22]));
+        // 现在天气 WEP_Now 23
+       //总云量 CLO_Cov  24
         return groundInfo;
     }
 }

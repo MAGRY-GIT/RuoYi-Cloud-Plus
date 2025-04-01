@@ -116,5 +116,14 @@ public class StationData extends TenantEntity {
      */
     private Double pre3h;
 
+    /**
+     * 过去1小时降水量
+     */
+    private Double pre1h;
+
+    /**
+     * 10分钟平均水平能见度
+     */
+    private Integer visHor10mi;
 
 }
